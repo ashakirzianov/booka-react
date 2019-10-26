@@ -26,7 +26,16 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "overrides": {
+      "rules": {
+        "quotes": [
+          2,
+          "single",
+          "avoidEscape"
+        ]
+      }
+    }
   },
   "browserslist": {
     "production": [
