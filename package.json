@@ -37,6 +37,7 @@
     ]
   },
   "devDependencies": {
+    "@types/facebook-js-sdk": "^3.3.0",
     "@types/react-native": "^0.60.21",
     "@types/react-transition-group": "^4.2.3"
   }
