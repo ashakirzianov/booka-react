@@ -31,5 +31,9 @@ function AllBooksComp({ books }: AllBooksProps) {
 
 export function LibraryScreenComp() {
     // TODO: wire
-    return <AllBooksComp books={[]} />
+    return <AllBooksComp books={[{
+        title: 'Hello',
+        id: 'hello',
+        tags: [],
+    }]} />
 }
