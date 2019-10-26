@@ -1,13 +1,15 @@
-import * as React from 'react';
+import React from 'react';
 import { createStore } from 'redux';
 
 import { Provider } from 'react-redux';
 
 import { rootReducer } from './reducers';
-import { AppAction } from '../model';
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, {
+    books: [{
+        title: 'Hello world',
+    }],
+});
 
-class AppProvider extends Provider<AppAction> { }
 export const ConnectedProvider: React.SFC = ({ children }) =>
-    React.createElement(AppProvider, { store }, children);
+    React.createElement(Provider, { store }, children);

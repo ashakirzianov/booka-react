@@ -2,7 +2,7 @@ import * as React from 'react';
 import { BookDesc } from 'booka-common';
 
 import { Column, TextLine } from '../atoms';
-import { defaultTheme } from '../core';
+import { defaultTheme, useAppSelector } from '../core';
 
 type BookItemProps = {
     desc: BookDesc,
@@ -30,10 +30,6 @@ function AllBooksComp({ books }: AllBooksProps) {
 }
 
 export function LibraryScreenComp() {
-    // TODO: wire
-    return <AllBooksComp books={[{
-        title: 'Hello',
-        id: 'hello',
-        tags: [],
-    }]} />
+    const books = useAppSelector(s => s.books);
+    return <AllBooksComp books={books} />
 }
