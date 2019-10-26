@@ -1,0 +1,1 @@
+export { ConnectedProvider } from './store';
