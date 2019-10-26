@@ -7,5 +7,6 @@ export * from './FileUpload';
 export * from './Modal';
 export * from './Layout';
 export * from './Popover';
+export * from './theme';
 
 export { SafeAreaView } from 'react-native';

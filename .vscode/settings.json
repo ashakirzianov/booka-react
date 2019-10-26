@@ -3,13 +3,24 @@
         "**/build/**": true,
         "**/node_modules/**": true
     },
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true,
+    },
+    "editor.formatOnSave": true,
+    "editor.wordWrap": "bounded",
+    "editor.wrappingIndent": "indent",
+    "typescript.tsdk": "node_modules/typescript/lib",
     "cSpell.words": [
         "ALLBOOKS",
         "Helvetica",
         "Subpath",
         "booka",
+        "booqas",
+        "browserslist",
         "hoverable",
         "jssdk",
+        "unmount",
         "xfbml"
     ]
 }
