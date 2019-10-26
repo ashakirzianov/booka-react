@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { AppState, AppAction } from "../model";
+import { AppState, AppAction } from '../model';
 
 function books(state: AppState['books'] = [], action: AppAction) {
     switch (action.type) {
@@ -10,6 +10,6 @@ function books(state: AppState['books'] = [], action: AppAction) {
     }
 }
 
-export const reducer = combineReducers<AppState, AppAction>({
+export const rootReducer = combineReducers<AppState, AppAction>({
     books,
 });
