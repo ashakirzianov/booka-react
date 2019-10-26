@@ -1,5 +1,10 @@
 {
+    "files.exclude": {
+        "**/build/**": true,
+        "**/node_modules/**": true
+    },
     "cSpell.words": [
+        "ALLBOOKS",
         "Helvetica",
         "Subpath",
         "booka",
