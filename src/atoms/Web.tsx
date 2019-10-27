@@ -1,48 +1,55 @@
 import * as React from 'react';
 
 import { WithChildren, Callback } from './common';
+import { Link } from '@reach/router';
 
-export type HyperlinkProps = WithChildren<{
+export type LinkOrButtonProps = WithChildren<{
     style?: React.CSSProperties,
-    href?: string,
+    to?: string,
     onClick?: Callback<void>,
     onHoverIn?: Callback,
     onHoverOut?: Callback,
 }>;
-function HyperlinkC(props: HyperlinkProps) {
-    return <a
-        href={props.href}
-        style={{
-            textDecoration: 'none',
-            cursor: 'pointer',
-            ...props.style,
-        }}
-        onClick={e => {
-            e.stopPropagation();
-            if (!isOpenNewTabEvent(e)) {
-                e.preventDefault();
-                if (props.onClick) {
-                    props.onClick();
-                }
-            }
-        }}
-        onMouseEnter={props.onHoverIn}
-        onMouseLeave={props.onHoverOut}
-    >
-        {props.children}
-    </a>;
+export function LinkOrButton(props: LinkOrButtonProps) {
+    if (props.to) {
+        return <Link
+            to={props.to}
+            style={{
+                textDecoration: 'none',
+                cursor: 'pointer',
+                ...props.style,
+            }}
+            // onClick={e => {
+            //     e.stopPropagation();
+            //     if (!isOpenNewTabEvent(e)) {
+            //         e.preventDefault();
+            //         if (props.onClick) {
+            //             props.onClick();
+            //         }
+            //     }
+            // }}
+            onMouseEnter={props.onHoverIn}
+            onMouseLeave={props.onHoverOut}
+        >
+            {props.children}
+        </Link>;
+    } else {
+        return <span
+            style={{
+                textDecoration: 'none',
+                cursor: 'pointer',
+                ...props.style,
+            }}
+            onClick={props.onClick}
+            onMouseEnter={props.onHoverIn}
+            onMouseLeave={props.onHoverOut}
+        >
+            {props.children}
+        </span>;
+    }
 }
-export const Hyperlink = hoverable(HyperlinkC);
 
-type HoverableProps<T> = T extends { style?: infer S }
-    ? T & { style?: S & { ':hover'?: S } }
-    : T;
-// TODO: use something instead of Radium
-export function hoverable<T>(Cmp: React.ComponentType<T>): React.ComponentType<HoverableProps<T>> {
-    return Cmp as any;
-}
-
-function isOpenNewTabEvent(e: React.MouseEvent) {
+export function isOpenNewTabEvent(e: React.MouseEvent) {
     return isMacOs()
         ? e.metaKey
         : e.ctrlKey;

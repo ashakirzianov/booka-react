@@ -5,28 +5,26 @@ import { PaletteName, colors, fontSize, Theme } from './theme';
 import { TextLine, TextProps } from './Basics';
 import { point, WithChildren, Callback } from './common';
 import { Icon, IconName } from './Icons';
-import { Hyperlink, hoverable } from './Web';
+import { LinkOrButton } from './Web';
 
-export type SuperLink = {
+export type ButtonProps<T> = T & {
+    theme: Theme,
     to?: string,
     onClick?: Callback<void>,
-};
-export type ButtonProps<T> = T & SuperLink & {
-    theme: Theme,
 };
 
 export type TextButtonProps = ButtonProps<TextProps & {
     text: string,
 }>;
 export function TextButton(props: TextButtonProps) {
-    return <Hyperlink
-        href={props.to}
+    return <LinkOrButton
+        to={props.to}
         onClick={props.onClick}
         style={{
             color: colors(props.theme).accent,
-            ':hover': {
-                color: colors(props.theme).highlight,
-            },
+            // ':hover': {
+            //     color: colors(props.theme).highlight,
+            // },
         }}
     >
         <TextLine
@@ -36,7 +34,7 @@ export function TextButton(props: TextButtonProps) {
             fontSize={props.fontSize}
             letterSpacing={props.letterSpacing}
         />
-    </Hyperlink>;
+    </LinkOrButton>;
 }
 
 export type IconButtonProps = ButtonProps<{
@@ -45,15 +43,15 @@ export type IconButtonProps = ButtonProps<{
     onHoverOut?: Callback,
 }>;
 export function IconButton(props: IconButtonProps) {
-    return <Hyperlink
-        href={props.to}
+    return <LinkOrButton
+        to={props.to}
         onClick={props.onClick}
         style={{
             margin: point(0.5),
             color: colors(props.theme).accent,
-            ':hover': {
-                color: colors(props.theme).highlight,
-            },
+            // ':hover': {
+            //     color: colors(props.theme).highlight,
+            // },
         }}
         onHoverIn={props.onHoverIn}
         onHoverOut={props.onHoverOut}
@@ -64,23 +62,23 @@ export function IconButton(props: IconButtonProps) {
                 size={24}
             />
         </View>
-    </Hyperlink>;
+    </LinkOrButton>;
 }
 
 export type TagButtonProps = ButtonProps<{
     text: string,
 }>;
 export function TagButton(props: TagButtonProps) {
-    return <Hyperlink
-        href={props.to}
+    return <LinkOrButton
+        to={props.to}
         onClick={props.onClick}
         style={{
             backgroundColor: colors(props.theme).accent,
             borderWidth: 1,
             borderRadius: 50,
-            ':hover': {
-                backgroundColor: colors(props.theme).highlight,
-            },
+            // ':hover': {
+            //     backgroundColor: colors(props.theme).highlight,
+            // },
         }}
     >
         <View style={{
@@ -101,20 +99,20 @@ export function TagButton(props: TagButtonProps) {
                 />
             </View>
         </View>
-    </Hyperlink>;
+    </LinkOrButton>;
 }
 
 export function BorderButton(props: TextButtonProps) {
-    return <Hyperlink
-        href={props.to}
+    return <LinkOrButton
+        to={props.to}
         onClick={props.onClick}
         style={{
             color: colors(props.theme).accent,
             borderColor: colors(props.theme).accent,
-            ':hover': {
-                color: colors(props.theme).highlight,
-                borderColor: colors(props.theme).highlight,
-            },
+            // ':hover': {
+            //     color: colors(props.theme).highlight,
+            //     borderColor: colors(props.theme).highlight,
+            // },
         }}
     >
         <div
@@ -134,10 +132,10 @@ export function BorderButton(props: TextButtonProps) {
                 color={null}
             />
         </div>
-    </Hyperlink>;
+    </LinkOrButton>;
 }
 
-const HoverableView = hoverable(View);
+const HoverableView = View;
 export type PaletteButtonProps = ButtonProps<{
     text: string,
     palette: PaletteName,
@@ -146,15 +144,15 @@ export function PaletteButton(props: PaletteButtonProps) {
     const theme = props.theme;
     const cols = theme.palettes[props.palette].colors;
     const selected = props.palette === theme.currentPalette;
-    return <Hyperlink
-        href={props.to}
+    return <LinkOrButton
+        to={props.to}
         onClick={props.onClick}
         style={{
             color: cols.text,
             fontSize: fontSize(props.theme, 'normal'),
-            ':hover': {
-                color: cols.highlight,
-            },
+            // ':hover': {
+            //     color: cols.highlight,
+            // },
         }}
     >
         <HoverableView style={{
@@ -168,9 +166,9 @@ export function PaletteButton(props: PaletteButtonProps) {
             borderWidth: selected ? 3 : 0,
             shadowColor: cols.shadow,
             shadowRadius: 5,
-            ':hover': {
-                borderWidth: 3,
-            },
+            // ':hover': {
+            //     borderWidth: 3,
+            // },
         }}>
             <View
                 style={{
@@ -181,15 +179,15 @@ export function PaletteButton(props: PaletteButtonProps) {
                 <span>{props.text}</span>
             </View>
         </HoverableView>
-    </Hyperlink>;
+    </LinkOrButton>;
 }
 
 export type PictureButtonProps = ButtonProps<{
     pictureUrl?: string,
 }>;
 export function PictureButton(props: PictureButtonProps) {
-    return <Hyperlink
-        href={props.to}
+    return <LinkOrButton
+        to={props.to}
         onClick={props.onClick}
     >
         <img
@@ -210,23 +208,24 @@ export function PictureButton(props: PictureButtonProps) {
                 }),
             }}
         />
-    </Hyperlink>;
+    </LinkOrButton>;
 }
 
 export type StretchTextButtonProps = WithChildren<ButtonProps<{}>>;
 export function StretchTextButton(props: StretchTextButtonProps) {
-    return <Hyperlink
-        href={props.to}
+    return <LinkOrButton
+        to={props.to}
         onClick={props.onClick}
         style={{
             alignSelf: 'stretch',
             flexGrow: 1,
             color: colors(props.theme).accent,
             borderColor: colors(props.theme).accent,
-            ':hover': {
-                color: colors(props.theme).highlight,
-                borderColor: colors(props.theme).highlight,
-            },
+            // TODO: put back hovering
+            // ':hover': {
+            //     color: colors(props.theme).highlight,
+            //     borderColor: colors(props.theme).highlight,
+            // },
         }}
     >
         <View style={{
@@ -235,5 +234,5 @@ export function StretchTextButton(props: StretchTextButtonProps) {
         }}>
             {props.children}
         </View>
-    </Hyperlink>;
+    </LinkOrButton>;
 }

@@ -2,11 +2,11 @@ import * as React from 'react';
 import { Text, View } from 'react-native';
 
 import { TextLine } from './Basics';
-import { point, WithChildren } from './common';
+import { point, WithChildren, Callback } from './common';
 import { Icon } from './Icons';
 import {
     TextButtonProps, IconButtonProps, TagButtonProps,
-    PaletteButtonProps, StretchTextButtonProps, SuperLink,
+    PaletteButtonProps, StretchTextButtonProps,
 } from './Buttons';
 import { colors, fontSize } from './theme';
 
@@ -138,13 +138,16 @@ export function StretchTextButton(props: StretchTextButtonProps) {
 
 // =================================================
 
-function Link({ onClick, children }: WithChildren<SuperLink>) {
+type NativeLinkProps = WithChildren<{
+    onClick?: Callback,
+}>;
+function Link({ onClick, children }: NativeLinkProps) {
     return <Text onPress={onClick}>
         {children}
     </Text>;
 }
 
-function Button({ onClick, children }: WithChildren<SuperLink>) {
+function Button({ onClick, children }: NativeLinkProps) {
     return <View onTouchEnd={onClick}>
         {children}
     </View>;
