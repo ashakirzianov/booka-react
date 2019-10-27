@@ -8,7 +8,7 @@ import { Icon, IconName } from './Icons';
 import { Hyperlink, hoverable } from './Web';
 
 export type SuperLink = {
-    href?: string,
+    to?: string,
     onClick?: Callback<void>,
 };
 export type ButtonProps<T> = T & SuperLink & {
@@ -20,7 +20,7 @@ export type TextButtonProps = ButtonProps<TextProps & {
 }>;
 export function TextButton(props: TextButtonProps) {
     return <Hyperlink
-        href={props.href}
+        href={props.to}
         onClick={props.onClick}
         style={{
             color: colors(props.theme).accent,
@@ -46,7 +46,7 @@ export type IconButtonProps = ButtonProps<{
 }>;
 export function IconButton(props: IconButtonProps) {
     return <Hyperlink
-        href={props.href}
+        href={props.to}
         onClick={props.onClick}
         style={{
             margin: point(0.5),
@@ -72,7 +72,7 @@ export type TagButtonProps = ButtonProps<{
 }>;
 export function TagButton(props: TagButtonProps) {
     return <Hyperlink
-        href={props.href}
+        href={props.to}
         onClick={props.onClick}
         style={{
             backgroundColor: colors(props.theme).accent,
@@ -106,7 +106,7 @@ export function TagButton(props: TagButtonProps) {
 
 export function BorderButton(props: TextButtonProps) {
     return <Hyperlink
-        href={props.href}
+        href={props.to}
         onClick={props.onClick}
         style={{
             color: colors(props.theme).accent,
@@ -147,7 +147,7 @@ export function PaletteButton(props: PaletteButtonProps) {
     const cols = theme.palettes[props.palette].colors;
     const selected = props.palette === theme.currentPalette;
     return <Hyperlink
-        href={props.href}
+        href={props.to}
         onClick={props.onClick}
         style={{
             color: cols.text,
@@ -189,7 +189,7 @@ export type PictureButtonProps = ButtonProps<{
 }>;
 export function PictureButton(props: PictureButtonProps) {
     return <Hyperlink
-        href={props.href}
+        href={props.to}
         onClick={props.onClick}
     >
         <img
@@ -216,7 +216,7 @@ export function PictureButton(props: PictureButtonProps) {
 export type StretchTextButtonProps = WithChildren<ButtonProps<{}>>;
 export function StretchTextButton(props: StretchTextButtonProps) {
     return <Hyperlink
-        href={props.href}
+        href={props.to}
         onClick={props.onClick}
         style={{
             alignSelf: 'stretch',

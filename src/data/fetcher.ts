@@ -47,7 +47,6 @@ export function createFetcher<C extends ApiContract>(baseUrl: string): Fetcher<C
             };
             return ajax(req).pipe(
                 map(res => {
-                    console.log(res);
                     if (res.status === 200) {
                         return {
                             success: true,
