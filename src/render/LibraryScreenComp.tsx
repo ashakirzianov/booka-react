@@ -1,17 +1,19 @@
 import * as React from 'react';
 import { BookDesc } from 'booka-common';
 
-import { Column, TextLine } from '../atoms';
-import { defaultTheme, useAppSelector, useAppDispatch } from '../core';
+import { Column, TextButton } from '../atoms';
+import { useAppSelector, useAppDispatch, useTheme } from '../core';
 
 type BookItemProps = {
     desc: BookDesc,
 };
 function BookItemComp({ desc }: BookItemProps) {
+    const theme = useTheme();
     return <Column>
-        <TextLine
-            theme={defaultTheme}
+        <TextButton
+            theme={theme}
             text={desc.title}
+            to={`/book/${desc.id}`}
         />
     </Column>
 }
