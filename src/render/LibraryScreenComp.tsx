@@ -34,7 +34,7 @@ function AllBooksComp({ books }: AllBooksProps) {
 export function LibraryScreenComp() {
     const dispatch = useAppDispatch();
     React.useEffect(() => {
-        dispatch({ type: 'LIBRARY_FETCH' });
+        dispatch({ type: 'library-fetch' });
     }, [dispatch]);
     const books = useAppSelector(s => s.books);
     return <AllBooksComp books={books} />

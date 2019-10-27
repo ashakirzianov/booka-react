@@ -4,7 +4,7 @@ import { defaultTheme } from './defaults';
 
 function books(state: AppState['books'] = [], action: AppAction) {
     switch (action.type) {
-        case 'ALLBOOKS_FULFILLED':
+        case 'allbooks-fulfilled':
             return action.payload;
         default:
             return state;

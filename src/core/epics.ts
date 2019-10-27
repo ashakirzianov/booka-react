@@ -5,21 +5,21 @@ import { from } from 'rxjs';
 import { fetchAllBooks } from '../data/library';
 
 const fetchLibraryEpic: Epic<AppAction> = action$ => action$.pipe(
-    ofType('LIBRARY_FETCH'),
-    flatMap(() => from([
-        { type: 'ALLBOOKS_FETCH' } as const,
+    ofType('library-fetch'),
+    flatMap(() => from<AppAction[]>([
+        { type: 'allbooks-fetch' },
     ])),
 );
 
 const fetchAllBooksEpic: Epic<AppAction> = action$ => action$.pipe(
-    ofType('ALLBOOKS_FETCH'),
+    ofType('allbooks-fetch'),
     mergeMap(
         () => fetchAllBooks(0).pipe(
             filter(res => res.success),
             map((res): AppAction => {
                 if (res.success) {
                     return {
-                        type: 'ALLBOOKS_FULFILLED',
+                        type: 'allbooks-fulfilled',
                         payload: res.value.values,
                     };
                 } else {

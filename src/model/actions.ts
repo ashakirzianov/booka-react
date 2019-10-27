@@ -1,18 +1,18 @@
 import { BookDesc, BookPositionLocator, BookFragment } from "booka-common";
 
 export type LibraryFetchAction = {
-    type: 'LIBRARY_FETCH',
+    type: 'library-fetch',
 };
 
 export type AllBooksFetchAction = {
-    type: 'ALLBOOKS_FETCH',
+    type: 'allbooks-fetch',
     payload?: {
         page: number,
     },
 };
 
 export type AllBooksFulfilledAction = {
-    type: 'ALLBOOKS_FULFILLED',
+    type: 'allbooks-fulfilled',
     payload: BookDesc[],
 };
 
@@ -35,4 +35,5 @@ export type BookFragmentFulfilledAction = {
 export type BookAction =
     | BookFragmentFetchAction | BookFragmentFulfilledAction;
 
-export type AppAction = LibraryAction;
+export type AppAction =
+    | LibraryAction | BookAction;
