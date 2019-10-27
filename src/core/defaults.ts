@@ -1,6 +1,5 @@
 import { Theme } from "../atoms";
 
-// TODO: remove this file ?
 export const defaultTheme: Theme = {
     palettes: {
         light: {
