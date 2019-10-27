@@ -9,7 +9,9 @@ import { createEpicMiddleware } from 'redux-observable';
 
 function configureStore() {
     const epicMiddleware = createEpicMiddleware();
-    const composeEnhancers: typeof compose = (globalThis.window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+    const composeEnhancers: typeof compose =
+        (globalThis.window && (globalThis.window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) // Note: support redux dev tools
+        || compose;
     const s = createStore(
         rootReducer,
         {
