@@ -9,3 +9,7 @@ export function useAppSelector<T>(selector: (state: AppState) => T) {
 export function useAppDispatch() {
     return useDispatch() as Dispatch<AppAction>;
 }
+
+export function useTheme() {
+    return useAppSelector(s => s.theme);
+}
