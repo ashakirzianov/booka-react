@@ -25,7 +25,7 @@ export type FetchParam<C extends PathMethodContract> = Omit<C, 'return' | 'files
 
 export type FetchMethod<C extends ApiContract, M extends MethodNames> =
     <Path extends AllowedPaths<C, M>>(path: Path, param: FetchParam<Contract<C, M, Path>>)
-        => Observable<Contract<C, M, Path>['return']>;
+        => Observable<FetchReturn<Contract<C, M, Path>>>;
 export type Fetcher<C extends ApiContract> = {
     [m in MethodNames]: FetchMethod<C, m>;
 };
@@ -46,16 +46,22 @@ export function createFetcher<C extends ApiContract>(baseUrl: string): Fetcher<C
                 },
             };
             return ajax(req).pipe(
-                map(res => res.status === 200
-                    ? {
-                        success: true,
-                        value: res.response,
+                map(res => {
+                    console.log(res);
+                    if (res.status === 200) {
+                        return {
+                            success: true,
+                            value: res.response,
+                        };
+                    } else {
+                        return {
+                            success: false,
+                            status: res.status,
+                            response: res.response,
+                        };
                     }
-                    : {
-                        success: false,
-                        status: res.status,
-                        response: res.response,
-                    }),
+                },
+                ),
             );
         };
     }

@@ -14,11 +14,6 @@ function configureStore() {
         || compose;
     const s = createStore(
         rootReducer,
-        {
-            books: [{
-                title: 'Hello world',
-            }],
-        },
         composeEnhancers(
             applyMiddleware(
                 epicMiddleware,
