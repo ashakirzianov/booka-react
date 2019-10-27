@@ -1,9 +1,12 @@
-import { ajax } from 'rxjs/ajax';
-import { BookDesc, Page } from 'booka-common';
+import { LibContract } from 'booka-common';
 
 import { config } from '../config';
+import { createFetcher } from './fetcher';
+
+const fetcher = createFetcher<LibContract>(config().libUrl);
 
 export function fetchAllBooks(page: number) {
-    const url = `${config().libUrl}/all?page=${page}`;
-    return ajax.getJSON<Page<BookDesc>>(url);
+    return fetcher.get('/all', {
+        query: { page },
+    });
 }
