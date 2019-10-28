@@ -8,12 +8,8 @@ import { Observable } from 'rxjs';
 
 // TODO: remove ?
 export type FetchReturn<C extends PathMethodContract> = {
-    success: true,
-    value: C['return'],
-} | {
-    success: false,
     status: number,
-    response: any,
+    value: C['return'],
 };
 
 export type FetchParam<C extends PathMethodContract> = Omit<C, 'return' | 'files'> & {
@@ -47,20 +43,11 @@ export function createFetcher<C extends ApiContract>(baseUrl: string): Fetcher<C
             };
             return ajax(req).pipe(
                 map(res => {
-                    if (res.status === 200) {
-                        return {
-                            success: true,
-                            value: res.response,
-                        };
-                    } else {
-                        return {
-                            success: false,
-                            status: res.status,
-                            response: res.response,
-                        };
-                    }
-                },
-                ),
+                    return {
+                        status: res.status,
+                        value: res.response,
+                    };
+                }),
             );
         };
     }

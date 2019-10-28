@@ -1,10 +1,10 @@
 import React from 'react';
-import { BookPositionLocator } from 'booka-common';
-import { BookFragmentState } from '../ducks/bookFragment';
-import { assertNever } from '../reader/RichText/utils';
+import { assertNever } from 'booka-common';
+
+import { AppState } from '../ducks';
 
 export type BookScreenProps = {
-    fragment: BookFragmentState,
+    fragment: AppState['currentFragment'],
 };
 export function BookScreenComp({ fragment }: BookScreenProps) {
     switch (fragment.state) {
@@ -14,6 +14,8 @@ export function BookScreenComp({ fragment }: BookScreenProps) {
             return <span>loading: {fragment.location.id}</span>;
         case 'ready':
             return <span>ready: {fragment.fragment.current.join('-')}</span>;
+        case 'error':
+            return <span>error: {fragment.location.id}</span>;
         default:
             assertNever(fragment);
             return <span>Should not happen</span>;

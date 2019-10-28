@@ -1,7 +1,7 @@
 import { BookDesc } from 'booka-common';
 import { combineEpics, Epic } from 'redux-observable';
-import { from } from 'rxjs';
-import { filter, flatMap, map, mergeMap } from 'rxjs/operators';
+import { from, of } from 'rxjs';
+import { flatMap, map, mergeMap, catchError } from 'rxjs/operators';
 
 import { fetchAllBooks } from '../api';
 import { AppAction } from './app';
@@ -10,21 +10,23 @@ import { ofAppType } from './utils';
 export type LibraryFetchAction = {
     type: 'library-fetch',
 };
-
 export type AllBooksFetchAction = {
     type: 'allbooks-fetch',
     payload?: {
         page: number,
     },
 };
-
 export type AllBooksFulfilledAction = {
     type: 'allbooks-fulfilled',
     payload: BookDesc[],
 };
+export type AllBooksRejectedAction = {
+    type: 'allbooks-rejected',
+};
 
 export type LibraryAction =
-    | LibraryFetchAction | AllBooksFetchAction | AllBooksFulfilledAction
+    | LibraryFetchAction
+    | AllBooksFetchAction | AllBooksFulfilledAction | AllBooksRejectedAction
     ;
 
 export type LibraryState = {
@@ -51,18 +53,15 @@ const fetchAllBooksEpic: Epic<AppAction> = (action$) => action$.pipe(
     ofAppType('allbooks-fetch'),
     mergeMap(
         () => fetchAllBooks(0).pipe(
-            filter((res) => res.success),
             map((res): AppAction => {
-                if (res.success) {
-                    return {
-                        type: 'allbooks-fulfilled',
-                        payload: res.value.values,
-                    };
-                } else {
-                    // TODO: remove
-                    throw new Error('should not happen');
-                }
-            })
+                return {
+                    type: 'allbooks-fulfilled',
+                    payload: res.value.values,
+                };
+            }),
+            catchError((err) => of<AppAction>({
+                type: 'allbooks-rejected',
+            })),
         ),
     ),
 );

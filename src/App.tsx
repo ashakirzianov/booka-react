@@ -29,7 +29,7 @@ function BookRoute({ bookId }: RouteProps) {
                 path: emptyPath(),
             },
         });
-    }, [dispatch]);
+    }, [dispatch, bookId]);
     const fragment = useAppSelector(s => s.currentFragment);
     return <BookScreenComp
         fragment={fragment}
