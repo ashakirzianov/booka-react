@@ -73,6 +73,6 @@ function replaceParams(url: string, params?: object): string {
 
 function queryToString(query?: object): string {
     return query
-        ? `?${Object.entries(query).map(([key, value]) => `${key}=${value}`).join(',')}`
+        ? `?${Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&')}`
         : '';
 }
