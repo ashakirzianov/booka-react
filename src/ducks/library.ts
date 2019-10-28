@@ -59,6 +59,7 @@ const fetchAllBooksEpic: Epic<AppAction> = (action$) => action$.pipe(
                         payload: res.value.values,
                     };
                 } else {
+                    // TODO: remove
                     throw new Error('should not happen');
                 }
             })

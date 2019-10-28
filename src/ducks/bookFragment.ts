@@ -1,5 +1,9 @@
 import { BookPositionLocator, BookFragment } from 'booka-common';
+import { Epic, combineEpics } from 'redux-observable';
+import { filter, map, mergeMap } from 'rxjs/operators';
+import { fetchBookFragment } from '../api';
 import { AppAction } from './app';
+import { ofAppType } from './utils';
 
 export type NoFragment = { state: 'no-fragment' };
 export type LoadingFragment = {
@@ -46,3 +50,30 @@ export function bookFragmentReducer(state: BookFragmentState = defaultState, act
             return state;
     }
 }
+
+const fetchBookFragmentEpic: Epic<AppAction> = (action$) => action$.pipe(
+    ofAppType('fragment-open'),
+    mergeMap(
+        action => fetchBookFragment(action.payload).pipe(
+            filter((res) => res.success),
+            map((res): AppAction => {
+                if (res.success) {
+                    return {
+                        type: 'fragment-fulfilled',
+                        payload: {
+                            location: action.payload,
+                            fragment: res.value,
+                        },
+                    };
+                } else {
+                    // TODO: remove
+                    throw new Error('should not happen');
+                }
+            })
+        ),
+    ),
+);
+
+export const bookFragmentEpic = combineEpics(
+    fetchBookFragmentEpic,
+);

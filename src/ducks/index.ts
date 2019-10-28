@@ -3,7 +3,7 @@ import { combineEpics } from 'redux-observable';
 import { AppState, AppAction } from './app';
 import { libraryReducer, libraryEpic } from './library';
 import { themeReducer } from './theme';
-import { bookFragmentReducer } from './bookFragment';
+import { bookFragmentReducer, bookFragmentEpic } from './bookFragment';
 
 export * from './app';
 
@@ -15,4 +15,5 @@ export const rootReducer = combineReducers<AppState, AppAction>({
 
 export const rootEpic = combineEpics(
     libraryEpic,
+    bookFragmentEpic,
 );
