@@ -6,6 +6,8 @@ export type AppAction =
     | LibraryAction
     | BookFragmentAction
     ;
+export type ActionForType<T extends AppAction['type']> =
+    Extract<AppAction, { type: T }>;
 
 export type AppState = {
     library: LibraryState,
