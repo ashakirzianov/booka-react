@@ -1,8 +1,9 @@
 import React from 'react';
+import { Router } from '@reach/router';
+import { emptyPath, pathFromString } from 'booka-common';
+import { parse } from 'query-string';
 import { LibraryScreenComp, BookScreenComp } from './render';
 import { ConnectedProvider, useAppDispatch, useAppSelector } from './core';
-import { Router } from '@reach/router';
-import { emptyPath } from 'booka-common';
 
 type RouteProps = {
     path: string,
@@ -18,18 +19,25 @@ function LibraryRoute(_: RouteProps) {
     return <LibraryScreenComp />;
 }
 
-function BookRoute({ bookId }: RouteProps) {
+function BookRoute({ bookId, location }: RouteProps) {
+    const query = parse(location.search);
+    const pathFromQuery = typeof query.p === 'string'
+        ? query.p
+        : undefined;
     const dispatch = useAppDispatch();
     React.useEffect(() => {
+        const path = pathFromQuery
+            ? pathFromString(pathFromQuery)
+            : undefined;
         dispatch({
             type: 'fragment-fetch',
             payload: {
                 loc: 'book-pos',
                 id: bookId,
-                path: emptyPath(),
+                path: path ? path : emptyPath(),
             },
         });
-    }, [dispatch, bookId]);
+    }, [dispatch, bookId, pathFromQuery]);
     const fragment = useAppSelector(s => s.currentFragment);
     return <BookScreenComp
         fragment={fragment}
