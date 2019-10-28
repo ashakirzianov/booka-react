@@ -4,11 +4,18 @@ import { assertNever } from 'booka-common';
 import { AppState } from '../ducks';
 import { useTheme } from '../core';
 import { BookViewComp } from './BookViewComp';
+import { WithChildren, Column, EmptyLine, point, Row } from '../atoms';
 
 export type BookScreenProps = {
     fragment: AppState['currentFragment'],
 };
-export function BookScreenComp({ fragment }: BookScreenProps) {
+export function BookScreenComp(props: BookScreenProps) {
+    return <BookScreenContainer>
+        <BookScreenContent {...props} />
+    </BookScreenContainer>;
+}
+
+function BookScreenContent({ fragment }: BookScreenProps) {
     const theme = useTheme();
     switch (fragment.state) {
         case 'no-fragment':
@@ -26,4 +33,14 @@ export function BookScreenComp({ fragment }: BookScreenProps) {
             assertNever(fragment);
             return <span>Should not happen</span>;
     }
+}
+
+function BookScreenContainer({ children }: WithChildren<{}>) {
+    return <Row fullWidth centered>
+        <Column maxWidth={point(50)} fullWidth padding={point(1)} centered>
+            <EmptyLine />
+            {children}
+            <EmptyLine />
+        </Column>
+    </Row>;
 }
