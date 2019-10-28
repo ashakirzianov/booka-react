@@ -22,7 +22,7 @@ function BookRoute({ bookId }: RouteProps) {
     const dispatch = useAppDispatch();
     React.useEffect(() => {
         dispatch({
-            type: 'fragment-open',
+            type: 'fragment-fetch',
             payload: {
                 loc: 'book-pos',
                 id: bookId,

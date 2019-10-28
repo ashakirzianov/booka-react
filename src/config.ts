@@ -7,6 +7,7 @@ function prodConfig() {
 function debugConfig(): AppConfig {
     return {
         ...prodConfig(),
+        libUrl: 'http://localhost:3141',
     };
 }
 
