@@ -2,7 +2,7 @@ import { BookDesc } from "booka-common";
 import { Epic, ofType, combineEpics } from "redux-observable";
 import { flatMap, mergeMap, filter, map } from "rxjs/operators";
 import { from } from "rxjs";
-import { fetchAllBooks } from "../data";
+import { fetchAllBooks } from "../api";
 import { AppAction } from './app';
 
 export type LibraryFetchAction = {
