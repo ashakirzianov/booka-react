@@ -9,7 +9,8 @@ import { rootReducer, rootEpic } from '../ducks';
 function configureStore() {
     const epicMiddleware = createEpicMiddleware();
     const composeEnhancers: typeof compose =
-        (globalThis.window && (globalThis.window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) // Note: support redux dev tools
+        // Note: support redux dev tools
+        (globalThis.window && (globalThis.window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__)
         || compose;
     const s = createStore(
         rootReducer,

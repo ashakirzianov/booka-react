@@ -28,7 +28,8 @@ export type BookFragmentFulfilledAction = {
 export type BookFragmentAction =
     | BookFragmentOpenAction | BookFragmentFulfilledAction;
 
-export function bookFragmentReducer(state: BookFragmentState = { state: 'no-fragment' }, action: AppAction): BookFragmentState {
+const defaultState: BookFragmentState = { state: 'no-fragment' };
+export function bookFragmentReducer(state: BookFragmentState = defaultState, action: AppAction): BookFragmentState {
     switch (action.type) {
         case 'fragment-open':
             return {

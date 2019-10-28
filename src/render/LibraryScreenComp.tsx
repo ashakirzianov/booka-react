@@ -15,7 +15,7 @@ function BookItemComp({ desc }: BookItemProps) {
             text={desc.title}
             to={`/book/${desc.id}`}
         />
-    </Column>
+    </Column>;
 }
 
 type AllBooksProps = {
@@ -28,7 +28,7 @@ function AllBooksComp({ books }: AllBooksProps) {
                 <BookItemComp key={idx} desc={desc} />
             )
         }
-    </Column>
+    </Column>;
 }
 
 export function LibraryScreenComp() {
@@ -37,5 +37,5 @@ export function LibraryScreenComp() {
         dispatch({ type: 'library-fetch' });
     }, [dispatch]);
     const books = useAppSelector(s => s.library.books);
-    return <AllBooksComp books={books} />
+    return <AllBooksComp books={books} />;
 }

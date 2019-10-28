@@ -1,0 +1,28 @@
+{
+  "extends": "tslint:recommended",
+  "rules": {
+    "arrow-parens": false,
+    "ordered-imports": false,
+    "object-literal-sort-keys": false,
+    "interface-over-type-literal": false,
+    "quotemark": [
+      true,
+      "single",
+      "avoid-escape"
+    ],
+    "semicolon": true,
+    "trailing-comma": [
+      true,
+      {
+        "multiline": {
+          "arrays": "always",
+          "objects": "always",
+          "imports": "always",
+          "exports": "always",
+          "typeLiterals": "always",
+          "functions": "ignore"
+        }
+      }
+    ]
+  }
+}

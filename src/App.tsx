@@ -29,4 +29,4 @@ export const App: React.FC = () => {
       <BookRoute path='/book/:bookId' />
     </Router>
   </ConnectedProvider>;
-}
+};

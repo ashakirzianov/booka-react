@@ -1,8 +1,9 @@
-import { BookDesc } from "booka-common";
-import { Epic, ofType, combineEpics } from "redux-observable";
-import { flatMap, mergeMap, filter, map } from "rxjs/operators";
-import { from } from "rxjs";
-import { fetchAllBooks } from "../api";
+import { BookDesc } from 'booka-common';
+import { combineEpics, Epic, ofType } from 'redux-observable';
+import { from } from 'rxjs';
+import { filter, flatMap, map, mergeMap } from 'rxjs/operators';
+
+import { fetchAllBooks } from '../api';
 import { AppAction } from './app';
 
 export type LibraryFetchAction = {
@@ -38,18 +39,18 @@ export function libraryReducer(state: LibraryState = { books: [] }, action: AppA
     }
 }
 
-const fetchLibraryEpic: Epic<AppAction> = action$ => action$.pipe(
+const fetchLibraryEpic: Epic<AppAction> = (action$) => action$.pipe(
     ofType('library-fetch'),
     flatMap(() => from<AppAction[]>([
         { type: 'allbooks-fetch' },
     ])),
 );
 
-const fetchAllBooksEpic: Epic<AppAction> = action$ => action$.pipe(
+const fetchAllBooksEpic: Epic<AppAction> = (action$) => action$.pipe(
     ofType('allbooks-fetch'),
     mergeMap(
         () => fetchAllBooks(0).pipe(
-            filter(res => res.success),
+            filter((res) => res.success),
             map((res): AppAction => {
                 if (res.success) {
                     return {

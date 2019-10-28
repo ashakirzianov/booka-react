@@ -1,4 +1,4 @@
-import { Theme } from "../atoms";
+import { Theme } from '../atoms';
 import { AppAction } from './app';
 
 export type ThemeState = Theme;

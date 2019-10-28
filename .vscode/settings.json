@@ -21,6 +21,9 @@
         "browserslist",
         "hoverable",
         "jssdk",
+        "multiline",
+        "parens",
+        "quotemark",
         "unmount",
         "xfbml"
     ]
