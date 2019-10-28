@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { AppState, AppAction } from "../model";
+import { AppState, AppAction } from "../ducks";
 import { Dispatch } from "react";
 
 export function useAppSelector<T>(selector: (state: AppState) => T) {

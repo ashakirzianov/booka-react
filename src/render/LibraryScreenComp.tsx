@@ -36,6 +36,6 @@ export function LibraryScreenComp() {
     React.useEffect(() => {
         dispatch({ type: 'library-fetch' });
     }, [dispatch]);
-    const books = useAppSelector(s => s.books);
+    const books = useAppSelector(s => s.library.books);
     return <AllBooksComp books={books} />
 }

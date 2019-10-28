@@ -1,6 +1,13 @@
 import { Theme } from "../atoms";
+import { AppAction } from './app';
 
-export const defaultTheme: Theme = {
+export type ThemeState = Theme;
+
+export function themeReducer(state: Theme = defaultTheme, action: AppAction) {
+    return state;
+}
+
+const defaultTheme: Theme = {
     palettes: {
         light: {
             colors: {
