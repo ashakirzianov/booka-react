@@ -26,6 +26,7 @@ function BookScreenContent({ fragment }: BookScreenProps) {
             return <BookViewComp
                 theme={theme}
                 fragment={fragment.fragment}
+                pathToScroll={fragment.location.path}
             />;
         case 'error':
             return <span>error: {fragment.location.id}</span>;
