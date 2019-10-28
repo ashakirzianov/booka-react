@@ -15,7 +15,6 @@ export function fetchAllBooks(page: number) {
 }
 
 export function fetchBookFragment(location: BookPositionLocator) {
-    console.log(location);
     return fetcher.get('/fragment', {
         query: {
             id: location.id,

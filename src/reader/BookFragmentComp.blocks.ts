@@ -1,5 +1,9 @@
 import {
-    BookFragment, BookPath, BookNode, assertNever, flatten, ParagraphNode, pphSpan, ListNode, TableNode, Span, AttributeName, pathLessThan, isSubpath, iterateBookFragment, samePath, BookRange, TitleNode, ImageDic, Image, isSimpleSpan, SingleSpan, isSingleSpan,
+    BookFragment, BookPath, BookNode, assertNever, flatten,
+    ParagraphNode, pphSpan, ListNode, TableNode, Span,
+    AttributeName, pathLessThan, isSubpath, iterateBookFragment,
+    samePath, BookRange, TitleNode, ImageDic, Image, isSimpleSpan,
+    SingleSpan, isSingleSpan,
 } from 'booka-common';
 import {
     RichTextBlock, AttrsRange, applyAttrsRange, RichTextFragment,
@@ -191,42 +195,39 @@ function fragmentsForSpan(span: Span, env: BuildBlocksEnv): RichTextFragment[] {
         return fragmentsForSingleSpan(span, env);
     } else {
         const ss = span as Span[];
-        return flatten(ss.map(s => fragmentsForSpan(s, env)))
+        return flatten(ss.map(s => fragmentsForSpan(s, env)));
     }
 }
 
 function fragmentsForSingleSpan(span: SingleSpan, env: BuildBlocksEnv): RichTextFragment[] {
     switch (span.span) {
-        case 'ref':
-            {
-                const inside = fragmentsForSpan(span.content, env);
-                const range: AttrsRange = span.refToId
-                    ? {
-                        attrs: {
-                            ref: span.refToId,
-                            color: env.refColor,
-                        },
-                        start: 0,
-                    }
-                    : { attrs: {}, start: 0 };
-                const result = applyAttrsRange(inside, range);
-                return result;
-            }
-        case 'bold': case 'italic': case 'big': case 'small':
-        case 'sub': case 'sup': case 'quote':
-            {
-                const inside = fragmentsForSpan(span.content, env);
-                const range: AttrsRange = {
-                    attrs: convertAttr(span.span),
+        case 'ref': {
+            const inside = fragmentsForSpan(span.content, env);
+            const range: AttrsRange = span.refToId
+                ? {
+                    attrs: {
+                        ref: span.refToId,
+                        color: env.refColor,
+                    },
                     start: 0,
-                };
-                const result = applyAttrsRange(inside, range);
-                return result;
-            }
-        case 'ruby': case 'plain':
-            {
-                return fragmentsForSpan(span.content, env);
-            }
+                }
+                : { attrs: {}, start: 0 };
+            const result = applyAttrsRange(inside, range);
+            return result;
+        }
+        case 'bold': case 'italic': case 'big': case 'small':
+        case 'sub': case 'sup': case 'quote': {
+            const inside = fragmentsForSpan(span.content, env);
+            const range: AttrsRange = {
+                attrs: convertAttr(span.span),
+                start: 0,
+            };
+            const result = applyAttrsRange(inside, range);
+            return result;
+        }
+        case 'ruby': case 'plain': {
+            return fragmentsForSpan(span.content, env);
+        }
         case 'image':
             return fragmentsForImage(span.image, env);
         case undefined:
@@ -242,8 +243,6 @@ function fragmentsForSingleSpan(span: SingleSpan, env: BuildBlocksEnv): RichText
 }
 
 function fragmentsForImage(image: Image, env: BuildBlocksEnv): RichTextFragment[] {
-    console.log('HERE');
-    console.log(image.imageId);
     if (image.image === 'ref') {
         const resolved = env.images[image.imageId];
         image = resolved !== undefined
@@ -282,7 +281,11 @@ function convertAttr(an: AttributeName): RichTextAttrs {
     }
 }
 
-function colorizeFragments(fragments: RichTextFragment[], colorization: ColorizedRange[], path: BookPath): RichTextFragment[] {
+function colorizeFragments(
+    fragments: RichTextFragment[],
+    colorization: ColorizedRange[],
+    path: BookPath,
+): RichTextFragment[] {
     for (const col of colorization) {
         const relative = colorizationRelativeToPath(path, col);
         if (relative) {
@@ -320,7 +323,7 @@ function colorizationRelativeToPath(path: BookPath, colorized: ColorizedRange): 
 function imageSrcFromBase64(base64: string): string {
     const buffer = Buffer.from(base64, 'base64');
     const arrayBufferView = new Uint8Array(buffer);
-    const blob = new Blob([arrayBufferView], { type: "image/jpg" });
+    const blob = new Blob([arrayBufferView], { type: 'image/jpg' });
     const urlCreator = window.URL || window.webkitURL;
     const imageUrl = urlCreator.createObjectURL(blob);
     return imageUrl;

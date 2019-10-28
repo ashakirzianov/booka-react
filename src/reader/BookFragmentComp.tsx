@@ -16,12 +16,12 @@ export type BookSelection = {
 };
 export type BookFragmentProps = {
     fragment: BookFragment,
-    colorization?: ColorizedRange[],
     color: Color,
     refColor: Color,
     refHoverColor: Color,
     fontSize: number,
     fontFamily: string,
+    colorization?: ColorizedRange[],
     pathToScroll?: BookPath,
     onScroll?: (path: BookPath) => void,
     onSelectionChange?: (selection: BookSelection | undefined) => void,
