@@ -23,31 +23,31 @@ export type FragmentReady = {
 export type BookFragmentState =
     | NoFragment | ErrorFragment | LoadingFragment | FragmentReady;
 
-export type BookFragmentOpenAction = {
-    type: 'fragment-open',
+export type FetchFragmentAction = {
+    type: 'fragment-fetch',
     payload: BookPositionLocator,
 };
-export type BookFragmentFulfilledAction = {
+export type FetchFragmentFulfilledAction = {
     type: 'fragment-fulfilled',
     payload: {
         location: BookPositionLocator,
         fragment: BookFragment,
     },
 };
-export type BookFragmentRejectedAction = {
+export type FetchFragmentRejectedAction = {
     type: 'fragment-rejected',
     payload: BookPositionLocator,
 };
 export type BookFragmentAction =
-    | BookFragmentOpenAction
-    | BookFragmentFulfilledAction
-    | BookFragmentRejectedAction
+    | FetchFragmentAction
+    | FetchFragmentFulfilledAction
+    | FetchFragmentRejectedAction
     ;
 
 const defaultState: BookFragmentState = { state: 'no-fragment' };
 export function bookFragmentReducer(state: BookFragmentState = defaultState, action: AppAction): BookFragmentState {
     switch (action.type) {
-        case 'fragment-open':
+        case 'fragment-fetch':
             return {
                 state: 'loading',
                 location: action.payload,
@@ -69,7 +69,7 @@ export function bookFragmentReducer(state: BookFragmentState = defaultState, act
 }
 
 const fetchBookFragmentEpic: Epic<AppAction> = (action$) => action$.pipe(
-    ofAppType('fragment-open'),
+    ofAppType('fragment-fetch'),
     mergeMap(
         action => fetchBookFragment(action.payload).pipe(
             map((res): AppAction => {
@@ -81,7 +81,7 @@ const fetchBookFragmentEpic: Epic<AppAction> = (action$) => action$.pipe(
                     },
                 };
             }),
-            catchError((err) => of<AppAction>({
+            catchError(() => of<AppAction>({
                 type: 'fragment-rejected',
                 payload: action.payload,
             })),
