@@ -12,8 +12,9 @@ type BookStateBase = {
     id: string,
     path: BookPath,
     quote?: BookRange,
+    needToScroll?: boolean,
 };
-export type BookEmptyState = { state: 'empty' };
+export type BookEmptyState = { state: 'empty' } & Partial<BookStateBase>;
 export type BookErrorState = BookStateBase & {
     state: 'error',
 };
@@ -57,11 +58,15 @@ export type SetQuoteRangeAction = {
     type: 'book-set-quote',
     payload: BookRange | undefined,
 };
+export type UpdateCurrentPathAction = {
+    type: 'book-update-path',
+    payload: BookPath,
+};
 export type BookFragmentAction =
     | BookOpenAction
     | BookFetchFulfilledAction
     | BookFetchRejectedAction
-    | SetQuoteRangeAction
+    | SetQuoteRangeAction | UpdateCurrentPathAction
     ;
 
 const defaultState: BookState = { state: 'empty' };
@@ -81,6 +86,7 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
                 path: action.payload.path,
                 fragment: action.payload.fragment,
                 quote: action.payload.quote,
+                needToScroll: true,
             };
         case 'book-fetch-rejected':
             return {
@@ -89,12 +95,16 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
                 path: action.payload.path,
             };
         case 'book-set-quote':
-            return state.state === 'ready'
-                ? {
-                    ...state,
-                    quote: action.payload,
-                }
-                : state;
+            return {
+                ...state,
+                quote: action.payload,
+            };
+        case 'book-update-path':
+            return {
+                ...state,
+                path: action.payload,
+                needToScroll: false,
+            };
         default:
             return state;
     }
