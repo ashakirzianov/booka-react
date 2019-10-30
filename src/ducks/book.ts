@@ -8,25 +8,25 @@ import { fetchBookFragment } from '../api';
 import { AppAction } from './app';
 import { ofAppType } from './utils';
 
-type BookScreenStateBase = {
+type BookStateBase = {
     id: string,
     path: BookPath,
     quote?: BookRange,
 };
-export type BookScreenEmptyState = { state: 'empty' };
-export type BookScreenErrorState = BookScreenStateBase & {
+export type BookEmptyState = { state: 'empty' };
+export type BookErrorState = BookStateBase & {
     state: 'error',
 };
-export type BookScreenLoadingState = BookScreenStateBase & {
+export type BookLoadingState = BookStateBase & {
     state: 'loading',
 };
-export type BookScreenReadyState = BookScreenStateBase & {
+export type BookReadyState = BookStateBase & {
     state: 'ready',
     fragment: BookFragment,
 };
-export type BookScreenState =
-    | BookScreenEmptyState | BookScreenErrorState
-    | BookScreenLoadingState | BookScreenReadyState
+export type BookState =
+    | BookEmptyState | BookErrorState
+    | BookLoadingState | BookReadyState
     ;
 
 export type OpenFragmentAction = {
@@ -64,8 +64,8 @@ export type BookFragmentAction =
     | SetQuoteRangeAction
     ;
 
-const defaultState: BookScreenState = { state: 'empty' };
-export function bookScreenReducer(state: BookScreenState = defaultState, action: AppAction): BookScreenState {
+const defaultState: BookState = { state: 'empty' };
+export function bookReducer(state: BookState = defaultState, action: AppAction): BookState {
     switch (action.type) {
         case 'fragment-open':
             return {

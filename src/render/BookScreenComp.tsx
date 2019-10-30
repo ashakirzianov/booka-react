@@ -3,7 +3,7 @@ import {
     assertNever, BookRange, positionForPath,
 } from 'booka-common';
 
-import { BookScreenState } from '../ducks';
+import { BookState } from '../ducks';
 import { updateCurrentPath, useAppDispatch } from '../core';
 import { BookViewComp } from './BookViewComp';
 import {
@@ -14,7 +14,7 @@ import {
 } from '../atoms';
 
 export type BookScreenProps = Themed & {
-    screen: BookScreenState,
+    screen: BookState,
     setQuoteRange: Callback<BookRange | undefined>,
     toggleControls: Callback,
     controlsVisible: boolean,
@@ -203,7 +203,7 @@ function SelectPaletteButton({ theme, text, name, setPalette }: PaletteButtonPro
 }
 
 type BookScreenFooterProps = Themed & {
-    screen: BookScreenState,
+    screen: BookState,
     visible: boolean,
 };
 function BookScreenFooter({

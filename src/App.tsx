@@ -45,7 +45,7 @@ function BookRoute({ bookId, location }: RouteProps) {
             },
         });
     }, [dispatch, bookId, pathString, quoteString]);
-    const bookScreen = useAppSelector(s => s.bookScreen);
+    const bookScreen = useAppSelector(s => s.book);
 
     const setQuoteRange = React.useCallback((range: BookRange | undefined) => {
         dispatch({
