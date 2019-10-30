@@ -6,6 +6,7 @@ import { LibraryScreenComp, BookScreenComp } from './render';
 import {
     ConnectedProvider, useAppDispatch, useAppSelector, updateQuote,
 } from './core';
+import { whileDebug } from './config';
 
 type RouteProps = {
     path: string,
@@ -73,3 +74,8 @@ export const App: React.FC = () => {
         </Router>
     </ConnectedProvider>;
 };
+
+whileDebug(async () => {
+    const { default: why } = await import('@welldone-software/why-did-you-render');
+    why(React);
+});

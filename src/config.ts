@@ -17,8 +17,17 @@ function debugConfig(): AppConfig {
 }
 
 export function config() {
-    return process.env.NODE_ENV === 'development'
+    return isDebug()
         ? debugConfig()
         : prodConfig();
 }
+export function whileDebug(callback: () => void) {
+    if (isDebug()) {
+        callback();
+    }
+}
 export type AppConfig = ReturnType<typeof prodConfig>;
+
+function isDebug() {
+    return process.env.NODE_ENV === 'development';
+}
