@@ -7,7 +7,7 @@ import { BookViewComp } from './BookViewComp';
 import {
     WithChildren, Column, point, Row, Callback, Themed,
     Triad, IconButton, TopBar, EmptyLine, Clickable,
-    PaletteName, PaletteButton, TextButton, Separator, WithPopover,
+    PaletteName, PaletteButton, TextButton, Separator, WithPopover, colors,
 } from '../atoms';
 
 export type BookScreenProps = Themed & {
@@ -65,7 +65,9 @@ function BookScreenContainer({
             theme={theme}
             visible={visible}
         />
-        <Row fullWidth centered>
+        <Row fullWidth centered
+            backgroundColor={colors(theme).primary}
+        >
             <Clickable onClick={toggleControls}>
                 <Column maxWidth={point(50)} fullWidth padding={point(1)} centered>
                     <EmptyLine />

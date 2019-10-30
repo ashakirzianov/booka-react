@@ -15,6 +15,7 @@ export type LayoutProps = WithChildren<{
     margin?: Size,
     padding?: Size,
     borderColor?: string,
+    backgroundColor?: string,
 }>;
 
 function buildStyle(props: LayoutProps): ViewStyle | undefined {
@@ -36,6 +37,7 @@ function buildStyle(props: LayoutProps): ViewStyle | undefined {
             borderStyle: 'solid',
             borderWidth: 2,
         }),
+        backgroundColor: props.backgroundColor,
     };
 }
 
