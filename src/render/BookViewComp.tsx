@@ -7,8 +7,9 @@ import {
     Themed, colors, fontSize, Row, BorderButton, point,
     EmptyLine, Callback,
 } from '../atoms';
-import { BookFragmentComp } from '../reader';
-import { linkForLocation } from './common';
+import { BookFragmentComp, BookSelection } from '../reader';
+import { linkForLocation, generateQuoteLink } from './common';
+import { useCopy } from '../core';
 
 export type BookViewCompProps = Themed & {
     bookId: string,
@@ -22,6 +23,18 @@ export function BookViewComp({
     bookId, fragment, theme,
     pathToScroll, updateBookPosition,
 }: BookViewCompProps) {
+    const selection = React.useRef<BookSelection | undefined>(undefined);
+    const selectionHandler = React.useCallback((sel: BookSelection | undefined) => {
+        selection.current = sel;
+    }, []);
+    useCopy(React.useCallback((e: ClipboardEvent) => {
+        if (selection.current && e.clipboardData) {
+            e.preventDefault();
+            const selectionText = `${selection.current.text}\n${generateQuoteLink(bookId, selection.current.range)}`;
+            e.clipboardData.setData('text/plain', selectionText);
+        }
+    }, [bookId]));
+
     return <>
         <EmptyLine />
         {
@@ -41,6 +54,7 @@ export function BookViewComp({
             fontFamily={theme.fontFamilies.book}
             pathToScroll={pathToScroll || undefined}
             onScroll={updateBookPosition}
+            onSelectionChange={selectionHandler}
         />
         {
             fragment.next === undefined ? null :
