@@ -2,7 +2,10 @@ import * as React from 'react';
 
 import {
     Color, Path,
-    RichTextFragment, RichTextBlock, RichTextSelection, RichTextSimpleFragment, RichTextImageFragment, RichTextListFragment, RichTextTableFragment, RichTextLineFragment,
+    RichTextBlock, RichTextSelection,
+    RichTextFragment, RichTextSimpleFragment,
+    RichTextImageFragment, RichTextListFragment, RichTextTableFragment,
+    RichTextLineFragment,
 } from './model';
 import {
     fragmentLength, makePathMap, PathMap, assertNever,
@@ -60,9 +63,9 @@ export function RichText({
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'stretch',
-            color: color,
-            fontSize: fontSize,
-            fontFamily: fontFamily,
+            color,
+            fontSize,
+            fontFamily,
         }}>
         {blocks.map(
             (block, idx) =>
@@ -125,10 +128,12 @@ function buildFragments({
     let currentOffset = offset;
     for (let idx = 0; idx < fragments.length; idx++) {
         const frag = fragments[idx];
-        const offset = currentOffset;
         children.push(<RichTextFragmentComp
             key={idx}
-            path={{ ...path, symbol: offset }}
+            path={{
+                ...path,
+                symbol: currentOffset,
+            }}
             fragment={frag}
             refCallback={refCallback}
             onRefClick={onRefClick}
@@ -263,7 +268,7 @@ function RichTextTableFragmentComp({
     let currentOffset = 0;
     for (let rowIdx = 0; rowIdx < rows.length; rowIdx++) {
         const row = rows[rowIdx];
-        const tds: JSX.Element[] = []
+        const tds: JSX.Element[] = [];
         for (let cellIdx = 0; cellIdx < row.length; cellIdx++) {
             const cell = row[cellIdx];
             const { fragments, offset } = buildFragments({
@@ -284,7 +289,7 @@ function RichTextTableFragmentComp({
         border: '1px solid',
     }}>
         <tbody>{trs}</tbody>
-    </table>
+    </table>;
 }
 
 function RichTextLineFragmentComp({
