@@ -29,16 +29,16 @@ export type BookState =
     | BookLoadingState | BookReadyState
     ;
 
-export type OpenFragmentAction = {
-    type: 'fragment-open',
+export type BookOpenAction = {
+    type: 'book-open',
     payload: {
         id: string,
         path: BookPath,
         quote?: BookRange,
     },
 };
-export type FetchFragmentFulfilledAction = {
-    type: 'fragment-fulfilled',
+export type BookFetchFulfilledAction = {
+    type: 'book-fetch-fulfilled',
     payload: {
         id: string,
         path: BookPath,
@@ -46,35 +46,35 @@ export type FetchFragmentFulfilledAction = {
         quote?: BookRange,
     },
 };
-export type FetchFragmentRejectedAction = {
-    type: 'fragment-rejected',
+export type BookFetchRejectedAction = {
+    type: 'book-fetch-rejected',
     payload: {
         id: string,
         path: BookPath,
     },
 };
 export type SetQuoteRangeAction = {
-    type: 'fragment-set-quote',
+    type: 'book-set-quote',
     payload: BookRange | undefined,
 };
 export type BookFragmentAction =
-    | OpenFragmentAction
-    | FetchFragmentFulfilledAction
-    | FetchFragmentRejectedAction
+    | BookOpenAction
+    | BookFetchFulfilledAction
+    | BookFetchRejectedAction
     | SetQuoteRangeAction
     ;
 
 const defaultState: BookState = { state: 'empty' };
 export function bookReducer(state: BookState = defaultState, action: AppAction): BookState {
     switch (action.type) {
-        case 'fragment-open':
+        case 'book-open':
             return {
                 state: 'loading',
                 id: action.payload.id,
                 path: action.payload.path,
                 quote: action.payload.quote,
             };
-        case 'fragment-fulfilled':
+        case 'book-fetch-fulfilled':
             return {
                 state: 'ready',
                 id: action.payload.id,
@@ -82,13 +82,13 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
                 fragment: action.payload.fragment,
                 quote: action.payload.quote,
             };
-        case 'fragment-rejected':
+        case 'book-fetch-rejected':
             return {
                 state: 'error',
                 id: action.payload.id,
                 path: action.payload.path,
             };
-        case 'fragment-set-quote':
+        case 'book-set-quote':
             return state.state === 'ready'
                 ? {
                     ...state,
@@ -101,12 +101,12 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
 }
 
 const fetchBookFragmentEpic: Epic<AppAction> = (action$) => action$.pipe(
-    ofAppType('fragment-open'),
+    ofAppType('book-open'),
     mergeMap(
         action => fetchBookFragment(pathLocator(action.payload.id, action.payload.path)).pipe(
             map((res): AppAction => {
                 return {
-                    type: 'fragment-fulfilled',
+                    type: 'book-fetch-fulfilled',
                     payload: {
                         id: action.payload.id,
                         path: action.payload.path,
@@ -116,7 +116,7 @@ const fetchBookFragmentEpic: Epic<AppAction> = (action$) => action$.pipe(
                 };
             }),
             catchError(() => of<AppAction>({
-                type: 'fragment-rejected',
+                type: 'book-fetch-rejected',
                 payload: {
                     id: action.payload.id,
                     path: action.payload.path,

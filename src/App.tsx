@@ -1,7 +1,9 @@
 import React from 'react';
 import { Router, HistoryLocation } from '@reach/router';
-import { emptyPath, pathFromString, rangeFromString, BookRange } from 'booka-common';
 import { parse } from 'query-string';
+import {
+    emptyPath, pathFromString, rangeFromString, BookRange,
+} from 'booka-common';
 import { LibraryScreenComp, BookScreenComp } from './render';
 import {
     ConnectedProvider, useAppDispatch, useAppSelector, updateQuote, useTheme,
@@ -17,7 +19,7 @@ type RouteProps = {
 function LibraryRoute(_: RouteProps) {
     const dispatch = useAppDispatch();
     React.useEffect(() => {
-        dispatch({ type: 'library-fetch' });
+        dispatch({ type: 'library-open' });
     }, [dispatch]);
 
     return <LibraryScreenComp />;
@@ -36,7 +38,7 @@ function BookRoute({ bookId, location }: RouteProps) {
             ? rangeFromString(quoteString)
             : undefined;
         dispatch({
-            type: 'fragment-open',
+            type: 'book-open',
             payload: {
                 id: bookId,
                 // TODO: handle quote range navigation somewhere else
@@ -49,7 +51,7 @@ function BookRoute({ bookId, location }: RouteProps) {
 
     const setQuoteRange = React.useCallback((range: BookRange | undefined) => {
         dispatch({
-            type: 'fragment-set-quote',
+            type: 'book-set-quote',
             payload: range,
         });
         updateQuote(range);

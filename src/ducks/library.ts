@@ -7,8 +7,8 @@ import { fetchAllBooks } from '../api';
 import { AppAction } from './app';
 import { ofAppType } from './utils';
 
-export type LibraryFetchAction = {
-    type: 'library-fetch',
+export type LibraryOpenAction = {
+    type: 'library-open',
 };
 export type AllBooksFetchAction = {
     type: 'allbooks-fetch',
@@ -25,7 +25,7 @@ export type AllBooksRejectedAction = {
 };
 
 export type LibraryAction =
-    | LibraryFetchAction
+    | LibraryOpenAction
     | AllBooksFetchAction | AllBooksFulfilledAction | AllBooksRejectedAction
     ;
 
@@ -43,7 +43,7 @@ export function libraryReducer(state: LibraryState = { books: [] }, action: AppA
 }
 
 const fetchLibraryEpic: Epic<AppAction> = (action$) => action$.pipe(
-    ofAppType('library-fetch'),
+    ofAppType('library-open'),
     flatMap(() => from<AppAction[]>([
         { type: 'allbooks-fetch' },
     ])),
