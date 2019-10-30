@@ -1,5 +1,4 @@
 import React from 'react';
-import { Router, HistoryLocation } from '@reach/router';
 import { parse } from 'query-string';
 import {
     emptyPath, pathFromString, rangeFromString, BookRange,
@@ -9,12 +8,7 @@ import {
     ConnectedProvider, useAppDispatch, useAppSelector, updateQuote, useTheme,
 } from './core';
 import { whileDebug } from './config';
-
-type RouteProps = {
-    path: string,
-    location?: HistoryLocation,
-    [k: string]: any,
-};
+import { RouteProps, Router } from './atoms';
 
 function LibraryRoute(_: RouteProps) {
     const dispatch = useAppDispatch();

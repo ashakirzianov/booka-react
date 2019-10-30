@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { WithChildren, Callback } from './common';
-import { Link } from '@reach/router';
+import { Link } from './Router';
 
 export type LinkOrButtonProps = WithChildren<{
     style?: React.CSSProperties,
