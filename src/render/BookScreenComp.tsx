@@ -3,7 +3,7 @@ import {
     assertNever, BookRange, positionForPath,
 } from 'booka-common';
 
-import { AppState } from '../ducks';
+import { BookScreenState } from '../ducks';
 import { updateCurrentPath, useAppDispatch } from '../core';
 import { BookViewComp } from './BookViewComp';
 import {
@@ -14,62 +14,53 @@ import {
 } from '../atoms';
 
 export type BookScreenProps = Themed & {
-    fragment: AppState['currentFragment'],
+    screen: BookScreenState,
     setQuoteRange: Callback<BookRange | undefined>,
     toggleControls: Callback,
     controlsVisible: boolean,
 };
 export function BookScreenComp(props: BookScreenProps) {
-    return <BookScreenContainer
-        theme={props.theme}
-        fragment={props.fragment}
-        visible={props.controlsVisible}
-        toggleControls={props.toggleControls}
-    >
+    return <BookScreenContainer {...props} >
         <BookScreenContent {...props} />
     </BookScreenContainer>;
 }
 
 function BookScreenContent({
-    fragment, setQuoteRange, theme,
+    screen, setQuoteRange, theme,
 }: BookScreenProps) {
-    switch (fragment.state) {
-        case 'no-fragment':
+    switch (screen.state) {
+        case 'empty':
             return <span>No fragment set</span>;
         case 'loading':
-            return <span>loading: {fragment.location.id}</span>;
+            return <span>loading: {screen.id}</span>;
         case 'ready':
             return <BookViewComp
-                bookId={fragment.location.id}
+                bookId={screen.id}
                 theme={theme}
-                fragment={fragment.fragment}
-                pathToScroll={fragment.location.path}
+                fragment={screen.fragment}
+                pathToScroll={screen.path}
                 // TODO: abstract updateCurrentPath ?
                 updateBookPosition={updateCurrentPath}
-                quoteRange={fragment.quote}
+                quoteRange={screen.quote}
                 setQuoteRange={setQuoteRange}
             />;
         case 'error':
-            return <span>error: {fragment.location.id}</span>;
+            return <span>error: {screen.id}</span>;
         default:
-            assertNever(fragment);
+            assertNever(screen);
             return <span>Should not happen</span>;
     }
 }
 
-type BookScreenContainerProps = WithChildren<Themed & {
-    visible: boolean,
-    toggleControls: Callback,
-    fragment: AppState['currentFragment'],
-}>;
+type BookScreenContainerProps = WithChildren<BookScreenProps>;
 function BookScreenContainer({
-    theme, visible, toggleControls, children,
-    fragment,
+    theme, controlsVisible, toggleControls, children,
+    screen,
 }: BookScreenContainerProps) {
     return <>
         <BookScreenHeader
             theme={theme}
-            visible={visible}
+            visible={controlsVisible}
         />
         <Row fullWidth centered
             backgroundColor={colors(theme).primary}
@@ -84,8 +75,8 @@ function BookScreenContainer({
         </Row>
         <BookScreenFooter
             theme={theme}
-            fragment={fragment}
-            visible={visible}
+            screen={screen}
+            visible={controlsVisible}
         />
     </>;
 }
@@ -212,15 +203,15 @@ function SelectPaletteButton({ theme, text, name, setPalette }: PaletteButtonPro
 }
 
 type BookScreenFooterProps = Themed & {
-    fragment: AppState['currentFragment'],
+    screen: BookScreenState,
     visible: boolean,
 };
 function BookScreenFooter({
-    fragment: fragmentState, theme, visible,
+    screen, theme, visible,
 }: BookScreenFooterProps) {
-    if (fragmentState.state === 'ready') {
-        const fragment = fragmentState.fragment;
-        const path = fragmentState.location.path;
+    if (screen.state === 'ready') {
+        const fragment = screen.fragment;
+        const path = screen.path;
         // const total: number | undefined = undefined; // TODO: implement
         const currentPage = fragment
             ? pageForPosition(positionForPath(fragment, path))

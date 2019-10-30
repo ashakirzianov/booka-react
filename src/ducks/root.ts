@@ -3,13 +3,13 @@ import { combineEpics } from 'redux-observable';
 import { AppState, AppAction } from './app';
 import { libraryReducer, libraryEpic } from './library';
 import { themeReducer } from './theme';
-import { bookFragmentReducer, bookFragmentEpic } from './bookFragment';
+import { bookScreenReducer, bookFragmentEpic } from './bookScreen';
 import { controlsVisibilityReducer } from './controlsVisibility';
 
 export const rootReducer = combineReducers<AppState, AppAction>({
     library: libraryReducer,
     theme: themeReducer,
-    currentFragment: bookFragmentReducer,
+    bookScreen: bookScreenReducer,
     controlsVisibility: controlsVisibilityReducer,
 });
 

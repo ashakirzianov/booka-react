@@ -38,16 +38,14 @@ function BookRoute({ bookId, location }: RouteProps) {
         dispatch({
             type: 'fragment-open',
             payload: {
-                location: {
-                    loc: 'book-pos',
-                    id: bookId,
-                    path: path || (quoteRange && quoteRange.start) || emptyPath(),
-                },
+                id: bookId,
+                // TODO: handle quote range navigation somewhere else
+                path: path || (quoteRange && quoteRange.start) || emptyPath(),
                 quote: quoteRange,
             },
         });
     }, [dispatch, bookId, pathString, quoteString]);
-    const fragment = useAppSelector(s => s.currentFragment);
+    const bookScreen = useAppSelector(s => s.bookScreen);
 
     const setQuoteRange = React.useCallback((range: BookRange | undefined) => {
         dispatch({
@@ -67,7 +65,7 @@ function BookRoute({ bookId, location }: RouteProps) {
     }, [dispatch]);
     return <BookScreenComp
         theme={theme}
-        fragment={fragment}
+        screen={bookScreen}
         controlsVisible={controlsVisible}
         setQuoteRange={setQuoteRange}
         toggleControls={toggleControls}

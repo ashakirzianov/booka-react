@@ -1,48 +1,57 @@
 import { of } from 'rxjs';
 import { map, mergeMap, catchError } from 'rxjs/operators';
 import { Epic, combineEpics } from 'redux-observable';
-import { BookPositionLocator, BookFragment, BookRange } from 'booka-common';
+import {
+    BookFragment, BookRange, BookPath, pathLocator,
+} from 'booka-common';
 import { fetchBookFragment } from '../api';
 import { AppAction } from './app';
 import { ofAppType } from './utils';
 
-export type NoFragment = { state: 'no-fragment' };
-export type ErrorFragment = {
+type BookScreenStateBase = {
+    id: string,
+    path: BookPath,
+    quote?: BookRange,
+};
+export type BookScreenEmptyState = { state: 'empty' };
+export type BookScreenErrorState = BookScreenStateBase & {
     state: 'error',
-    location: BookPositionLocator,
 };
-export type LoadingFragment = {
+export type BookScreenLoadingState = BookScreenStateBase & {
     state: 'loading',
-    location: BookPositionLocator,
-    quote?: BookRange,
 };
-export type FragmentReady = {
+export type BookScreenReadyState = BookScreenStateBase & {
     state: 'ready',
-    location: BookPositionLocator,
-    quote?: BookRange,
     fragment: BookFragment,
 };
-export type BookFragmentState =
-    | NoFragment | ErrorFragment | LoadingFragment | FragmentReady;
+export type BookScreenState =
+    | BookScreenEmptyState | BookScreenErrorState
+    | BookScreenLoadingState | BookScreenReadyState
+    ;
 
 export type OpenFragmentAction = {
     type: 'fragment-open',
     payload: {
-        location: BookPositionLocator,
+        id: string,
+        path: BookPath,
         quote?: BookRange,
     },
 };
 export type FetchFragmentFulfilledAction = {
     type: 'fragment-fulfilled',
     payload: {
-        location: BookPositionLocator,
+        id: string,
+        path: BookPath,
         fragment: BookFragment,
         quote?: BookRange,
     },
 };
 export type FetchFragmentRejectedAction = {
     type: 'fragment-rejected',
-    payload: BookPositionLocator,
+    payload: {
+        id: string,
+        path: BookPath,
+    },
 };
 export type SetQuoteRangeAction = {
     type: 'fragment-set-quote',
@@ -55,26 +64,29 @@ export type BookFragmentAction =
     | SetQuoteRangeAction
     ;
 
-const defaultState: BookFragmentState = { state: 'no-fragment' };
-export function bookFragmentReducer(state: BookFragmentState = defaultState, action: AppAction): BookFragmentState {
+const defaultState: BookScreenState = { state: 'empty' };
+export function bookScreenReducer(state: BookScreenState = defaultState, action: AppAction): BookScreenState {
     switch (action.type) {
         case 'fragment-open':
             return {
                 state: 'loading',
-                location: action.payload.location,
+                id: action.payload.id,
+                path: action.payload.path,
                 quote: action.payload.quote,
             };
         case 'fragment-fulfilled':
             return {
                 state: 'ready',
-                location: action.payload.location,
+                id: action.payload.id,
+                path: action.payload.path,
                 fragment: action.payload.fragment,
                 quote: action.payload.quote,
             };
         case 'fragment-rejected':
             return {
                 state: 'error',
-                location: action.payload,
+                id: action.payload.id,
+                path: action.payload.path,
             };
         case 'fragment-set-quote':
             return state.state === 'ready'
@@ -91,12 +103,13 @@ export function bookFragmentReducer(state: BookFragmentState = defaultState, act
 const fetchBookFragmentEpic: Epic<AppAction> = (action$) => action$.pipe(
     ofAppType('fragment-open'),
     mergeMap(
-        action => fetchBookFragment(action.payload.location).pipe(
+        action => fetchBookFragment(pathLocator(action.payload.id, action.payload.path)).pipe(
             map((res): AppAction => {
                 return {
                     type: 'fragment-fulfilled',
                     payload: {
-                        location: action.payload.location,
+                        id: action.payload.id,
+                        path: action.payload.path,
                         quote: action.payload.quote,
                         fragment: res.value,
                     },
@@ -104,7 +117,10 @@ const fetchBookFragmentEpic: Epic<AppAction> = (action$) => action$.pipe(
             }),
             catchError(() => of<AppAction>({
                 type: 'fragment-rejected',
-                payload: action.payload.location,
+                payload: {
+                    id: action.payload.id,
+                    path: action.payload.path,
+                },
             })),
         ),
     ),

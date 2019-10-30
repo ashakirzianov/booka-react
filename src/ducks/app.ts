@@ -1,6 +1,6 @@
 import { LibraryState, LibraryAction } from './library';
 import { ThemeState, ThemeAction } from './theme';
-import { BookFragmentAction, BookFragmentState } from './bookFragment';
+import { BookFragmentAction, BookScreenState } from './bookScreen';
 import { ControlsVisibilityAction, ControlsVisibilityState } from './controlsVisibility';
 
 export type AppAction =
@@ -15,6 +15,6 @@ export type ActionForType<T extends AppAction['type']> =
 export type AppState = {
     library: LibraryState,
     theme: ThemeState,
-    currentFragment: BookFragmentState,
+    bookScreen: BookScreenState,
     controlsVisibility: ControlsVisibilityState,
 };
