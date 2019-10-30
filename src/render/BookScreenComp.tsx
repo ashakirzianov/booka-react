@@ -1,5 +1,5 @@
 import React from 'react';
-import { assertNever } from 'booka-common';
+import { assertNever, BookRange } from 'booka-common';
 
 import { AppState } from '../ducks';
 import { useTheme, updateCurrentPath } from '../core';
@@ -8,6 +8,7 @@ import { WithChildren, Column, point, Row } from '../atoms';
 
 export type BookScreenProps = {
     fragment: AppState['currentFragment'],
+    quoteRange: BookRange | undefined,
 };
 export function BookScreenComp(props: BookScreenProps) {
     return <BookScreenContainer>
@@ -15,7 +16,7 @@ export function BookScreenComp(props: BookScreenProps) {
     </BookScreenContainer>;
 }
 
-function BookScreenContent({ fragment }: BookScreenProps) {
+function BookScreenContent({ fragment, quoteRange }: BookScreenProps) {
     const theme = useTheme();
     switch (fragment.state) {
         case 'no-fragment':
@@ -29,6 +30,7 @@ function BookScreenContent({ fragment }: BookScreenProps) {
                 fragment={fragment.fragment}
                 pathToScroll={fragment.location.path}
                 updateBookPosition={updateCurrentPath}
+                quoteRange={quoteRange}
             />;
         case 'error':
             return <span>error: {fragment.location.id}</span>;

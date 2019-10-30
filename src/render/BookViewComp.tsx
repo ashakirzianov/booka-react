@@ -1,11 +1,11 @@
 import React from 'react';
 import {
-    BookFragment, BookPath, BookPositionLocator, pathLocator,
+    BookFragment, BookPath, BookPositionLocator, pathLocator, BookRange,
 } from 'booka-common';
 
 import {
     Themed, colors, fontSize, Row, BorderButton, point,
-    EmptyLine, Callback,
+    EmptyLine, Callback, highlights,
 } from '../atoms';
 import { BookFragmentComp, BookSelection } from '../reader';
 import { linkForLocation, generateQuoteLink } from './common';
@@ -16,12 +16,13 @@ export type BookViewCompProps = Themed & {
     fragment: BookFragment,
     pathToScroll: BookPath | null,
     updateBookPosition: Callback<BookPath>,
-    // quoteRange: BookRange | undefined,
+    quoteRange: BookRange | undefined,
     // openFootnote: Callback<string>,
 };
 export function BookViewComp({
     bookId, fragment, theme,
     pathToScroll, updateBookPosition,
+    quoteRange,
 }: BookViewCompProps) {
     const selection = React.useRef<BookSelection | undefined>(undefined);
     const selectionHandler = React.useCallback((sel: BookSelection | undefined) => {
@@ -34,6 +35,13 @@ export function BookViewComp({
             e.clipboardData.setData('text/plain', selectionText);
         }
     }, [bookId]));
+
+    const colorization = quoteRange
+        ? [{
+            color: highlights(theme).quote,
+            range: quoteRange,
+        }]
+        : [];
 
     return <>
         <EmptyLine />
@@ -52,6 +60,7 @@ export function BookViewComp({
             refHoverColor={colors(theme).highlight}
             fontSize={fontSize(theme, 'text')}
             fontFamily={theme.fontFamilies.book}
+            colorization={colorization}
             pathToScroll={pathToScroll || undefined}
             onScroll={updateBookPosition}
             onSelectionChange={selectionHandler}
