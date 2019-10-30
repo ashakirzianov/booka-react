@@ -6,6 +6,9 @@ import { createEpicMiddleware } from 'redux-observable';
 
 import { rootReducer, rootEpic } from '../ducks';
 
+export const ConnectedProvider: React.SFC = ({ children }) =>
+    React.createElement(Provider, { store }, children);
+
 function configureStore() {
     const epicMiddleware = createEpicMiddleware();
     const composeEnhancers: typeof compose =
@@ -26,6 +29,3 @@ function configureStore() {
 }
 
 const store = configureStore();
-
-export const ConnectedProvider: React.SFC = ({ children }) =>
-    React.createElement(Provider, { store }, children);

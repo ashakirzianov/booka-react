@@ -5,12 +5,14 @@ import { libraryReducer, libraryEpic } from './library';
 import { themeReducer } from './theme';
 import { bookReducer, bookFragmentEpic } from './book';
 import { controlsVisibilityReducer } from './controlsVisibility';
+import { screenReducer } from './screen';
 
 export const rootReducer = combineReducers<AppState, AppAction>({
     library: libraryReducer,
     theme: themeReducer,
     book: bookReducer,
     controlsVisibility: controlsVisibilityReducer,
+    screen: screenReducer,
 });
 
 export const rootEpic = combineEpics(

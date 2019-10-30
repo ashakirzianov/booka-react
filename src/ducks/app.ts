@@ -2,6 +2,7 @@ import { LibraryState, LibraryAction } from './library';
 import { ThemeState, ThemeAction } from './theme';
 import { BookFragmentAction, BookState } from './book';
 import { ControlsVisibilityAction, ControlsVisibilityState } from './controlsVisibility';
+import { ScreenState } from './screen';
 
 export type AppAction =
     | LibraryAction
@@ -17,4 +18,5 @@ export type AppState = {
     theme: ThemeState,
     book: BookState,
     controlsVisibility: ControlsVisibilityState,
+    screen: ScreenState,
 };
