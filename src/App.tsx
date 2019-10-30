@@ -1,9 +1,11 @@
 import React from 'react';
 import { Router, HistoryLocation } from '@reach/router';
-import { emptyPath, pathFromString, rangeFromString } from 'booka-common';
+import { emptyPath, pathFromString, rangeFromString, BookRange } from 'booka-common';
 import { parse } from 'query-string';
 import { LibraryScreenComp, BookScreenComp } from './render';
-import { ConnectedProvider, useAppDispatch, useAppSelector } from './core';
+import {
+    ConnectedProvider, useAppDispatch, useAppSelector, updateQuote,
+} from './core';
 
 type RouteProps = {
     path: string,
@@ -28,31 +30,38 @@ function BookRoute({ bookId, location }: RouteProps) {
     const quoteString = typeof query.q === 'string'
         ? query.q
         : undefined;
-    const quoteRange = quoteString
-        ? rangeFromString(quoteString)
-        : undefined;
     const dispatch = useAppDispatch();
     React.useEffect(() => {
-        let path = pathString
+        const path = pathString
             ? pathFromString(pathString)
             : undefined;
-        if (!path && quoteString) {
-            const range = rangeFromString(quoteString);
-            path = range && range.start;
-        }
+        const quoteRange = quoteString
+            ? rangeFromString(quoteString)
+            : undefined;
         dispatch({
-            type: 'fragment-fetch',
+            type: 'fragment-open',
             payload: {
-                loc: 'book-pos',
-                id: bookId,
-                path: path ? path : emptyPath(),
+                location: {
+                    loc: 'book-pos',
+                    id: bookId,
+                    path: path || (quoteRange && quoteRange.start) || emptyPath(),
+                },
+                quote: quoteRange,
             },
         });
     }, [dispatch, bookId, pathString, quoteString]);
     const fragment = useAppSelector(s => s.currentFragment);
+
+    const setQuoteRange = React.useCallback((range: BookRange | undefined) => {
+        dispatch({
+            type: 'fragment-set-quote',
+            payload: range,
+        });
+        updateQuote(range);
+    }, [dispatch]);
     return <BookScreenComp
         fragment={fragment}
-        quoteRange={quoteRange}
+        setQuoteRange={setQuoteRange}
     />;
 }
 

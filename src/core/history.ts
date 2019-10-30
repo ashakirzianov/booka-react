@@ -1,16 +1,26 @@
 import { createBrowserHistory } from 'history';
 import { parse, stringify } from 'query-string';
-import { BookPath, pathToString } from 'booka-common';
+import { BookPath, pathToString, rangeToString, BookRange } from 'booka-common';
+
+export function updateCurrentPath(path: BookPath | undefined) {
+    updateQueryParam('p', path && pathToString(path));
+}
+
+export function updateQuote(quote: BookRange | undefined) {
+    updateQueryParam('q', quote && rangeToString(quote));
+}
 
 const history = createBrowserHistory();
-export function updateCurrentPath(path: BookPath | undefined) {
+function updateQueryParam(name: string, value: string | undefined) {
     const searchObject = history.location.search
         ? parse(history.location.search)
-        : { p: undefined };
+        : {};
 
-    searchObject.p = path === undefined
-        ? undefined
-        : pathToString(path);
+    if (value !== undefined) {
+        searchObject[name] = value;
+    } else {
+        delete searchObject[name];
+    }
 
     history.replace({
         search: stringify(searchObject),

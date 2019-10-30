@@ -4,11 +4,11 @@ import { assertNever, BookRange } from 'booka-common';
 import { AppState } from '../ducks';
 import { useTheme, updateCurrentPath } from '../core';
 import { BookViewComp } from './BookViewComp';
-import { WithChildren, Column, point, Row } from '../atoms';
+import { WithChildren, Column, point, Row, Callback } from '../atoms';
 
 export type BookScreenProps = {
     fragment: AppState['currentFragment'],
-    quoteRange: BookRange | undefined,
+    setQuoteRange: Callback<BookRange | undefined>,
 };
 export function BookScreenComp(props: BookScreenProps) {
     return <BookScreenContainer>
@@ -16,7 +16,9 @@ export function BookScreenComp(props: BookScreenProps) {
     </BookScreenContainer>;
 }
 
-function BookScreenContent({ fragment, quoteRange }: BookScreenProps) {
+function BookScreenContent({
+    fragment, setQuoteRange,
+}: BookScreenProps) {
     const theme = useTheme();
     switch (fragment.state) {
         case 'no-fragment':
@@ -29,8 +31,10 @@ function BookScreenContent({ fragment, quoteRange }: BookScreenProps) {
                 theme={theme}
                 fragment={fragment.fragment}
                 pathToScroll={fragment.location.path}
+                // TODO: abstract updateCurrentPath ?
                 updateBookPosition={updateCurrentPath}
-                quoteRange={quoteRange}
+                quoteRange={fragment.quote}
+                setQuoteRange={setQuoteRange}
             />;
         case 'error':
             return <span>error: {fragment.location.id}</span>;

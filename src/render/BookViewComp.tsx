@@ -17,12 +17,13 @@ export type BookViewCompProps = Themed & {
     pathToScroll: BookPath | null,
     updateBookPosition: Callback<BookPath>,
     quoteRange: BookRange | undefined,
+    setQuoteRange: Callback<BookRange | undefined>,
     // openFootnote: Callback<string>,
 };
 export function BookViewComp({
     bookId, fragment, theme,
     pathToScroll, updateBookPosition,
-    quoteRange,
+    quoteRange, setQuoteRange,
 }: BookViewCompProps) {
     const selection = React.useRef<BookSelection | undefined>(undefined);
     const selectionHandler = React.useCallback((sel: BookSelection | undefined) => {
@@ -34,7 +35,8 @@ export function BookViewComp({
             const selectionText = `${selection.current.text}\n${generateQuoteLink(bookId, selection.current.range)}`;
             e.clipboardData.setData('text/plain', selectionText);
         }
-    }, [bookId]));
+        setQuoteRange(selection.current && selection.current.range);
+    }, [bookId, setQuoteRange]));
 
     const colorization = quoteRange
         ? [{
