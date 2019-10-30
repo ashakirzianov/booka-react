@@ -2,24 +2,23 @@ import React from 'react';
 import { assertNever, BookRange } from 'booka-common';
 
 import { AppState } from '../ducks';
-import { useTheme, updateCurrentPath } from '../core';
+import { updateCurrentPath } from '../core';
 import { BookViewComp } from './BookViewComp';
-import { WithChildren, Column, point, Row, Callback } from '../atoms';
+import { WithChildren, Column, point, Row, Callback, Themed, Triad, IconButton, TopBar, EmptyLine } from '../atoms';
 
-export type BookScreenProps = {
+export type BookScreenProps = Themed & {
     fragment: AppState['currentFragment'],
     setQuoteRange: Callback<BookRange | undefined>,
 };
 export function BookScreenComp(props: BookScreenProps) {
-    return <BookScreenContainer>
+    return <BookScreenContainer theme={props.theme}>
         <BookScreenContent {...props} />
     </BookScreenContainer>;
 }
 
 function BookScreenContent({
-    fragment, setQuoteRange,
+    fragment, setQuoteRange, theme,
 }: BookScreenProps) {
-    const theme = useTheme();
     switch (fragment.state) {
         case 'no-fragment':
             return <span>No fragment set</span>;
@@ -44,10 +43,39 @@ function BookScreenContent({
     }
 }
 
-function BookScreenContainer({ children }: WithChildren<{}>) {
-    return <Row fullWidth centered>
-        <Column maxWidth={point(50)} fullWidth padding={point(1)} centered>
-            {children}
-        </Column>
-    </Row>;
+type BookScreenContainerProps = WithChildren<Themed>;
+function BookScreenContainer({ theme, children }: BookScreenContainerProps) {
+    return <>
+        <BookScreenHeader theme={theme} />
+        <Row fullWidth centered>
+            <Column maxWidth={point(50)} fullWidth padding={point(1)} centered>
+                <EmptyLine />
+                {children}
+                <EmptyLine />
+            </Column>
+        </Row>
+    </>;
+}
+
+type BookScreenHeaderProps = Themed & {
+};
+function BookScreenHeader({ theme }: BookScreenHeaderProps) {
+    return <TopBar
+        theme={theme}
+        open={true}
+        paddingHorizontal={point(1)}
+    >
+        <Triad
+            left={<LibButton theme={theme} />}
+        />
+    </TopBar>;
+}
+
+type LibButtonProps = Themed;
+function LibButton({ theme }: LibButtonProps) {
+    return <IconButton
+        theme={theme}
+        icon='left'
+        to='/'
+    />;
 }

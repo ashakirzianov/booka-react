@@ -1,11 +1,12 @@
 import React from 'react';
 import {
-    BookFragment, BookPath, BookPositionLocator, pathLocator, BookRange,
+    BookFragment, BookPath, BookPositionLocator, pathLocator,
+    BookRange,
 } from 'booka-common';
 
 import {
-    Themed, colors, fontSize, Row, BorderButton, point,
-    EmptyLine, Callback, highlights,
+    Themed, colors, fontSize, Row, BorderButton,
+    point, Callback, highlights,
 } from '../atoms';
 import { BookFragmentComp, BookSelection } from '../reader';
 import { linkForLocation, generateQuoteLink } from './common';
@@ -46,7 +47,6 @@ export function BookViewComp({
         : [];
 
     return <>
-        <EmptyLine />
         {
             fragment.previous === undefined ? null :
                 <PathLink
@@ -75,7 +75,6 @@ export function BookViewComp({
                     location={pathLocator(bookId, fragment.next.path)}
                 />
         }
-        <EmptyLine />
     </>;
 }
 

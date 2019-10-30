@@ -4,7 +4,7 @@ import { emptyPath, pathFromString, rangeFromString, BookRange } from 'booka-com
 import { parse } from 'query-string';
 import { LibraryScreenComp, BookScreenComp } from './render';
 import {
-    ConnectedProvider, useAppDispatch, useAppSelector, updateQuote,
+    ConnectedProvider, useAppDispatch, useAppSelector, updateQuote, useTheme,
 } from './core';
 import { whileDebug } from './config';
 
@@ -60,7 +60,10 @@ function BookRoute({ bookId, location }: RouteProps) {
         });
         updateQuote(range);
     }, [dispatch]);
+
+    const theme = useTheme();
     return <BookScreenComp
+        theme={theme}
         fragment={fragment}
         setQuoteRange={setQuoteRange}
     />;
