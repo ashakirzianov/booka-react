@@ -20,6 +20,8 @@ function LibraryRoute(_: RouteProps) {
 }
 
 function BookRoute({ bookId, location }: RouteProps) {
+    console.log(bookId);
+    console.log(location);
     const query = parse(location.search);
     const pathFromQuery = typeof query.p === 'string'
         ? query.p
@@ -39,6 +41,7 @@ function BookRoute({ bookId, location }: RouteProps) {
         });
     }, [dispatch, bookId, pathFromQuery]);
     const fragment = useAppSelector(s => s.currentFragment);
+    console.log(fragment);
     return <BookScreenComp
         fragment={fragment}
     />;

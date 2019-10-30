@@ -4,7 +4,7 @@ import { assertNever } from 'booka-common';
 import { AppState } from '../ducks';
 import { useTheme } from '../core';
 import { BookViewComp } from './BookViewComp';
-import { WithChildren, Column, EmptyLine, point, Row } from '../atoms';
+import { WithChildren, Column, point, Row } from '../atoms';
 
 export type BookScreenProps = {
     fragment: AppState['currentFragment'],
@@ -24,6 +24,7 @@ function BookScreenContent({ fragment }: BookScreenProps) {
             return <span>loading: {fragment.location.id}</span>;
         case 'ready':
             return <BookViewComp
+                bookId={fragment.location.id}
                 theme={theme}
                 fragment={fragment.fragment}
                 pathToScroll={fragment.location.path}
@@ -39,9 +40,7 @@ function BookScreenContent({ fragment }: BookScreenProps) {
 function BookScreenContainer({ children }: WithChildren<{}>) {
     return <Row fullWidth centered>
         <Column maxWidth={point(50)} fullWidth padding={point(1)} centered>
-            <EmptyLine />
             {children}
-            <EmptyLine />
         </Column>
     </Row>;
 }
