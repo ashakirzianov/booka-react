@@ -1,9 +1,11 @@
 import { createBrowserHistory } from 'history';
 import { parse, stringify } from 'query-string';
 import { BookPath, pathToString, rangeToString, BookRange } from 'booka-common';
+import { throttle } from 'lodash';
 
 export function updateCurrentPath(path: BookPath | undefined) {
-    updateQueryParam('p', path && pathToString(path));
+    const throttled = throttle(updateQueryParam, 1000);
+    throttled('p', path && pathToString(path));
 }
 
 export function updateQuote(quote: BookRange | undefined) {
