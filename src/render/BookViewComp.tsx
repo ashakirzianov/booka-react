@@ -3,7 +3,10 @@ import {
     BookFragment, BookPath, BookPositionLocator, pathLocator,
 } from 'booka-common';
 
-import { Themed, colors, fontSize, Row, BorderButton, point, EmptyLine } from '../atoms';
+import {
+    Themed, colors, fontSize, Row, BorderButton, point,
+    EmptyLine, Callback,
+} from '../atoms';
 import { BookFragmentComp } from '../reader';
 import { linkForLocation } from './common';
 
@@ -11,11 +14,14 @@ export type BookViewCompProps = Themed & {
     bookId: string,
     fragment: BookFragment,
     pathToScroll: BookPath | null,
+    updateBookPosition: Callback<BookPath>,
     // quoteRange: BookRange | undefined,
-    // updateBookPosition: Callback<BookPath>,
     // openFootnote: Callback<string>,
 };
-export function BookViewComp({ bookId, fragment, theme, pathToScroll }: BookViewCompProps) {
+export function BookViewComp({
+    bookId, fragment, theme,
+    pathToScroll, updateBookPosition,
+}: BookViewCompProps) {
     return <>
         <EmptyLine />
         {
@@ -34,6 +40,7 @@ export function BookViewComp({ bookId, fragment, theme, pathToScroll }: BookView
             fontSize={fontSize(theme, 'text')}
             fontFamily={theme.fontFamilies.book}
             pathToScroll={pathToScroll || undefined}
+            onScroll={updateBookPosition}
         />
         {
             fragment.next === undefined ? null :
