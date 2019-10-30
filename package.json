@@ -22,7 +22,8 @@
     "redux": "^4.0.4",
     "redux-observable": "^1.2.0",
     "rxjs": "^6.5.3",
-    "typescript": "3.6.4"
+    "typescript": "3.6.4",
+    "why-did-you-update": "^1.0.6"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -52,6 +53,7 @@
     "@types/react-native-vector-icons": "^6.4.4",
     "@types/react-redux": "^7.1.5",
     "@types/react-transition-group": "^4.2.3",
+    "@types/why-did-you-update": "0.0.10",
     "react-native-popover-view": "^2.0.5",
     "react-native-vector-icons": "^6.6.0"
   }
