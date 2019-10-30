@@ -25,12 +25,8 @@ function LibraryRoute(_: RouteProps) {
 
 function BookRoute({ bookId, location }: RouteProps) {
     const query = parse(location!.search);
-    const pathString = typeof query.p === 'string'
-        ? query.p
-        : undefined;
-    const quoteString = typeof query.q === 'string'
-        ? query.q
-        : undefined;
+    const pathString: string | undefined = query.p as any;
+    const quoteString: string | undefined = query.q as any;
     const dispatch = useAppDispatch();
     React.useEffect(() => {
         const path = pathString
@@ -62,10 +58,19 @@ function BookRoute({ bookId, location }: RouteProps) {
     }, [dispatch]);
 
     const theme = useTheme();
+    const controlsVisible = useAppSelector(s => s.controlsVisibility);
+
+    const toggleControls = React.useCallback(() => {
+        dispatch({
+            type: 'controls-toggle',
+        });
+    }, [dispatch]);
     return <BookScreenComp
         theme={theme}
         fragment={fragment}
+        controlsVisible={controlsVisible}
         setQuoteRange={setQuoteRange}
+        toggleControls={toggleControls}
     />;
 }
 

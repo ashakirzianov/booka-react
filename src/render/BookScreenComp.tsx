@@ -4,14 +4,23 @@ import { assertNever, BookRange } from 'booka-common';
 import { AppState } from '../ducks';
 import { updateCurrentPath } from '../core';
 import { BookViewComp } from './BookViewComp';
-import { WithChildren, Column, point, Row, Callback, Themed, Triad, IconButton, TopBar, EmptyLine } from '../atoms';
+import {
+    WithChildren, Column, point, Row, Callback, Themed,
+    Triad, IconButton, TopBar, EmptyLine, Clickable,
+} from '../atoms';
 
 export type BookScreenProps = Themed & {
     fragment: AppState['currentFragment'],
     setQuoteRange: Callback<BookRange | undefined>,
+    toggleControls: Callback,
+    controlsVisible: boolean,
 };
 export function BookScreenComp(props: BookScreenProps) {
-    return <BookScreenContainer theme={props.theme}>
+    return <BookScreenContainer
+        theme={props.theme}
+        visible={props.controlsVisible}
+        toggleControls={props.toggleControls}
+    >
         <BookScreenContent {...props} />
     </BookScreenContainer>;
 }
@@ -43,26 +52,34 @@ function BookScreenContent({
     }
 }
 
-type BookScreenContainerProps = WithChildren<Themed>;
-function BookScreenContainer({ theme, children }: BookScreenContainerProps) {
+type BookScreenContainerProps = WithChildren<Themed & {
+    visible: boolean,
+    toggleControls: Callback,
+}>;
+function BookScreenContainer({
+    theme, visible, toggleControls, children,
+}: BookScreenContainerProps) {
     return <>
-        <BookScreenHeader theme={theme} />
+        <BookScreenHeader theme={theme} visible={visible} />
         <Row fullWidth centered>
-            <Column maxWidth={point(50)} fullWidth padding={point(1)} centered>
-                <EmptyLine />
-                {children}
-                <EmptyLine />
-            </Column>
+            <Clickable onClick={toggleControls}>
+                <Column maxWidth={point(50)} fullWidth padding={point(1)} centered>
+                    <EmptyLine />
+                    {children}
+                    <EmptyLine />
+                </Column>
+            </Clickable>
         </Row>
     </>;
 }
 
 type BookScreenHeaderProps = Themed & {
+    visible: boolean,
 };
-function BookScreenHeader({ theme }: BookScreenHeaderProps) {
+function BookScreenHeader({ theme, visible }: BookScreenHeaderProps) {
     return <TopBar
         theme={theme}
-        open={true}
+        open={visible}
         paddingHorizontal={point(1)}
     >
         <Triad
