@@ -1,5 +1,7 @@
 import React from 'react';
-import { assertNever, BookRange } from 'booka-common';
+import {
+    assertNever, BookRange, positionForPath,
+} from 'booka-common';
 
 import { AppState } from '../ducks';
 import { updateCurrentPath, useAppDispatch } from '../core';
@@ -7,7 +9,8 @@ import { BookViewComp } from './BookViewComp';
 import {
     WithChildren, Column, point, Row, Callback, Themed,
     Triad, IconButton, TopBar, EmptyLine, Clickable,
-    PaletteName, PaletteButton, TextButton, Separator, WithPopover, colors,
+    PaletteName, PaletteButton, TextButton, Separator, WithPopover,
+    colors, TextLine, BottomBar,
 } from '../atoms';
 
 export type BookScreenProps = Themed & {
@@ -19,6 +22,7 @@ export type BookScreenProps = Themed & {
 export function BookScreenComp(props: BookScreenProps) {
     return <BookScreenContainer
         theme={props.theme}
+        fragment={props.fragment}
         visible={props.controlsVisible}
         toggleControls={props.toggleControls}
     >
@@ -56,9 +60,11 @@ function BookScreenContent({
 type BookScreenContainerProps = WithChildren<Themed & {
     visible: boolean,
     toggleControls: Callback,
+    fragment: AppState['currentFragment'],
 }>;
 function BookScreenContainer({
     theme, visible, toggleControls, children,
+    fragment,
 }: BookScreenContainerProps) {
     return <>
         <BookScreenHeader
@@ -76,6 +82,11 @@ function BookScreenContainer({
                 </Column>
             </Clickable>
         </Row>
+        <BookScreenFooter
+            theme={theme}
+            fragment={fragment}
+            visible={visible}
+        />
     </>;
 }
 
@@ -198,4 +209,53 @@ function SelectPaletteButton({ theme, text, name, setPalette }: PaletteButtonPro
         palette={name}
         onClick={() => setPalette(name)}
     />;
+}
+
+type BookScreenFooterProps = Themed & {
+    fragment: AppState['currentFragment'],
+    visible: boolean,
+};
+function BookScreenFooter({
+    fragment: fragmentState, theme, visible,
+}: BookScreenFooterProps) {
+    if (fragmentState.state === 'ready') {
+        const fragment = fragmentState.fragment;
+        const path = fragmentState.location.path;
+        // const total: number | undefined = undefined; // TODO: implement
+        const currentPage = fragment
+            ? pageForPosition(positionForPath(fragment, path))
+            : undefined;
+        const nextChapterPage = fragment && fragment.next
+            ? pageForPosition(fragment.next.position)
+            : undefined;
+        return <BottomBar theme={theme} open={visible}>
+            <Triad
+                // TODO: add ToC
+                // center={
+                //     <TocButton
+                //         theme={theme}
+                //         current={currentPage}
+                //         total={total}
+                //     />
+                // }
+                right={<TextLine
+                    theme={theme}
+                    text={
+                        nextChapterPage !== undefined && currentPage !== undefined
+                            ? `${nextChapterPage - currentPage} pages left`
+                            : ''
+                    }
+                    fontSize='smallest'
+                    color='accent'
+                />}
+            />
+        </BottomBar>;
+    } else {
+        return null;
+    }
+
+}
+
+function pageForPosition(position: number): number {
+    return Math.floor(position / 1500) + 1;
 }
