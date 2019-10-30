@@ -2,7 +2,7 @@ import React from 'react';
 import { assertNever, BookRange } from 'booka-common';
 
 import { AppState } from '../ducks';
-import { updateCurrentPath } from '../core';
+import { updateCurrentPath, useAppDispatch } from '../core';
 import { BookViewComp } from './BookViewComp';
 import {
     WithChildren, Column, point, Row, Callback, Themed,
@@ -104,14 +104,21 @@ function LibButton({ theme }: LibButtonProps) {
 
 type AppearanceButtonProps = Themed;
 function AppearanceButton({ theme }: AppearanceButtonProps) {
+    const dispatch = useAppDispatch();
     return <WithPopover
         theme={theme}
         popoverPlacement='bottom'
         body={
             <ThemePicker
                 theme={theme}
-                setPalette={() => undefined}
-                incrementScale={() => undefined}
+                setPalette={name => dispatch({
+                    type: 'theme-set-palette',
+                    payload: name,
+                })}
+                incrementScale={increment => dispatch({
+                    type: 'theme-increment-scale',
+                    payload: increment,
+                })}
             />
         }
     >

@@ -1,10 +1,34 @@
-import { Theme } from '../atoms';
+import { Theme, PaletteName } from '../atoms';
 import { AppAction } from './app';
 
 export type ThemeState = Theme;
 
-export function themeReducer(state: Theme = defaultTheme, action: AppAction) {
-    return state;
+export type ThemeSetPaletteAction = {
+    type: 'theme-set-palette',
+    payload: PaletteName,
+};
+export type ThemeIncrementScaleAction = {
+    type: 'theme-increment-scale',
+    payload: number,
+};
+export type ThemeAction =
+    | ThemeSetPaletteAction | ThemeIncrementScaleAction;
+
+export function themeReducer(state: ThemeState = defaultTheme, action: AppAction) {
+    switch (action.type) {
+        case 'theme-set-palette':
+            return {
+                ...state,
+                currentPalette: action.payload,
+            };
+        case 'theme-increment-scale':
+            return {
+                ...state,
+                fontScale: state.fontScale + action.payload,
+            };
+        default:
+            return state;
+    }
 }
 
 const defaultTheme: Theme = {
