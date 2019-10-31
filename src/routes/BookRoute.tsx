@@ -44,6 +44,9 @@ export function BookRoute({ bookId, location }: RouteProps) {
     const toggleControls = React.useCallback(() => dispatch({
         type: 'controls-toggle',
     }), [dispatch]);
+    const toggleToc = React.useCallback(() => dispatch({
+        type: 'book-toggle-toc',
+    }), [dispatch]);
 
     const theme = useTheme();
     const controlsVisible = useAppSelector(s => s.controlsVisibility);
@@ -54,5 +57,6 @@ export function BookRoute({ bookId, location }: RouteProps) {
         updateCurrentPath={updateCurrentPath}
         setQuoteRange={setQuoteRange}
         toggleControls={toggleControls}
+        toggleToc={toggleToc}
     />;
 }

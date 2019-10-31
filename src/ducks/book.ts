@@ -13,6 +13,7 @@ type BookStateBase = {
     path: BookPath,
     quote?: BookRange,
     needToScroll?: boolean,
+    showToc?: boolean,
 };
 export type BookEmptyState = { state: 'empty' } & Partial<BookStateBase>;
 export type BookErrorState = BookStateBase & {
@@ -62,11 +63,15 @@ export type UpdateCurrentPathAction = {
     type: 'book-update-path',
     payload: BookPath,
 };
+export type ToggleTocAction = {
+    type: 'book-toggle-toc',
+};
 export type BookFragmentAction =
     | BookOpenAction
     | BookFetchFulfilledAction
     | BookFetchRejectedAction
     | SetQuoteRangeAction | UpdateCurrentPathAction
+    | ToggleTocAction
     ;
 
 const defaultState: BookState = { state: 'empty' };
@@ -105,6 +110,13 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
                 path: action.payload,
                 needToScroll: false,
             };
+        case 'book-toggle-toc':
+            return state.state === 'ready' && state.fragment.toc
+                ? {
+                    ...state,
+                    showToc: !state.showToc,
+                }
+                : state;
         default:
             return state;
     }

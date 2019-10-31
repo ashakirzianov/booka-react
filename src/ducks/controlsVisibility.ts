@@ -1,5 +1,6 @@
 import { AppAction } from './app';
 
+// TODO: merge into 'book'
 export type ControlsVisibilityState = boolean;
 export type ToggleControlsAction = {
     type: 'controls-toggle',

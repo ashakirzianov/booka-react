@@ -15,10 +15,11 @@ import {
 
 export type BookScreenProps = Themed & {
     screen: BookState,
+    controlsVisible: boolean,
     setQuoteRange: Callback<BookRange | undefined>,
     updateCurrentPath: Callback<BookPath>,
     toggleControls: Callback,
-    controlsVisible: boolean,
+    toggleToc: Callback,
 };
 export function BookScreenComp(props: BookScreenProps) {
     return <BookScreenContainer {...props} >
@@ -57,31 +58,24 @@ function BookScreenContent({
 }
 
 type BookScreenContainerProps = WithChildren<BookScreenProps>;
-function BookScreenContainer({
-    theme, controlsVisible, toggleControls, children,
-    screen,
-}: BookScreenContainerProps) {
+function BookScreenContainer(props: BookScreenContainerProps) {
     return <>
         <BookScreenHeader
-            theme={theme}
-            visible={controlsVisible}
+            theme={props.theme}
+            visible={props.controlsVisible}
         />
         <Row fullWidth centered
-            backgroundColor={colors(theme).primary}
+            backgroundColor={colors(props.theme).primary}
         >
-            <Clickable onClick={toggleControls}>
+            <Clickable onClick={props.toggleControls}>
                 <Column maxWidth={point(50)} fullWidth padding={point(1)} centered>
                     <EmptyLine />
-                    {children}
+                    {props.children}
                     <EmptyLine />
                 </Column>
             </Clickable>
         </Row>
-        <BookScreenFooter
-            theme={theme}
-            screen={screen}
-            visible={controlsVisible}
-        />
+        <BookScreenFooter {...props} />
     </>;
 }
 
@@ -209,6 +203,7 @@ function SelectPaletteButton({ theme, text, name, setPalette }: PaletteButtonPro
 type TocButtonProps = Themed & {
     current: number,
     total: number | undefined,
+    toggleToc: Callback,
 };
 function TocButton(props: TocButtonProps) {
     return <TagButton
@@ -221,12 +216,9 @@ function TocButton(props: TocButtonProps) {
     />;
 }
 
-type BookScreenFooterProps = Themed & {
-    screen: BookState,
-    visible: boolean,
-};
+type BookScreenFooterProps = BookScreenProps;
 function BookScreenFooter({
-    screen, theme, visible,
+    screen, theme, controlsVisible, toggleToc,
 }: BookScreenFooterProps) {
     if (screen.state === 'ready') {
         const fragment = screen.fragment;
@@ -238,13 +230,14 @@ function BookScreenFooter({
         const nextChapterPage = fragment.next
             ? pageForPosition(fragment.next.position)
             : total;
-        return <BottomBar theme={theme} open={visible}>
+        return <BottomBar theme={theme} open={controlsVisible}>
             <Triad
                 center={
                     <TocButton
                         theme={theme}
                         current={currentPage}
                         total={total}
+                        toggleToc={toggleToc}
                     />
                 }
                 right={<TextLine
