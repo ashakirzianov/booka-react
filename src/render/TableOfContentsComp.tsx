@@ -52,7 +52,7 @@ function TocItemComp({ item, tabs, page, theme }: TocItemProps) {
             <TextLine
                 key='title'
                 theme={theme}
-                text={item.title[0]}
+                text={item.title}
             />
             <TextLine
                 key='pn'

@@ -40,16 +40,6 @@ function BookScreenContent({
             return <span>loading: {screen.id}</span>;
         case 'ready':
             return <>
-                {
-                    screen.showToc && screen.fragment.toc
-                        ? <TableOfContentsComp
-                            theme={theme}
-                            toc={screen.fragment.toc}
-                            id={screen.id}
-                            toggleToc={toggleToc}
-                        />
-                        : null
-                }
                 <BookViewComp
                     bookId={screen.id}
                     theme={theme}
@@ -63,6 +53,16 @@ function BookScreenContent({
                     quoteRange={screen.quote}
                     setQuoteRange={setQuoteRange}
                 />
+                {
+                    screen.showToc && screen.fragment.toc
+                        ? <TableOfContentsComp
+                            theme={theme}
+                            toc={screen.fragment.toc}
+                            id={screen.id}
+                            toggleToc={toggleToc}
+                        />
+                        : null
+                }
             </>;
         case 'error':
             return <span>error: {screen.id}</span>;
@@ -79,6 +79,7 @@ function BookScreenContainer(props: BookScreenContainerProps) {
             theme={props.theme}
             visible={props.controlsVisible}
         />
+        <BookScreenFooter {...props} />
         <Row fullWidth centered
             backgroundColor={colors(props.theme).primary}
         >
@@ -90,7 +91,6 @@ function BookScreenContainer(props: BookScreenContainerProps) {
                 </Column>
             </Clickable>
         </Row>
-        <BookScreenFooter {...props} />
     </>;
 }
 
@@ -220,14 +220,15 @@ type TocButtonProps = Themed & {
     total: number | undefined,
     toggleToc: Callback,
 };
-function TocButton(props: TocButtonProps) {
+function TocButton({ theme, total, current, toggleToc }: TocButtonProps) {
     return <TagButton
-        theme={props.theme}
+        theme={theme}
         text={
-            props.total !== undefined
-                ? `${props.current} of ${props.total}`
-                : `${props.current}`
+            total !== undefined
+                ? `${current} of ${total}`
+                : `${current}`
         }
+        onClick={toggleToc}
     />;
 }
 
