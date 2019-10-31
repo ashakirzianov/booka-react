@@ -2,9 +2,9 @@ import { of } from 'rxjs';
 import { map, mergeMap, catchError } from 'rxjs/operators';
 import { Epic, combineEpics } from 'redux-observable';
 import {
-    BookFragment, BookRange, BookPath, pathLocator,
+    BookFragment, BookRange, BookPath,
 } from 'booka-common';
-import { fetchBookFragment } from '../api';
+import { getBookFragment } from '../api';
 import { AppAction } from './app';
 import { ofAppType } from './utils';
 
@@ -113,15 +113,15 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
 const fetchBookFragmentEpic: Epic<AppAction> = (action$) => action$.pipe(
     ofAppType('book-open'),
     mergeMap(
-        action => fetchBookFragment(action.payload.id, action.payload.path).pipe(
-            map((res): AppAction => {
+        action => getBookFragment(action.payload.id, action.payload.path).pipe(
+            map((fragment): AppAction => {
                 return {
                     type: 'book-fetch-fulfilled',
                     payload: {
+                        fragment,
                         id: action.payload.id,
                         path: action.payload.path,
                         quote: action.payload.quote,
-                        fragment: res.value,
                     },
                 };
             }),
