@@ -8,6 +8,7 @@ import { rootReducer, rootEpic, AppState } from '../ducks';
 import { createBrowserHistory, LocationDescriptorObject } from 'history';
 import { stringify } from 'query-string';
 import { pathToString, rangeToString } from 'booka-common';
+import { throttle } from 'lodash';
 
 export const ConnectedProvider: React.SFC = ({ children }) =>
     React.createElement(Provider, { store }, children);
@@ -34,11 +35,14 @@ function configureStore() {
 const store = configureStore();
 
 const history = createBrowserHistory();
-store.subscribe(() => {
+store.subscribe(throttle(() => {
     const state = store.getState();
     const location = locationForState(state);
     history.replace(location);
-});
+}, 1000, {
+    trailing: true,
+    leading: false,
+}));
 
 function locationForState(state: AppState): LocationDescriptorObject {
     const searchObject: { [k: string]: string } = {};
