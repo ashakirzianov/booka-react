@@ -5,13 +5,15 @@ import {
 
 import { BookState } from '../ducks';
 import { useAppDispatch } from '../core';
-import { BookViewComp } from './BookViewComp';
 import {
     WithChildren, Column, point, Row, Callback, Themed,
     Triad, IconButton, TopBar, EmptyLine, Clickable,
     PaletteName, PaletteButton, TextButton, Separator, WithPopover,
     colors, TextLine, BottomBar, TagButton,
 } from '../atoms';
+import { pageForPosition } from './common';
+import { BookViewComp } from './BookViewComp';
+import { TableOfContentsComp } from './TableOfContentsComp';
 
 export type BookScreenProps = Themed & {
     screen: BookState,
@@ -28,7 +30,8 @@ export function BookScreenComp(props: BookScreenProps) {
 }
 
 function BookScreenContent({
-    screen, setQuoteRange, theme, updateCurrentPath,
+    screen, setQuoteRange, theme,
+    updateCurrentPath, toggleToc,
 }: BookScreenProps) {
     switch (screen.state) {
         case 'empty':
@@ -36,19 +39,31 @@ function BookScreenContent({
         case 'loading':
             return <span>loading: {screen.id}</span>;
         case 'ready':
-            return <BookViewComp
-                bookId={screen.id}
-                theme={theme}
-                fragment={screen.fragment}
-                pathToScroll={
-                    screen.needToScroll
-                        ? screen.path
+            return <>
+                {
+                    screen.showToc && screen.fragment.toc
+                        ? <TableOfContentsComp
+                            theme={theme}
+                            toc={screen.fragment.toc}
+                            id={screen.id}
+                            toggleToc={toggleToc}
+                        />
                         : null
                 }
-                updateBookPosition={updateCurrentPath}
-                quoteRange={screen.quote}
-                setQuoteRange={setQuoteRange}
-            />;
+                <BookViewComp
+                    bookId={screen.id}
+                    theme={theme}
+                    fragment={screen.fragment}
+                    pathToScroll={
+                        screen.needToScroll
+                            ? screen.path
+                            : null
+                    }
+                    updateBookPosition={updateCurrentPath}
+                    quoteRange={screen.quote}
+                    setQuoteRange={setQuoteRange}
+                />
+            </>;
         case 'error':
             return <span>error: {screen.id}</span>;
         default:
@@ -256,8 +271,4 @@ function BookScreenFooter({
         return null;
     }
 
-}
-
-function pageForPosition(position: number): number {
-    return Math.floor(position / 1500) + 1;
 }
