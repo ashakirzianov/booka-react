@@ -113,7 +113,7 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
 const fetchBookFragmentEpic: Epic<AppAction> = (action$) => action$.pipe(
     ofAppType('book-open'),
     mergeMap(
-        action => fetchBookFragment(pathLocator(action.payload.id, action.payload.path)).pipe(
+        action => fetchBookFragment(action.payload.id, action.payload.path).pipe(
             map((res): AppAction => {
                 return {
                     type: 'book-fetch-fulfilled',

@@ -1,6 +1,7 @@
 import {
     LibContract, BookPositionLocator,
     pathToString,
+    BookPath,
 } from 'booka-common';
 
 import { config } from '../config';
@@ -14,11 +15,17 @@ export function fetchAllBooks(page: number) {
     });
 }
 
-export function fetchBookFragment(location: BookPositionLocator) {
+export function fetchBookFragment(id: string, path: BookPath) {
     return fetcher.get('/fragment', {
         query: {
-            id: location.id,
-            path: pathToString(location.path),
+            id,
+            path: pathToString(path),
         },
+    });
+}
+
+export function fetchBook(id: string) {
+    return fetcher.get('/full', {
+        query: { id },
     });
 }
