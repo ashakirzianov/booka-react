@@ -1,14 +1,12 @@
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import {
     BookFragment, BookPath, Book, fragmentForPath,
     defaultFragmentLength, tocForBook, LibContract, pathToString, findReference,
 } from 'booka-common';
 import { createFetcher } from './fetcher';
 import { config } from '../config';
+import { map } from 'rxjs/operators';
 
-const cache: {
-    [id: string]: Book,
-} = {};
 export function getBookFragment(bookId: string, path: BookPath): Observable<BookFragment> {
     return new Observable(subs => {
         const cached = cache[bookId];
@@ -101,6 +99,23 @@ function resolvedFragment(book: Book, path: BookPath): BookFragment {
         images: book.images,
         toc: tocForBook(book),
     };
+}
+
+const cache: {
+    [id: string]: Book,
+} = {};
+function getBook(id: string): Observable<Book> {
+    const cached = cache[id];
+    if (cached) {
+        return of(cached);
+    } else {
+        return fetchBook(id).pipe(
+            map(({ value: book }) => {
+                cache[id] = book;
+                return book;
+            })
+        );
+    }
 }
 
 const fetcher = createFetcher<LibContract>(config().libUrl);
