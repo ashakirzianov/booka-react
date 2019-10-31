@@ -10,7 +10,7 @@ import {
     WithChildren, Column, point, Row, Callback, Themed,
     Triad, IconButton, TopBar, EmptyLine, Clickable,
     PaletteName, PaletteButton, TextButton, Separator, WithPopover,
-    colors, TextLine, BottomBar,
+    colors, TextLine, BottomBar, TagButton,
 } from '../atoms';
 
 export type BookScreenProps = Themed & {
@@ -206,6 +206,17 @@ function SelectPaletteButton({ theme, text, name, setPalette }: PaletteButtonPro
     />;
 }
 
+type TocButtonProps = Themed & {
+    current: number,
+    total: number,
+};
+function TocButton(props: TocButtonProps) {
+    return <TagButton
+        theme={props.theme}
+        text={`${props.current} of ${props.total}`}
+    />;
+}
+
 type BookScreenFooterProps = Themed & {
     screen: BookState,
     visible: boolean,
@@ -216,27 +227,26 @@ function BookScreenFooter({
     if (screen.state === 'ready') {
         const fragment = screen.fragment;
         const path = screen.path;
-        // const total: number | undefined = undefined; // TODO: implement
-        const currentPage = fragment
-            ? pageForPosition(positionForPath(fragment, path))
+        const total = fragment.toc
+            ? pageForPosition(fragment.toc.length)
             : undefined;
-        const nextChapterPage = fragment && fragment.next
+        const currentPage = pageForPosition(positionForPath(fragment, path));
+        const nextChapterPage = fragment.next
             ? pageForPosition(fragment.next.position)
-            : undefined;
+            : total;
         return <BottomBar theme={theme} open={visible}>
             <Triad
-                // TODO: add ToC
-                // center={
-                //     <TocButton
-                //         theme={theme}
-                //         current={currentPage}
-                //         total={total}
-                //     />
-                // }
+                center={
+                    <TocButton
+                        theme={theme}
+                        current={currentPage}
+                        total={total || NaN}
+                    />
+                }
                 right={<TextLine
                     theme={theme}
                     text={
-                        nextChapterPage !== undefined && currentPage !== undefined
+                        nextChapterPage !== undefined
                             ? `${nextChapterPage - currentPage} pages left`
                             : ''
                     }
