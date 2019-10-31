@@ -208,12 +208,16 @@ function SelectPaletteButton({ theme, text, name, setPalette }: PaletteButtonPro
 
 type TocButtonProps = Themed & {
     current: number,
-    total: number,
+    total: number | undefined,
 };
 function TocButton(props: TocButtonProps) {
     return <TagButton
         theme={props.theme}
-        text={`${props.current} of ${props.total}`}
+        text={
+            props.total !== undefined
+                ? `${props.current} of ${props.total}`
+                : `${props.current}`
+        }
     />;
 }
 
@@ -240,7 +244,7 @@ function BookScreenFooter({
                     <TocButton
                         theme={theme}
                         current={currentPage}
-                        total={total || NaN}
+                        total={total}
                     />
                 }
                 right={<TextLine
