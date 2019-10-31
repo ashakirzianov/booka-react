@@ -1,10 +1,10 @@
 import React from 'react';
 import {
-    assertNever, BookRange, positionForPath,
+    assertNever, BookRange, positionForPath, BookPath,
 } from 'booka-common';
 
 import { BookState } from '../ducks';
-import { updateCurrentPath, useAppDispatch } from '../core';
+import { useAppDispatch } from '../core';
 import { BookViewComp } from './BookViewComp';
 import {
     WithChildren, Column, point, Row, Callback, Themed,
@@ -16,6 +16,7 @@ import {
 export type BookScreenProps = Themed & {
     screen: BookState,
     setQuoteRange: Callback<BookRange | undefined>,
+    updateCurrentPath: Callback<BookPath>,
     toggleControls: Callback,
     controlsVisible: boolean,
 };
@@ -26,7 +27,7 @@ export function BookScreenComp(props: BookScreenProps) {
 }
 
 function BookScreenContent({
-    screen, setQuoteRange, theme,
+    screen, setQuoteRange, theme, updateCurrentPath,
 }: BookScreenProps) {
     switch (screen.state) {
         case 'empty':
@@ -38,8 +39,11 @@ function BookScreenContent({
                 bookId={screen.id}
                 theme={theme}
                 fragment={screen.fragment}
-                pathToScroll={screen.path}
-                // TODO: abstract updateCurrentPath ?
+                pathToScroll={
+                    screen.needToScroll
+                        ? screen.path
+                        : null
+                }
                 updateBookPosition={updateCurrentPath}
                 quoteRange={screen.quote}
                 setQuoteRange={setQuoteRange}

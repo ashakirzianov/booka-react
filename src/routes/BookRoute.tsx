@@ -1,11 +1,11 @@
 import React from 'react';
 import { parse } from 'query-string';
 import {
-    emptyPath, pathFromString, rangeFromString, BookRange,
+    emptyPath, pathFromString, rangeFromString, BookRange, BookPath,
 } from 'booka-common';
 import { BookScreenComp } from '../render';
 import {
-    useAppDispatch, useAppSelector, updateQuote, useTheme,
+    useAppDispatch, useAppSelector, useTheme,
 } from '../core';
 import { RouteProps } from '../atoms';
 
@@ -33,26 +33,25 @@ export function BookRoute({ bookId, location }: RouteProps) {
     }, [dispatch, bookId, pathString, quoteString]);
     const bookScreen = useAppSelector(s => s.book);
 
-    const setQuoteRange = React.useCallback((range: BookRange | undefined) => {
-        dispatch({
-            type: 'book-set-quote',
-            payload: range,
-        });
-        updateQuote(range);
-    }, [dispatch]);
+    const setQuoteRange = React.useCallback((range: BookRange | undefined) => dispatch({
+        type: 'book-set-quote',
+        payload: range,
+    }), [dispatch]);
+    const updateCurrentPath = React.useCallback((path: BookPath) => dispatch({
+        type: 'book-update-path',
+        payload: path,
+    }), [dispatch]);
+    const toggleControls = React.useCallback(() => dispatch({
+        type: 'controls-toggle',
+    }), [dispatch]);
 
     const theme = useTheme();
     const controlsVisible = useAppSelector(s => s.controlsVisibility);
-
-    const toggleControls = React.useCallback(() => {
-        dispatch({
-            type: 'controls-toggle',
-        });
-    }, [dispatch]);
     return <BookScreenComp
         theme={theme}
         screen={bookScreen}
         controlsVisible={controlsVisible}
+        updateCurrentPath={updateCurrentPath}
         setQuoteRange={setQuoteRange}
         toggleControls={toggleControls}
     />;

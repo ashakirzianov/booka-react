@@ -6,7 +6,7 @@ export type ToggleControlsAction = {
 };
 export type ControlsVisibilityAction = ToggleControlsAction;
 
-export function controlsVisibilityReducer(state: ControlsVisibilityState = true, action: AppAction) {
+export function controlsVisibilityReducer(state: ControlsVisibilityState = false, action: AppAction) {
     switch (action.type) {
         case 'controls-toggle':
             return !state;
