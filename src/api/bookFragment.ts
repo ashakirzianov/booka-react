@@ -1,39 +1,26 @@
 import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
     BookFragment, BookPath, Book, fragmentForPath,
     defaultFragmentLength, tocForBook, LibContract, pathToString, findReference,
 } from 'booka-common';
-import { createFetcher } from './fetcher';
 import { config } from '../config';
-import { map } from 'rxjs/operators';
+import { createFetcher } from './fetcher';
+import { withPartial } from './operators';
 
 export function getBookFragment(bookId: string, path: BookPath): Observable<BookFragment> {
-    return new Observable(subs => {
-        const cached = cache[bookId];
-        if (cached) {
-            subs.next(resolvedFragment(cached, path));
-            subs.complete();
-            return;
-        }
-        // TODO: forward errors
-        // TODO: implement as composition ?
-        const fragmentSubscription = fetchBookFragment(bookId, path).subscribe(res => {
-            subs.next(res.value);
-        });
-        const bookSubscription = fetchBook(bookId).subscribe(res => {
-            fragmentSubscription.unsubscribe();
-            const book = res.value;
-            cache[bookId] = book;
-            subs.next(resolvedFragment(book, path));
-            subs.complete();
-        });
-        return {
-            unsubscribe() {
-                fragmentSubscription.unsubscribe();
-                bookSubscription.unsubscribe();
-            },
-        };
-    });
+    return withPartial(
+        getBook(bookId).pipe(
+            map(book => {
+                return resolvedFragment(book, path);
+            })
+        ),
+        fetchBookFragment(bookId, path).pipe(
+            map(res => {
+                return res.value;
+            })
+        ),
+    );
 }
 
 export function getFragmentWithPathForId(
