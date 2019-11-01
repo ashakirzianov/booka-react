@@ -18,6 +18,7 @@ import { TableOfContentsComp } from './TableOfContentsComp';
 export type BookScreenProps = Themed & {
     screen: BookState,
     controlsVisible: boolean,
+    openRef: Callback<string>,
     setQuoteRange: Callback<BookRange | undefined>,
     updateCurrentPath: Callback<BookPath>,
     toggleControls: Callback,
@@ -32,6 +33,7 @@ export function BookScreenComp(props: BookScreenProps) {
 function BookScreenContent({
     screen, setQuoteRange, theme,
     updateCurrentPath, toggleToc,
+    openRef,
 }: BookScreenProps) {
     switch (screen.state) {
         case 'loading':
@@ -50,6 +52,7 @@ function BookScreenContent({
                     updateBookPosition={updateCurrentPath}
                     quoteRange={screen.quote}
                     setQuoteRange={setQuoteRange}
+                    openRef={openRef}
                 />
                 {
                     screen.toc && screen.fragment.toc

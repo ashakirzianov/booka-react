@@ -20,12 +20,13 @@ export type BookViewCompProps = Themed & {
     updateBookPosition: Callback<BookPath>,
     quoteRange: BookRange | undefined,
     setQuoteRange: Callback<BookRange | undefined>,
-    // openFootnote: Callback<string>,
+    openRef: Callback<string>,
 };
 export function BookViewComp({
     bookId, fragment, theme,
     pathToScroll, updateBookPosition,
     quoteRange, setQuoteRange,
+    openRef,
 }: BookViewCompProps) {
     const selection = React.useRef<BookSelection | undefined>(undefined);
     const selectionHandler = React.useCallback((sel: BookSelection | undefined) => {
@@ -70,6 +71,7 @@ export function BookViewComp({
             pathToScroll={pathToScroll || undefined}
             onScroll={updateBookPosition}
             onSelectionChange={selectionHandler}
+            onRefClick={openRef}
         />
         {
             fragment.next === undefined ? null :

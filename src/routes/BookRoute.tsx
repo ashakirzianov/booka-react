@@ -36,6 +36,13 @@ export function BookRoute({ bookId, location }: RouteProps) {
     const toggleToc = React.useCallback(() => dispatch({
         type: 'book-toggle-toc',
     }), [dispatch]);
+    const openRef = React.useCallback((refId: string) => dispatch({
+        type: 'book-open',
+        payload: {
+            bookId,
+            refId,
+        },
+    }), [dispatch, bookId]);
 
     const theme = useTheme();
     const controlsVisible = useAppSelector(s => s.controlsVisibility);
@@ -47,6 +54,7 @@ export function BookRoute({ bookId, location }: RouteProps) {
         setQuoteRange={setQuoteRange}
         toggleControls={toggleControls}
         toggleToc={toggleToc}
+        openRef={openRef}
     />;
 }
 
