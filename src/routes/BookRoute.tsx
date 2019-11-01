@@ -24,7 +24,7 @@ export function BookRoute({ bookId, location }: RouteProps) {
         dispatch({
             type: 'book-open',
             payload: {
-                id: bookId,
+                bookId,
                 // TODO: handle quote range navigation somewhere else
                 path: path || (quoteRange && quoteRange.start) || emptyPath(),
                 quote: quoteRange,

@@ -1,3 +1,4 @@
 export * from './app';
-export * from './root';
 export * from './book';
+export * from './bookLink';
+export * from './root';

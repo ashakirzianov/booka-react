@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { range } from 'lodash';
-import { TableOfContents, TableOfContentsItem, pathLocator } from 'booka-common';
+import { TableOfContents, TableOfContentsItem } from 'booka-common';
 
 import {
     Row, Tab, Column, point, StretchTextButton, TextLine, Themed, Modal, Callback,
 } from '../atoms';
-import { pageForPosition, linkForLocation } from './common';
+import { linkToString } from '../ducks';
+import { pageForPosition } from './common';
 
 export type TableOfContentsProps = Themed & {
     toc: TableOfContents,
@@ -48,7 +49,10 @@ function TocItemComp({ id, item, tabs, page, theme }: TocItemProps) {
         {range(0, tabs).map(i => <Tab key={i.toString()} />)}
         <StretchTextButton
             theme={theme}
-            to={linkForLocation(pathLocator(id, item.path))}
+            to={linkToString({
+                bookId: id,
+                path: item.path,
+            })}
         >
             <TextLine
                 key='title'

@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    BookFragment, BookPath, BookPositionLocator, pathLocator,
+    BookFragment, BookPath,
     BookRange,
 } from 'booka-common';
 
@@ -9,13 +9,14 @@ import {
     point, Callback, highlights,
 } from '../atoms';
 import { BookFragmentComp, BookSelection } from '../reader';
-import { linkForLocation, generateQuoteLink } from './common';
+import { generateQuoteLink } from './common';
 import { useCopy } from '../core';
+import { BookLink, linkToString } from '../ducks';
 
 export type BookViewCompProps = Themed & {
     bookId: string,
     fragment: BookFragment,
-    pathToScroll: BookPath | null,
+    pathToScroll: BookPath | undefined,
     updateBookPosition: Callback<BookPath>,
     quoteRange: BookRange | undefined,
     setQuoteRange: Callback<BookRange | undefined>,
@@ -52,7 +53,10 @@ export function BookViewComp({
                 <PathLink
                     theme={theme}
                     text={fragment.previous.title || 'Previous'}
-                    location={pathLocator(bookId, fragment.previous.path)}
+                    link={{
+                        bookId,
+                        path: fragment.previous.path,
+                    }}
                 />
         }
         <BookFragmentComp
@@ -72,23 +76,26 @@ export function BookViewComp({
                 <PathLink
                     theme={theme}
                     text={fragment.next.title || 'Next'}
-                    location={pathLocator(bookId, fragment.next.path)}
+                    link={{
+                        bookId,
+                        path: fragment.next.path,
+                    }}
                 />
         }
     </>;
 }
 
 type PathLinkProps = Themed & {
-    location: BookPositionLocator,
+    link: BookLink,
     text: string,
 };
-function PathLink({ theme, text, location }: PathLinkProps) {
+function PathLink({ theme, text, link }: PathLinkProps) {
     return <Row centered margin={point(1)}>
         <BorderButton
             theme={theme}
             text={text}
             fontFamily='book'
-            to={linkForLocation(location)}
+            to={linkToString(link)}
         />
     </Row>;
 }

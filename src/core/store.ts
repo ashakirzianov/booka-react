@@ -4,10 +4,8 @@ import { createStore, compose, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { createEpicMiddleware } from 'redux-observable';
 
-import { rootReducer, rootEpic, AppState } from '../ducks';
+import { rootReducer, rootEpic, AppState, queryForLink } from '../ducks';
 import { createBrowserHistory, LocationDescriptorObject } from 'history';
-import { stringify } from 'query-string';
-import { pathToString, rangeToString } from 'booka-common';
 import { throttle } from 'lodash';
 
 export const ConnectedProvider: React.SFC = ({ children }) =>
@@ -45,15 +43,8 @@ store.subscribe(throttle(() => {
 }));
 
 function locationForState(state: AppState): LocationDescriptorObject {
-    const searchObject: { [k: string]: string } = {};
-    if (state.screen === 'book') {
-        if (state.book.path) {
-            searchObject.p = pathToString(state.book.path);
-        }
-        if (state.book.quote) {
-            searchObject.q = rangeToString(state.book.quote);
-        }
-    }
-    const search = stringify(searchObject);
-    return { search };
+    const query = queryForLink(state.book.link);
+    return {
+        search: query,
+    };
 }
