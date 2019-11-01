@@ -10,8 +10,8 @@ import {
 } from '../atoms';
 import { BookFragmentComp, BookSelection } from '../reader';
 import { generateQuoteLink } from './common';
-import { useCopy } from '../core';
-import { BookLink, linkToString } from '../ducks';
+import { useCopy, linkToString } from '../core';
+import { BookLink } from '../ducks';
 
 export type BookViewCompProps = Themed & {
     bookId: string,

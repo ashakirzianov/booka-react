@@ -5,8 +5,8 @@ import { TableOfContents, TableOfContentsItem } from 'booka-common';
 import {
     Row, Tab, Column, point, StretchTextButton, TextLine, Themed, Modal, Callback,
 } from '../atoms';
-import { linkToString } from '../ducks';
 import { pageForPosition } from './common';
+import { linkToString } from '../core';
 
 export type TableOfContentsProps = Themed & {
     toc: TableOfContents,

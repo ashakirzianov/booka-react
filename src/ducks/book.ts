@@ -7,7 +7,14 @@ import {
 import { getBookFragment } from '../api';
 import { AppAction } from './app';
 import { ofAppType } from './utils';
-import { BookLink } from './bookLink';
+
+export type BookLink = {
+    bookId: string,
+    path?: BookPath,
+    refId?: string,
+    quote?: BookRange,
+    toc?: boolean,
+};
 
 type BookStateBase = {
     link: BookLink,
