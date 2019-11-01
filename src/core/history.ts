@@ -11,7 +11,7 @@ export function updateHistoryFromState(state: AppState) {
 }
 
 function locationForState(state: AppState): LocationDescriptorObject {
-    const query = queryForLink(state.book.link);
+    const query = queryForLink(state.book);
     return {
         search: query,
     };

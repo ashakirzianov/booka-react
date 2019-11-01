@@ -16,18 +16,13 @@ export type BookLink = {
     toc?: boolean,
 };
 
-type BookStateBase = BookLink & {
+type BookStateBase<K extends string> = BookLink & {
+    state: K,
     needToScroll?: boolean,
 };
-export type BookErrorState = BookStateBase & {
-    state: 'error',
-};
-export type BookLoadingState = BookStateBase & {
-    state: 'loading',
-};
-export type BookReadyState = BookStateBase & {
-    state: 'ready',
-    bookId: string,
+export type BookErrorState = BookStateBase<'error'>;
+export type BookLoadingState = BookStateBase<'loading'>;
+export type BookReadyState = BookStateBase<'ready'> & {
     fragment: BookFragment,
 };
 export type BookState =
