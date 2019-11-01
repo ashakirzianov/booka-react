@@ -16,8 +16,7 @@ export type BookLink = {
     toc?: boolean,
 };
 
-type BookStateBase = {
-    link: BookLink,
+type BookStateBase = BookLink & {
     needToScroll?: boolean,
 };
 export type BookErrorState = BookStateBase & {
@@ -28,10 +27,13 @@ export type BookLoadingState = BookStateBase & {
 };
 export type BookReadyState = BookStateBase & {
     state: 'ready',
+    bookId: string,
     fragment: BookFragment,
 };
 export type BookState =
-    | BookErrorState | BookLoadingState | BookReadyState
+    | BookReadyState
+    | BookLoadingState
+    | BookErrorState
     ;
 
 export type BookOpenAction = {
@@ -70,52 +72,43 @@ export type BookFragmentAction =
 
 const defaultState: BookState = {
     state: 'loading',
-    link: { bookId: '<no-book-id>' },
+    bookId: '<no-book>',
 };
 export function bookReducer(state: BookState = defaultState, action: AppAction): BookState {
     switch (action.type) {
         case 'book-open':
             return {
                 state: 'loading',
-                link: action.payload,
+                ...action.payload,
             };
         case 'book-fetch-fulfilled':
             return {
                 state: 'ready',
-                link: action.payload.link,
+                ...action.payload.link,
                 fragment: action.payload.fragment,
                 needToScroll: true,
             };
         case 'book-fetch-rejected':
             return {
                 state: 'error',
-                link: action.payload,
+                ...action.payload,
             };
         case 'book-set-quote':
             return {
                 ...state,
-                link: {
-                    ...state.link,
-                    quote: action.payload,
-                },
+                quote: action.payload,
             };
         case 'book-update-path':
             return {
                 ...state,
-                link: {
-                    ...state.link,
-                    path: action.payload,
-                },
+                path: action.payload,
                 needToScroll: false,
             };
         case 'book-toggle-toc':
             return state.state === 'ready' && state.fragment.toc
                 ? {
                     ...state,
-                    link: {
-                        ...state.link,
-                        toc: !state.link.toc,
-                    },
+                    toc: !state.toc,
                 }
                 : state;
         default:

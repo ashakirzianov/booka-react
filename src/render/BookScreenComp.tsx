@@ -35,35 +35,35 @@ function BookScreenContent({
 }: BookScreenProps) {
     switch (screen.state) {
         case 'loading':
-            return <span>loading: {screen.link.bookId}</span>;
+            return <span>loading: {screen.bookId}</span>;
         case 'ready':
             return <>
                 <BookViewComp
-                    bookId={screen.link.bookId}
+                    bookId={screen.bookId}
                     theme={theme}
                     fragment={screen.fragment}
                     pathToScroll={
                         screen.needToScroll
-                            ? screen.link.path
+                            ? screen.path
                             : undefined
                     }
                     updateBookPosition={updateCurrentPath}
-                    quoteRange={screen.link.quote}
+                    quoteRange={screen.quote}
                     setQuoteRange={setQuoteRange}
                 />
                 {
-                    screen.link.toc && screen.fragment.toc
+                    screen.toc && screen.fragment.toc
                         ? <TableOfContentsComp
                             theme={theme}
                             toc={screen.fragment.toc}
-                            id={screen.link.bookId}
+                            id={screen.bookId}
                             toggleToc={toggleToc}
                         />
                         : null
                 }
             </>;
         case 'error':
-            return <span>error: {screen.link.bookId}</span>;
+            return <span>error: {screen.bookId}</span>;
         default:
             assertNever(screen);
             return <span>Should not happen</span>;
@@ -236,7 +236,7 @@ function BookScreenFooter({
 }: BookScreenFooterProps) {
     if (screen.state === 'ready') {
         const fragment = screen.fragment;
-        const path = screen.link.path || fragment.current.path;
+        const path = screen.path || fragment.current.path;
         const total = fragment.toc
             ? pageForPosition(fragment.toc.length)
             : undefined;
