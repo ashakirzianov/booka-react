@@ -1,10 +1,10 @@
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 import { map, mergeMap, catchError } from 'rxjs/operators';
 import { Epic, combineEpics } from 'redux-observable';
 import {
     BookFragment, BookRange, BookPath, emptyPath,
 } from 'booka-common';
-import { getBookFragment } from '../api';
+import { getBookFragment, getFragmentWithPathForId } from '../api';
 import { AppAction } from './app';
 import { ofAppType } from './utils';
 
@@ -111,19 +111,55 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
     }
 }
 
+type FragmentWithLink = {
+    fragment: BookFragment,
+    link: BookLink,
+};
+type RefIdLink = BookLink & { refId: string };
+function openRefId(link: RefIdLink): Observable<FragmentWithLink> {
+    return getFragmentWithPathForId(link.bookId, link.refId).pipe(
+        map(({ fragment, path }) => {
+            return {
+                fragment,
+                link: {
+                    ...link,
+                    path,
+                },
+            };
+        }),
+    );
+}
+
+type PathLink = BookLink;
+function openPath(link: PathLink): Observable<FragmentWithLink> {
+    return getBookFragment(link.bookId, link.path || emptyPath()).pipe(
+        map((fragment) => {
+            return {
+                fragment,
+                link,
+            };
+        }),
+    );
+}
+
+function openLink(bookLink: BookLink) {
+    const observable = bookLink.refId !== undefined
+        // Note: object assign to please TypeScript
+        ? openRefId({ ...bookLink, refId: bookLink.refId })
+        : openPath(bookLink);
+    return observable;
+}
+
 const fetchBookFragmentEpic: Epic<AppAction> = (action$) => action$.pipe(
     ofAppType('book-open'),
     mergeMap(
-        action => getBookFragment(action.payload.bookId, action.payload.path || emptyPath()).pipe(
-            map((fragment): AppAction => {
-                return {
-                    type: 'book-fetch-fulfilled',
-                    payload: {
-                        fragment,
-                        link: action.payload,
-                    },
-                };
-            }),
+        action => openLink(action.payload).pipe(
+            map(({ fragment, link }): AppAction => ({
+                type: 'book-fetch-fulfilled',
+                payload: {
+                    fragment, link,
+                },
+            })),
             catchError(() => of<AppAction>({
                 type: 'book-fetch-rejected',
                 payload: action.payload,
