@@ -2,7 +2,8 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
     BookFragment, BookPath, Book, fragmentForPath,
-    defaultFragmentLength, tocForBook, LibContract, pathToString, findReference,
+    defaultFragmentLength, tocForBook, LibContract,
+    pathToString, findReference,
 } from 'booka-common';
 import { config } from '../config';
 import { createFetcher } from './fetcher';
@@ -10,9 +11,9 @@ import { withPartial } from './operators';
 
 export function getBookFragment(bookId: string, path: BookPath): Observable<BookFragment> {
     return withPartial(
-        getBook(bookId).pipe(
+        getBookCached(bookId).pipe(
             map(book => {
-                return resolvedFragment(book, path);
+                return resolveFragment(book, path);
             })
         ),
         fetchBookFragment(bookId, path).pipe(
@@ -26,42 +27,16 @@ export function getBookFragment(bookId: string, path: BookPath): Observable<Book
 export function getFragmentWithPathForId(
     bookId: string, refId: string,
 ): Observable<FragmentWithPath> {
-    return new Observable(subs => {
-        const cached = cache[bookId];
-        if (cached) {
-            const pair = resolveRefId(cached, refId);
+    return getBookCached(bookId).pipe(
+        map(book => {
+            const pair = resolveRefId(book, refId);
             if (pair) {
-                subs.next(pair);
-                subs.complete();
+                return pair;
             } else {
-                subs.error({
-                    diag: 'bad reference',
-                    refId,
-                });
+                throw new Error(`Could not resolve an id: ${refId}`);
             }
-            return;
-        } else {
-            const bookSubscription = fetchBook(bookId).subscribe(res => {
-                const book = res.value;
-                cache[bookId] = book;
-                const pair = resolveRefId(book, refId);
-                if (pair) {
-                    subs.next(pair);
-                    subs.complete();
-                } else {
-                    subs.error({
-                        diag: 'bad reference',
-                        refId,
-                    });
-                }
-            });
-            return {
-                unsubscribe() {
-                    bookSubscription.unsubscribe();
-                },
-            };
-        }
-    });
+        }),
+    );
 }
 
 type FragmentWithPath = {
@@ -72,14 +47,14 @@ function resolveRefId(book: Book, refId: string): FragmentWithPath | undefined {
     const reference = findReference(book.nodes, refId);
     if (reference) {
         const path = reference[1];
-        const fragment = resolvedFragment(book, path);
+        const fragment = resolveFragment(book, path);
         return { fragment, path };
     } else {
         return undefined;
     }
 }
 
-function resolvedFragment(book: Book, path: BookPath): BookFragment {
+function resolveFragment(book: Book, path: BookPath): BookFragment {
     const fragment = fragmentForPath(book, path, defaultFragmentLength);
     return {
         ...fragment,
@@ -91,7 +66,7 @@ function resolvedFragment(book: Book, path: BookPath): BookFragment {
 const cache: {
     [id: string]: Book,
 } = {};
-function getBook(id: string): Observable<Book> {
+function getBookCached(id: string): Observable<Book> {
     const cached = cache[id];
     if (cached) {
         return of(cached);
