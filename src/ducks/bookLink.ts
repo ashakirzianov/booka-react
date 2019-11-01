@@ -13,7 +13,7 @@ export type BookLink = {
 
 export function linkToString(link: BookLink): string {
     const query = queryForLink(link);
-    return `/book/${link.bookId}${query}`;
+    return `/book/${link.bookId}${query ? '?' + query : ''}`;
 }
 
 export function queryForLink(link: BookLink): string {
@@ -27,10 +27,10 @@ export function queryForLink(link: BookLink): string {
     if (link.quote) {
         queryObject.q = rangeToString(link.quote);
     }
-    // TODO: support toc on link
+    if (link.toc) {
+        queryObject.toc = 'true';
+    }
 
     const query = stringify(queryObject);
-    return query
-        ? `?${query}`
-        : '';
+    return query;
 }

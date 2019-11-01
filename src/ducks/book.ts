@@ -12,8 +12,6 @@ import { BookLink } from './bookLink';
 type BookStateBase = {
     link: BookLink,
     needToScroll?: boolean,
-    // TODO: combine with link ?
-    showToc?: boolean,
 };
 export type BookErrorState = BookStateBase & {
     state: 'error',
@@ -107,7 +105,10 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
             return state.state === 'ready' && state.fragment.toc
                 ? {
                     ...state,
-                    showToc: !state.showToc,
+                    link: {
+                        ...state.link,
+                        toc: !state.link.toc,
+                    },
                 }
                 : state;
         default:

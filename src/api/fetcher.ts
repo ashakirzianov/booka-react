@@ -29,7 +29,6 @@ export type Fetcher<C extends ApiContract> = {
 export function createFetcher<C extends ApiContract>(baseUrl: string): Fetcher<C> {
     function buildFetchMethod<M extends MethodNames>(method: M): FetchMethod<C, M> {
         return (path, param) => {
-            console.log(path, param);
             const url = baseUrl + replaceParams(path, param.params) + queryToString(param.query);
             const formData = param.extra && param.extra.postData;
             // TODO: test form data works

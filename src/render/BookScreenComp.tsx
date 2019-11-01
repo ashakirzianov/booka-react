@@ -52,7 +52,7 @@ function BookScreenContent({
                     setQuoteRange={setQuoteRange}
                 />
                 {
-                    screen.showToc && screen.fragment.toc
+                    screen.link.toc && screen.fragment.toc
                         ? <TableOfContentsComp
                             theme={theme}
                             toc={screen.fragment.toc}

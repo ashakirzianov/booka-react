@@ -1,36 +1,25 @@
 import React from 'react';
 import { parse } from 'query-string';
 import {
-    emptyPath, pathFromString, rangeFromString, BookRange, BookPath,
+    pathFromString, rangeFromString, BookRange, BookPath,
 } from 'booka-common';
 import { BookScreenComp } from '../render';
 import {
     useAppDispatch, useAppSelector, useTheme,
 } from '../core';
 import { RouteProps } from '../atoms';
+import { BookLink } from '../ducks';
+import { HistoryLocation } from '@reach/router';
 
 export function BookRoute({ bookId, location }: RouteProps) {
-    const query = parse(location!.search);
-    const pathString: string | undefined = query.p as any;
-    const quoteString: string | undefined = query.q as any;
     const dispatch = useAppDispatch();
     React.useEffect(() => {
-        const path = pathString
-            ? pathFromString(pathString)
-            : undefined;
-        const quoteRange = quoteString
-            ? rangeFromString(quoteString)
-            : undefined;
+        const link = buildLink(bookId, location!);
         dispatch({
             type: 'book-open',
-            payload: {
-                bookId,
-                // TODO: handle quote range navigation somewhere else
-                path: path || (quoteRange && quoteRange.start) || emptyPath(),
-                quote: quoteRange,
-            },
+            payload: link,
         });
-    }, [dispatch, bookId, pathString, quoteString]);
+    }, [dispatch, bookId, location]);
     const bookScreen = useAppSelector(s => s.book);
 
     const setQuoteRange = React.useCallback((range: BookRange | undefined) => dispatch({
@@ -59,4 +48,19 @@ export function BookRoute({ bookId, location }: RouteProps) {
         toggleControls={toggleControls}
         toggleToc={toggleToc}
     />;
+}
+
+function buildLink(bookId: string, location: HistoryLocation): BookLink {
+    const { p, q, toc } = parse(location!.search);
+
+    return {
+        bookId,
+        path: typeof p === 'string'
+            ? pathFromString(p)
+            : undefined,
+        quote: typeof q === 'string'
+            ? rangeFromString(q)
+            : undefined,
+        toc: toc === 'true' ? true : false,
+    };
 }
