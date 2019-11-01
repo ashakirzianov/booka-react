@@ -6,8 +6,10 @@ import { AppState, BookLink } from '../ducks';
 
 const history = createBrowserHistory();
 export function updateHistoryFromState(state: AppState) {
-    const location = locationForState(state);
-    history.replace(location);
+    if (state.screen === 'book') {
+        const location = locationForState(state);
+        history.replace(location);
+    }
 }
 
 function locationForState(state: AppState): LocationDescriptorObject {
