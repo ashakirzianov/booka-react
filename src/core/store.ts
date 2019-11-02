@@ -10,6 +10,7 @@ import { rootReducer, rootEpic } from '../ducks';
 import { updateHistoryFromState } from './history';
 import { startupFbSdk } from '../atoms';
 import { config } from '../config';
+import { fbState } from '../atoms/facebookSdk';
 
 export const ConnectedProvider: React.SFC = ({ children }) =>
     React.createElement(Provider, { store }, children);
@@ -45,3 +46,13 @@ store.subscribe(throttle(() => {
 }));
 
 startupFbSdk(config().facebook.clientId);
+fbState().subscribe(state => {
+    if (state.state === 'logged' && state.token) {
+        store.dispatch({
+            type: 'account-fb-token',
+            payload: {
+                token: state.token,
+            },
+        });
+    }
+});

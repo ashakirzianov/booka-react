@@ -5,19 +5,12 @@ import { Icon } from './Icons';
 import { point, Callback } from './common';
 import { FbLoginState, fbState, doFbLogin } from './facebookSdk';
 
-type SocialLoginProvider = 'facebook';
-export type SocialLoginResult = {
-    token: string,
-    provider: SocialLoginProvider,
-};
-
 type SocialButtonProps = {
-    onLogin: Callback<SocialLoginResult>,
     onStatusChange?: Callback,
 };
 
 export type FacebookLoginProps = SocialButtonProps;
-export function FacebookLogin({ onLogin, onStatusChange }: FacebookLoginProps) {
+export function FacebookLogin({ onStatusChange }: FacebookLoginProps) {
     const [loginState, setLoginState] = React.useState<FbLoginState>({ state: 'checking' });
     React.useEffect(() => {
         fbState().subscribe(setLoginState);
@@ -33,12 +26,7 @@ export function FacebookLogin({ onLogin, onStatusChange }: FacebookLoginProps) {
     return <Column>
         <ActualButton
             onClick={() => {
-                if (loginState.state === 'logged' && loginState.token) {
-                    onLogin({
-                        provider: 'facebook',
-                        token: loginState.token,
-                    });
-                } else {
+                if (loginState.state !== 'logged' || !loginState.token) {
                     doFbLogin();
                 }
             }}

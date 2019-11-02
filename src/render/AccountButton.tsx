@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Callback, AccountInfo } from 'booka-common';
 
 import {
-    Column, FacebookLogin, SocialLoginResult, PictureButton, Row, point,
+    Column, FacebookLogin, PictureButton, Row, point,
     WithPopover, TextLine, IconButton, TagButton, Themed,
 } from '../atoms';
 import { AccountState } from '../ducks';
@@ -12,17 +12,6 @@ export function ConnectedAccountButton() {
     const theme = useTheme();
     const account = useAppSelector(s => s.account);
     const dispatch = useAppDispatch();
-
-    const onLogin = React.useCallback((result: SocialLoginResult) => {
-        if (result.provider === 'facebook') {
-            dispatch({
-                type: 'account-fb-token',
-                payload: {
-                    token: result.token,
-                },
-            });
-        }
-    }, [dispatch]);
     const logout = React.useCallback(() => dispatch({
         type: 'account-logout',
     }), [dispatch]);
@@ -30,7 +19,6 @@ export function ConnectedAccountButton() {
     return <AccountButton
         theme={theme}
         account={account}
-        onLogin={onLogin}
         logout={logout}
     />;
 }
@@ -38,11 +26,10 @@ export function ConnectedAccountButton() {
 type AccountButtonProps = Themed & {
     account: AccountState,
     logout: Callback,
-    onLogin: Callback<SocialLoginResult>,
 };
 function AccountButton({
     account, theme,
-    logout, onLogin,
+    logout,
 }: AccountButtonProps) {
     return <WithPopover
         theme={theme}
@@ -57,7 +44,6 @@ function AccountButton({
                 : ({ scheduleUpdate }) =>
                     <SignInPanel
                         onStatusChanged={scheduleUpdate}
-                        onLogin={onLogin}
                     />
         }
     >
@@ -113,13 +99,11 @@ function AccountPanel({ account, theme, logout }: AccountPanelProps) {
 
 type SignInPanelProps = {
     onStatusChanged?: Callback,
-    onLogin: Callback<SocialLoginResult>,
 };
-function SignInPanel({ onStatusChanged, onLogin }: SignInPanelProps) {
+function SignInPanel({ onStatusChanged }: SignInPanelProps) {
     return <Column>
         <FacebookLogin
             onStatusChange={onStatusChanged}
-            onLogin={onLogin}
         />
     </Column>;
 }
