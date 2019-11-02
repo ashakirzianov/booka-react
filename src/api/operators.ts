@@ -5,7 +5,12 @@ export function withPartial<T>(actual: Observable<T>, partial: Observable<T>): O
         let partialSub: Subscription | undefined;
         let needToRunPartial = true;
         const actualSub = actual.subscribe({
-            ...observer,
+            complete() {
+                observer.complete();
+            },
+            error(err) {
+                observer.error(err);
+            },
             next(value) {
                 if (partialSub) {
                     partialSub.unsubscribe();
@@ -16,8 +21,12 @@ export function withPartial<T>(actual: Observable<T>, partial: Observable<T>): O
         });
         if (needToRunPartial) {
             partialSub = partial.subscribe({
-                ...observer,
-                complete() { return; },
+                next(value) {
+                    observer.next(value);
+                },
+                error(err) {
+                    observer.error(err);
+                },
             });
         }
         return {

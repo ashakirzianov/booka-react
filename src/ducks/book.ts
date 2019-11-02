@@ -160,10 +160,12 @@ const fetchBookFragmentEpic: Epic<AppAction> = (action$) => action$.pipe(
                     fragment, link,
                 },
             })),
-            catchError(() => of<AppAction>({
-                type: 'book-fetch-rejected',
-                payload: action.payload,
-            })),
+            catchError(() => {
+                return of<AppAction>({
+                    type: 'book-fetch-rejected',
+                    payload: action.payload,
+                });
+            }),
         ),
     ),
 );
