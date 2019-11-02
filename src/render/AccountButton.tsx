@@ -6,16 +6,43 @@ import {
     WithPopover, TextLine, IconButton, TagButton, Themed,
 } from '../atoms';
 import { AccountState } from '../ducks';
+import { useAppDispatch, useAppSelector, useTheme } from '../core';
 
-export type AccountButtonProps = Themed & {
+export function ConnectedAccountButton() {
+    const theme = useTheme();
+    const account = useAppSelector(s => s.account);
+    const dispatch = useAppDispatch();
+
+    const onLogin = React.useCallback((result: SocialLoginResult) => {
+        if (result.provider === 'facebook') {
+            dispatch({
+                type: 'account-fb-token',
+                payload: {
+                    token: result.token,
+                },
+            });
+        }
+    }, [dispatch]);
+    const logout = React.useCallback(() => dispatch({
+        type: 'account-logout',
+    }), [dispatch]);
+
+    return <AccountButton
+        theme={theme}
+        account={account}
+        onLogin={onLogin}
+        logout={logout}
+    />;
+}
+
+type AccountButtonProps = Themed & {
     account: AccountState,
     logout: Callback,
-    login: Callback,
     onLogin: Callback<SocialLoginResult>,
 };
-export function AccountButton({
+function AccountButton({
     account, theme,
-    logout, login, onLogin,
+    logout, onLogin,
 }: AccountButtonProps) {
     return <WithPopover
         theme={theme}
@@ -37,14 +64,13 @@ export function AccountButton({
         <ActualButton
             theme={theme}
             account={account}
-            onClick={login}
         />
     </WithPopover>;
 }
 
 type ActualButtonProps = Themed & {
     account: AccountState,
-    onClick: Callback,
+    onClick?: Callback,
 };
 function ActualButton({ theme, account, onClick }: ActualButtonProps) {
     if (account.state === 'signed') {

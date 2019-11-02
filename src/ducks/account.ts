@@ -38,8 +38,13 @@ export type ReceivedAccountInfoAction = {
         account: AccountInfo,
     },
 };
+export type LogoutAction = {
+    type: 'account-logout',
+};
 export type AccountAction =
-    | ReceivedFbTokenAction | AuthSuccessAction | ReceivedAccountInfoAction;
+    | ReceivedFbTokenAction | AuthSuccessAction | ReceivedAccountInfoAction
+    | LogoutAction
+    ;
 
 const defaultState: AccountState = { state: 'not-signed' };
 export function accountReducer(state: AccountState = defaultState, action: AppAction): AccountState {
@@ -51,6 +56,8 @@ export function accountReducer(state: AccountState = defaultState, action: AppAc
                 provider: action.payload.provider,
                 token: action.payload.token,
             };
+        case 'account-logout':
+            return { state: 'not-signed' };
         default:
             return state;
     }

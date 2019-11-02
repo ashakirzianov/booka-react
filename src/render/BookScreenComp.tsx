@@ -14,6 +14,7 @@ import {
 import { pageForPosition } from './common';
 import { BookViewComp } from './BookViewComp';
 import { TableOfContentsComp } from './TableOfContentsComp';
+import { ConnectedAccountButton } from './AccountButton';
 
 export type BookScreenProps = Themed & {
     screen: BookState,
@@ -106,7 +107,12 @@ function BookScreenHeader({ theme, visible }: BookScreenHeaderProps) {
     >
         <Triad
             left={<LibButton theme={theme} />}
-            right={<AppearanceButton theme={theme} />}
+            right={
+                <>
+                    <AppearanceButton theme={theme} />
+                    <ConnectedAccountButton
+                    />
+                </>}
         />
     </TopBar>;
 }
