@@ -6,17 +6,24 @@ import { AppState, BookLink } from '../ducks';
 
 const history = createBrowserHistory();
 export function updateHistoryFromState(state: AppState) {
-    if (state.screen === 'book') {
-        const location = locationForState(state);
+    const location = locationForState(state);
+    if (location) {
         history.replace(location);
     }
 }
 
-function locationForState(state: AppState): LocationDescriptorObject {
-    const query = queryForLink(state.book);
-    return {
-        search: query,
-    };
+function locationForState(state: AppState): LocationDescriptorObject | undefined {
+    switch (state.screen) {
+        case 'book': {
+            const query = queryForLink(state.book);
+            return {
+                pathname: `/book/${state.book.bookId}`,
+                search: query,
+            };
+        }
+        default:
+            return undefined;
+    }
 }
 
 export function linkToString(link: BookLink): string {
