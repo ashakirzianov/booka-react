@@ -1,4 +1,3 @@
-/*global globalThis*/
 import * as React from 'react';
 
 import { Column, Row } from './Layout';
