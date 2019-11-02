@@ -39,7 +39,7 @@ export function BookScreenComp(props: BookScreenProps) {
             const readyProps = { ...props, screen: props.screen };
             return <BookScreenReadyComp {...readyProps} />;
         case 'error':
-            return <>
+            return <Column>
                 <TextLine
                     theme={props.theme}
                     text={`Error opening ${props.screen.bookId}`}
@@ -49,7 +49,7 @@ export function BookScreenComp(props: BookScreenProps) {
                     text='Back'
                     to='/'
                 />
-            </>;
+            </Column>;
         default:
             assertNever(props.screen);
             return <span>Should not happen</span>;
