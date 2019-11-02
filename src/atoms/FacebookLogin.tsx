@@ -6,18 +6,12 @@ import { point, Callback } from './common';
 import { FbLoginState, fbState, doFbLogin } from './facebookSdk';
 
 type SocialLoginProvider = 'facebook';
-type SocialLoginResultFail = {
-    success: false,
-};
-type SocialLoginResultSuccess = {
-    success: true,
+export type SocialLoginResult = {
     token: string,
     provider: SocialLoginProvider,
 };
-export type SocialLoginResult = SocialLoginResultSuccess | SocialLoginResultFail;
 
 type SocialButtonProps = {
-    clientId: string,
     onLogin: Callback<SocialLoginResult>,
     onStatusChange?: Callback,
 };
@@ -41,7 +35,6 @@ export function FacebookLogin({ onLogin, onStatusChange }: FacebookLoginProps) {
             onClick={() => {
                 if (loginState.state === 'logged' && loginState.token) {
                     onLogin({
-                        success: true,
                         provider: 'facebook',
                         token: loginState.token,
                     });
