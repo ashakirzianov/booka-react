@@ -1,8 +1,19 @@
 import * as React from 'react';
 import { BookDesc } from 'booka-common';
 
-import { Column, TextButton } from '../atoms';
+import { Column, TextButton, Themed, TopBar, point, Triad } from '../atoms';
 import { useAppSelector, useTheme } from '../core';
+import { ConnectedAccountButton } from './AccountButton';
+
+export type LibraryScreenProps = Themed & {
+    books: BookDesc[],
+};
+export function LibraryScreenComp({ theme, books }: LibraryScreenProps) {
+    return <>
+        <LibraryScreenHeader theme={theme} />
+        <AllBooksComp books={books} />
+    </>;
+}
 
 type BookItemProps = {
     desc: BookDesc,
@@ -31,7 +42,15 @@ function AllBooksComp({ books }: AllBooksProps) {
     </Column>;
 }
 
-export function LibraryScreenComp() {
-    const books = useAppSelector(s => s.library.books);
-    return <AllBooksComp books={books} />;
+type LibraryScreenHeaderProps = Themed;
+function LibraryScreenHeader({ theme }: LibraryScreenHeaderProps) {
+    return <TopBar
+        theme={theme}
+        open={true}
+        paddingHorizontal={point(1)}
+    >
+        <Triad
+            right={<ConnectedAccountButton />}
+        />
+    </TopBar>;
 }
