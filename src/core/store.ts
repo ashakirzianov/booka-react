@@ -7,6 +7,8 @@ import { throttle } from 'lodash';
 
 import { rootReducer, rootEpic } from '../ducks';
 import { updateHistoryFromState } from './history';
+import { startupFbSdk } from '../atoms';
+import { config } from '../config';
 
 export const ConnectedProvider: React.SFC = ({ children }) =>
     React.createElement(Provider, { store }, children);
@@ -39,3 +41,5 @@ store.subscribe(throttle(() => {
     trailing: true,
     leading: false,
 }));
+
+startupFbSdk(config().facebook.clientId);

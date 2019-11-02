@@ -3,6 +3,7 @@ function prodConfig() {
         frontUrl: 'http://booka.pub',
         backUrl: 'https://reader-back.herokuapp.com',
         libUrl: 'https://booka-lib.herokuapp.com',
+        facebook: { clientId: '1527203577422306' },
     };
 }
 
