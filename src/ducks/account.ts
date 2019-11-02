@@ -1,8 +1,8 @@
-import { AppAction } from './app';
-import { AuthToken, AccountInfo } from 'booka-common';
 import { Epic, combineEpics } from 'redux-observable';
-import { ofAppType } from './utils';
 import { mergeMap, map } from 'rxjs/operators';
+import { AuthToken, AccountInfo } from 'booka-common';
+import { ofAppType } from './utils';
+import { AppAction } from './app';
 import { authFbToken, fetchAccountInfo } from '../api';
 
 export type SignInProvider = 'facebook';
@@ -12,9 +12,8 @@ export type AccountStateNotSigned = {
 export type AccountStateSigned = {
     state: 'signed',
     provider: SignInProvider,
+    account: AccountInfo,
     token: AuthToken,
-    userName: string,
-    profilePictureUrl?: string,
 };
 export type AccountState =
     | AccountStateNotSigned | AccountStateSigned;
@@ -33,7 +32,11 @@ export type AuthSuccessAction = {
 };
 export type ReceivedAccountInfoAction = {
     type: 'account-info',
-    payload: AccountInfo,
+    payload: {
+        provider: SignInProvider,
+        token: AuthToken,
+        account: AccountInfo,
+    },
 };
 export type AccountAction =
     | ReceivedFbTokenAction | AuthSuccessAction | ReceivedAccountInfoAction;
@@ -41,6 +44,13 @@ export type AccountAction =
 const defaultState: AccountState = { state: 'not-signed' };
 export function accountReducer(state: AccountState = defaultState, action: AppAction): AccountState {
     switch (action.type) {
+        case 'account-info':
+            return {
+                state: 'signed',
+                account: action.payload.account,
+                provider: action.payload.provider,
+                token: action.payload.token,
+            };
         default:
             return state;
     }
@@ -70,7 +80,11 @@ const accountAuthSuccessEpic: Epic<AppAction> = action$ => action$.pipe(
             map((res): AppAction => {
                 return {
                     type: 'account-info',
-                    payload: res.value,
+                    payload: {
+                        account: res.value,
+                        token: action.payload.token,
+                        provider: action.payload.provider,
+                    },
                 };
             }),
         ),
