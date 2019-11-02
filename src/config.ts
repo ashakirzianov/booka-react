@@ -1,7 +1,8 @@
 function prodConfig() {
     return {
-        libUrl: 'https://booka-lib.herokuapp.com',
         frontUrl: 'http://booka.pub',
+        backUrl: 'https://reader-back.herokuapp.com',
+        libUrl: 'https://booka-lib.herokuapp.com',
     };
 }
 
@@ -9,10 +10,11 @@ function debugConfig(): AppConfig {
     const prod = prodConfig();
     return {
         ...prod,
-        libUrl: 'http://localhost:3141',
         frontUrl: window && window.location && window.location.hostname
             ? `http://${window.location.hostname}:3000`
             : prod.frontUrl,
+        backUrl: 'http://localhost:3042',
+        libUrl: 'http://localhost:3141',
     };
 }
 
