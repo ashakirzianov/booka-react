@@ -2,7 +2,7 @@ import * as React from 'react';
 import { BookDesc } from 'booka-common';
 
 import { Column, TextButton, Themed, TopBar, point, Triad } from '../atoms';
-import { useAppSelector, useTheme } from '../core';
+import { useTheme } from '../core';
 import { ConnectedAccountButton } from './AccountButton';
 
 export type LibraryScreenProps = Themed & {

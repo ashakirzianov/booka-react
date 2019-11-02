@@ -4,6 +4,7 @@ import { createStore, compose, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { createEpicMiddleware } from 'redux-observable';
 import { throttle } from 'lodash';
+import { createLogger } from 'redux-logger';
 
 import { rootReducer, rootEpic } from '../ducks';
 import { updateHistoryFromState } from './history';
@@ -19,12 +20,13 @@ function configureStore() {
         // Note: support redux dev tools
         (globalThis.window && (globalThis.window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__)
         || compose;
+    const middlewares = process.env.NODE_ENV === 'development'
+        ? [epicMiddleware, createLogger()]
+        : [epicMiddleware];
     const s = createStore(
         rootReducer,
         composeEnhancers(
-            applyMiddleware(
-                epicMiddleware,
-            ),
+            applyMiddleware(...middlewares),
         ),
     );
     epicMiddleware.run(rootEpic);

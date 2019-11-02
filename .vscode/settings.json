@@ -22,6 +22,7 @@
         "fbtoken",
         "hoverable",
         "jssdk",
+        "middlewares",
         "multiline",
         "paren",
         "parens",
