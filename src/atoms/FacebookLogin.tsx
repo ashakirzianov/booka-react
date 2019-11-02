@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Column, Row } from './Layout';
 import { Icon } from './Icons';
 import { point, Callback } from './common';
+import { FbLoginState, fbState, doFbLogin } from './facebookSdk';
 
 type SocialLoginProvider = 'facebook';
 type SocialLoginResultFail = {
@@ -22,29 +23,19 @@ type SocialButtonProps = {
     onStatusChange?: Callback,
 };
 
-type LoginState =
-    | { state: 'checking' }
-    | { state: 'not-logged' }
-    | { state: 'logged', token?: string, name?: string, picture?: string }
-    ;
 export type FacebookLoginProps = SocialButtonProps;
-export function FacebookLogin({ clientId, onLogin, onStatusChange }: FacebookLoginProps) {
-    const [loginState, setLoginState] = React.useState<LoginState>({ state: 'checking' });
-    const updateLoginState = React.useCallback((state: LoginState) => {
-        setLoginState(state);
+export function FacebookLogin({ onLogin, onStatusChange }: FacebookLoginProps) {
+    const [loginState, setLoginState] = React.useState<FbLoginState>({ state: 'checking' });
+    React.useEffect(() => {
+        fbState().subscribe(setLoginState);
+    }, [setLoginState]);
+    React.useEffect(() => {
         if (onStatusChange) {
-            // HACK: need to set timeout to update popover properly
+            onStatusChange();
+            // Note: HACK: need to set timeout to update popover properly
             setTimeout(onStatusChange, 200);
         }
-    }, [onStatusChange, setLoginState]);
-
-    React.useEffect(() => {
-        initFbSdk(clientId);
-    }, [clientId]);
-
-    React.useEffect(() => {
-        getLoginStatus(updateLoginState);
-    }, [updateLoginState]);
+    }, [loginState, onStatusChange]);
 
     return <Column>
         <ActualButton
@@ -55,11 +46,8 @@ export function FacebookLogin({ clientId, onLogin, onStatusChange }: FacebookLog
                         provider: 'facebook',
                         token: loginState.token,
                     });
-                    updateLoginState(loginState);
-                } else if (globalThis.FB) {
-                    globalThis.FB.login(res => {
-                        handleFbLoginState(res, updateLoginState);
-                    });
+                } else {
+                    doFbLogin();
                 }
             }}
             user={
@@ -115,71 +103,4 @@ function ActualButton({ onClick, user }: ActualButtonProps) {
             }
         </Row>
     </button>;
-}
-
-function initFbSdk(clientId: string) {
-    let timeout = 0;
-    (window as any).fbAsyncInit = function asyncInit() {
-        if (globalThis.FB) {
-            globalThis.FB.init({
-                appId: clientId,
-                cookie: true,
-                xfbml: true,
-                version: 'v4.0',
-            });
-        } else {
-            setTimeout(asyncInit(), timeout);
-            timeout += 1000;
-        }
-    };
-
-    loadSdk();
-}
-
-function loadSdk() {
-    (function (d, s, id) {
-        let js: any;
-        const fjs: any = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) {
-            return;
-        }
-        js = d.createElement(s); js.id = id;
-        js.src = '//connect.facebook.net/en_US/sdk.js';
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-}
-
-function handleFbLoginState(status: fb.StatusResponse, callback: Callback<LoginState>) {
-    if (status.status === 'connected') {
-        callback({
-            state: 'logged',
-            token: status.authResponse.accessToken,
-        });
-        globalThis.FB.api('/me', { fields: 'picture,first_name' }, response => {
-            const anyResp = response as any;
-            const picUrl = anyResp.picture
-                && anyResp.picture.data
-                && anyResp.picture.data.url;
-            if (anyResp.first_name) {
-                callback({
-                    state: 'logged',
-                    name: anyResp.first_name,
-                    token: status.authResponse.accessToken,
-                    picture: picUrl,
-                });
-            }
-        });
-    } else {
-        callback({ state: 'not-logged' });
-    }
-}
-
-function getLoginStatus(callback: Callback<LoginState>) {
-    if (globalThis.FB) {
-        globalThis.FB.getLoginStatus(status => {
-            handleFbLoginState(status, callback);
-        });
-    } else {
-        setTimeout(() => getLoginStatus(callback), 1000);
-    }
 }
