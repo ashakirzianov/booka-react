@@ -3,10 +3,10 @@ import {
     assertNever, BookRange, positionForPath, BookPath,
 } from 'booka-common';
 
-import { BookState } from '../ducks';
+import { BookState, BookReadyState } from '../ducks';
 import { useAppDispatch } from '../core';
 import {
-    WithChildren, Column, point, Row, Callback, Themed,
+    Column, point, Row, Callback, Themed,
     Triad, IconButton, TopBar, EmptyLine, Clickable,
     PaletteName, PaletteButton, TextButton, Separator, WithPopover,
     colors, TextLine, BottomBar, TagButton,
@@ -15,9 +15,9 @@ import { pageForPosition } from './common';
 import { BookViewComp } from './BookViewComp';
 import { TableOfContentsComp } from './TableOfContentsComp';
 import { ConnectedAccountButton } from './AccountButton';
+import { FullScreenActivityIndicator } from '../atoms/Basics.native';
 
-export type BookScreenProps = Themed & {
-    screen: BookState,
+type BookScreenPropsBase = Themed & {
     controlsVisible: boolean,
     openRef: Callback<string>,
     setQuoteRange: Callback<BookRange | undefined>,
@@ -25,57 +25,41 @@ export type BookScreenProps = Themed & {
     toggleControls: Callback,
     toggleToc: Callback,
 };
-export function BookScreenComp(props: BookScreenProps) {
-    return <BookScreenContainer {...props} >
-        <BookScreenContent {...props} />
-    </BookScreenContainer>;
-}
 
-function BookScreenContent({
-    screen, setQuoteRange, theme,
-    updateCurrentPath, toggleToc,
-    openRef,
-}: BookScreenProps) {
-    switch (screen.state) {
+export type BookScreenProps = BookScreenPropsBase & {
+    screen: BookState,
+};
+export function BookScreenComp(props: BookScreenProps) {
+    switch (props.screen.state) {
         case 'loading':
-            return <span>loading: {screen.bookId}</span>;
+            return <FullScreenActivityIndicator
+                theme={props.theme}
+            />;
         case 'ready':
-            return <>
-                <BookViewComp
-                    bookId={screen.bookId}
-                    theme={theme}
-                    fragment={screen.fragment}
-                    pathToScroll={
-                        screen.needToScroll
-                            ? screen.path
-                            : undefined
-                    }
-                    updateBookPosition={updateCurrentPath}
-                    quoteRange={screen.quote}
-                    setQuoteRange={setQuoteRange}
-                    openRef={openRef}
-                />
-                {
-                    screen.toc && screen.fragment.toc
-                        ? <TableOfContentsComp
-                            theme={theme}
-                            toc={screen.fragment.toc}
-                            id={screen.bookId}
-                            toggleToc={toggleToc}
-                        />
-                        : null
-                }
-            </>;
+            const readyProps = { ...props, screen: props.screen };
+            return <BookScreenReadyComp {...readyProps} />;
         case 'error':
-            return <span>error: {screen.bookId}</span>;
+            return <>
+                <TextLine
+                    theme={props.theme}
+                    text={`Error opening ${props.screen.bookId}`}
+                />
+                <TextButton
+                    theme={props.theme}
+                    text='Back'
+                    to='/'
+                />
+            </>;
         default:
-            assertNever(screen);
+            assertNever(props.screen);
             return <span>Should not happen</span>;
     }
 }
 
-type BookScreenContainerProps = WithChildren<BookScreenProps>;
-function BookScreenContainer(props: BookScreenContainerProps) {
+type BookScreenReadyProps = BookScreenPropsBase & {
+    screen: BookReadyState,
+};
+function BookScreenReadyComp(props: BookScreenReadyProps) {
     return <>
         <BookScreenHeader
             theme={props.theme}
@@ -88,7 +72,30 @@ function BookScreenContainer(props: BookScreenContainerProps) {
             <Clickable onClick={props.toggleControls}>
                 <Column maxWidth={point(50)} fullWidth padding={point(1)} centered>
                     <EmptyLine />
-                    {props.children}
+                    <BookViewComp
+                        bookId={props.screen.bookId}
+                        theme={props.theme}
+                        fragment={props.screen.fragment}
+                        pathToScroll={
+                            props.screen.needToScroll
+                                ? props.screen.path
+                                : undefined
+                        }
+                        updateBookPosition={props.updateCurrentPath}
+                        quoteRange={props.screen.quote}
+                        setQuoteRange={props.setQuoteRange}
+                        openRef={props.openRef}
+                    />
+                    {
+                        props.screen.toc && props.screen.fragment.toc
+                            ? <TableOfContentsComp
+                                theme={props.theme}
+                                toc={props.screen.fragment.toc}
+                                id={props.screen.bookId}
+                                toggleToc={props.toggleToc}
+                            />
+                            : null
+                    }
                     <EmptyLine />
                 </Column>
             </Clickable>
