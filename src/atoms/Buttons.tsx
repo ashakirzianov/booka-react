@@ -25,6 +25,7 @@ export function TextButton({
 }: TextButtonProps) {
     return <div
         css={{
+            cursor: 'default',
             fontSize: getFontSize(theme, fontSize),
             fontFamily: getFontFamily(theme, fontFamily),
             color: colors(theme).accent,
@@ -95,7 +96,6 @@ export function TagButton(props: TagButtonProps) {
     </div>;
 }
 
-const HoverableView = View;
 export type PaletteButtonProps = ButtonProps & {
     text: string,
     palette: PaletteName,
@@ -104,30 +104,32 @@ export function PaletteButton(props: PaletteButtonProps) {
     const theme = props.theme;
     const cols = theme.palettes[props.palette].colors;
     const selected = props.palette === theme.currentPalette;
-    return <LinkOrButton
+    return <div
         onClick={props.onClick}
-        style={{
+        css={{
+            display: 'flex',
             color: cols.text,
             fontSize: getFontSize(props.theme, 'normal'),
-            // ':hover': {
-            //     color: cols.highlight,
-            // },
+            '&:hover': {
+                color: cols.highlight,
+            },
         }}
     >
-        <HoverableView style={{
+        <div css={{
+            display: 'flex',
             flexDirection: 'column',
             width: 50,
             height: 50,
             justifyContent: 'center',
             backgroundColor: cols.primary,
             borderRadius: 50,
-            borderColor: cols.highlight,
-            borderWidth: selected ? 3 : 0,
-            shadowColor: cols.shadow,
-            shadowRadius: 5,
-            // ':hover': {
-            //     borderWidth: 3,
-            // },
+            borderWidth: 3,
+            borderColor: selected ? cols.highlight : 'rgba(0,0,0,0)',
+            borderStyle: 'solid',
+            boxShadow: `0px 0px 5px 0px ${cols.shadow}`,
+            '&:hover': {
+                borderColor: cols.highlight,
+            },
         }}>
             <View
                 style={{
@@ -137,8 +139,8 @@ export function PaletteButton(props: PaletteButtonProps) {
             >
                 <span>{props.text}</span>
             </View>
-        </HoverableView>
-    </LinkOrButton>;
+        </div>
+    </div>;
 }
 
 export type PictureButtonProps = ButtonProps & {
