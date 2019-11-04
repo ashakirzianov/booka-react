@@ -146,29 +146,31 @@ export function PaletteButton(props: PaletteButtonProps) {
 export type PictureButtonProps = ButtonProps & {
     pictureUrl?: string,
 };
-export function PictureButton(props: PictureButtonProps) {
-    return <LinkOrButton
-        onClick={props.onClick}
+export function PictureButton({
+    onClick, pictureUrl, theme,
+}: PictureButtonProps) {
+    return <div
+        onClick={onClick}
     >
         <img
-            src={props.pictureUrl}
+            src={pictureUrl}
             alt='account'
-            style={{
+            css={{
                 display: 'flex',
                 justifyContent: 'center',
                 borderRadius: '50%',
                 alignItems: 'center',
-                borderColor: colors(props.theme).accent,
+                borderColor: colors(theme).accent,
                 borderWidth: 2,
                 borderStyle: 'solid',
                 ...({
                     ':hover': {
-                        borderColor: colors(props.theme).highlight,
+                        borderColor: colors(theme).highlight,
                     },
                 }),
             }}
         />
-    </LinkOrButton>;
+    </div>;
 }
 
 export type StretchTextButtonProps = WithChildren<ButtonProps>;
