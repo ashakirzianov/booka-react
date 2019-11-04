@@ -4,6 +4,10 @@ import { platformValue } from './platform';
 
 export type WithChildren<P = {}> = React.PropsWithChildren<P>;
 
+export type Style = React.CSSProperties & {
+    '&:hover'?: React.CSSProperties,
+};
+
 export type Func<Argument, Return> =
     void extends Argument ? () => Return
     : (

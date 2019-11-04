@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { jsx, css } from '@emotion/core';
 
 import { PaletteName, colors, getFontSize, Theme } from './theme';
 import { TextLine, TextProps } from './Basics';
@@ -23,12 +22,12 @@ export function TextButton({
     return <LinkOrButton
         to={to}
         onClick={onClick}
-        className={css({
+        style={{
             'color': colors(theme).accent,
-            '&hover': {
+            '&:hover': {
                 color: colors(theme).highlight,
             },
-        })}
+        }}
     >
         <TextLine
             theme={theme}

@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import { WithChildren, Callback } from './common';
+import { WithChildren, Callback, Style } from './common';
 import { Link } from './Router';
 
 export type LinkOrButtonProps = WithChildren<{
-    style?: React.CSSProperties,
+    style?: Style,
     to?: string,
     onClick?: Callback<void>,
     onHoverIn?: Callback,
