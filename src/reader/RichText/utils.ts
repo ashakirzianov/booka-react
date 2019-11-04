@@ -61,7 +61,7 @@ export function makePathMap<T>(): PathMap<T> {
                 block.value = value;
             }
         },
-        iterator: function* () {
+        *iterator() {
             for (let idx = 0; idx < map.length; idx++) {
                 const block = map[idx];
                 if (block !== undefined) {

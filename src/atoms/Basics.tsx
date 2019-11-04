@@ -3,7 +3,6 @@ import { ActivityIndicator, View } from 'react-native';
 
 import { Theme, PaletteColor, colors, fontSize } from './theme';
 import { percent, point, Size, WithChildren, defaults } from './common';
-import { platformValue } from './platform';
 
 export type TextProps = {
     fontFamily?: keyof Theme['fontFamilies'],
@@ -63,7 +62,6 @@ export function Separator() {
     }} />;
 }
 
-// TODO: remove ?
 export type ClickableProps = WithChildren<{
     onClick: () => void,
 }>;
@@ -73,28 +71,8 @@ export function Clickable(props: ClickableProps) {
     </div>;
 }
 
-// TODO: remove ?
 export function Tab() {
     return <span>&nbsp;&nbsp;</span>;
-}
-
-// TODO: remove ?
-export type LayerProps = WithChildren<{
-    theme: Theme,
-}>;
-export function Layer(props: LayerProps) {
-    return <View
-        style={{
-            position: 'absolute',
-            minHeight: '100%',
-            minWidth: '100%',
-            width: platformValue({ mobile: '100%' }),
-            height: platformValue({ mobile: '100%' }),
-            backgroundColor: colors(props.theme).primary,
-        }}
-    >
-        {props.children}
-    </View>;
 }
 
 export function EmptyLine() {

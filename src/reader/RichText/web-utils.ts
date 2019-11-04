@@ -68,8 +68,8 @@ function boundingClientRect(ref?: RefType) {
 export function scrollToRef(ref: RefType) {
     if (ref) {
         ref.scrollIntoView();
-        // TODO: find other solution ?
-        window.scrollBy(0, 1); // Ugly -- fix issue with showing prev element path in the url after navigation
+        // Note: HACK: fix issue with showing prev element path in the url after navigation
+        window.scrollBy(0, 1);
         return true;
     }
     return false;

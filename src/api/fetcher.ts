@@ -6,7 +6,6 @@ import { map } from 'rxjs/operators';
 import { AjaxRequest, ajax } from 'rxjs/ajax';
 import { Observable } from 'rxjs';
 
-// TODO: remove ?
 export type FetchReturn<C extends PathMethodContract> = {
     status: number,
     value: C['return'],

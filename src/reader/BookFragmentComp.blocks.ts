@@ -39,7 +39,6 @@ export function bookPathForBlockPath(blockPath: Path, data: BlockData): BookPath
     return bookPath;
 }
 export function blockPathForBookPath(path: BookPath, data: BlockData): Path | undefined {
-    // TODO: implement properly
     if (path.length === 0) {
         return { block: 0 };
     }
@@ -73,6 +72,9 @@ function* generateBlocks({
             isUnderTitle, fontSize, refColor, refHoverColor,
             images: fragment.images || {},
         });
+        if (block === undefined) {
+            continue;
+        }
         if (colorization) {
             block.fragments = colorizeFragments(block.fragments, colorization, path);
         }
@@ -89,7 +91,7 @@ type BuildBlocksEnv = {
     images: ImageDic,
 };
 
-function blockForNode(node: BookNode, env: BuildBlocksEnv): RichTextBlock {
+function blockForNode(node: BookNode, env: BuildBlocksEnv): RichTextBlock | undefined {
     switch (node.node) {
         case undefined:
         case 'pph':
@@ -106,14 +108,13 @@ function blockForNode(node: BookNode, env: BuildBlocksEnv): RichTextBlock {
                     frag: 'line', direction: 'horizontal',
                 }],
             };
-        case 'image': // TODO: support
+        case 'image':
             return { fragments: fragmentsForImage(node.image, env) };
         case 'ignore':
             return { fragments: [] };
         default:
             assertNever(node);
-            // TODO: do not generate empty block
-            return { fragments: [] };
+            return undefined;
     }
 }
 

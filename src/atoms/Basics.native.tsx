@@ -4,11 +4,10 @@ import {
     View, SafeAreaView,
 } from 'react-native';
 
-import { platformValue } from './platform';
 import { colors, fontSize } from './theme';
 import { point, defaults } from './common';
 import {
-    TextLineProps, ClickableProps, FullScreenActivityIndicatorProps, LayerProps,
+    TextLineProps, ClickableProps, FullScreenActivityIndicatorProps,
 } from './Basics';
 
 export function TextLine(props: TextLineProps) {
@@ -49,7 +48,6 @@ export function Separator() {
     return null;
 }
 
-// TODO: remove ?
 export function Clickable(props: ClickableProps) {
     return <TouchableWithoutFeedback
         onPress={props.onClick}
@@ -60,24 +58,8 @@ export function Clickable(props: ClickableProps) {
     </TouchableWithoutFeedback>;
 }
 
-// TODO: remove ?
 export function Tab() {
     return null;
-}
-
-// TODO: remove ?
-export function Layer(props: LayerProps) {
-    return <View
-        style={{
-            position: 'absolute',
-            minHeight: '100%',
-            minWidth: '100%',
-            width: platformValue({ mobile: '100%' }),
-            height: platformValue({ mobile: '100%' }),
-            backgroundColor: colors(props.theme).primary,
-        }}>
-        {props.children}
-    </View>;
 }
 
 export function EmptyLine() {
