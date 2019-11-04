@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 
-import { Theme, PaletteColor, colors, fontSize } from './theme';
+import { Theme, PaletteColor, colors, getFontSize } from './theme';
 import { percent, point, Size, WithChildren, defaults } from './common';
 
 export type TextProps = {
@@ -19,7 +19,7 @@ export type TextLineProps = TextProps & {
 export function TextLine(props: TextLineProps) {
     return <span
         style={{
-            fontSize: fontSize(props.theme, props.fontSize),
+            fontSize: getFontSize(props.theme, props.fontSize),
             fontFamily: props.theme.fontFamilies[props.fontFamily || 'menu'],
             color: props.color === null ? undefined : colors(props.theme)[props.color || 'text'],
             letterSpacing: props.letterSpacing,
