@@ -4,7 +4,7 @@ import {
     View, SafeAreaView,
 } from 'react-native';
 
-import { colors, fontSize } from './theme';
+import { colors, getFontSize } from './theme';
 import { point, defaults } from './common';
 import {
     TextLineProps, ClickableProps, FullScreenActivityIndicatorProps,
@@ -14,7 +14,7 @@ export function TextLine(props: TextLineProps) {
     return <Text
         style={{
             fontFamily: props.theme.fontFamilies[props.fontFamily || 'menu'],
-            fontSize: fontSize(props.theme, props.fontSize),
+            fontSize: getFontSize(props.theme, props.fontSize),
             color: colors(props.theme)[props.color || 'text'],
 
         }}

@@ -8,7 +8,7 @@ import {
     TextButtonProps, IconButtonProps, TagButtonProps,
     PaletteButtonProps, StretchTextButtonProps,
 } from './Buttons';
-import { colors, fontSize } from './theme';
+import { colors, getFontSize } from './theme';
 
 export function TextButton(props: TextButtonProps) {
     return <Link onClick={props.onClick}>
@@ -113,7 +113,7 @@ export function PaletteButton(props: PaletteButtonProps) {
                 }}>
                 <Text style={{
                     color: cols.text,
-                    fontSize: fontSize(props.theme, 'normal'),
+                    fontSize: getFontSize(props.theme, 'normal'),
                 }}>
                     {props.text}
                 </Text>

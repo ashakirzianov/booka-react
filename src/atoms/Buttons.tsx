@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { View } from 'react-native';
+import { jsx, css } from '@emotion/core';
 
-import { PaletteName, colors, fontSize, Theme } from './theme';
+import { PaletteName, colors, getFontSize, Theme } from './theme';
 import { TextLine, TextProps } from './Basics';
 import { point, WithChildren, Callback } from './common';
 import { Icon, IconName } from './Icons';
@@ -16,23 +17,25 @@ export type ButtonProps<T> = T & {
 export type TextButtonProps = ButtonProps<TextProps & {
     text: string,
 }>;
-export function TextButton(props: TextButtonProps) {
+export function TextButton({
+    to, onClick, theme, text, fontFamily, fontSize, letterSpacing,
+}: TextButtonProps) {
     return <LinkOrButton
-        to={props.to}
-        onClick={props.onClick}
-        style={{
-            color: colors(props.theme).accent,
-            // ':hover': {
-            //     color: colors(props.theme).highlight,
-            // },
-        }}
+        to={to}
+        onClick={onClick}
+        className={css({
+            'color': colors(theme).accent,
+            '&hover': {
+                color: colors(theme).highlight,
+            },
+        })}
     >
         <TextLine
-            theme={props.theme}
-            text={props.text}
-            fontFamily={props.fontFamily}
-            fontSize={props.fontSize}
-            letterSpacing={props.letterSpacing}
+            theme={theme}
+            text={text}
+            fontFamily={fontFamily}
+            fontSize={fontSize}
+            letterSpacing={letterSpacing}
         />
     </LinkOrButton>;
 }
@@ -118,7 +121,7 @@ export function BorderButton(props: TextButtonProps) {
         <div
             style={{
                 borderStyle: 'solid',
-                fontSize: fontSize(props.theme, 'normal'),
+                fontSize: getFontSize(props.theme, 'normal'),
                 borderRadius: 10,
                 padding: point(0.3),
             }}
@@ -149,7 +152,7 @@ export function PaletteButton(props: PaletteButtonProps) {
         onClick={props.onClick}
         style={{
             color: cols.text,
-            fontSize: fontSize(props.theme, 'normal'),
+            fontSize: getFontSize(props.theme, 'normal'),
             // ':hover': {
             //     color: cols.highlight,
             // },

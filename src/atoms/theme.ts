@@ -58,7 +58,7 @@ export function highlights(theme: Theme): Palette['highlights'] {
     return theme.palettes[theme.currentPalette].highlights;
 }
 
-export function fontSize(theme: Theme, size?: keyof FontSizes): number {
+export function getFontSize(theme: Theme, size?: keyof FontSizes): number {
     return size === 'text'
         ? theme.fontSizes.text * theme.fontScale
         : theme.fontSizes[size || 'normal'];

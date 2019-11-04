@@ -5,7 +5,7 @@ import {
 } from 'booka-common';
 
 import {
-    Themed, colors, fontSize, Row, BorderButton,
+    Themed, colors, getFontSize, Row, BorderButton,
     point, Callback, highlights,
 } from '../atoms';
 import { BookFragmentComp, BookSelection } from '../reader';
@@ -65,7 +65,7 @@ export function BookViewComp({
             color={colors(theme).text}
             refColor={colors(theme).accent}
             refHoverColor={colors(theme).highlight}
-            fontSize={fontSize(theme, 'text')}
+            fontSize={getFontSize(theme, 'text')}
             fontFamily={theme.fontFamilies.book}
             colorization={colorization}
             pathToScroll={pathToScroll || undefined}
