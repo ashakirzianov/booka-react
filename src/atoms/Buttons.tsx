@@ -63,15 +63,15 @@ export type TagButtonProps = ButtonProps & {
     text: string,
 };
 export function TagButton(props: TagButtonProps) {
-    return <LinkOrButton
+    return <div
         onClick={props.onClick}
-        style={{
+        css={{
             backgroundColor: colors(props.theme).accent,
             borderWidth: 1,
             borderRadius: 50,
-            // ':hover': {
-            //     backgroundColor: colors(props.theme).highlight,
-            // },
+            '&:hover': {
+                backgroundColor: colors(props.theme).highlight,
+            },
         }}
     >
         <View style={{
@@ -92,7 +92,7 @@ export function TagButton(props: TagButtonProps) {
                 />
             </View>
         </View>
-    </LinkOrButton>;
+    </div>;
 }
 
 const HoverableView = View;
