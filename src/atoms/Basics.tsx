@@ -5,7 +5,6 @@ import { ActivityIndicator, View } from 'react-native';
 import { Theme, PaletteColor, colors, getFontSize } from './theme';
 import { percent, point, Size, WithChildren, defaults } from './common';
 
-// TODO: remove ?
 export type TextProps = {
     fontFamily?: keyof Theme['fontFamilies'],
     fontSize?: keyof Theme['fontSizes'],
