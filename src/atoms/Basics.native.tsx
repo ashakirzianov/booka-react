@@ -15,8 +15,6 @@ export function TextLine(props: TextLineProps) {
         style={{
             fontFamily: props.theme.fontFamilies[props.fontFamily || 'menu'],
             fontSize: getFontSize(props.theme, props.fontSize),
-            color: colors(props.theme)[props.color || 'text'],
-
         }}
     >
         {props.text}

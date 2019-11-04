@@ -6,7 +6,7 @@ import { point, WithChildren, Callback } from './common';
 import { Icon } from './Icons';
 import {
     TextButtonProps, IconButtonProps, TagButtonProps,
-    PaletteButtonProps, StretchTextButtonProps,
+    PaletteButtonProps,
 } from './Buttons';
 import { colors, getFontSize } from './theme';
 
@@ -113,20 +113,6 @@ export function PaletteButton(props: PaletteButtonProps) {
                     {props.text}
                 </Text>
             </View>
-        </View>
-    </Button>;
-}
-
-export function StretchTextButton(props: StretchTextButtonProps) {
-    return <Button onClick={props.onClick}>
-        <View style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignSelf: 'stretch',
-            flexGrow: 1,
-        }}
-        >
-            {props.children}
         </View>
     </Button>;
 }

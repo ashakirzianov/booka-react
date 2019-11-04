@@ -1,15 +1,15 @@
-import * as React from 'react';
 import { View } from 'react-native';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 
-import { colors, getFontSize, Themed, FontSizes, PaletteName, FontFamilies, getFontFamily } from './theme';
+import {
+    colors, getFontSize, Themed, FontSizes, PaletteName,
+    FontFamilies, getFontFamily,
+} from './theme';
 import { TextLine } from './Basics';
-import { point, WithChildren, Callback } from './common';
+import { point, Callback } from './common';
 import { Icon, IconName } from './Icons';
-import { LinkOrButton } from './Web';
 
-// TODO: refactor button
 export type ButtonProps = Themed & {
     onClick?: Callback,
 };
@@ -171,29 +171,4 @@ export function PictureButton({
             }}
         />
     </div>;
-}
-
-export type StretchTextButtonProps = WithChildren<ButtonProps>;
-export function StretchTextButton(props: StretchTextButtonProps) {
-    return <LinkOrButton
-        onClick={props.onClick}
-        style={{
-            alignSelf: 'stretch',
-            flexGrow: 1,
-            color: colors(props.theme).accent,
-            borderColor: colors(props.theme).accent,
-            // TODO: put back hovering
-            // ':hover': {
-            //     color: colors(props.theme).highlight,
-            //     borderColor: colors(props.theme).highlight,
-            // },
-        }}
-    >
-        <View style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-        }}>
-            {props.children}
-        </View>
-    </LinkOrButton>;
 }

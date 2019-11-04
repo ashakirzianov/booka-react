@@ -3,7 +3,8 @@ import { range } from 'lodash';
 import { TableOfContents, TableOfContentsItem } from 'booka-common';
 
 import {
-    Row, Tab, Column, point, StretchTextButton, TextLine, Themed, Modal, Callback,
+    Row, Tab, Column, point,
+    StretchTextLink, TextLine, Themed, Modal, Callback,
 } from '../atoms';
 import { pageForPosition } from './common';
 import { linkToString } from '../core';
@@ -47,12 +48,12 @@ type TocItemProps = Themed & {
 function TocItemComp({ id, item, tabs, page, theme }: TocItemProps) {
     return <Row>
         {range(0, tabs).map(i => <Tab key={i.toString()} />)}
-        <StretchTextButton
+        <StretchTextLink
             theme={theme}
-        // to={linkToString({
-        //     bookId: id,
-        //     path: item.path,
-        // })}
+            to={linkToString({
+                bookId: id,
+                path: item.path,
+            })}
         >
             <TextLine
                 key='title'
@@ -64,6 +65,6 @@ function TocItemComp({ id, item, tabs, page, theme }: TocItemProps) {
                 theme={theme}
                 text={page.toString()}
             />
-        </StretchTextButton>
+        </StretchTextLink>
     </Row>;
 }

@@ -1,4 +1,5 @@
-import * as React from 'react';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 import { ActivityIndicator, View } from 'react-native';
 
 import { Theme, PaletteColor, colors, getFontSize } from './theme';
@@ -19,10 +20,12 @@ export type TextLineProps = TextProps & {
 };
 export function TextLine(props: TextLineProps) {
     return <span
-        style={{
+        css={{
             fontSize: getFontSize(props.theme, props.fontSize),
             fontFamily: props.theme.fontFamilies[props.fontFamily || 'menu'],
-            color: props.color === null ? undefined : colors(props.theme)[props.color || 'text'],
+            color: props.color
+                ? colors(props.theme)[props.color]
+                : undefined,
             letterSpacing: props.letterSpacing,
             fontWeight: props.bold ? 'bold' : 'normal',
             fontStyle: props.italic ? 'italic' : 'normal',

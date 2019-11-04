@@ -1,4 +1,5 @@
 // import React from 'react';
+import { View } from 'react-native';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 
@@ -6,13 +7,11 @@ import {
     Themed, colors, getFontSize, getFontFamily, FontFamilies,
 } from './theme';
 import { Link } from './Router';
-import { point } from './common';
+import { point, WithChildren } from './common';
 import { IconName, Icon } from './Icons';
-// import { Callback } from './common';
 
 export type LinkProps = Themed & {
     to: string,
-    // onClick?: Callback,
 };
 
 export type TextLinkProps = LinkProps & {
@@ -76,5 +75,32 @@ export function IconLink({
             color='accent'
             hoverColor='highlight'
         />
+    </Link>;
+}
+
+export type StretchTextLinkProps = WithChildren<LinkProps>;
+export function StretchTextLink({
+    theme, to, children,
+}: StretchTextLinkProps) {
+    return <Link
+        to={to}
+        css={{
+            textDecoration: 'none',
+            alignSelf: 'stretch',
+            flexGrow: 1,
+            color: colors(theme).accent,
+            borderColor: colors(theme).accent,
+            '&:hover': {
+                color: colors(theme).highlight,
+                borderColor: colors(theme).highlight,
+            },
+        }}
+    >
+        <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+        }}>
+            {children}
+        </View>
     </Link>;
 }
