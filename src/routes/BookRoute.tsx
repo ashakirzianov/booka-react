@@ -31,7 +31,7 @@ export function BookRoute({ bookId, location }: RouteProps) {
         payload: path,
     }), [dispatch]);
     const toggleControls = React.useCallback(() => dispatch({
-        type: 'controls-toggle',
+        type: 'book-toggle-controls',
     }), [dispatch]);
     const toggleToc = React.useCallback(() => dispatch({
         type: 'book-toggle-toc',
@@ -45,7 +45,7 @@ export function BookRoute({ bookId, location }: RouteProps) {
     }), [dispatch, bookId]);
 
     const theme = useTheme();
-    const controlsVisible = useAppSelector(s => s.controlsVisibility);
+    const controlsVisible = useAppSelector(s => s.book.showControls || false);
     return <BookScreenComp
         theme={theme}
         screen={bookScreen}

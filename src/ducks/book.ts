@@ -18,6 +18,7 @@ export type BookLink = {
 
 type BookStateBase<K extends string> = BookLink & {
     state: K,
+    showControls?: boolean,
     needToScroll?: boolean,
 };
 export type BookErrorState = BookStateBase<'error'>;
@@ -57,12 +58,15 @@ export type UpdateCurrentPathAction = {
 export type ToggleTocAction = {
     type: 'book-toggle-toc',
 };
+export type ToggleControlsAction = {
+    type: 'book-toggle-controls',
+};
 export type BookFragmentAction =
     | BookOpenAction
     | BookFetchFulfilledAction
     | BookFetchRejectedAction
     | SetQuoteRangeAction | UpdateCurrentPathAction
-    | ToggleTocAction
+    | ToggleTocAction | ToggleControlsAction
     ;
 
 const defaultState: BookState = {
@@ -81,6 +85,7 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
                 state: 'ready',
                 ...action.payload.link,
                 fragment: action.payload.fragment,
+                showControls: true,
                 needToScroll: true,
             };
         case 'book-fetch-rejected':
@@ -106,6 +111,8 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
                     toc: !state.toc,
                 }
                 : state;
+        case 'book-toggle-controls':
+            return { ...state, showControls: !state.showControls };
         default:
             return state;
     }
