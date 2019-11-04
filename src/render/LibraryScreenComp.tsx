@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { BookDesc } from 'booka-common';
 
-import { Column, TextLink, Themed, TopBar, point, Triad, EmptyLine } from '../atoms';
+import {
+    Column, TextLink, Themed, TopBar, point, Triad, EmptyLine,
+} from '../atoms';
 import { useTheme } from '../core';
 import { ConnectedAccountButton } from './AccountButton';
 

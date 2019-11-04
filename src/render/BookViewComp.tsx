@@ -5,8 +5,8 @@ import {
 } from 'booka-common';
 
 import {
-    Themed, colors, getFontSize, Row, BorderButton,
-    point, Callback, highlights,
+    Themed, colors, getFontSize, Row,
+    point, Callback, highlights, BorderLink,
 } from '../atoms';
 import { BookFragmentComp, BookSelection } from '../reader';
 import { generateQuoteLink } from './common';
@@ -93,11 +93,11 @@ type PathLinkProps = Themed & {
 };
 function PathLink({ theme, text, link }: PathLinkProps) {
     return <Row centered margin={point(1)}>
-        <BorderButton
+        <BorderLink
             theme={theme}
             text={text}
-            fontFamily='book'
             to={linkToString(link)}
+            fontFamily='book'
         />
     </Row>;
 }

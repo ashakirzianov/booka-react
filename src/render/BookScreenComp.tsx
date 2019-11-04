@@ -9,7 +9,7 @@ import {
     Column, point, Row, Callback, Themed,
     Triad, IconButton, TopBar, EmptyLine, Clickable,
     PaletteName, PaletteButton, TextButton, Separator, WithPopover,
-    colors, TextLine, BottomBar, TagButton,
+    colors, TextLine, BottomBar, TagButton, TextLink,
 } from '../atoms';
 import { pageForPosition } from './common';
 import { BookViewComp } from './BookViewComp';
@@ -44,7 +44,7 @@ export function BookScreenComp(props: BookScreenProps) {
                     theme={props.theme}
                     text={`Error opening ${props.screen.bookId}`}
                 />
-                <TextButton
+                <TextLink
                     theme={props.theme}
                     text='Back'
                     to='/'

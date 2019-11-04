@@ -7,6 +7,7 @@ import { point, WithChildren, Callback } from './common';
 import { Icon, IconName } from './Icons';
 import { LinkOrButton } from './Web';
 
+// TODO: refactor button
 export type ButtonProps<T> = T & {
     theme: Theme,
     to?: string,
@@ -101,39 +102,6 @@ export function TagButton(props: TagButtonProps) {
                 />
             </View>
         </View>
-    </LinkOrButton>;
-}
-
-export function BorderButton(props: TextButtonProps) {
-    return <LinkOrButton
-        to={props.to}
-        onClick={props.onClick}
-        style={{
-            color: colors(props.theme).accent,
-            borderColor: colors(props.theme).accent,
-            // ':hover': {
-            //     color: colors(props.theme).highlight,
-            //     borderColor: colors(props.theme).highlight,
-            // },
-        }}
-    >
-        <div
-            style={{
-                borderStyle: 'solid',
-                fontSize: getFontSize(props.theme, 'normal'),
-                borderRadius: 10,
-                padding: point(0.3),
-            }}
-        >
-            <TextLine
-                theme={props.theme}
-                text={props.text}
-                fontFamily={props.fontFamily}
-                fontSize={props.fontSize}
-                letterSpacing={props.letterSpacing}
-                color={null}
-            />
-        </div>
     </LinkOrButton>;
 }
 
