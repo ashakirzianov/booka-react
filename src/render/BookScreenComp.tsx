@@ -129,7 +129,6 @@ function LibButton({ theme }: LibButtonProps) {
     return <IconButton
         theme={theme}
         icon='left'
-        to='/'
     />;
 }
 
@@ -195,7 +194,6 @@ function FontScaleButton({
             fontFamily='book'
             text='Abc'
             fontSize={size}
-            color='accent'
             onClick={() => incrementScale(increment)}
         />
     </Column>;

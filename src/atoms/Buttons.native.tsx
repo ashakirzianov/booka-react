@@ -15,7 +15,6 @@ export function TextButton(props: TextButtonProps) {
         <TextLine
             theme={props.theme}
             text={props.text}
-            fontFamily={props.fontFamily}
             fontSize={props.fontSize}
         />
     </Link>;
@@ -81,7 +80,6 @@ export function BorderButton(props: TextButtonProps) {
                 color='accent'
                 theme={props.theme}
                 text={props.text}
-                fontFamily={props.fontFamily}
                 fontSize={props.fontSize}
             />
         </View>

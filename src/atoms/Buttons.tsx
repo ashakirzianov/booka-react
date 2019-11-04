@@ -1,53 +1,50 @@
 import * as React from 'react';
 import { View } from 'react-native';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 
-import { PaletteName, colors, getFontSize, Theme } from './theme';
-import { TextLine, TextProps } from './Basics';
+import { colors, getFontSize, Themed, FontSizes, PaletteName, FontFamilies, getFontFamily } from './theme';
+import { TextLine } from './Basics';
 import { point, WithChildren, Callback } from './common';
 import { Icon, IconName } from './Icons';
 import { LinkOrButton } from './Web';
 
 // TODO: refactor button
-export type ButtonProps<T> = T & {
-    theme: Theme,
-    to?: string,
-    onClick?: Callback<void>,
+export type ButtonProps = Themed & {
+    onClick?: Callback,
 };
 
-export type TextButtonProps = ButtonProps<TextProps & {
+export type TextButtonProps = ButtonProps & {
     text: string,
-}>;
+    fontSize: keyof FontSizes,
+    fontFamily: keyof FontFamilies,
+};
 export function TextButton({
-    to, onClick, theme, text, fontFamily, fontSize, letterSpacing,
+    onClick, theme, text,
+    fontSize, fontFamily,
 }: TextButtonProps) {
-    return <LinkOrButton
-        to={to}
-        onClick={onClick}
-        style={{
-            'color': colors(theme).accent,
+    return <div
+        css={{
+            fontSize: getFontSize(theme, fontSize),
+            fontFamily: getFontFamily(theme, fontFamily),
+            color: colors(theme).accent,
             '&:hover': {
                 color: colors(theme).highlight,
             },
         }}
+        onClick={onClick}
     >
-        <TextLine
-            theme={theme}
-            text={text}
-            fontFamily={fontFamily}
-            fontSize={fontSize}
-            letterSpacing={letterSpacing}
-        />
-    </LinkOrButton>;
+        {text}
+    </div>;
 }
 
-export type IconButtonProps = ButtonProps<{
+export type IconButtonProps = ButtonProps & {
     icon: IconName,
     onHoverIn?: Callback,
     onHoverOut?: Callback,
-}>;
+};
 export function IconButton(props: IconButtonProps) {
     return <LinkOrButton
-        to={props.to}
         onClick={props.onClick}
         style={{
             margin: point(0.5),
@@ -68,12 +65,11 @@ export function IconButton(props: IconButtonProps) {
     </LinkOrButton>;
 }
 
-export type TagButtonProps = ButtonProps<{
+export type TagButtonProps = ButtonProps & {
     text: string,
-}>;
+};
 export function TagButton(props: TagButtonProps) {
     return <LinkOrButton
-        to={props.to}
         onClick={props.onClick}
         style={{
             backgroundColor: colors(props.theme).accent,
@@ -106,16 +102,15 @@ export function TagButton(props: TagButtonProps) {
 }
 
 const HoverableView = View;
-export type PaletteButtonProps = ButtonProps<{
+export type PaletteButtonProps = ButtonProps & {
     text: string,
     palette: PaletteName,
-}>;
+};
 export function PaletteButton(props: PaletteButtonProps) {
     const theme = props.theme;
     const cols = theme.palettes[props.palette].colors;
     const selected = props.palette === theme.currentPalette;
     return <LinkOrButton
-        to={props.to}
         onClick={props.onClick}
         style={{
             color: cols.text,
@@ -152,12 +147,11 @@ export function PaletteButton(props: PaletteButtonProps) {
     </LinkOrButton>;
 }
 
-export type PictureButtonProps = ButtonProps<{
+export type PictureButtonProps = ButtonProps & {
     pictureUrl?: string,
-}>;
+};
 export function PictureButton(props: PictureButtonProps) {
     return <LinkOrButton
-        to={props.to}
         onClick={props.onClick}
     >
         <img
@@ -181,10 +175,9 @@ export function PictureButton(props: PictureButtonProps) {
     </LinkOrButton>;
 }
 
-export type StretchTextButtonProps = WithChildren<ButtonProps<{}>>;
+export type StretchTextButtonProps = WithChildren<ButtonProps>;
 export function StretchTextButton(props: StretchTextButtonProps) {
     return <LinkOrButton
-        to={props.to}
         onClick={props.onClick}
         style={{
             alignSelf: 'stretch',

@@ -49,10 +49,10 @@ function TocItemComp({ id, item, tabs, page, theme }: TocItemProps) {
         {range(0, tabs).map(i => <Tab key={i.toString()} />)}
         <StretchTextButton
             theme={theme}
-            to={linkToString({
-                bookId: id,
-                path: item.path,
-            })}
+        // to={linkToString({
+        //     bookId: id,
+        //     path: item.path,
+        // })}
         >
             <TextLine
                 key='title'
