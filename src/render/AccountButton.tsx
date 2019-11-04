@@ -43,6 +43,7 @@ function AccountButton({
                 />
                 : ({ scheduleUpdate }) =>
                     <SignInPanel
+                        theme={theme}
                         onStatusChanged={scheduleUpdate}
                     />
         }
@@ -97,12 +98,13 @@ function AccountPanel({ account, theme, logout }: AccountPanelProps) {
     </Column>;
 }
 
-type SignInPanelProps = {
+type SignInPanelProps = Themed & {
     onStatusChanged?: Callback,
 };
-function SignInPanel({ onStatusChanged }: SignInPanelProps) {
+function SignInPanel({ theme, onStatusChanged }: SignInPanelProps) {
     return <Column>
         <FacebookLogin
+            theme={theme}
             onStatusChange={onStatusChanged}
         />
     </Column>;

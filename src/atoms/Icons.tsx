@@ -1,11 +1,14 @@
 import * as React from 'react';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 
 import {
     FaTimes, FaAngleLeft, FaBars, FaFont,
     FaCircle, FaSignInAlt, FaFacebookSquare, FaCloudUploadAlt,
     FaQuestion,
 } from 'react-icons/fa';
-import { Size, assertNever } from './common';
+import { Size, assertNever, Callback } from './common';
+import { PaletteColor, Themed, colors } from './theme';
 
 export type IconName =
     | 'close' | 'left' | 'items' | 'letter'
@@ -13,10 +16,45 @@ export type IconName =
     | 'upload'
     ;
 
-export type IconProps = {
+export type IconProps = Themed & {
     name: IconName,
     size?: Size,
+    margin?: Size,
+    color?: PaletteColor,
+    hoverColor?: PaletteColor,
+    onClick?: Callback,
+    onHoverIn?: Callback,
+    onHoverOut?: Callback,
 };
+
+export function Icon({
+    theme, name, size, margin, color, hoverColor,
+    onClick, onHoverIn, onHoverOut,
+}: IconProps) {
+    return <div
+        css={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            margin,
+            color: color
+                ? colors(theme)[color]
+                : undefined,
+            '&:hover': {
+                color: hoverColor
+                    ? colors(theme)[hoverColor]
+                    : undefined,
+            },
+        }}
+        onClick={onClick}
+        onMouseEnter={onHoverIn}
+        onMouseLeave={onHoverOut}
+    >
+        {React.createElement(iconForName(name), {
+            size: size || '1em',
+        })}
+    </div>;
+}
 
 function iconForName(name: IconName) {
     switch (name) {
@@ -40,16 +78,4 @@ function iconForName(name: IconName) {
             assertNever(name);
             return FaQuestion;
     }
-}
-
-export function Icon({ size, name }: IconProps) {
-    return <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    }}>
-        {React.createElement(iconForName(name), {
-            size: size || '1em',
-        })}
-    </div>;
 }

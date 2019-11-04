@@ -20,20 +20,17 @@ export function TextButton(props: TextButtonProps) {
     </Link>;
 }
 
-export function IconButton(props: IconButtonProps) {
-    return <Button onClick={props.onClick}>
-        <View
-            style={{
-                justifyContent: 'center',
-                flexDirection: 'column',
-            }}
-        >
-            <Icon
-                name={props.icon}
-                size={24}
-            />
-        </View>
-    </Button>;
+export function IconButton({
+    theme, icon, onClick, onHoverIn, onHoverOut,
+}: IconButtonProps) {
+    return <Icon
+        theme={theme}
+        name={icon}
+        size={24}
+        onClick={onClick}
+        onHoverIn={onHoverIn}
+        onHoverOut={onHoverOut}
+    />;
 }
 
 export function TagButton(props: TagButtonProps) {

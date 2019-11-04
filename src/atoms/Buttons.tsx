@@ -43,26 +43,20 @@ export type IconButtonProps = ButtonProps & {
     onHoverIn?: Callback,
     onHoverOut?: Callback,
 };
-export function IconButton(props: IconButtonProps) {
-    return <LinkOrButton
-        onClick={props.onClick}
-        style={{
-            margin: point(0.5),
-            color: colors(props.theme).accent,
-            // ':hover': {
-            //     color: colors(props.theme).highlight,
-            // },
-        }}
-        onHoverIn={props.onHoverIn}
-        onHoverOut={props.onHoverOut}
-    >
-        <View>
-            <Icon
-                name={props.icon}
-                size={24}
-            />
-        </View>
-    </LinkOrButton>;
+export function IconButton({
+    icon, theme,
+    onClick, onHoverIn, onHoverOut,
+}: IconButtonProps) {
+    return <Icon
+        theme={theme}
+        name={icon}
+        size={24}
+        color='accent'
+        hoverColor='highlight'
+        onClick={onClick}
+        onHoverIn={onHoverIn}
+        onHoverOut={onHoverOut}
+    />;
 }
 
 export type TagButtonProps = ButtonProps & {

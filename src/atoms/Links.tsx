@@ -7,6 +7,7 @@ import {
 } from './theme';
 import { Link } from './Router';
 import { point } from './common';
+import { IconName, Icon } from './Icons';
 // import { Callback } from './common';
 
 export type LinkProps = Themed & {
@@ -58,5 +59,22 @@ export function BorderLink({
         }}
     >
         {text}
+    </Link>;
+}
+
+export type IconLinkProps = LinkProps & {
+    icon: IconName,
+};
+export function IconLink({
+    icon, theme, to,
+}: IconLinkProps) {
+    return <Link to={to}>
+        <Icon
+            theme={theme}
+            name={icon}
+            size={24}
+            color='accent'
+            hoverColor='highlight'
+        />
     </Link>;
 }

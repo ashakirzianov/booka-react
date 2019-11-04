@@ -4,13 +4,14 @@ import { Column, Row } from './Layout';
 import { Icon } from './Icons';
 import { point, Callback } from './common';
 import { FbLoginState, fbState, doFbLogin } from './facebookSdk';
+import { Themed } from './theme';
 
-type SocialButtonProps = {
+type SocialButtonProps = Themed & {
     onStatusChange?: Callback,
 };
 
 export type FacebookLoginProps = SocialButtonProps;
-export function FacebookLogin({ onStatusChange }: FacebookLoginProps) {
+export function FacebookLogin({ theme, onStatusChange }: FacebookLoginProps) {
     const [loginState, setLoginState] = React.useState<FbLoginState>({ state: 'checking' });
     React.useEffect(() => {
         fbState().subscribe(setLoginState);
@@ -25,6 +26,7 @@ export function FacebookLogin({ onStatusChange }: FacebookLoginProps) {
 
     return <Column>
         <ActualButton
+            theme={theme}
             onClick={() => {
                 if (loginState.state !== 'logged' || !loginState.token) {
                     doFbLogin();
@@ -39,14 +41,14 @@ export function FacebookLogin({ onStatusChange }: FacebookLoginProps) {
     </Column>;
 }
 
-type ActualButtonProps = {
+type ActualButtonProps = Themed & {
     onClick: Callback<void>,
     user?: {
         name: string,
         pictureUrl?: string,
     },
 };
-function ActualButton({ onClick, user }: ActualButtonProps) {
+function ActualButton({ onClick, user, theme }: ActualButtonProps) {
     const text = user
         ? `Continue as ${user.name}`
         : 'Continue with facebook';
@@ -63,7 +65,11 @@ function ActualButton({ onClick, user }: ActualButtonProps) {
     >
         <Row centered justified>
             <div style={{ marginLeft: point(0.5) }}>
-                <Icon name='facebook' size={point(2)} />
+                <Icon
+                    theme={theme}
+                    name='facebook'
+                    size={point(2)}
+                />
             </div>
             <span style={{
                 fontSize: point(1.5),

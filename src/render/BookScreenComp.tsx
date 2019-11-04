@@ -9,7 +9,7 @@ import {
     Column, point, Row, Callback, Themed,
     Triad, IconButton, TopBar, EmptyLine, Clickable,
     PaletteName, PaletteButton, TextButton, Separator, WithPopover,
-    colors, TextLine, BottomBar, TagButton, TextLink,
+    colors, TextLine, BottomBar, TagButton, TextLink, IconLink,
 } from '../atoms';
 import { pageForPosition } from './common';
 import { BookViewComp } from './BookViewComp';
@@ -126,9 +126,10 @@ function BookScreenHeader({ theme, visible }: BookScreenHeaderProps) {
 
 type LibButtonProps = Themed;
 function LibButton({ theme }: LibButtonProps) {
-    return <IconButton
+    return <IconLink
         theme={theme}
         icon='left'
+        to='/'
     />;
 }
 
