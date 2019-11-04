@@ -6,6 +6,7 @@
     "arrow-parens": false,
     "ordered-imports": false,
     "object-literal-sort-keys": false,
+    "object-literal-key-quotes": false,
     "interface-over-type-literal": false,
     "quotemark": [
       true,

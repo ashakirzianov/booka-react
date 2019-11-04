@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BookDesc } from 'booka-common';
 
-import { Column, TextButton, Themed, TopBar, point, Triad } from '../atoms';
+import { Column, TextLink, Themed, TopBar, point, Triad, EmptyLine } from '../atoms';
 import { useTheme } from '../core';
 import { ConnectedAccountButton } from './AccountButton';
 
@@ -11,6 +11,7 @@ export type LibraryScreenProps = Themed & {
 export function LibraryScreenComp({ theme, books }: LibraryScreenProps) {
     return <>
         <LibraryScreenHeader theme={theme} />
+        <EmptyLine />
         <AllBooksComp books={books} />
     </>;
 }
@@ -21,7 +22,7 @@ type BookItemProps = {
 function BookItemComp({ desc }: BookItemProps) {
     const theme = useTheme();
     return <Column>
-        <TextButton
+        <TextLink
             theme={theme}
             text={desc.title}
             to={`/book/${desc.id}`}
