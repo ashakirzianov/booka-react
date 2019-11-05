@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { range } from 'lodash';
-import { TableOfContents, TableOfContentsItem } from 'booka-common';
+import { TableOfContents, TableOfContentsItem, pathToString } from 'booka-common';
 
 import {
     Row, Tab, Column, point,
@@ -28,7 +28,7 @@ export function TableOfContentsComp({
             {toc.items.map(item =>
                 <TocItemComp
                     theme={theme}
-                    key={item.path.join('-')}
+                    key={pathToString(item.path)}
                     id={id}
                     tabs={maxLevel - item.level}
                     item={item}

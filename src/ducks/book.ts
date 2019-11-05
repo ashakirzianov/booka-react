@@ -2,7 +2,7 @@ import { of, Observable } from 'rxjs';
 import { map, mergeMap, catchError } from 'rxjs/operators';
 import { Epic, combineEpics } from 'redux-observable';
 import {
-    BookFragment, BookRange, BookPath, emptyPath,
+    BookFragment, BookRange, BookPath, firstPath,
 } from 'booka-common';
 import { getBookFragment, getFragmentWithPathForId } from '../api';
 import { AppAction } from './app';
@@ -139,7 +139,7 @@ function openRefId(link: RefIdLink): Observable<FragmentWithLink> {
 
 type PathLink = BookLink;
 function openPath(link: PathLink): Observable<FragmentWithLink> {
-    return getBookFragment(link.bookId, link.path || emptyPath()).pipe(
+    return getBookFragment(link.bookId, link.path || firstPath()).pipe(
         map((fragment) => {
             return {
                 fragment,

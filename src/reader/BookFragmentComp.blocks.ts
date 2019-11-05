@@ -1,9 +1,9 @@
 import {
     BookFragment, BookPath, BookNode, assertNever, flatten,
     ParagraphNode, pphSpan, ListNode, TableNode, Span,
-    AttributeName, pathLessThan, isSubpath, iterateBookFragment,
-    samePath, BookRange, TitleNode, ImageDic, Image, isSimpleSpan,
-    SingleSpan, isSingleSpan,
+    AttributeName, pathLessThan, iterateBookFragment,
+    BookRange, TitleNode, ImageDic, Image, isSimpleSpan,
+    SingleSpan, isSingleSpan, pathWithSpan, sameNode,
 } from 'booka-common';
 import {
     RichTextBlock, AttrsRange, applyAttrsRange, RichTextFragment,
@@ -34,31 +34,20 @@ export function buildBlocksData(args: BuildBlocksDataArgs) {
 export function bookPathForBlockPath(blockPath: Path, data: BlockData): BookPath | undefined {
     const prefix = data[blockPath.block].path;
     const bookPath = blockPath.symbol !== undefined
-        ? [...prefix, blockPath.symbol]
+        ? pathWithSpan(prefix, blockPath.symbol)
         : prefix;
     return bookPath;
 }
 export function blockPathForBookPath(path: BookPath, data: BlockData): Path | undefined {
-    if (path.length === 0) {
-        return { block: 0 };
-    }
-    let blockIndex = data
-        .findIndex(datum => samePath(datum.path, path));
+    const blockIndex = data
+        .findIndex(datum => sameNode(datum.path, path));
     if (blockIndex >= 0) {
         return {
             block: blockIndex,
-            symbol: path.length > data[blockIndex].path.length
-                ? path[data[blockIndex].path.length]
-                : undefined,
+            symbol: path.span,
         };
     } else {
-        const withoutSymbol = path.slice(0, path.length - 1);
-        blockIndex = data
-            .findIndex(datum => samePath(datum.path, withoutSymbol));
-        return blockIndex >= 0 ? {
-            block: blockIndex,
-            symbol: path[data[blockIndex].path.length],
-        } : undefined;
+        return undefined;
     }
 }
 
@@ -308,12 +297,12 @@ function colorizationRelativeToPath(path: BookPath, colorized: ColorizedRange): 
     let start: number | undefined;
     if (!pathLessThan(path, colorized.range.start)) {
         start = 0;
-    } else if (isSubpath(path, colorized.range.start)) {
-        start = colorized.range.start[path.length];
+    } else if (sameNode(path, colorized.range.start)) {
+        start = colorized.range.start.span || 0;
     }
     let end: number | undefined;
-    if (colorized.range.end && isSubpath(path, colorized.range.end)) {
-        end = colorized.range.end[path.length];
+    if (colorized.range.end && sameNode(path, colorized.range.end)) {
+        end = colorized.range.end.span;
     }
 
     return start !== undefined
