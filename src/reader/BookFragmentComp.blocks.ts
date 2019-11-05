@@ -1,6 +1,6 @@
 import {
     BookFragment, BookPath, BookNode, assertNever, flatten,
-    ParagraphNode, pphSpan, ListNode, TableNode, Span,
+    ParagraphNode, ListNode, TableNode, Span,
     AttributeName, pathLessThan, iterateBookFragment,
     BookRange, TitleNode, ImageDic, Image, isSimpleSpan,
     SingleSpan, isSingleSpan, pathWithSpan, sameNode,
@@ -108,7 +108,7 @@ function blockForNode(node: BookNode, env: BuildBlocksEnv): RichTextBlock | unde
 }
 
 function blockForParagraph(node: ParagraphNode, env: BuildBlocksEnv): RichTextBlock {
-    let fragments = fragmentsForSpan(pphSpan(node), env);
+    let fragments = fragmentsForSpan(node.span, env);
 
     const isFirstParagraph = env.isUnderTitle;
     const needDropCase = isFirstParagraph;
