@@ -141,10 +141,7 @@ export function applyAttrsRange(fragments: RichTextFragment[], range: AttrsRange
                 };
                 const post: RichTextFragment = {
                     text: frag.text.substring(range.end),
-                    attrs: {
-                        ...frag.attrs,
-                        ...range.attrs,
-                    },
+                    attrs: frag.attrs,
                 };
                 result.push(pre, overlap, post);
             }
