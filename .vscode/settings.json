@@ -1,0 +1,35 @@
+{
+    "files.exclude": {
+        "**/build/**": true,
+        "**/node_modules/**": true
+    },
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true,
+    },
+    "editor.formatOnSave": true,
+    "editor.wordWrap": "bounded",
+    "editor.wrappingIndent": "indent",
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "cSpell.words": [
+        "ALLBOOKS",
+        "DEVTOOLS",
+        "Helvetica",
+        "Subpath",
+        "booka",
+        "booqas",
+        "browserslist",
+        "fbtoken",
+        "hoverable",
+        "jssdk",
+        "middlewares",
+        "multiline",
+        "paren",
+        "parens",
+        "quotemark",
+        "unmount",
+        "webfonts",
+        "welldone",
+        "xfbml"
+    ]
+}

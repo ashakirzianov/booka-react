@@ -1,0 +1,31 @@
+{
+  "extends": "tslint:recommended",
+  "rules": {
+    "space-before-function-paren": false,
+    "only-arrow-functions": false,
+    "arrow-parens": false,
+    "ordered-imports": false,
+    "object-literal-sort-keys": false,
+    "object-literal-key-quotes": false,
+    "interface-over-type-literal": false,
+    "quotemark": [
+      true,
+      "single",
+      "avoid-escape"
+    ],
+    "semicolon": true,
+    "trailing-comma": [
+      true,
+      {
+        "multiline": {
+          "arrays": "always",
+          "objects": "always",
+          "imports": "always",
+          "exports": "always",
+          "typeLiterals": "always",
+          "functions": "ignore"
+        }
+      }
+    ]
+  }
+}

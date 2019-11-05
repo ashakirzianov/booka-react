@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "booka",
+  "name": "booka co-reading app",
   "icons": [
     {
       "src": "favicon.ico",
