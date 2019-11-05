@@ -3,7 +3,7 @@ import {
     ParagraphNode, ListNode, TableNode, Span,
     AttributeName, pathLessThan, iterateBookFragment,
     BookRange, TitleNode, ImageDic, Image, isSimpleSpan,
-    SingleSpan, isSingleSpan, pathWithSpan, sameNode,
+    SingleSpan, isSingleSpan, pathWithSpan, sameNode, BookNodePath,
 } from 'booka-common';
 import {
     RichTextBlock, AttrsRange, applyAttrsRange, RichTextFragment,
@@ -274,7 +274,7 @@ function convertAttr(an: AttributeName): RichTextAttrs {
 function colorizeFragments(
     fragments: RichTextFragment[],
     colorization: ColorizedRange[],
-    path: BookPath,
+    path: BookNodePath,
 ): RichTextFragment[] {
     for (const col of colorization) {
         const relative = colorizationRelativeToPath(path, col);
@@ -286,7 +286,7 @@ function colorizeFragments(
     return fragments;
 }
 
-function colorizationRelativeToPath(path: BookPath, colorized: ColorizedRange): AttrsRange | undefined {
+function colorizationRelativeToPath(path: BookNodePath, colorized: ColorizedRange): AttrsRange | undefined {
     const attrs: RichTextAttrs = {
         background: colorized.color,
     };
