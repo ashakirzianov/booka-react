@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    assertNever, BookRange, positionForPath, BookPath, pathToString,
+    assertNever, BookRange, positionForPath, BookPath,
 } from 'booka-common';
 
 import { BookState, BookReadyState } from '../ducks';
