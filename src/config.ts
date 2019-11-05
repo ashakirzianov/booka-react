@@ -14,8 +14,8 @@ function debugConfig(): AppConfig {
         frontUrl: window && window.location && window.location.hostname
             ? `http://${window.location.hostname}:3000`
             : prod.frontUrl,
-        backUrl: 'https://localhost:3042',
-        libUrl: 'http://localhost:3141',
+        // backUrl: 'https://localhost:3042',
+        // libUrl: 'http://localhost:3141',
     };
 }
 
