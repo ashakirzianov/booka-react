@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    assertNever, BookRange, positionForPath, BookPath,
+    assertNever, BookRange, positionForPath, BookPath, pathToString,
 } from 'booka-common';
 
 import { BookState, BookReadyState } from '../ducks';
@@ -60,6 +60,9 @@ type BookScreenReadyProps = BookScreenPropsBase & {
     screen: BookReadyState,
 };
 function BookScreenReadyComp(props: BookScreenReadyProps) {
+    const pathToScroll = props.screen.needToScroll
+        ? props.screen.path
+        : undefined;
     return <>
         <BookScreenHeader
             theme={props.theme}
@@ -76,11 +79,7 @@ function BookScreenReadyComp(props: BookScreenReadyProps) {
                         bookId={props.screen.bookId}
                         theme={props.theme}
                         fragment={props.screen.fragment}
-                        pathToScroll={
-                            props.screen.needToScroll
-                                ? props.screen.path
-                                : undefined
-                        }
+                        pathToScroll={pathToScroll}
                         updateBookPosition={props.updateCurrentPath}
                         quoteRange={props.screen.quote}
                         setQuoteRange={props.setQuoteRange}

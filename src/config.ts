@@ -12,7 +12,7 @@ function debugConfig(): AppConfig {
     return {
         ...prod,
         frontUrl: window && window.location && window.location.hostname
-            ? `http://${window.location.hostname}:3000`
+            ? `https://${window.location.hostname}:3000`
             : prod.frontUrl,
         // backUrl: 'https://localhost:3042',
         libUrl: 'http://localhost:3141',

@@ -139,11 +139,15 @@ function openRefId(link: RefIdLink): Observable<FragmentWithLink> {
 
 type PathLink = BookLink;
 function openPath(link: PathLink): Observable<FragmentWithLink> {
-    return getBookFragment(link.bookId, link.path || firstPath()).pipe(
+    const path = link.path || (link.quote && link.quote.start) || firstPath();
+    return getBookFragment(link.bookId, path).pipe(
         map((fragment) => {
             return {
                 fragment,
-                link,
+                link: {
+                    ...link,
+                    path,
+                },
             };
         }),
     );
