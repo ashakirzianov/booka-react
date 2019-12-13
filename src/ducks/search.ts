@@ -1,4 +1,5 @@
-import { mergeMap, map } from 'rxjs/operators';
+import { of, Observable } from 'rxjs';
+import { mergeMap, map, catchError } from 'rxjs/operators';
 import { Epic, combineEpics } from 'redux-observable';
 import { SearchResult } from 'booka-common';
 import { fetchSearchQuery } from '../api';
@@ -17,9 +18,14 @@ export type SearchReadyState = SearchStateBase<'ready'> & {
     query: SearchQuery,
     results: SearchResult[],
 };
+export type SearchErrorState = SearchStateBase<'error'> & {
+    query: SearchQuery,
+};
 
 export type SearchState =
-    | SearchEmptyState | SearchLoadingState | SearchReadyState;
+    | SearchEmptyState | SearchErrorState
+    | SearchLoadingState | SearchReadyState
+    ;
 
 export type SearchQueryAction = {
     type: 'search-query',
@@ -32,26 +38,40 @@ export type SearchFulfilledAction = {
         results: SearchResult[],
     },
 };
+export type SearchRejectedAction = {
+    type: 'search-rejected',
+    payload: {
+        query: SearchQuery,
+    },
+};
 export type SearchClearAction = {
     type: 'search-clear',
 };
 export type SearchAction =
-    | SearchQueryAction | SearchFulfilledAction | SearchClearAction;
+    | SearchQueryAction | SearchClearAction
+    | SearchFulfilledAction | SearchRejectedAction
+    ;
 
 export function searchReducer(state: SearchState = { state: 'empty' }, action: AppAction): SearchState {
     switch (action.type) {
         case 'search-query':
-            return isEmptyQuery(action.payload)
-                ? { state: 'empty' }
-                : { state: 'loading', query: action.payload };
+            return {
+                state: 'loading',
+                query: action.payload,
+            };
+        case 'search-clear':
+            return { state: 'empty' };
         case 'search-fulfilled':
             return {
                 state: 'ready',
                 query: action.payload.query,
                 results: action.payload.results,
             };
-        case 'search-clear':
-            return { state: 'empty' };
+        case 'search-rejected':
+            return {
+                state: 'error',
+                query: action.payload.query,
+            };
         default:
             return state;
     }
@@ -72,6 +92,14 @@ const searchQueryEpic: Epic<AppAction> = (action$) => action$.pipe(
                     results: value.values,
                 },
             })),
+            catchError(() => {
+                return of<AppAction>({
+                    type: 'search-rejected',
+                    payload: {
+                        query: action.payload,
+                    },
+                });
+            }),
         ),
     ),
 );
