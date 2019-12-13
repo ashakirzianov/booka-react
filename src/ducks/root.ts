@@ -6,7 +6,7 @@ import { themeReducer } from './theme';
 import { bookReducer, bookFragmentEpic } from './book';
 import { screenReducer } from './screen';
 import { accountReducer, accountEpic } from './account';
-import { searchReducer } from './search';
+import { searchReducer, searchEpic } from './search';
 
 export const rootReducer = combineReducers<AppState, AppAction>({
     library: libraryReducer,
@@ -21,4 +21,5 @@ export const rootEpic = combineEpics(
     libraryEpic,
     bookFragmentEpic,
     accountEpic,
+    searchEpic,
 );
