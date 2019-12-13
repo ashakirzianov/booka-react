@@ -28,7 +28,7 @@
     "redux-observable": "^1.2.0",
     "rxjs": "^6.5.3",
     "serve": "^11.2.0",
-    "typescript": "3.6.4"
+    "typescript": "3.7.3"
   },
   "scripts": {
     "start": "serve -s build",
