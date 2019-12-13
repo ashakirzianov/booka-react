@@ -1,4 +1,4 @@
-import { of, Observable } from 'rxjs';
+import { of } from 'rxjs';
 import { mergeMap, map, catchError } from 'rxjs/operators';
 import { Epic, combineEpics } from 'redux-observable';
 import { SearchResult } from 'booka-common';
@@ -75,10 +75,6 @@ export function searchReducer(state: SearchState = { state: 'empty' }, action: A
         default:
             return state;
     }
-}
-
-function isEmptyQuery(query: SearchQuery): boolean {
-    return query.trim().length === 0;
 }
 
 const searchQueryEpic: Epic<AppAction> = (action$) => action$.pipe(
