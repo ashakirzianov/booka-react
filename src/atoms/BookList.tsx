@@ -1,18 +1,25 @@
 import React from 'react';
 import { BookDesc } from 'booka-common';
-import { Column } from './Layout';
+import { Column, Row } from './Layout';
 import { Link } from './Router';
+import { View } from 'react-native';
+import { point } from './common';
 
 export type BookListProps = {
     books: BookDesc[],
 };
 export function BookListComp({ books }: BookListProps) {
     return <Column>
-        {
-            books.map((desc, idx) =>
-                <BookItemComp key={idx} desc={desc} />
-            )
-        }
+        <Row
+            maxWidth='100%'
+            centered
+        >
+            {
+                books.map((desc, idx) =>
+                    <BookItemComp key={idx} desc={desc} />
+                )
+            }
+        </Row>
     </Column>;
 }
 
