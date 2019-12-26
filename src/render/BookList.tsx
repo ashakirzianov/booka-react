@@ -1,8 +1,7 @@
 // TODO: move to 'atoms'
 import React from 'react';
 import { BookDesc } from 'booka-common';
-import { Column, TextLink } from '../atoms';
-import { useTheme } from '../core';
+import { Column, Link } from '../atoms';
 
 export type BookListProps = {
     books: BookDesc[],
@@ -21,32 +20,25 @@ type BookItemProps = {
     desc: BookDesc,
 };
 function BookItemComp({ desc }: BookItemProps) {
-    const theme = useTheme();
-    return <Column centered>
-        <BookCoverComp
-            coverUrl={desc.coverUrl}
-            title={desc.title}
-        />
-        <TextLink
-            theme={theme}
-            text={desc.title}
-            to={`/book/${desc.id}`}
-        />
-    </Column>;
+    return <Link
+        to={`/book/${desc.id}`}
+    >
+        <Column
+            centered
+            width={200} height={200}
+        >
+            <BookCoverComp {...desc} />
+            <BookTitleComp {...desc} />
+        </Column>
+    </Link>;
 }
 
-type BookCoverProps = {
-    coverUrl?: string,
-    title?: string,
-};
-function BookCoverComp({ coverUrl, title }: BookCoverProps) {
+function BookCoverComp({ coverUrl }: BookDesc) {
     if (coverUrl) {
-        return <div
-            style={{
-                height: 180,
-                width: 120,
-            }}
-        >
+        return <div style={{
+            height: 180,
+            width: 120,
+        }}>
             <img
                 src={coverUrl}
                 style={{
@@ -58,4 +50,17 @@ function BookCoverComp({ coverUrl, title }: BookCoverProps) {
     } else {
         return null;
     }
+}
+
+function BookTitleComp({ title }: BookDesc) {
+    return <div style={{
+        display: 'block',
+        whiteSpace: 'nowrap',
+        maxWidth: '100%',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        textDecoration: 'none',
+    }}>
+        {title ?? '<no-title>'}
+    </div>;
 }
