@@ -1,3 +1,5 @@
+// TODO: move to 'atoms'
+import React from 'react';
 import { BookDesc } from 'booka-common';
 import { Column, TextLink } from '../atoms';
 import { useTheme } from '../core';
@@ -20,11 +22,40 @@ type BookItemProps = {
 };
 function BookItemComp({ desc }: BookItemProps) {
     const theme = useTheme();
-    return <Column>
+    return <Column centered>
+        <BookCoverComp
+            coverUrl={desc.coverUrl}
+            title={desc.title}
+        />
         <TextLink
             theme={theme}
             text={desc.title}
             to={`/book/${desc.id}`}
         />
     </Column>;
+}
+
+type BookCoverProps = {
+    coverUrl?: string,
+    title?: string,
+};
+function BookCoverComp({ coverUrl, title }: BookCoverProps) {
+    if (coverUrl) {
+        return <div
+            style={{
+                height: 180,
+                width: 120,
+            }}
+        >
+            <img
+                src={coverUrl}
+                style={{
+                    maxHeight: '100%',
+                    maxWidth: '100%',
+                }}
+            />
+        </div>;
+    } else {
+        return null;
+    }
 }
