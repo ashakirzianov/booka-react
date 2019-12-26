@@ -6,6 +6,7 @@ import {
 } from '../atoms';
 import { useTheme } from '../core';
 import { ConnectedAccountButton } from './AccountButton';
+import { BookListComp } from './BookList';
 
 export type LibraryScreenProps = Themed & {
     books: BookDesc[],
@@ -14,7 +15,7 @@ export function LibraryScreenComp({ theme, books }: LibraryScreenProps) {
     return <>
         <LibraryScreenHeader theme={theme} />
         <EmptyLine />
-        <AllBooksComp books={books} />
+        <BookListComp books={books} />
     </>;
 }
 
@@ -29,19 +30,6 @@ function BookItemComp({ desc }: BookItemProps) {
             text={desc.title}
             to={`/book/${desc.id}`}
         />
-    </Column>;
-}
-
-type AllBooksProps = {
-    books: BookDesc[],
-};
-function AllBooksComp({ books }: AllBooksProps) {
-    return <Column>
-        {
-            books.map((desc, idx) =>
-                <BookItemComp key={idx} desc={desc} />
-            )
-        }
     </Column>;
 }
 
