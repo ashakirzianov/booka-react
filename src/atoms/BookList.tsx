@@ -1,7 +1,7 @@
-// TODO: move to 'atoms'
 import React from 'react';
 import { BookDesc } from 'booka-common';
-import { Column, Link } from '../atoms';
+import { Column } from './Layout';
+import { Link } from './Router';
 
 export type BookListProps = {
     books: BookDesc[],
@@ -33,7 +33,7 @@ function BookItemComp({ desc }: BookItemProps) {
     </Link>;
 }
 
-function BookCoverComp({ coverUrl }: BookDesc) {
+function BookCoverComp({ coverUrl, title }: BookDesc) {
     if (coverUrl) {
         return <div style={{
             height: 180,
@@ -41,6 +41,7 @@ function BookCoverComp({ coverUrl }: BookDesc) {
         }}>
             <img
                 src={coverUrl}
+                alt={title}
                 style={{
                     maxHeight: '100%',
                     maxWidth: '100%',
