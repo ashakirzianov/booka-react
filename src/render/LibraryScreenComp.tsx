@@ -3,9 +3,9 @@ import { BookDesc } from 'booka-common';
 
 import {
     Themed, TopBar, point, Triad, EmptyLine,
-    BookListComp,
 } from '../atoms';
 import { ConnectedAccountButton } from './AccountButton';
+import { LibrarySearchConnected } from './LibrarySearchComp';
 
 export type LibraryScreenProps = Themed & {
     books: BookDesc[],
@@ -14,7 +14,7 @@ export function LibraryScreenComp({ theme, books }: LibraryScreenProps) {
     return <>
         <LibraryScreenHeader theme={theme} />
         <EmptyLine />
-        <BookListComp books={books} />
+        <LibrarySearchConnected />
     </>;
 }
 

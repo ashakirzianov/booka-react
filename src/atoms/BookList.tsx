@@ -2,8 +2,6 @@ import React from 'react';
 import { BookDesc } from 'booka-common';
 import { Column, Row } from './Layout';
 import { Link } from './Router';
-import { View } from 'react-native';
-import { point } from './common';
 
 export type BookListProps = {
     books: BookDesc[],
