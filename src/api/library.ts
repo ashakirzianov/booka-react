@@ -10,3 +10,9 @@ export function fetchAllBooks(page: number) {
         query: { page },
     });
 }
+
+export function fetchSearchQuery(query: string) {
+    return fetcher.get('/search', {
+        query: { query },
+    });
+}

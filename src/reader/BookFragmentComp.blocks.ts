@@ -3,7 +3,7 @@ import {
     ParagraphNode, ListNode, TableNode, Span,
     AttributeName, pathLessThan, iterateBookFragment,
     BookRange, TitleNode, ImageDic, Image, isSimpleSpan,
-    SingleSpan, isSingleSpan, pathWithSpan, sameNode, BookNodePath,
+    pathWithSpan, sameNode, BookNodePath,
 } from 'booka-common';
 import {
     RichTextBlock, AttrsRange, applyAttrsRange, RichTextFragment,
@@ -181,15 +181,6 @@ function blockForTable(node: TableNode, env: BuildBlocksEnv): RichTextBlock {
 }
 
 function fragmentsForSpan(span: Span, env: BuildBlocksEnv): RichTextFragment[] {
-    if (isSingleSpan(span)) {
-        return fragmentsForSingleSpan(span, env);
-    } else {
-        const ss = span as Span[];
-        return flatten(ss.map(s => fragmentsForSpan(s, env)));
-    }
-}
-
-function fragmentsForSingleSpan(span: SingleSpan, env: BuildBlocksEnv): RichTextFragment[] {
     switch (span.span) {
         case 'ref': {
             const inside = fragmentsForSpan(span.content, env);
@@ -224,7 +215,8 @@ function fragmentsForSingleSpan(span: SingleSpan, env: BuildBlocksEnv): RichText
             if (isSimpleSpan(span)) {
                 return [{ text: span }];
             } else {
-                return [];
+                const ss = span;
+                return flatten(ss.map(s => fragmentsForSpan(s, env)));
             }
         default:
             assertNever(span);

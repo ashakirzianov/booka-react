@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator as NativeActivityIndicator, View } from 'react-native';
 
 import { Theme, PaletteColor, colors, getFontSize } from './theme';
 import { percent, point, Size, WithChildren, defaults } from './common';
@@ -34,6 +34,8 @@ export function TextLine(props: TextLineProps) {
     </span>;
 }
 
+export const ActivityIndicator = NativeActivityIndicator;
+
 export type FullScreenActivityIndicatorProps = {
     theme: Theme,
 };
@@ -52,7 +54,7 @@ export function FullScreenActivityIndicator(props: FullScreenActivityIndicatorPr
             zIndex: 10,
         }}
     >
-        <ActivityIndicator
+        <NativeActivityIndicator
             size='large'
             color={colors(props.theme).primary}
         />

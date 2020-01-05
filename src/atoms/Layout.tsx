@@ -21,6 +21,7 @@ export type LayoutProps = WithChildren<{
 function buildStyle(props: LayoutProps): ViewStyle | undefined {
     return {
         flex: props.flex,
+        flexWrap: 'wrap',
         alignSelf: props.stretched ? 'stretch' : undefined,
         flexGrow: props.stretched ? 1 : undefined,
         alignItems: props.centered ? 'center' : 'stretch',
