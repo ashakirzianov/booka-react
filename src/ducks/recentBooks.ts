@@ -14,3 +14,19 @@ export type RecentBook = {
 export type RecentBooksState = {
     recentBooks: RecentBook[],
 };
+
+export type RecentBooksFetchAction = {
+    type: 'recent-books-fetch',
+};
+export type RecentBooksFulfilledAction = {
+    type: 'recent-books-fulfilled',
+    payload: RecentBook[],
+};
+export type RecentBooksRejectedAction = {
+    type: 'recent-books-rejected',
+};
+export type RecentBooksAction =
+    | RecentBooksFetchAction
+    | RecentBooksFulfilledAction
+    | RecentBooksRejectedAction
+    ;
