@@ -1,4 +1,5 @@
 import { BookPath } from 'booka-common';
+import { AppAction } from './app';
 
 export type RecentBookLocation = {
     path: BookPath,
@@ -11,9 +12,7 @@ export type RecentBook = {
     locations: RecentBookLocation[],
 };
 
-export type RecentBooksState = {
-    recentBooks: RecentBook[],
-};
+export type RecentBooksState = RecentBook[];
 
 export type RecentBooksFetchAction = {
     type: 'recent-books-fetch',
@@ -30,3 +29,12 @@ export type RecentBooksAction =
     | RecentBooksFulfilledAction
     | RecentBooksRejectedAction
     ;
+
+export function recentBooksReducer(state: RecentBooksState = [], action: AppAction): RecentBooksState {
+    switch (action.type) {
+        case 'recent-books-fulfilled':
+            return action.payload;
+        default:
+            return state;
+    }
+}
