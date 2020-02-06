@@ -1,5 +1,11 @@
 import { BookPath } from 'booka-common';
-import { AppAction } from './app';
+import { AppAction, AppState } from './app';
+import { combineEpics, Epic } from 'redux-observable';
+import { ofAppType } from './utils';
+import { mergeMap, withLatestFrom, map, catchError } from 'rxjs/operators';
+import { getRecentBooks } from '../api/bookmarks';
+import { getAuthToken } from './account';
+import { of } from 'rxjs';
 
 export type RecentBookLocation = {
     path: BookPath,
@@ -38,3 +44,27 @@ export function recentBooksReducer(state: RecentBooksState = [], action: AppActi
             return state;
     }
 }
+
+const fetchRecentBooksEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) => action$.pipe(
+    ofAppType('recent-books-fetch'),
+    withLatestFrom(state$),
+    mergeMap(
+        ([_, state]) => getRecentBooks(getAuthToken(state.account)).pipe(
+            map((res): AppAction => {
+                return {
+                    type: 'recent-books-fulfilled',
+                    payload: res,
+                };
+            }),
+            catchError(() => {
+                return of<AppAction>({
+                    type: 'recent-books-rejected',
+                });
+            }),
+        ),
+    ),
+);
+
+export const recentBooksEpic = combineEpics(
+    fetchRecentBooksEpic,
+);
