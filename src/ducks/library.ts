@@ -46,6 +46,7 @@ const fetchLibraryEpic: Epic<AppAction> = (action$) => action$.pipe(
     ofAppType('library-open'),
     flatMap(() => from<AppAction[]>([
         { type: 'allbooks-fetch' },
+        { type: 'recent-books-fetch' },
     ])),
 );
 
