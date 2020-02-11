@@ -31,7 +31,13 @@ function fetchCurrentBookmarks(token: AuthToken) {
     return fetcher.get('/bookmarks/current', { auth: token.token });
 }
 
-export function putCurrentBookUpdate(bookId: string, path: BookPath, source: BookmarkSource, token: AuthToken) {
+type CurrentPathUpdate = {
+    bookId: string,
+    path: BookPath,
+    source: BookmarkSource,
+    token: AuthToken,
+};
+export function putCurrentPathUpdate({ bookId, path, source, token }: CurrentPathUpdate) {
     const created = new Date(Date.now());
     return fetcher.put('/bookmarks/current', {
         auth: token.token,
