@@ -5,7 +5,7 @@ import {
 } from '../ducks';
 import { useTheme, useAppSelector } from '../core';
 import {
-    Column, Themed,
+    Column, Themed, BookLink,
 } from '../atoms';
 
 export function RecentBooksConnected() {
@@ -44,9 +44,31 @@ function RecentBookComp({ recentBook }: { recentBook: RecentBook }) {
     const farthest = getFarthestLocation(recentBook.locations);
     // TODO: use proper book links
     if (mostRecent === farthest) {
-        return <span>Id: {`${recentBook.id}`}, path: {`${mostRecent}`}</span>;
+        return <Column>
+            <span>Id: {recentBook.id}</span>
+            <BookLink
+                bookId={recentBook.id}
+                path={mostRecent.path}
+            >
+                Recent and furthest
+            </BookLink>
+        </Column>;
     } else {
-        return <span>Id: {`${recentBook.id}`}, recent: {`${mostRecent}`}, farthest: {`${farthest}`}</span>;
+        return <Column>
+            <span>Id: {recentBook.id}</span>
+            <BookLink
+                bookId={recentBook.id}
+                path={mostRecent.path}
+            >
+                Recent
+            </BookLink>
+            <BookLink
+                bookId={recentBook.id}
+                path={farthest.path}
+            >
+                Farthest
+            </BookLink>
+        </Column>;
     }
 }
 
