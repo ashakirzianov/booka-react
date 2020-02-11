@@ -24,6 +24,7 @@ type RecentBooksProps = Themed & {
 };
 function RecentBooksComp({ state }: RecentBooksProps) {
     return <Column>
+        <span key='label'>Recent books: {state.length}</span>
         {
             state.map((recentBook, idx) => {
                 return <RecentBookComp
@@ -43,9 +44,9 @@ function RecentBookComp({ recentBook }: { recentBook: RecentBook }) {
     const farthest = getFarthestLocation(recentBook.locations);
     // TODO: use proper book links
     if (mostRecent === farthest) {
-        return <span>Id: {recentBook.id}, path: {mostRecent}</span>;
+        return <span>Id: {`${recentBook.id}`}, path: {`${mostRecent}`}</span>;
     } else {
-        return <span>Id: {recentBook.id}, recent: {mostRecent}, farthest: {farthest}</span>;
+        return <span>Id: {`${recentBook.id}`}, recent: {`${mostRecent}`}, farthest: {`${farthest}`}</span>;
     }
 }
 
