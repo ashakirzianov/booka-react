@@ -45,7 +45,17 @@ export function recentBooksReducer(state: RecentBooksState = [], action: AppActi
     }
 }
 
-const fetchRecentBooksEpic: Epic<AppAction, AppAction, AppState> =
+const fetchEpic: Epic<AppAction> =
+    action$ => action$.pipe(
+        ofAppType('account-info'),
+        mergeMap(
+            action => of<AppAction>({
+                type: 'recent-books-fetch',
+            }),
+        ),
+    );
+
+const processFetchEpic: Epic<AppAction, AppAction, AppState> =
     (action$, state$) => action$.pipe(
         ofAppType('recent-books-fetch'),
         withLatestFrom(state$),
@@ -85,6 +95,7 @@ const updateCurrentPathEpic: Epic<AppAction, AppAction, AppState> =
     );
 
 export const recentBooksEpic = combineEpics(
-    fetchRecentBooksEpic,
+    fetchEpic,
+    processFetchEpic,
     updateCurrentPathEpic,
 );
