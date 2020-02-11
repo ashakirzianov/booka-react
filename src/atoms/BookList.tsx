@@ -1,7 +1,7 @@
 import React from 'react';
 import { BookDesc } from 'booka-common';
 import { Column, Row } from './Layout';
-import { Link } from './Router';
+import { BookLink } from './Router';
 
 export type BookListProps = {
     books: BookDesc[],
@@ -25,12 +25,8 @@ type BookItemProps = {
     desc: BookDesc,
 };
 function BookItemComp({ desc }: BookItemProps) {
-    return <Link
-        to={`/book/${desc.id}`}
-        style={{
-            textDecoration: 'none',
-            color: undefined,
-        }}
+    return <BookLink
+        bookId={desc.id}
     >
         <Column
             centered
@@ -39,7 +35,7 @@ function BookItemComp({ desc }: BookItemProps) {
             <BookCoverComp {...desc} />
             <BookTitleComp {...desc} />
         </Column>
-    </Link>;
+    </BookLink>;
 }
 
 function BookCoverComp(desc: BookDesc) {
