@@ -36,6 +36,7 @@ export function createFetcher<C extends ApiContract>(baseUrl: string): Fetcher<C
                 url, method, body,
                 responseType: 'json',
                 headers: {
+                    'Content-Type': 'application/json',
                     ...param.extra && param.extra.headers,
                     ...param.auth && { Authorization: `Bearer ${param.auth}` },
                 },
