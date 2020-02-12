@@ -20,7 +20,7 @@ function debugConfig(): AppConfig {
             : prod.backUrl,
         libUrl: useLocalServices
             ? 'http://localhost:3141'
-            : prod.backUrl,
+            : prod.libUrl,
     };
 }
 
