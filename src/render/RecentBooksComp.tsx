@@ -45,28 +45,34 @@ function RecentBookComp({ recentBook }: { recentBook: RecentBook }) {
     // TODO: use proper book links
     if (mostRecent === farthest) {
         return <Column>
-            <span>Id: {recentBook.id}</span>
+            <span>Title: {recentBook.card.title}</span>
+            <span>Recent and furthest</span>
+            <span>{mostRecent.preview}</span>
             <BookLink
-                bookId={recentBook.id}
+                bookId={recentBook.card.id}
                 path={mostRecent.path}
             >
-                Recent and furthest
+                Continue
             </BookLink>
         </Column>;
     } else {
         return <Column>
-            <span>Id: {recentBook.id}</span>
+            <span>Title: {recentBook.card.title}</span>
+            <span>Recent</span>
+            <span>{mostRecent.preview}</span>
             <BookLink
-                bookId={recentBook.id}
+                bookId={recentBook.card.id}
                 path={mostRecent.path}
             >
-                Recent
+                Continue
             </BookLink>
+            <span>Furthest</span>
+            <span>{farthest.preview}</span>
             <BookLink
-                bookId={recentBook.id}
+                bookId={recentBook.card.id}
                 path={farthest.path}
             >
-                Farthest
+                Continue
             </BookLink>
         </Column>;
     }

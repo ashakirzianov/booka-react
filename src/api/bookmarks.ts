@@ -12,7 +12,7 @@ export function getRecentBooks(token: AuthToken | undefined): Observable<RecentB
             map((res): RecentBook[] => {
                 const all = res.value;
                 return all.map(b => ({
-                    id: b.card.id,
+                    card: b.card,
                     locations: b.locations.map(l => ({
                         path: l.path,
                         created: l.created,

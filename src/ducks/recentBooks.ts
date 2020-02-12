@@ -1,4 +1,4 @@
-import { BookPath } from 'booka-common';
+import { BookPath, LibraryCard } from 'booka-common';
 import { of } from 'rxjs';
 import { mergeMap, withLatestFrom, map, catchError } from 'rxjs/operators';
 import { combineEpics, Epic } from 'redux-observable';
@@ -14,7 +14,7 @@ export type RecentBookLocation = {
 };
 
 export type RecentBook = {
-    id: string,
+    card: LibraryCard,
     locations: RecentBookLocation[],
 };
 
