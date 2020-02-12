@@ -33,6 +33,7 @@
   "scripts": {
     "start": "serve -s build",
     "debug": "HTTPS=true react-scripts start",
+    "debug-local": "HTTPS=true REACT_APP_LOCAL=all react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
