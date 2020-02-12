@@ -2,7 +2,7 @@ import { BookPath, LibraryCard } from 'booka-common';
 import { of } from 'rxjs';
 import { mergeMap, withLatestFrom, map, catchError } from 'rxjs/operators';
 import { combineEpics, Epic } from 'redux-observable';
-import { getRecentBooks, putCurrentPathUpdate } from '../api/bookmarks';
+import { getRecentBooks, sendCurrentPathUpdate } from '../api/bookmarks';
 import { AppAction, AppState } from './app';
 import { ofAppType } from './utils';
 import { getAuthToken } from './account';
@@ -83,12 +83,12 @@ const updateCurrentPathEpic: Epic<AppAction, AppAction, AppState> =
         mergeMap(([action, state]) => {
             const token = getAuthToken(state.account);
             if (token !== undefined) {
-                putCurrentPathUpdate({
+                sendCurrentPathUpdate({
                     token,
                     bookId: state.book.bookId,
                     path: action.payload,
                     source: 'not-implemented',
-                });
+                }).subscribe();
             }
             return of<AppAction>();
         }),

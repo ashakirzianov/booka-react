@@ -34,7 +34,7 @@ type CurrentPathUpdate = {
     source: BookmarkSource,
     token: AuthToken,
 };
-export function putCurrentPathUpdate({ bookId, path, source, token }: CurrentPathUpdate) {
+export function sendCurrentPathUpdate({ bookId, path, source, token }: CurrentPathUpdate) {
     const created = new Date(Date.now());
     return back.put('/bookmarks/current', {
         auth: token.token,

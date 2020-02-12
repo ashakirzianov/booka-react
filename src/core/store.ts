@@ -16,13 +16,18 @@ export const ConnectedProvider: React.SFC = ({ children }) =>
     React.createElement(Provider, { store }, children);
 
 function configureStore() {
-    const epicMiddleware = createEpicMiddleware();
     const composeEnhancers: typeof compose =
         // Note: support redux dev tools
         (globalThis.window && (globalThis.window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__)
         || compose;
+
+    const epicMiddleware = createEpicMiddleware();
+    const loggerMiddleware = createLogger();
     const middlewares = process.env.NODE_ENV === 'development'
-        ? [epicMiddleware, createLogger()]
+        ? [
+            epicMiddleware,
+            loggerMiddleware,
+        ]
         : [epicMiddleware];
     const s = createStore(
         rootReducer,
