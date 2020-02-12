@@ -4,6 +4,7 @@ import { BookFragmentAction, BookState } from './book';
 import { AccountState, AccountAction } from './account';
 import { ScreenState } from './screen';
 import { SearchAction, SearchState } from './search';
+import { RecentBooksAction, RecentBooksState } from './recentBooks';
 
 export type AppAction =
     | LibraryAction
@@ -11,6 +12,7 @@ export type AppAction =
     | ThemeAction
     | AccountAction
     | SearchAction
+    | RecentBooksAction
     ;
 export type ActionForType<T extends AppAction['type']> =
     Extract<AppAction, { type: T }>;
@@ -22,4 +24,5 @@ export type AppState = {
     screen: ScreenState,
     account: AccountState,
     search: SearchState,
+    recentBooks: RecentBooksState,
 };

@@ -1,10 +1,10 @@
 import React from 'react';
-import { BookDesc } from 'booka-common';
+import { LibraryCard } from 'booka-common';
 import { Column, Row } from './Layout';
-import { Link } from './Router';
+import { BookLink } from './Router';
 
 export type BookListProps = {
-    books: BookDesc[],
+    books: LibraryCard[],
 };
 export function BookListComp({ books }: BookListProps) {
     return <Column>
@@ -22,15 +22,11 @@ export function BookListComp({ books }: BookListProps) {
 }
 
 type BookItemProps = {
-    desc: BookDesc,
+    desc: LibraryCard,
 };
 function BookItemComp({ desc }: BookItemProps) {
-    return <Link
-        to={`/book/${desc.id}`}
-        style={{
-            textDecoration: 'none',
-            color: undefined,
-        }}
+    return <BookLink
+        bookId={desc.id}
     >
         <Column
             centered
@@ -39,10 +35,10 @@ function BookItemComp({ desc }: BookItemProps) {
             <BookCoverComp {...desc} />
             <BookTitleComp {...desc} />
         </Column>
-    </Link>;
+    </BookLink>;
 }
 
-function BookCoverComp(desc: BookDesc) {
+function BookCoverComp(desc: LibraryCard) {
     if (desc.coverUrl) {
         return <BookImageCover {...desc} />;
     } else {
@@ -50,7 +46,7 @@ function BookCoverComp(desc: BookDesc) {
     }
 }
 
-function BookImageCover({ coverUrl, title }: BookDesc) {
+function BookImageCover({ coverUrl, title }: LibraryCard) {
     return <div style={{
         height: 180,
         width: 120,
@@ -66,7 +62,7 @@ function BookImageCover({ coverUrl, title }: BookDesc) {
     </div>;
 }
 
-function BookEmptyCover({ title }: BookDesc) {
+function BookEmptyCover({ title }: LibraryCard) {
     return <div style={{
         height: 180,
         width: 120,
@@ -81,7 +77,7 @@ function BookEmptyCover({ title }: BookDesc) {
     </div>;
 }
 
-function BookTitleComp({ title }: BookDesc) {
+function BookTitleComp({ title }: LibraryCard) {
     return <div style={{
         display: 'block',
         whiteSpace: 'nowrap',
