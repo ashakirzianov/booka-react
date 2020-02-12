@@ -29,6 +29,7 @@ export type RecentBooksFulfilledAction = {
 };
 export type RecentBooksRejectedAction = {
     type: 'recent-books-rejected',
+    payload?: any,
 };
 export type RecentBooksAction =
     | RecentBooksFetchAction
@@ -67,9 +68,10 @@ const processFetchEpic: Epic<AppAction, AppAction, AppState> =
                         payload: res,
                     };
                 }),
-                catchError(() => {
+                catchError(err => {
                     return of<AppAction>({
                         type: 'recent-books-rejected',
+                        payload: err,
                     });
                 }),
             ),
