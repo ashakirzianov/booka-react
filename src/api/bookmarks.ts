@@ -1,4 +1,3 @@
-import { groupBy } from 'lodash';
 import { of, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BackContract, AuthToken, BookPath, BookmarkSource } from 'booka-common';
@@ -12,23 +11,21 @@ export function getRecentBooks(token: AuthToken | undefined): Observable<RecentB
         : fetchCurrentBookmarks(token).pipe(
             map((res): RecentBook[] => {
                 const all = res.value;
-                const grouped = groupBy(all, val => val.location.bookId);
-                const recentBooks: RecentBook[] = Object.entries(grouped).map(([bookId, bookmarks]) => ({
-                    id: bookId,
-                    locations: bookmarks.map(bookmark => ({
-                        path: bookmark.location.path,
-                        created: bookmark.created,
-                        preview: 'to-implement',
+                return all.map(b => ({
+                    id: b.card.id,
+                    locations: b.locations.map(l => ({
+                        path: l.path,
+                        created: l.created,
+                        preview: l.preview,
                     })),
                 }));
-                return recentBooks;
-            })
+            }),
         );
 }
 
-const fetcher = createFetcher<BackContract>(config().backUrl);
+const back = createFetcher<BackContract>(config().backUrl);
 function fetchCurrentBookmarks(token: AuthToken) {
-    return fetcher.get('/bookmarks/current', { auth: token.token });
+    return back.get('/bookmarks/current', { auth: token.token });
 }
 
 type CurrentPathUpdate = {
@@ -39,7 +36,7 @@ type CurrentPathUpdate = {
 };
 export function putCurrentPathUpdate({ bookId, path, source, token }: CurrentPathUpdate) {
     const created = new Date(Date.now());
-    return fetcher.put('/bookmarks/current', {
+    return back.put('/bookmarks/current', {
         auth: token.token,
         body: {
             source,

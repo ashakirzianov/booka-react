@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BookDesc } from 'booka-common';
+import { LibraryCard } from 'booka-common';
 
 import {
     Themed, TopBar, point, Triad, EmptyLine,
@@ -9,7 +9,7 @@ import { LibrarySearchConnected } from './LibrarySearchComp';
 import { RecentBooksConnected } from './RecentBooksComp';
 
 export type LibraryScreenProps = Themed & {
-    books: BookDesc[],
+    books: LibraryCard[],
 };
 export function LibraryScreenComp({ theme, books }: LibraryScreenProps) {
     return <>

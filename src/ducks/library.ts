@@ -1,4 +1,4 @@
-import { BookDesc } from 'booka-common';
+import { LibraryCard } from 'booka-common';
 import { combineEpics, Epic } from 'redux-observable';
 import { from, of } from 'rxjs';
 import { flatMap, map, mergeMap, catchError } from 'rxjs/operators';
@@ -18,7 +18,7 @@ export type AllBooksFetchAction = {
 };
 export type AllBooksFulfilledAction = {
     type: 'allbooks-fulfilled',
-    payload: BookDesc[],
+    payload: LibraryCard[],
 };
 export type AllBooksRejectedAction = {
     type: 'allbooks-rejected',
@@ -30,7 +30,7 @@ export type LibraryAction =
     ;
 
 export type LibraryState = {
-    books: BookDesc[],
+    books: LibraryCard[],
 };
 
 export function libraryReducer(state: LibraryState = { books: [] }, action: AppAction): LibraryState {
