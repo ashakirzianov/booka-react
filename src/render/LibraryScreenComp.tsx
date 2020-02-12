@@ -15,8 +15,8 @@ export function LibraryScreenComp({ theme, books }: LibraryScreenProps) {
     return <>
         <LibraryScreenHeader theme={theme} />
         <EmptyLine />
-        <RecentBooksConnected />
         <LibrarySearchConnected />
+        <RecentBooksConnected />
     </>;
 }
 
