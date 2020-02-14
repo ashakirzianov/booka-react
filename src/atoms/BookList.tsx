@@ -38,7 +38,7 @@ function BookItemComp({ desc }: BookItemProps) {
     </BookLink>;
 }
 
-function BookCoverComp(desc: LibraryCard) {
+export function BookCoverComp(desc: LibraryCard) {
     if (desc.coverUrl) {
         return <BookImageCover {...desc} />;
     } else {
