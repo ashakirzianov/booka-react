@@ -1,12 +1,13 @@
 import React from 'react';
 import { LibraryCard } from 'booka-common';
 import { Column, Row } from './Layout';
-import { BookLink } from './Router';
+import { Callback } from './common';
 
 export type BookListProps = {
     books: LibraryCard[],
+    onClick: Callback<LibraryCard>,
 };
-export function BookListComp({ books }: BookListProps) {
+export function BookListComp({ books, onClick }: BookListProps) {
     return <Column>
         <Row
             maxWidth='100%'
@@ -14,7 +15,11 @@ export function BookListComp({ books }: BookListProps) {
         >
             {
                 books.map((desc, idx) =>
-                    <BookItemComp key={idx} desc={desc} />
+                    <BookItemComp
+                        key={idx}
+                        card={desc}
+                        onClick={onClick}
+                    />
                 )
             }
         </Row>
@@ -22,20 +27,24 @@ export function BookListComp({ books }: BookListProps) {
 }
 
 type BookItemProps = {
-    desc: LibraryCard,
+    card: LibraryCard,
+    onClick: Callback<LibraryCard>,
 };
-function BookItemComp({ desc }: BookItemProps) {
-    return <BookLink
-        bookId={desc.id}
+function BookItemComp({ card, onClick }: BookItemProps) {
+    return <div
+        onClick={() => onClick(card)}
+        style={{
+            cursor: 'pointer',
+        }}
     >
         <Column
             centered
             width={200} height={200}
         >
-            <BookCoverComp {...desc} />
-            <BookTitleComp {...desc} />
+            <BookCoverComp {...card} />
+            <BookTitleComp {...card} />
         </Column>
-    </BookLink>;
+    </div>;
 }
 
 export function BookCoverComp(desc: LibraryCard) {
