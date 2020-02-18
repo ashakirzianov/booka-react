@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, Link, HistoryLocation } from '@reach/router';
+import { Router, Link, HistoryLocation, navigate } from '@reach/router';
 import { BookPath, pathToString } from 'booka-common';
 import { WithChildren } from './common';
 
@@ -8,7 +8,7 @@ export type RouteProps = {
     location?: HistoryLocation,
     [k: string]: any,
 };
-export { Link, Router };
+export { Link, Router, navigate };
 
 export type BookLinkProps = WithChildren<{
     bookId: string,

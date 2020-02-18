@@ -1,9 +1,9 @@
 import React from 'react';
 import { Callback, LibraryCard } from 'booka-common';
 import { SearchState } from '../ducks';
-import { useAppDispatch, useTheme, useAppSelector } from '../core';
+import { useAppDispatch, useTheme, useAppSelector, linkToString } from '../core';
 import {
-    Column, SearchBox, BookListComp, ActivityIndicator, Themed,
+    Column, SearchBox, BookListComp, ActivityIndicator, Themed, navigate,
 } from '../atoms';
 
 export function LibrarySearchConnected() {
@@ -17,12 +17,9 @@ export function LibrarySearchConnected() {
     const clearSearch = React.useCallback(() => dispatch({
         type: 'search-clear',
     }), [dispatch]);
-    const openBook = React.useCallback((card: LibraryCard) => dispatch({
-        type: 'book-open',
-        payload: {
-            bookId: card.id,
-        },
-    }), [dispatch]);
+    const openBook = React.useCallback((card: LibraryCard) => navigate(linkToString({
+        bookId: card.id,
+    })), []);
 
     const theme = useTheme();
 
