@@ -47,11 +47,11 @@ function BookItemComp({ card, onClick }: BookItemProps) {
     </div>;
 }
 
-export function BookCoverComp(desc: LibraryCard) {
-    if (desc.coverUrl) {
-        return <BookImageCover {...desc} />;
+export function BookCoverComp(card: LibraryCard) {
+    if (card.coverUrl) {
+        return <BookImageCover {...card} />;
     } else {
-        return <BookEmptyCover {...desc} />;
+        return <BookEmptyCover {...card} />;
     }
 }
 
