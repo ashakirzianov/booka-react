@@ -10,8 +10,7 @@ import {
 } from '../atoms';
 import { BookFragmentComp, BookSelection } from '../reader';
 import { generateQuoteLink } from './common';
-import { useCopy, linkToString } from '../core';
-import { BookLink } from '../ducks';
+import { useCopy, linkToString, BookLink } from '../core';
 
 export type BookViewCompProps = Themed & {
     bookId: string,
@@ -55,6 +54,7 @@ export function BookViewComp({
                     theme={theme}
                     text={fragment.previous.title || 'Previous'}
                     link={{
+                        link: 'book',
                         bookId,
                         path: fragment.previous.path,
                     }}
@@ -79,6 +79,7 @@ export function BookViewComp({
                     theme={theme}
                     text={fragment.next.title || 'Next'}
                     link={{
+                        link: 'book',
                         bookId,
                         path: fragment.next.path,
                     }}

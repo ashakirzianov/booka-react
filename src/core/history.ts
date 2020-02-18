@@ -1,8 +1,7 @@
 import { createBrowserHistory, LocationDescriptorObject } from 'history';
-import { stringify } from 'query-string';
-import { pathToString, rangeToString } from 'booka-common';
 
-import { AppState, BookLink } from '../ducks';
+import { AppState } from '../ducks';
+import { AppLink, pathForLink, queryForLink } from './link';
 
 const history = createBrowserHistory();
 export function updateHistoryFromState(state: AppState) {
@@ -13,39 +12,23 @@ export function updateHistoryFromState(state: AppState) {
 }
 
 function locationForState(state: AppState): LocationDescriptorObject | undefined {
+    const link = linkForState(state);
+    return {
+        pathname: pathForLink(link),
+        search: queryForLink(link),
+    };
+}
+
+function linkForState(state: AppState): AppLink {
     switch (state.screen) {
-        case 'book': {
-            const query = queryForLink(state.book);
+        case 'book':
+            return state.book;
+        case 'library':
             return {
-                pathname: `/book/${state.book.bookId}`,
-                search: query,
+                link: 'feed',
+                card: state.library.show?.id,
             };
-        }
         default:
-            return undefined;
+            return { link: 'feed' };
     }
-}
-
-export function linkToString(link: BookLink): string {
-    const query = queryForLink(link);
-    return `/book/${link.bookId}${query ? '?' + query : ''}`;
-}
-
-export function queryForLink(link: BookLink): string {
-    const queryObject: { [k: string]: string } = {};
-    if (link.path) {
-        queryObject.p = pathToString(link.path);
-    }
-    if (link.refId) {
-        queryObject.ref = link.refId;
-    }
-    if (link.quote) {
-        queryObject.q = rangeToString(link.quote);
-    }
-    if (link.toc) {
-        queryObject.toc = 'true';
-    }
-
-    const query = stringify(queryObject);
-    return query;
 }

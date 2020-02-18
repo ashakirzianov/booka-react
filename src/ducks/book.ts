@@ -7,14 +7,7 @@ import {
 import { getBookFragment, getFragmentWithPathForId } from '../api';
 import { AppAction } from './app';
 import { ofAppType } from './utils';
-
-export type BookLink = {
-    bookId: string,
-    path?: BookPath,
-    refId?: string,
-    quote?: BookRange,
-    toc?: boolean,
-};
+import { BookLink } from '../core';
 
 type BookStateBase<K extends string> = BookLink & {
     state: K,
@@ -71,6 +64,7 @@ export type BookFragmentAction =
 
 const defaultState: BookState = {
     state: 'loading',
+    link: 'book',
     bookId: '<no-book>',
 };
 export function bookReducer(state: BookState = defaultState, action: AppAction): BookState {

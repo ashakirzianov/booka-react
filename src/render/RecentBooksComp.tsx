@@ -1,9 +1,9 @@
 import React from 'react';
 import { pathLessThan, BookPath } from 'booka-common';
 import {
-    RecentBooksState, RecentBook, RecentBookLocation, BookLink,
+    RecentBooksState, RecentBook, RecentBookLocation,
 } from '../ducks';
-import { useTheme, useAppSelector, linkToString } from '../core';
+import { useTheme, useAppSelector, linkToString, BookLink } from '../core';
 import {
     Column, Themed, Callback, WithChildren, navigate,
 } from '../atoms';
@@ -108,6 +108,7 @@ function NavigationLink({ bookId, path, onBookNavigate, children }: WithChildren
 }>) {
     return <span
         onClick={() => onBookNavigate({
+            link: 'book',
             bookId, path,
         })}
         style={{
