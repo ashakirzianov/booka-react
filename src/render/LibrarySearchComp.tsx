@@ -1,10 +1,11 @@
 import React from 'react';
 import { Callback, LibraryCard } from 'booka-common';
 import { SearchState } from '../ducks';
-import { useAppDispatch, useTheme, useAppSelector, linkToString } from '../core';
+import { useAppDispatch, useTheme, useAppSelector } from '../core';
 import {
-    Column, SearchBox, BookListComp, ActivityIndicator, Themed, navigate,
+    Column, SearchBox, BookListComp, ActivityIndicator, Themed,
 } from '../atoms';
+import { LibraryCardConnected } from './LibraryCardComp';
 
 export function LibrarySearchConnected() {
     const dispatch = useAppDispatch();
@@ -17,9 +18,10 @@ export function LibrarySearchConnected() {
     const clearSearch = React.useCallback(() => dispatch({
         type: 'search-clear',
     }), [dispatch]);
-    const openBook = React.useCallback((card: LibraryCard) => navigate(linkToString({
-        bookId: card.id,
-    })), []);
+    const openBook = React.useCallback((card: LibraryCard) => dispatch({
+        type: 'card-show',
+        payload: card,
+    }), [dispatch]);
 
     const theme = useTheme();
 
@@ -28,22 +30,23 @@ export function LibrarySearchConnected() {
         onSearch={querySearch}
         onClear={clearSearch}
         onSelectBook={openBook}
-        state={searchState}
+        searchState={searchState}
     />;
 }
 
-function LibrarySearchComp({ state, onSearch, onSelectBook }: Themed & {
+function LibrarySearchComp({ searchState, onSearch, onSelectBook, }: Themed & {
     onSearch: Callback<string>,
     onSelectBook: Callback<LibraryCard>,
     onClear?: Callback,
-    state: SearchState,
+    searchState: SearchState,
 }) {
     return <Column>
+        <LibraryCardConnected />
         <SearchBox
             onSearch={onSearch}
         />
         <SearchStateComp
-            state={state}
+            state={searchState}
             onSelectBook={onSelectBook}
         />
     </Column>;
