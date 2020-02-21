@@ -1,8 +1,8 @@
 import { of } from 'rxjs';
 import { mergeMap, withLatestFrom, map } from 'rxjs/operators';
 import { combineEpics, Epic } from 'redux-observable';
-import { CardCollection } from 'booka-common';
-import { getCollections } from '../api';
+import { CardCollection, CardCollectionName } from 'booka-common';
+import { getCollections, postAddToCollection } from '../api';
 import { AppAction, AppState } from './app';
 import { ofAppType } from './utils';
 import { getAuthToken } from './account';
@@ -22,9 +22,17 @@ type CollectionsRejectedAction = {
     type: 'collections-rejected',
     payload?: any,
 };
+type AddToCollectionAction = {
+    type: 'collections-add',
+    payload: {
+        bookId: string,
+        collection: CardCollectionName,
+    },
+};
 
 export type CollectionsAction =
     | CollectionsFetchAction | CollectionsFulfilledAction | CollectionsRejectedAction
+    | AddToCollectionAction
     ;
 
 const initial: CollectionsState = {
@@ -64,6 +72,20 @@ const processFetchEpic: Epic<AppAction, AppAction, AppState> = (action$, state$)
                 }),
             ),
         ),
+    );
+
+const addToCollectionEpic: Epic<AppAction, AppAction, AppState> =
+    (action$, state$) => action$.pipe(
+        ofAppType('collections-add'),
+        withLatestFrom(state$),
+        mergeMap(([{ payload }, state]) => {
+            const token = getAuthToken(state.account);
+            if (token !== undefined) {
+                postAddToCollection(payload.bookId, payload.collection, token)
+                    .subscribe();
+            }
+            return of<AppAction>();
+        }),
     );
 
 export const collectionsEpic = combineEpics(

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { LibraryCard, Callback } from 'booka-common';
 import { BookCoverComp, Column, Modal, Themed, navigate } from '../atoms';
 import { useTheme, useAppDispatch, useAppSelector, linkToString } from '../core';
@@ -16,6 +17,14 @@ export function LibraryCardConnected() {
         bookId,
     })), []);
 
+    const addToReadingList = React.useCallback((bookId: string) => dispatch({
+        type: 'collections-add',
+        payload: {
+            collection: 'reading-list',
+            bookId,
+        },
+    }), [dispatch]);
+
     const theme = useTheme();
 
     if (card) {
@@ -24,6 +33,7 @@ export function LibraryCardConnected() {
             card={card}
             toggleCard={closeCard}
             readFromStart={readFromStart}
+            addToReadingList={addToReadingList}
         />;
     } else {
         return null;
@@ -34,8 +44,11 @@ type LibraryCardProps = Themed & {
     card: LibraryCard,
     toggleCard: Callback,
     readFromStart: Callback<string>,
+    addToReadingList: Callback<string>,
 };
-function LibraryCardModal({ theme, toggleCard, card, readFromStart }: LibraryCardProps) {
+function LibraryCardModal({
+    theme, toggleCard, card, readFromStart, addToReadingList,
+}: LibraryCardProps) {
     return <Modal
         theme={theme}
         toggle={toggleCard}
@@ -45,6 +58,7 @@ function LibraryCardModal({ theme, toggleCard, card, readFromStart }: LibraryCar
             <BookCoverComp {...card} />
             <span>{card.title}</span>
             <span onClick={() => readFromStart(card.id)}>Read</span>
+            <span onClick={() => addToReadingList(card.id)}>Add to reading list</span>
         </Column>
     </Modal>;
 }
