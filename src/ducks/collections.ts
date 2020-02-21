@@ -91,4 +91,5 @@ const addToCollectionEpic: Epic<AppAction, AppAction, AppState> =
 export const collectionsEpic = combineEpics(
     fetchEpic,
     processFetchEpic,
+    addToCollectionEpic,
 );
