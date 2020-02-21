@@ -2,7 +2,7 @@ import { of, Observable } from 'rxjs';
 import { map, mergeMap, catchError } from 'rxjs/operators';
 import { Epic, combineEpics } from 'redux-observable';
 import {
-    BookFragment, BookRange, BookPath, firstPath,
+    BookFragment, BookRange, BookPath, firstPath, Highlight,
 } from 'booka-common';
 import { getBookFragment, getFragmentWithPathForId } from '../api';
 import { AppAction } from './app';
@@ -19,6 +19,7 @@ export type BookErrorState = BookStateBase<'error'>;
 export type BookLoadingState = BookStateBase<'loading'>;
 export type BookReadyState = BookStateBase<'ready'> & {
     fragment: BookFragment,
+    highlights: Highlight[],
 };
 export type BookState =
     | BookReadyState
@@ -35,6 +36,7 @@ export type BookFetchFulfilledAction = {
     payload: {
         link: BookLink,
         fragment: BookFragment,
+        highlights: Highlight[],
     },
 };
 export type BookFetchRejectedAction = {
@@ -82,6 +84,7 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
                 state: 'ready',
                 link: action.payload.link,
                 fragment: action.payload.fragment,
+                highlights: action.payload.highlights,
                 showControls: true,
                 needToScroll: true,
             };
@@ -175,6 +178,7 @@ const fetchBookFragmentEpic: Epic<AppAction> = (action$) => action$.pipe(
                 type: 'book-fetch-fulfilled',
                 payload: {
                     fragment, link,
+                    highlights: [],
                 },
             })),
             catchError(() => {
