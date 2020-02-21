@@ -87,7 +87,7 @@ const updateCurrentPathEpic: Epic<AppAction, AppAction, AppState> =
             if (token !== undefined) {
                 sendCurrentPathUpdate({
                     token,
-                    bookId: state.book.bookId,
+                    bookId: state.book.link.bookId,
                     path: action.payload,
                     source: 'not-implemented',
                 }).subscribe();

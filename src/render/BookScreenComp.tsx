@@ -42,7 +42,7 @@ export function BookScreenComp(props: BookScreenProps) {
             return <Column>
                 <TextLine
                     theme={props.theme}
-                    text={`Error opening ${props.screen.bookId}`}
+                    text={`Error opening ${props.screen.link.bookId}`}
                 />
                 <TextLink
                     theme={props.theme}
@@ -61,7 +61,7 @@ type BookScreenReadyProps = BookScreenPropsBase & {
 };
 function BookScreenReadyComp(props: BookScreenReadyProps) {
     const pathToScroll = props.screen.needToScroll
-        ? props.screen.path
+        ? props.screen.link.path
         : undefined;
     return <>
         <BookScreenHeader
@@ -76,21 +76,21 @@ function BookScreenReadyComp(props: BookScreenReadyProps) {
                 <Column maxWidth={point(50)} fullWidth padding={point(1)} centered>
                     <EmptyLine />
                     <BookViewComp
-                        bookId={props.screen.bookId}
+                        bookId={props.screen.link.bookId}
                         theme={props.theme}
                         fragment={props.screen.fragment}
                         pathToScroll={pathToScroll}
                         updateBookPosition={props.updateCurrentPath}
-                        quoteRange={props.screen.quote}
+                        quoteRange={props.screen.link.quote}
                         setQuoteRange={props.setQuoteRange}
                         openRef={props.openRef}
                     />
                     {
-                        props.screen.toc && props.screen.fragment.toc
+                        props.screen.link.toc && props.screen.fragment.toc
                             ? <TableOfContentsComp
                                 theme={props.theme}
                                 toc={props.screen.fragment.toc}
-                                id={props.screen.bookId}
+                                id={props.screen.link.bookId}
                                 toggleToc={props.toggleToc}
                             />
                             : null
@@ -244,13 +244,14 @@ function TocButton({ theme, total, current, toggleToc }: TocButtonProps) {
     />;
 }
 
+// TODO: decouple props
 type BookScreenFooterProps = BookScreenProps;
 function BookScreenFooter({
     screen, theme, controlsVisible, toggleToc,
 }: BookScreenFooterProps) {
     if (screen.state === 'ready') {
         const fragment = screen.fragment;
-        const path = screen.path || fragment.current.path;
+        const path = screen.link.path || fragment.current.path;
         const total = fragment.toc
             ? pageForPosition(fragment.toc.length)
             : undefined;
