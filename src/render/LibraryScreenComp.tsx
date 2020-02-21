@@ -6,6 +6,7 @@ import {
 } from '../atoms';
 import { ConnectedAccountButton } from './AccountButton';
 import { LibrarySearchConnected } from './LibrarySearchComp';
+import { CollectionsConnected } from './CollectionsComp';
 import { RecentBooksConnected } from './RecentBooksComp';
 
 export type LibraryScreenProps = Themed & {
@@ -16,6 +17,7 @@ export function LibraryScreenComp({ theme, books }: LibraryScreenProps) {
         <LibraryScreenHeader theme={theme} />
         <EmptyLine />
         <LibrarySearchConnected />
+        <CollectionsConnected />
         <RecentBooksConnected />
     </>;
 }
