@@ -1,10 +1,11 @@
 import React from 'react';
-import { Callback } from 'booka-common';
+import { Callback, LibraryCard } from 'booka-common';
 import { SearchState } from '../ducks';
 import { useAppDispatch, useTheme, useAppSelector } from '../core';
 import {
     Column, SearchBox, BookListComp, ActivityIndicator, Themed,
 } from '../atoms';
+import { LibraryCardConnected } from './LibraryCardComp';
 
 export function LibrarySearchConnected() {
     const dispatch = useAppDispatch();
@@ -17,6 +18,10 @@ export function LibrarySearchConnected() {
     const clearSearch = React.useCallback(() => dispatch({
         type: 'search-clear',
     }), [dispatch]);
+    const openBook = React.useCallback((card: LibraryCard) => dispatch({
+        type: 'card-show',
+        payload: card,
+    }), [dispatch]);
 
     const theme = useTheme();
 
@@ -24,25 +29,33 @@ export function LibrarySearchConnected() {
         theme={theme}
         onSearch={querySearch}
         onClear={clearSearch}
-        state={searchState}
+        onSelectBook={openBook}
+        searchState={searchState}
     />;
 }
 
-type LibrarySearchProps = Themed & {
+function LibrarySearchComp({ searchState, onSearch, onSelectBook, }: Themed & {
     onSearch: Callback<string>,
+    onSelectBook: Callback<LibraryCard>,
     onClear?: Callback,
-    state: SearchState,
-};
-function LibrarySearchComp({ state, onSearch }: LibrarySearchProps) {
+    searchState: SearchState,
+}) {
     return <Column>
+        <LibraryCardConnected />
         <SearchBox
             onSearch={onSearch}
         />
-        <SearchStateComp {...state} />
+        <SearchStateComp
+            state={searchState}
+            onSelectBook={onSelectBook}
+        />
     </Column>;
 }
 
-function SearchStateComp(state: SearchState) {
+function SearchStateComp({ state, onSelectBook }: {
+    state: SearchState,
+    onSelectBook: Callback<LibraryCard>,
+}) {
     switch (state.state) {
         case 'error':
             return <span>Search error</span>;
@@ -51,6 +64,7 @@ function SearchStateComp(state: SearchState) {
         case 'ready':
             return <BookListComp
                 books={state.results.map(r => r.desc)}
+                onClick={onSelectBook}
             />;
         case 'empty':
         default:

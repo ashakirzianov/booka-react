@@ -23,20 +23,33 @@ export type AllBooksFulfilledAction = {
 export type AllBooksRejectedAction = {
     type: 'allbooks-rejected',
 };
+export type ShowCardAction = {
+    type: 'card-show',
+    payload: LibraryCard,
+};
+export type CloseCardAction = {
+    type: 'card-close',
+};
 
 export type LibraryAction =
     | LibraryOpenAction
     | AllBooksFetchAction | AllBooksFulfilledAction | AllBooksRejectedAction
+    | ShowCardAction | CloseCardAction
     ;
 
 export type LibraryState = {
     books: LibraryCard[],
+    show?: LibraryCard,
 };
 
 export function libraryReducer(state: LibraryState = { books: [] }, action: AppAction): LibraryState {
     switch (action.type) {
         case 'allbooks-fulfilled':
-            return { books: action.payload };
+            return { ...state, books: action.payload };
+        case 'card-show':
+            return { ...state, show: action.payload };
+        case 'card-close':
+            return { ...state, show: undefined };
         default:
             return state;
     }

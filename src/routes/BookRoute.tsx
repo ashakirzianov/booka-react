@@ -5,10 +5,9 @@ import {
 } from 'booka-common';
 import { BookScreenComp } from '../render';
 import {
-    useAppDispatch, useAppSelector, useTheme,
+    useAppDispatch, useAppSelector, useTheme, BookLink,
 } from '../core';
 import { RouteProps } from '../atoms';
-import { BookLink } from '../ducks';
 import { HistoryLocation } from '@reach/router';
 
 export function BookRoute({ bookId, location }: RouteProps) {
@@ -39,6 +38,7 @@ export function BookRoute({ bookId, location }: RouteProps) {
     const openRef = React.useCallback((refId: string) => dispatch({
         type: 'book-open',
         payload: {
+            link: 'book',
             bookId,
             refId,
         },
@@ -62,6 +62,7 @@ function buildLink(bookId: string, location: HistoryLocation): BookLink {
     const { p, q, toc } = parse(location!.search);
 
     return {
+        link: 'book',
         bookId,
         path: typeof p === 'string'
             ? pathFromString(p)

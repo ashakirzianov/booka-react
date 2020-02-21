@@ -51,6 +51,7 @@ function TocItemComp({ id, item, tabs, page, theme }: TocItemProps) {
         <StretchTextLink
             theme={theme}
             to={linkToString({
+                link: 'book',
                 bookId: id,
                 path: item.path,
             })}
