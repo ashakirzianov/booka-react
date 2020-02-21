@@ -1,10 +1,10 @@
-import { of, Observable } from 'rxjs';
+import { of } from 'rxjs';
 import { map, mergeMap, catchError } from 'rxjs/operators';
 import { Epic, combineEpics } from 'redux-observable';
 import {
-    BookFragment, BookRange, BookPath, firstPath, Highlight,
+    BookFragment, BookRange, BookPath, Highlight,
 } from 'booka-common';
-import { getBookFragment, getFragmentWithPathForId } from '../api';
+import { openLink } from '../api';
 import { AppAction } from './app';
 import { ofAppType } from './utils';
 import { BookLink } from '../core';
@@ -125,49 +125,6 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
         default:
             return state;
     }
-}
-
-type FragmentWithLink = {
-    fragment: BookFragment,
-    link: BookLink,
-};
-type RefIdLink = BookLink & { refId: string };
-function openRefId(link: RefIdLink): Observable<FragmentWithLink> {
-    return getFragmentWithPathForId(link.bookId, link.refId).pipe(
-        map(({ fragment, path }) => {
-            return {
-                fragment,
-                link: {
-                    ...link,
-                    path,
-                },
-            };
-        }),
-    );
-}
-
-type PathLink = BookLink;
-function openPath(link: PathLink): Observable<FragmentWithLink> {
-    const path = link.path || (link.quote && link.quote.start) || firstPath();
-    return getBookFragment(link.bookId, path).pipe(
-        map((fragment) => {
-            return {
-                fragment,
-                link: {
-                    ...link,
-                    path,
-                },
-            };
-        }),
-    );
-}
-
-function openLink(bookLink: BookLink) {
-    const observable = bookLink.refId !== undefined
-        // Note: object assign to please TypeScript
-        ? openRefId({ ...bookLink, refId: bookLink.refId })
-        : openPath(bookLink);
-    return observable;
 }
 
 const fetchBookFragmentEpic: Epic<AppAction> = (action$) => action$.pipe(
