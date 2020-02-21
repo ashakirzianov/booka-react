@@ -1,5 +1,11 @@
+import { of } from 'rxjs';
+import { mergeMap, withLatestFrom, map } from 'rxjs/operators';
+import { combineEpics, Epic } from 'redux-observable';
 import { CardCollection } from 'booka-common';
-import { AppAction } from './app';
+import { getCollections } from '../api';
+import { AppAction, AppState } from './app';
+import { ofAppType } from './utils';
+import { getAuthToken } from './account';
 
 export type CollectionsState = {
     collections: CardCollection[],
@@ -34,3 +40,33 @@ export function collectionsReducer(state: CollectionsState = initial, action: Ap
             return state;
     }
 }
+
+const fetchEpic: Epic<AppAction> = action$ => action$.pipe(
+    ofAppType('account-info'),
+    mergeMap(
+        action => of<AppAction>({
+            type: 'collections-fetch',
+        }),
+    ),
+);
+
+const processFetchEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
+    action$.pipe(
+        ofAppType('collections-fetch'),
+        withLatestFrom(state$),
+        mergeMap(
+            ([_, state]) => getCollections(getAuthToken(state.account)).pipe(
+                map((res): AppAction => {
+                    return {
+                        type: 'collections-fulfilled',
+                        payload: res,
+                    };
+                }),
+            ),
+        ),
+    );
+
+export const collectionsEpic = combineEpics(
+    fetchEpic,
+    processFetchEpic,
+);

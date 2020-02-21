@@ -2,7 +2,7 @@ import { BookPath, LibraryCard } from 'booka-common';
 import { of } from 'rxjs';
 import { mergeMap, withLatestFrom, map, catchError } from 'rxjs/operators';
 import { combineEpics, Epic } from 'redux-observable';
-import { getRecentBooks, sendCurrentPathUpdate } from '../api/bookmarks';
+import { getRecentBooks, sendCurrentPathUpdate } from '../api';
 import { AppAction, AppState } from './app';
 import { ofAppType } from './utils';
 import { getAuthToken } from './account';
