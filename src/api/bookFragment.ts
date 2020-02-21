@@ -1,9 +1,9 @@
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import {
     BookFragment, BookPath, Book, fragmentForPath,
     defaultFragmentLength, tocForBook, LibContract,
-    pathToString, findReference, firstPath,
+    pathToString, findReference, firstPath, Highlight, BackContract, AuthToken,
 } from 'booka-common';
 import { config } from '../config';
 import { createFetcher } from './fetcher';
@@ -13,8 +13,19 @@ import { BookLink } from '../core';
 type OpenLinkResult = {
     fragment: BookFragment,
     link: BookLink,
+    highlights: Highlight[],
 };
-export function openLink(bookLink: BookLink) {
+export function openLink(bookLink: BookLink, auth?: AuthToken) {
+    return openLinkFragment(bookLink).pipe(
+        withLatestFrom(fetchHighlights(bookLink.bookId, auth)),
+        map(([res, highlights]) => ({
+            ...res,
+            highlights,
+        })),
+    );
+}
+
+function openLinkFragment(bookLink: BookLink) {
     const observable = bookLink.refId !== undefined
         // Note: object assign to please TypeScript
         ? openRefId({ ...bookLink, refId: bookLink.refId })
@@ -31,6 +42,7 @@ function openRefId(link: RefIdLink): Observable<OpenLinkResult> {
                     ...link,
                     path,
                 },
+                highlights: [],
             };
         }),
     );
@@ -47,6 +59,7 @@ function openPath(link: PathLink): Observable<OpenLinkResult> {
                     ...link,
                     path,
                 },
+                highlights: [],
             };
         }),
     );
@@ -123,9 +136,9 @@ function getBookCached(id: string): Observable<Book> {
     }
 }
 
-const fetcher = createFetcher<LibContract>(config().libUrl);
+const libFetcher = createFetcher<LibContract>(config().libUrl);
 function fetchBookFragment(id: string, path: BookPath) {
-    return fetcher.get('/fragment', {
+    return libFetcher.get('/fragment', {
         query: {
             id,
             path: pathToString(path),
@@ -134,7 +147,22 @@ function fetchBookFragment(id: string, path: BookPath) {
 }
 
 function fetchBook(id: string) {
-    return fetcher.get('/full', {
+    return libFetcher.get('/full', {
         query: { id },
     });
+}
+
+// TODO: be consistent with fetch results
+const backFetcher = createFetcher<BackContract>(config().backUrl);
+function fetchHighlights(bookId: string, token?: AuthToken) {
+    return token
+        ? backFetcher.get('/highlights', {
+            auth: token.token,
+            query: {
+                bookId,
+            },
+        }).pipe(
+            map(res => res.value)
+        )
+        : of<Highlight[]>([]);
 }
