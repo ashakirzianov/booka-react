@@ -8,6 +8,7 @@ import { screenReducer } from './screen';
 import { accountReducer, accountEpic } from './account';
 import { searchReducer, searchEpic } from './search';
 import { recentBooksEpic, recentBooksReducer } from './recentBooks';
+import { collectionsReducer } from './collections';
 
 export const rootReducer = combineReducers<AppState, AppAction>({
     library: libraryReducer,
@@ -17,6 +18,7 @@ export const rootReducer = combineReducers<AppState, AppAction>({
     screen: screenReducer,
     account: accountReducer,
     search: searchReducer,
+    collections: collectionsReducer,
 });
 
 export const rootEpic = combineEpics(
