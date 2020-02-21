@@ -1,10 +1,21 @@
-import { LibraryCard } from 'booka-common';
+import { CardCollection } from 'booka-common';
 
-export type BookCollection = {
-    tag: string,
-    displayName: string,
-    cards: LibraryCard[],
-};
 export type CollectionsState = {
-    collections: BookCollection[],
+    collections: CardCollection[],
 };
+
+type CollectionsFetchAction = {
+    type: 'collections-fetch',
+};
+type CollectionsFulfilledAction = {
+    type: 'collections-fulfilled',
+    payload: CardCollection[],
+};
+type CollectionsRejectedAction = {
+    type: 'collections-rejected',
+    payload?: any,
+};
+
+export type CollectionsAction =
+    | CollectionsFetchAction | CollectionsFulfilledAction | CollectionsRejectedAction
+    ;
