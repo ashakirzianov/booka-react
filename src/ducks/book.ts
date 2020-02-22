@@ -2,7 +2,7 @@ import { of } from 'rxjs';
 import { map, mergeMap, catchError, withLatestFrom } from 'rxjs/operators';
 import { Epic, combineEpics } from 'redux-observable';
 import {
-    BookFragment, BookRange, BookPath, Highlight,
+    BookFragment, BookRange, BookPath, Highlight, HighlightPost,
 } from 'booka-common';
 import { openLink, getHighlights, postHighlight } from '../api';
 import { AppAction, AppEpic } from './app';
@@ -59,9 +59,7 @@ type ToggleControlsAction = {
 type BookHighlightsAddAction = {
     type: 'book-highlights-add',
     payload: {
-        bookId: string,
-        group: string,
-        range: BookRange,
+        highlight: HighlightPost,
     },
 };
 type BookHighlightsFetchAction = {
@@ -204,17 +202,13 @@ const postHighlightEpic: AppEpic = (action$, state$) => action$.pipe(
     ofAppType('book-highlights-add'),
     withLatestFrom(appAuth(state$)),
     mergeMap(
-        ([action, token]) => postHighlight({
-            group: 'main', // TODO: valid group
-            location: {
-                bookId: action.payload.bookId,
-                range: action.payload.range,
-            },
-        }, token).pipe(
+        ([action, token]) => postHighlight(action.payload.highlight, token).pipe(
             map(
                 (): AppAction => ({
                     type: 'book-highlights-fetch',
-                    payload: { bookId: action.payload.bookId },
+                    payload: {
+                        bookId: action.payload.highlight.location.bookId,
+                    },
                 }),
             ),
         ),

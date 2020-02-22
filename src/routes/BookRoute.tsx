@@ -1,7 +1,7 @@
 import React from 'react';
 import { parse } from 'query-string';
 import {
-    pathFromString, rangeFromString, BookRange, BookPath,
+    pathFromString, rangeFromString, BookRange, BookPath, HighlightPost,
 } from 'booka-common';
 import { BookScreenComp } from '../render';
 import {
@@ -43,6 +43,12 @@ export function BookRoute({ bookId, location }: RouteProps) {
             refId,
         },
     }), [dispatch, bookId]);
+    const addHighlight = React.useCallback((highlight: HighlightPost) => dispatch({
+        type: 'book-highlights-add',
+        payload: {
+            highlight,
+        },
+    }), [dispatch]);
 
     const theme = useTheme();
     const controlsVisible = useAppSelector(s => s.book.showControls || false);
@@ -51,6 +57,7 @@ export function BookRoute({ bookId, location }: RouteProps) {
         screen={bookScreen}
         controlsVisible={controlsVisible}
         updateCurrentPath={updateCurrentPath}
+        addHighlight={addHighlight}
         setQuoteRange={setQuoteRange}
         toggleControls={toggleControls}
         toggleToc={toggleToc}

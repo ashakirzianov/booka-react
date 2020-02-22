@@ -54,7 +54,7 @@ export function colors(theme: Theme): Palette['colors'] {
     return theme.palettes[theme.currentPalette].colors;
 }
 
-export function highlights(theme: Theme): Palette['highlights'] {
+export function getHighlights(theme: Theme): Palette['highlights'] {
     return theme.palettes[theme.currentPalette].highlights;
 }
 

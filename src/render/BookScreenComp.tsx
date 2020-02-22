@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    assertNever, BookRange, positionForPath, BookPath,
+    assertNever, BookRange, positionForPath, BookPath, HighlightPost,
 } from 'booka-common';
 
 import { BookState, BookReadyState } from '../ducks';
@@ -19,6 +19,7 @@ import { FullScreenActivityIndicator } from '../atoms/Basics.native';
 
 type BookScreenPropsBase = Themed & {
     controlsVisible: boolean,
+    addHighlight: Callback<HighlightPost>,
     openRef: Callback<string>,
     setQuoteRange: Callback<BookRange | undefined>,
     updateCurrentPath: Callback<BookPath>,
@@ -81,6 +82,8 @@ function BookScreenReadyComp(props: BookScreenReadyProps) {
                         fragment={props.screen.fragment}
                         pathToScroll={pathToScroll}
                         updateBookPosition={props.updateCurrentPath}
+                        highlights={props.screen.highlights}
+                        addHighlight={props.addHighlight}
                         quoteRange={props.screen.link.quote}
                         setQuoteRange={props.setQuoteRange}
                         openRef={props.openRef}

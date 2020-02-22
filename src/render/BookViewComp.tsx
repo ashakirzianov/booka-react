@@ -2,15 +2,18 @@ import React from 'react';
 import {
     BookFragment, BookPath,
     BookRange,
+    Highlight,
+    HighlightPost,
 } from 'booka-common';
 
 import {
     Themed, colors, getFontSize, Row,
-    point, Callback, highlights, BorderLink,
+    point, Callback, getHighlights, BorderLink, Theme,
 } from '../atoms';
 import { BookFragmentComp, BookSelection } from '../reader';
 import { generateQuoteLink } from './common';
 import { useCopy, linkToString, BookLink } from '../core';
+import { ColorizedRange } from '../reader/BookFragmentComp.blocks';
 
 export type BookViewCompProps = Themed & {
     bookId: string,
@@ -18,12 +21,15 @@ export type BookViewCompProps = Themed & {
     pathToScroll: BookPath | undefined,
     updateBookPosition: Callback<BookPath>,
     quoteRange: BookRange | undefined,
+    highlights: Highlight[],
+    addHighlight: Callback<HighlightPost>,
     setQuoteRange: Callback<BookRange | undefined>,
     openRef: Callback<string>,
 };
 export function BookViewComp({
     bookId, fragment, theme,
     pathToScroll, updateBookPosition,
+    highlights,
     quoteRange, setQuoteRange,
     openRef,
 }: BookViewCompProps) {
@@ -40,12 +46,9 @@ export function BookViewComp({
         setQuoteRange(selection.current && selection.current.range);
     }, [bookId, setQuoteRange]));
 
-    const colorization = quoteRange
-        ? [{
-            color: highlights(theme).quote,
-            range: quoteRange,
-        }]
-        : [];
+    const colorization = quoteColorization(quoteRange, theme)
+        .concat(highlightsColorization(highlights, theme))
+        ;
 
     return <>
         {
@@ -101,4 +104,25 @@ function PathLink({ theme, text, link }: PathLinkProps) {
             fontFamily='book'
         />
     </Row>;
+}
+
+function quoteColorization(quote: BookRange | undefined, theme: Theme): ColorizedRange[] {
+    return quote
+        ? [{
+            color: getHighlights(theme).quote,
+            range: quote,
+        }]
+        : [];
+}
+
+function highlightsColorization(highlights: Highlight[], theme: Theme): ColorizedRange[] {
+    return highlights.map(h => ({
+        color: colorForGroup(h.group),
+        range: h.location.range,
+    }));
+}
+
+function colorForGroup(group: string) {
+    // TODO: implement
+    return 'green';
 }
