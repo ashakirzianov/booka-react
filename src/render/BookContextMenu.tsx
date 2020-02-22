@@ -4,11 +4,25 @@ import { Menu, Item, MenuProvider } from 'react-contexify';
 import 'react-contexify/dist/ReactContexify.min.css';
 
 import { WithChildren } from '../atoms';
+import { BookSelection } from '../reader';
+import { Callback } from 'booka-common';
 
-export function BookContextMenuConnected({ children }: WithChildren<{
+type ContextMenuSelectionTarget = {
+    target: 'selection',
+    selection: BookSelection,
+};
+type ContextMenuEmptyTarget = {
+    target: 'empty',
+};
+export type ContextMenuTarget =
+    | ContextMenuSelectionTarget
+    | ContextMenuEmptyTarget
+    ;
 
+export function BookContextMenu({ children, target, onAddHighlight }: WithChildren<{
+    target: ContextMenuTarget,
+    onAddHighlight: Callback<string>,
 }>) {
-    const onClick = () => undefined;
     return <>
         <MenuProvider id='book-menu' style={{
             display: 'inline-block',
@@ -16,7 +30,22 @@ export function BookContextMenuConnected({ children }: WithChildren<{
             {children}
         </MenuProvider>
         <Menu id='book-menu'>
-            <Item onClick={onClick}>Hello</Item>
+            <AddHighlightItem target={target} onAddHighlight={onAddHighlight} />
         </Menu>
     </>;
+}
+
+function AddHighlightItem({ target, onAddHighlight }: {
+    target: ContextMenuTarget,
+    onAddHighlight: Callback<string>,
+}) {
+    if (target.target !== 'selection') {
+        return null;
+    }
+
+    return <Item
+        onClick={() => onAddHighlight('main')}
+    >
+        Add highlight
+    </Item>;
 }
