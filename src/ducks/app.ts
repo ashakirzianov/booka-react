@@ -6,6 +6,7 @@ import { ScreenState } from './screen';
 import { SearchAction, SearchState } from './search';
 import { RecentBooksAction, RecentBooksState } from './recentBooks';
 import { CollectionsAction, CollectionsState } from './collections';
+import { Epic } from 'redux-observable';
 
 export type AppAction =
     | LibraryAction
@@ -29,3 +30,5 @@ export type AppState = {
     recentBooks: RecentBooksState,
     collections: CollectionsState,
 };
+
+export type AppEpic = Epic<AppAction, AppAction, AppState>;

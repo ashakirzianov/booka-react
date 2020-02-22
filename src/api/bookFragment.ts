@@ -1,9 +1,9 @@
 import { Observable, of } from 'rxjs';
-import { map, withLatestFrom } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import {
     BookFragment, BookPath, Book, fragmentForPath,
     defaultFragmentLength, tocForBook, LibContract,
-    pathToString, findReference, firstPath, Highlight, BackContract, AuthToken,
+    pathToString, findReference, firstPath, AuthToken,
 } from 'booka-common';
 import { config } from '../config';
 import { createFetcher } from './fetcher';
@@ -13,25 +13,15 @@ import { BookLink } from '../core';
 type OpenLinkResult = {
     fragment: BookFragment,
     link: BookLink,
-    highlights: Highlight[],
 };
 export function openLink(bookLink: BookLink, auth?: AuthToken) {
-    return openLinkFragment(bookLink).pipe(
-        withLatestFrom(fetchHighlights(bookLink.bookId, auth)),
-        map(([res, highlights]) => ({
-            ...res,
-            highlights,
-        })),
-    );
-}
-
-function openLinkFragment(bookLink: BookLink) {
     const observable = bookLink.refId !== undefined
         // Note: object assign to please TypeScript
         ? openRefId({ ...bookLink, refId: bookLink.refId })
         : openPath(bookLink);
     return observable;
 }
+
 type RefIdLink = BookLink & { refId: string };
 function openRefId(link: RefIdLink): Observable<OpenLinkResult> {
     return getFragmentWithPathForId(link.bookId, link.refId).pipe(
@@ -150,19 +140,4 @@ function fetchBook(id: string) {
     return libFetcher.get('/full', {
         query: { id },
     });
-}
-
-// TODO: be consistent with fetch results
-const backFetcher = createFetcher<BackContract>(config().backUrl);
-function fetchHighlights(bookId: string, token?: AuthToken) {
-    return token
-        ? backFetcher.get('/highlights', {
-            auth: token.token,
-            query: {
-                bookId,
-            },
-        }).pipe(
-            map(res => res.value)
-        )
-        : of<Highlight[]>([]);
 }

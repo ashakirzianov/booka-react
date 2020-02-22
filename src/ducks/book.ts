@@ -1,13 +1,14 @@
 import { of } from 'rxjs';
-import { map, mergeMap, catchError } from 'rxjs/operators';
+import { map, mergeMap, catchError, withLatestFrom } from 'rxjs/operators';
 import { Epic, combineEpics } from 'redux-observable';
 import {
     BookFragment, BookRange, BookPath, Highlight,
 } from 'booka-common';
-import { openLink } from '../api';
-import { AppAction } from './app';
+import { openLink, getHighlights } from '../api';
+import { AppAction, AppEpic } from './app';
 import { ofAppType } from './utils';
 import { BookLink } from '../core';
+import { getAuthToken } from './account';
 
 type BookStateBase<K extends string> = {
     state: K,
@@ -36,7 +37,6 @@ export type BookFetchFulfilledAction = {
     payload: {
         link: BookLink,
         fragment: BookFragment,
-        highlights: Highlight[],
     },
 };
 export type BookFetchRejectedAction = {
@@ -57,11 +57,18 @@ export type ToggleTocAction = {
 export type ToggleControlsAction = {
     type: 'book-toggle-controls',
 };
-export type BookAddHighlightAction = {
-    type: 'book-add-highlight',
+export type BookHighlightsAddAction = {
+    type: 'book-highlights-add',
     payload: {
         group: string,
         range: BookRange,
+    },
+};
+export type BookHighlightsFulfilledAction = {
+    type: 'book-highlights-fulfilled',
+    payload: {
+        bookId: string,
+        highlights: Highlight[],
     },
 };
 export type BookFragmentAction =
@@ -70,7 +77,7 @@ export type BookFragmentAction =
     | BookFetchRejectedAction
     | SetQuoteRangeAction | UpdateCurrentPathAction
     | ToggleTocAction | ToggleControlsAction
-    | BookAddHighlightAction
+    | BookHighlightsAddAction | BookHighlightsFulfilledAction
     ;
 
 const defaultState: BookState = {
@@ -92,7 +99,7 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
                 state: 'ready',
                 link: action.payload.link,
                 fragment: action.payload.fragment,
-                highlights: action.payload.highlights,
+                highlights: [],
                 showControls: true,
                 needToScroll: true,
             };
@@ -130,6 +137,10 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
                 : state;
         case 'book-toggle-controls':
             return { ...state, showControls: !state.showControls };
+        case 'book-highlights-fulfilled':
+            return state.link.bookId === action.payload.bookId && state.state === 'ready'
+                ? { ...state, highlights: action.payload.highlights }
+                : state;
         default:
             return state;
     }
@@ -143,7 +154,6 @@ const fetchBookFragmentEpic: Epic<AppAction> = (action$) => action$.pipe(
                 type: 'book-fetch-fulfilled',
                 payload: {
                     fragment, link,
-                    highlights: [],
                 },
             })),
             catchError(() => {
@@ -156,6 +166,23 @@ const fetchBookFragmentEpic: Epic<AppAction> = (action$) => action$.pipe(
     ),
 );
 
+const fetchBookHighlightsEpic: AppEpic = (action$, state$) => action$.pipe(
+    ofAppType('book-fetch-fulfilled'),
+    withLatestFrom(state$),
+    mergeMap(
+        ([action, state]) => getHighlights(action.payload.link.bookId, getAuthToken(state.account)).pipe(
+            map((hs): AppAction => ({
+                type: 'book-highlights-fulfilled',
+                payload: {
+                    bookId: action.payload.link.bookId,
+                    highlights: hs,
+                },
+            })),
+        ),
+    ),
+);
+
 export const bookFragmentEpic = combineEpics(
     fetchBookFragmentEpic,
+    fetchBookHighlightsEpic,
 );
