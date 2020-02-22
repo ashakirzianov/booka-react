@@ -4,8 +4,7 @@ import { combineEpics, Epic } from 'redux-observable';
 import { CardCollection, CardCollectionName } from 'booka-common';
 import { getCollections, postAddToCollection } from '../api';
 import { AppAction, AppState } from './app';
-import { ofAppType } from './utils';
-import { getAuthToken } from './account';
+import { ofAppType, appAuth } from './utils';
 
 export type CollectionsState = {
     collections: CardCollection[],
@@ -61,9 +60,9 @@ const fetchEpic: Epic<AppAction> = action$ => action$.pipe(
 const processFetchEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
     action$.pipe(
         ofAppType('collections-fetch'),
-        withLatestFrom(state$),
+        withLatestFrom(appAuth(state$)),
         mergeMap(
-            ([_, state]) => getCollections(getAuthToken(state.account)).pipe(
+            ([_, token]) => getCollections(token).pipe(
                 map((res): AppAction => {
                     return {
                         type: 'collections-fulfilled',
@@ -79,9 +78,8 @@ const addToCollectionEpic: Epic<AppAction, AppAction, AppState> =
         ofAppType('collections-add'),
         withLatestFrom(state$),
         mergeMap(([{ payload }, state]) => {
-            const token = getAuthToken(state.account);
-            if (token !== undefined) {
-                postAddToCollection(payload.bookId, payload.collection, token)
+            if (state.account.state === 'signed') {
+                postAddToCollection(payload.bookId, payload.collection, state.account.token)
                     .subscribe();
             }
             return of<AppAction>();

@@ -6,9 +6,8 @@ import {
 } from 'booka-common';
 import { openLink, getHighlights } from '../api';
 import { AppAction, AppEpic } from './app';
-import { ofAppType } from './utils';
+import { ofAppType, appAuth } from './utils';
 import { BookLink } from '../core';
-import { getAuthToken } from './account';
 
 type BookStateBase<K extends string> = {
     state: K,
@@ -168,9 +167,9 @@ const fetchBookFragmentEpic: Epic<AppAction> = (action$) => action$.pipe(
 
 const fetchBookHighlightsEpic: AppEpic = (action$, state$) => action$.pipe(
     ofAppType('book-fetch-fulfilled'),
-    withLatestFrom(state$),
+    withLatestFrom(appAuth(state$)),
     mergeMap(
-        ([action, state]) => getHighlights(action.payload.link.bookId, getAuthToken(state.account)).pipe(
+        ([action, token]) => getHighlights(action.payload.link.bookId, token).pipe(
             map((hs): AppAction => ({
                 type: 'book-highlights-fulfilled',
                 payload: {
@@ -181,6 +180,11 @@ const fetchBookHighlightsEpic: AppEpic = (action$, state$) => action$.pipe(
         ),
     ),
 );
+
+// const postHighlightEpic: AppEpic = (action$, state$) => action$.pipe(
+//     ofAppType('book-highlights-add'),
+//     withLatestFrom(appAuth(state$)),
+// );
 
 export const bookFragmentEpic = combineEpics(
     fetchBookFragmentEpic,

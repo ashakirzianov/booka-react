@@ -46,12 +46,6 @@ export type AccountAction =
     | LogoutAction
     ;
 
-export function getAuthToken(state: AccountState): AuthToken | undefined {
-    return state.state === 'signed'
-        ? state.token
-        : undefined;
-}
-
 const defaultState: AccountState = { state: 'not-signed' };
 export function accountReducer(state: AccountState = defaultState, action: AppAction): AccountState {
     switch (action.type) {
