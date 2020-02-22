@@ -4,7 +4,7 @@ import { Epic, combineEpics } from 'redux-observable';
 import {
     BookFragment, BookRange, BookPath, Highlight,
 } from 'booka-common';
-import { openLink, getHighlights } from '../api';
+import { openLink, getHighlights, postHighlight } from '../api';
 import { AppAction, AppEpic } from './app';
 import { ofAppType, appAuth } from './utils';
 import { BookLink } from '../core';
@@ -27,43 +27,50 @@ export type BookState =
     | BookErrorState
     ;
 
-export type BookOpenAction = {
+type BookOpenAction = {
     type: 'book-open',
     payload: BookLink,
 };
-export type BookFetchFulfilledAction = {
+type BookFetchFulfilledAction = {
     type: 'book-fetch-fulfilled',
     payload: {
         link: BookLink,
         fragment: BookFragment,
     },
 };
-export type BookFetchRejectedAction = {
+type BookFetchRejectedAction = {
     type: 'book-fetch-rejected',
     payload: BookLink,
 };
-export type SetQuoteRangeAction = {
+type SetQuoteRangeAction = {
     type: 'book-set-quote',
     payload: BookRange | undefined,
 };
-export type UpdateCurrentPathAction = {
+type UpdateCurrentPathAction = {
     type: 'book-update-path',
     payload: BookPath,
 };
-export type ToggleTocAction = {
+type ToggleTocAction = {
     type: 'book-toggle-toc',
 };
-export type ToggleControlsAction = {
+type ToggleControlsAction = {
     type: 'book-toggle-controls',
 };
-export type BookHighlightsAddAction = {
+type BookHighlightsAddAction = {
     type: 'book-highlights-add',
     payload: {
+        bookId: string,
         group: string,
         range: BookRange,
     },
 };
-export type BookHighlightsFulfilledAction = {
+type BookHighlightsFetchAction = {
+    type: 'book-highlights-fetch',
+    payload: {
+        bookId: string,
+    },
+};
+type BookHighlightsFulfilledAction = {
     type: 'book-highlights-fulfilled',
     payload: {
         bookId: string,
@@ -76,7 +83,7 @@ export type BookFragmentAction =
     | BookFetchRejectedAction
     | SetQuoteRangeAction | UpdateCurrentPathAction
     | ToggleTocAction | ToggleControlsAction
-    | BookHighlightsAddAction | BookHighlightsFulfilledAction
+    | BookHighlightsAddAction | BookHighlightsFetchAction | BookHighlightsFulfilledAction
     ;
 
 const defaultState: BookState = {
@@ -165,28 +172,58 @@ const fetchBookFragmentEpic: Epic<AppAction> = (action$) => action$.pipe(
     ),
 );
 
-const fetchBookHighlightsEpic: AppEpic = (action$, state$) => action$.pipe(
+const fetchBookHighlightsEpic: AppEpic = action$ => action$.pipe(
     ofAppType('book-fetch-fulfilled'),
+    mergeMap(
+        action => of<AppAction>({
+            type: 'book-highlights-fetch',
+            payload: {
+                bookId: action.payload.link.bookId,
+            },
+        }),
+    ),
+);
+
+const getHighlightsEpic: AppEpic = (action$, state$) => action$.pipe(
+    ofAppType('book-highlights-fetch'),
     withLatestFrom(appAuth(state$)),
     mergeMap(
-        ([action, token]) => getHighlights(action.payload.link.bookId, token).pipe(
-            map((hs): AppAction => ({
+        ([action, token]) => getHighlights(action.payload.bookId, token).pipe(
+            map((highlights): AppAction => ({
                 type: 'book-highlights-fulfilled',
                 payload: {
-                    bookId: action.payload.link.bookId,
-                    highlights: hs,
+                    bookId: action.payload.bookId,
+                    highlights,
                 },
             })),
+        )
+    )
+);
+
+const postHighlightEpic: AppEpic = (action$, state$) => action$.pipe(
+    ofAppType('book-highlights-add'),
+    withLatestFrom(appAuth(state$)),
+    mergeMap(
+        ([action, token]) => postHighlight({
+            group: 'main', // TODO: valid group
+            location: {
+                bookId: action.payload.bookId,
+                range: action.payload.range,
+            },
+        }, token).pipe(
+            map(
+                (): AppAction => ({
+                    type: 'book-highlights-fetch',
+                    payload: { bookId: action.payload.bookId },
+                }),
+            ),
         ),
     ),
 );
 
-// const postHighlightEpic: AppEpic = (action$, state$) => action$.pipe(
-//     ofAppType('book-highlights-add'),
-//     withLatestFrom(appAuth(state$)),
-// );
-
 export const bookFragmentEpic = combineEpics(
     fetchBookFragmentEpic,
     fetchBookHighlightsEpic,
+    getHighlightsEpic,
+    postHighlightEpic,
 );
