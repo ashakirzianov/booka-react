@@ -4,6 +4,7 @@ import {
     BookRange,
     Highlight,
     HighlightPost,
+    BookAnchor,
 } from 'booka-common';
 
 import {
@@ -12,7 +13,7 @@ import {
 } from '../atoms';
 import { BookFragmentComp, BookSelection } from '../reader';
 import { generateQuoteLink } from './common';
-import { useCopy, linkToString, BookLink } from '../core';
+import { useCopy, linkToString } from '../core';
 import { ColorizedRange } from '../reader/BookFragmentComp.blocks';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
 
@@ -64,18 +65,12 @@ export function BookViewComp({
             },
         })}
     >
-        {
-            fragment.previous === undefined ? null :
-                <PathLink
-                    theme={theme}
-                    text={fragment.previous.title || 'Previous'}
-                    link={{
-                        link: 'book',
-                        bookId,
-                        path: fragment.previous.path,
-                    }}
-                />
-        }
+        <AnchorLink
+            theme={theme}
+            text='Previous'
+            anchor={fragment.previous}
+            bookId={bookId}
+        />
         <BookFragmentComp
             fragment={fragment}
             color={colors(theme).text}
@@ -89,31 +84,33 @@ export function BookViewComp({
             onSelectionChange={selectionHandler}
             onRefClick={openRef}
         />
-        {
-            fragment.next === undefined ? null :
-                <PathLink
-                    theme={theme}
-                    text={fragment.next.title || 'Next'}
-                    link={{
-                        link: 'book',
-                        bookId,
-                        path: fragment.next.path,
-                    }}
-                />
-        }
+        <AnchorLink
+            theme={theme}
+            text='Next'
+            anchor={fragment.next}
+            bookId={bookId}
+        />
     </BookContextMenu>;
 }
 
 type PathLinkProps = Themed & {
-    link: BookLink,
+    bookId: string,
+    anchor: BookAnchor | undefined,
     text: string,
 };
-function PathLink({ theme, text, link }: PathLinkProps) {
+function AnchorLink({ theme, text, anchor, bookId }: PathLinkProps) {
+    if (!anchor) {
+        return null;
+    }
     return <Row centered margin={point(1)}>
         <BorderLink
             theme={theme}
-            text={text}
-            to={linkToString(link)}
+            text={anchor.title || text}
+            to={linkToString({
+                link: 'book',
+                bookId,
+                path: anchor.path,
+            })}
             fontFamily='book'
         />
     </Row>;
