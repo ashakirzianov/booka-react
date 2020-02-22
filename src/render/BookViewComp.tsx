@@ -14,6 +14,7 @@ import { BookFragmentComp, BookSelection } from '../reader';
 import { generateQuoteLink } from './common';
 import { useCopy, linkToString, BookLink } from '../core';
 import { ColorizedRange } from '../reader/BookFragmentComp.blocks';
+import { BookContextMenuConnected } from './BookContextMenu';
 
 export type BookViewCompProps = Themed & {
     bookId: string,
@@ -50,7 +51,7 @@ export function BookViewComp({
         .concat(highlightsColorization(highlights, theme))
         ;
 
-    return <>
+    return <BookContextMenuConnected>
         {
             fragment.previous === undefined ? null :
                 <PathLink
@@ -88,7 +89,7 @@ export function BookViewComp({
                     }}
                 />
         }
-    </>;
+    </BookContextMenuConnected>;
 }
 
 type PathLinkProps = Themed & {
