@@ -57,12 +57,20 @@ export type ToggleTocAction = {
 export type ToggleControlsAction = {
     type: 'book-toggle-controls',
 };
+export type BookAddHighlightAction = {
+    type: 'book-add-highlight',
+    payload: {
+        group: string,
+        range: BookRange,
+    },
+};
 export type BookFragmentAction =
     | BookOpenAction
     | BookFetchFulfilledAction
     | BookFetchRejectedAction
     | SetQuoteRangeAction | UpdateCurrentPathAction
     | ToggleTocAction | ToggleControlsAction
+    | BookAddHighlightAction
     ;
 
 const defaultState: BookState = {

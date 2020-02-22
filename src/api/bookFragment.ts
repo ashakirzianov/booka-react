@@ -1,5 +1,5 @@
 import { Observable, of } from 'rxjs';
-import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { map, withLatestFrom } from 'rxjs/operators';
 import {
     BookFragment, BookPath, Book, fragmentForPath,
     defaultFragmentLength, tocForBook, LibContract,
