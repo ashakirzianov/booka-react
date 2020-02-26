@@ -22,7 +22,7 @@ function locationForState(state: AppState): LocationDescriptorObject | undefined
 function linkForState(state: AppState): AppLink {
     switch (state.screen) {
         case 'book':
-            return state.book;
+            return state.book.link;
         case 'library':
             return {
                 link: 'feed',

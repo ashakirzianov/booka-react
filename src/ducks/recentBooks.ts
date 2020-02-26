@@ -4,8 +4,7 @@ import { mergeMap, withLatestFrom, map, catchError } from 'rxjs/operators';
 import { combineEpics, Epic } from 'redux-observable';
 import { getRecentBooks, sendCurrentPathUpdate } from '../api';
 import { AppAction, AppState } from './app';
-import { ofAppType } from './utils';
-import { getAuthToken } from './account';
+import { ofAppType, appAuth } from './utils';
 
 export type RecentBookLocation = {
     path: BookPath,
@@ -59,9 +58,9 @@ const fetchEpic: Epic<AppAction> =
 const processFetchEpic: Epic<AppAction, AppAction, AppState> =
     (action$, state$) => action$.pipe(
         ofAppType('recent-books-fetch'),
-        withLatestFrom(state$),
+        withLatestFrom(appAuth(state$)),
         mergeMap(
-            ([_, state]) => getRecentBooks(getAuthToken(state.account)).pipe(
+            ([_, token]) => getRecentBooks(token).pipe(
                 map((res): AppAction => {
                     return {
                         type: 'recent-books-fulfilled',
@@ -83,11 +82,10 @@ const updateCurrentPathEpic: Epic<AppAction, AppAction, AppState> =
         ofAppType('book-update-path'),
         withLatestFrom(state$),
         mergeMap(([action, state]) => {
-            const token = getAuthToken(state.account);
-            if (token !== undefined) {
+            if (state.account.state === 'signed') {
                 sendCurrentPathUpdate({
-                    token,
-                    bookId: state.book.bookId,
+                    token: state.account.token,
+                    bookId: state.book.link.bookId,
                     path: action.payload,
                     source: 'not-implemented',
                 }).subscribe();

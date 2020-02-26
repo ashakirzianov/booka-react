@@ -3,13 +3,59 @@ import { map } from 'rxjs/operators';
 import {
     BookFragment, BookPath, Book, fragmentForPath,
     defaultFragmentLength, tocForBook, LibContract,
-    pathToString, findReference,
+    pathToString, findReference, firstPath, AuthToken,
 } from 'booka-common';
 import { config } from '../config';
 import { createFetcher } from './fetcher';
 import { withPartial } from './operators';
+import { BookLink } from '../core';
 
-export function getBookFragment(bookId: string, path: BookPath): Observable<BookFragment> {
+type OpenLinkResult = {
+    fragment: BookFragment,
+    link: BookLink,
+};
+export function openLink(bookLink: BookLink, auth?: AuthToken) {
+    const observable = bookLink.refId !== undefined
+        // Note: object assign to please TypeScript
+        ? openRefId({ ...bookLink, refId: bookLink.refId })
+        : openPath(bookLink);
+    return observable;
+}
+
+type RefIdLink = BookLink & { refId: string };
+function openRefId(link: RefIdLink): Observable<OpenLinkResult> {
+    return getFragmentWithPathForId(link.bookId, link.refId).pipe(
+        map(({ fragment, path }) => {
+            return {
+                fragment,
+                link: {
+                    ...link,
+                    path,
+                },
+                highlights: [],
+            };
+        }),
+    );
+}
+
+type PathLink = BookLink;
+function openPath(link: PathLink): Observable<OpenLinkResult> {
+    const path = link.path || (link.quote && link.quote.start) || firstPath();
+    return getBookFragment(link.bookId, path).pipe(
+        map((fragment) => {
+            return {
+                fragment,
+                link: {
+                    ...link,
+                    path,
+                },
+                highlights: [],
+            };
+        }),
+    );
+}
+
+function getBookFragment(bookId: string, path: BookPath): Observable<BookFragment> {
     return withPartial(
         getBookCached(bookId).pipe(
             map(book => {
@@ -24,7 +70,7 @@ export function getBookFragment(bookId: string, path: BookPath): Observable<Book
     );
 }
 
-export function getFragmentWithPathForId(
+function getFragmentWithPathForId(
     bookId: string, refId: string,
 ): Observable<FragmentWithPath> {
     return getBookCached(bookId).pipe(
@@ -80,9 +126,9 @@ function getBookCached(id: string): Observable<Book> {
     }
 }
 
-const fetcher = createFetcher<LibContract>(config().libUrl);
+const libFetcher = createFetcher<LibContract>(config().libUrl);
 function fetchBookFragment(id: string, path: BookPath) {
-    return fetcher.get('/fragment', {
+    return libFetcher.get('/fragment', {
         query: {
             id,
             path: pathToString(path),
@@ -91,7 +137,7 @@ function fetchBookFragment(id: string, path: BookPath) {
 }
 
 function fetchBook(id: string) {
-    return fetcher.get('/full', {
+    return libFetcher.get('/full', {
         query: { id },
     });
 }

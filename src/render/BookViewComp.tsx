@@ -2,15 +2,20 @@ import React from 'react';
 import {
     BookFragment, BookPath,
     BookRange,
+    Highlight,
+    HighlightPost,
+    BookAnchor,
 } from 'booka-common';
 
 import {
     Themed, colors, getFontSize, Row,
-    point, Callback, highlights, BorderLink,
+    point, Callback, getHighlights, BorderLink, Theme,
 } from '../atoms';
 import { BookFragmentComp, BookSelection } from '../reader';
 import { generateQuoteLink } from './common';
-import { useCopy, linkToString, BookLink } from '../core';
+import { useCopy, linkToString } from '../core';
+import { ColorizedRange } from '../reader/BookFragmentComp.blocks';
+import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
 
 export type BookViewCompProps = Themed & {
     bookId: string,
@@ -18,12 +23,15 @@ export type BookViewCompProps = Themed & {
     pathToScroll: BookPath | undefined,
     updateBookPosition: Callback<BookPath>,
     quoteRange: BookRange | undefined,
+    highlights: Highlight[],
+    addHighlight: Callback<HighlightPost>,
     setQuoteRange: Callback<BookRange | undefined>,
     openRef: Callback<string>,
 };
 export function BookViewComp({
     bookId, fragment, theme,
     pathToScroll, updateBookPosition,
+    highlights, addHighlight,
     quoteRange, setQuoteRange,
     openRef,
 }: BookViewCompProps) {
@@ -40,26 +48,29 @@ export function BookViewComp({
         setQuoteRange(selection.current && selection.current.range);
     }, [bookId, setQuoteRange]));
 
-    const colorization = quoteRange
-        ? [{
-            color: highlights(theme).quote,
-            range: quoteRange,
-        }]
-        : [];
+    const colorization = quoteColorization(quoteRange, theme)
+        .concat(highlightsColorization(highlights, theme))
+        ;
 
-    return <>
-        {
-            fragment.previous === undefined ? null :
-                <PathLink
-                    theme={theme}
-                    text={fragment.previous.title || 'Previous'}
-                    link={{
-                        link: 'book',
-                        bookId,
-                        path: fragment.previous.path,
-                    }}
-                />
-        }
+    const menuTarget: ContextMenuTarget = selection.current
+        ? { target: 'selection', selection: selection.current }
+        : { target: 'empty' };
+
+    return <BookContextMenu
+        target={menuTarget}
+        onAddHighlight={group => selection.current && addHighlight({
+            group,
+            location: {
+                bookId, range: selection.current?.range,
+            },
+        })}
+    >
+        <AnchorLink
+            theme={theme}
+            text='Previous'
+            anchor={fragment.previous}
+            bookId={bookId}
+        />
         <BookFragmentComp
             fragment={fragment}
             color={colors(theme).text}
@@ -73,32 +84,55 @@ export function BookViewComp({
             onSelectionChange={selectionHandler}
             onRefClick={openRef}
         />
-        {
-            fragment.next === undefined ? null :
-                <PathLink
-                    theme={theme}
-                    text={fragment.next.title || 'Next'}
-                    link={{
-                        link: 'book',
-                        bookId,
-                        path: fragment.next.path,
-                    }}
-                />
-        }
-    </>;
+        <AnchorLink
+            theme={theme}
+            text='Next'
+            anchor={fragment.next}
+            bookId={bookId}
+        />
+    </BookContextMenu>;
 }
 
 type PathLinkProps = Themed & {
-    link: BookLink,
+    bookId: string,
+    anchor: BookAnchor | undefined,
     text: string,
 };
-function PathLink({ theme, text, link }: PathLinkProps) {
+function AnchorLink({ theme, text, anchor, bookId }: PathLinkProps) {
+    if (!anchor) {
+        return null;
+    }
     return <Row centered margin={point(1)}>
         <BorderLink
             theme={theme}
-            text={text}
-            to={linkToString(link)}
+            text={anchor.title || text}
+            to={linkToString({
+                link: 'book',
+                bookId,
+                path: anchor.path,
+            })}
             fontFamily='book'
         />
     </Row>;
+}
+
+function quoteColorization(quote: BookRange | undefined, theme: Theme): ColorizedRange[] {
+    return quote
+        ? [{
+            color: getHighlights(theme).quote,
+            range: quote,
+        }]
+        : [];
+}
+
+function highlightsColorization(highlights: Highlight[], theme: Theme): ColorizedRange[] {
+    return highlights.map(h => ({
+        color: colorForGroup(h.group),
+        range: h.location.range,
+    }));
+}
+
+function colorForGroup(group: string) {
+    // TODO: implement
+    return 'green';
 }
