@@ -48,7 +48,9 @@ export function getBookmarks(bookId: string, token: AuthToken) {
     return back.get('/bookmarks', {
         auth: token.token,
         query: { bookId },
-    });
+    }).pipe(
+        map(res => res.value),
+    );
 }
 
 export function sendAddBookmark(bookmark: BookmarkPost, token: AuthToken) {
