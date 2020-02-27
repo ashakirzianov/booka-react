@@ -2,7 +2,7 @@ import { of } from 'rxjs';
 import { map, mergeMap, catchError, withLatestFrom } from 'rxjs/operators';
 import { Epic, combineEpics } from 'redux-observable';
 import {
-    BookFragment, BookRange, BookPath, Highlight, HighlightPost,
+    BookFragment, BookRange, BookPath, Highlight, HighlightPost, Bookmark, BookmarkPost,
 } from 'booka-common';
 import { openLink, getHighlights, postHighlight } from '../api';
 import { AppAction, AppEpic } from './app';
@@ -20,6 +20,7 @@ export type BookLoadingState = BookStateBase<'loading'>;
 export type BookReadyState = BookStateBase<'ready'> & {
     fragment: BookFragment,
     highlights: Highlight[],
+    bookmarks: Bookmark[],
 };
 export type BookState =
     | BookReadyState
@@ -75,6 +76,31 @@ type BookHighlightsFulfilledAction = {
         highlights: Highlight[],
     },
 };
+type BookmarkAddAction = {
+    type: 'book-bm-add',
+    payload: {
+        bookmark: BookmarkPost,
+    },
+};
+type BookmarkRemoveAction = {
+    type: 'book-bm-remove',
+    payload: {
+        bookmarkId: string,
+    },
+};
+type BookmarksFetchAction = {
+    type: 'book-bm-fetch',
+    payload: {
+        bookId: string,
+    },
+};
+type BookmarksFulfilledAction = {
+    type: 'book-bm-fulfilled',
+    payload: {
+        bookId: string,
+        bookmarkd: Bookmark[],
+    },
+};;
 export type BookFragmentAction =
     | BookOpenAction
     | BookFetchFulfilledAction
@@ -82,6 +108,7 @@ export type BookFragmentAction =
     | SetQuoteRangeAction | UpdateCurrentPathAction
     | ToggleTocAction | ToggleControlsAction
     | BookHighlightsAddAction | BookHighlightsFetchAction | BookHighlightsFulfilledAction
+    | BookmarkAddAction | BookmarkRemoveAction | BookmarksFetchAction | BookmarksFulfilledAction
     ;
 
 const defaultState: BookState = {
@@ -104,6 +131,7 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
                 link: action.payload.link,
                 fragment: action.payload.fragment,
                 highlights: [],
+                bookmarks: [],
                 showControls: true,
                 needToScroll: true,
             };
