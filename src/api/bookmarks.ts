@@ -1,12 +1,16 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BackContract, AuthToken, BookPath, BookmarkSource } from 'booka-common';
+import { BackContract, AuthToken, BookPath, BookmarkSource, BookmarkPost } from 'booka-common';
 import { createFetcher } from './fetcher';
 import { config } from '../config';
 import { RecentBook } from '../ducks';
 
+const back = createFetcher<BackContract>(config().backUrl);
+
 export function getRecentBooks(token: AuthToken): Observable<RecentBook[]> {
-    return fetchCurrentBookmarks(token).pipe(
+    return back.get('/bookmarks/current', {
+        auth: token.token,
+    }).pipe(
         map((res): RecentBook[] => {
             const all = res.value;
             return all.map(b => ({
@@ -21,18 +25,12 @@ export function getRecentBooks(token: AuthToken): Observable<RecentBook[]> {
     );
 }
 
-const back = createFetcher<BackContract>(config().backUrl);
-function fetchCurrentBookmarks(token: AuthToken) {
-    return back.get('/bookmarks/current', { auth: token.token });
-}
-
-type CurrentPathUpdate = {
+export function sendCurrentPathUpdate({ bookId, path, source, token }: {
     bookId: string,
     path: BookPath,
     source: BookmarkSource,
     token: AuthToken,
-};
-export function sendCurrentPathUpdate({ bookId, path, source, token }: CurrentPathUpdate) {
+}) {
     const created = new Date(Date.now());
     return back.put('/bookmarks/current', {
         auth: token.token,
@@ -43,5 +41,26 @@ export function sendCurrentPathUpdate({ bookId, path, source, token }: CurrentPa
             },
             created,
         },
+    });
+}
+
+export function getBookmarks(bookId: string, token: AuthToken) {
+    return back.get('/bookmarks', {
+        auth: token.token,
+        query: { bookId },
+    });
+}
+
+export function sendAddBookmark(bookmark: BookmarkPost, token: AuthToken) {
+    return back.post('/bookmarks', {
+        auth: token.token,
+        body: bookmark,
+    });
+}
+
+export function sendRemoveBookmark(bookmarkId: string, token: AuthToken) {
+    return back.delete('/bookmarks', {
+        auth: token.token,
+        query: { id: bookmarkId },
     });
 }
