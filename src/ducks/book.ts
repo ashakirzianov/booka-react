@@ -98,9 +98,9 @@ type BookmarksFulfilledAction = {
     type: 'book-bm-fulfilled',
     payload: {
         bookId: string,
-        bookmarkd: Bookmark[],
+        bookmarks: Bookmark[],
     },
-};;
+};
 export type BookFragmentAction =
     | BookOpenAction
     | BookFetchFulfilledAction
@@ -172,6 +172,10 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
         case 'book-highlights-fulfilled':
             return state.link.bookId === action.payload.bookId && state.state === 'ready'
                 ? { ...state, highlights: action.payload.highlights }
+                : state;
+        case 'book-bm-fulfilled':
+            return state.link.bookId === action.payload.bookId && state.state === 'ready'
+                ? { ...state, bookmarks: action.payload.bookmarks }
                 : state;
         default:
             return state;
