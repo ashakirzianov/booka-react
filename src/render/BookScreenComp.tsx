@@ -1,10 +1,10 @@
 import React from 'react';
 import {
-    assertNever, BookRange, positionForPath, BookPath, HighlightPost,
+    assertNever, BookRange, positionForPath, BookPath, HighlightPost, firstPath,
 } from 'booka-common';
 
 import { BookState, BookReadyState } from '../ducks';
-import { useAppDispatch } from '../core';
+import { useAppDispatch, useAppSelector } from '../core';
 import {
     Column, point, Row, Callback, Themed,
     Triad, IconButton, TopBar, EmptyLine, Clickable,
@@ -118,12 +118,38 @@ function BookScreenHeader({ theme, visible }: BookScreenHeaderProps) {
             left={<LibButton theme={theme} />}
             right={
                 <>
+                    <AddBookmarkButton theme={theme} />
                     <AppearanceButton theme={theme} />
                     <ConnectedAccountButton
                     />
                 </>}
         />
     </TopBar>;
+}
+
+function AddBookmarkButton({ theme }: Themed) {
+    const dispatch = useAppDispatch();
+    const currentLink = useAppSelector(state => state.book.link);
+    return <TextButton
+        theme={theme}
+        text='Add Bookmark'
+        fontSize='normal'
+        fontFamily='menu'
+        onClick={() => dispatch({
+            type: 'book-bm-add',
+            payload: {
+                bookmark: {
+                    source: 'not-implemented',
+                    kind: 'manual',
+                    location: {
+                        bookId: currentLink.bookId,
+                        path: currentLink.path || firstPath(),
+                    },
+                    created: new Date(Date.now()),
+                },
+            },
+        })}
+    />;
 }
 
 type LibButtonProps = Themed;
