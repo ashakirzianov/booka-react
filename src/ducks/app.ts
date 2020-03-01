@@ -8,6 +8,7 @@ import { CurrentPositionsAction, CurrentPositionsState } from './currentPosition
 import { CollectionsAction, CollectionsState } from './collections';
 import { BookmarksAction, BookmarksState } from './bookmarks';
 import { HighlightsState, HighlightsAction } from './highlights';
+import { ChangesState, ChangesAction } from './changes';
 import { Epic } from 'redux-observable';
 
 export type AppAction =
@@ -20,6 +21,7 @@ export type AppAction =
     | CollectionsAction
     | BookmarksAction
     | HighlightsAction
+    | ChangesAction
     ;
 export type ActionForType<T extends AppAction['type']> =
     Extract<AppAction, { type: T }>;
@@ -35,6 +37,7 @@ export type AppState = {
     collections: CollectionsState,
     bookmarks: BookmarksState,
     highlights: HighlightsState,
+    changes: ChangesState,
 };
 
 export type AppEpic = Epic<AppAction, AppAction, AppState>;

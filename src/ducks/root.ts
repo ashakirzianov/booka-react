@@ -11,6 +11,7 @@ import { currentPositionsEpic, currentPositionsReducer } from './currentPosition
 import { collectionsReducer, collectionsEpic } from './collections';
 import { bookmarksReducer, bookmarksEpic } from './bookmarks';
 import { highlightsReducer, highlightsEpic } from './highlights';
+import { changesReducer } from './changes';
 
 export const rootReducer = combineReducers<AppState, AppAction>({
     library: libraryReducer,
@@ -23,6 +24,7 @@ export const rootReducer = combineReducers<AppState, AppAction>({
     collections: collectionsReducer,
     bookmarks: bookmarksReducer,
     highlights: highlightsReducer,
+    changes: changesReducer,
 });
 
 export const rootEpic = combineEpics(
