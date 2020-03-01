@@ -70,7 +70,18 @@ export type CardCollections = {
 export const applyCollectionsChanges = makeApplyChanges<CardCollections>((collections, change) => {
     switch (change.change) {
         case 'collection-add': {
-            return collections;
+            const originalCards = collections[change.collection]?.cards ?? [];
+            if (originalCards.find(c => c.id === change.card.id)) {
+                return collections;
+            } else {
+                return {
+                    ...collections,
+                    [change.collection]: {
+                        name: change.collection,
+                        cards: [change.card, ...originalCards],
+                    },
+                };
+            }
         }
         default:
             return collections;
