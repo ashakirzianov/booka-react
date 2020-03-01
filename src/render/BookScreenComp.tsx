@@ -5,7 +5,7 @@ import {
 } from 'booka-common';
 
 import { BookState, BookReadyState } from '../ducks';
-import { useAppDispatch, useAppSelector, useTheme } from '../core';
+import { useAppDispatch, useAppSelector, useTheme } from '../application';
 import {
     Column, point, Row, Callback, Themed,
     Triad, IconButton, TopBar, EmptyLine, Clickable,

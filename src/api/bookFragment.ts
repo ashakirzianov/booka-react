@@ -8,7 +8,7 @@ import {
 import { config } from '../config';
 import { createFetcher } from './fetcher';
 import { withPartial } from './operators';
-import { BookLink } from '../core';
+import { BookLink } from '../application';
 
 type OpenLinkResult = {
     fragment: BookFragment,

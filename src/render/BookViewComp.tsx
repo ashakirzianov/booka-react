@@ -10,7 +10,7 @@ import {
 } from '../atoms';
 import { BookFragmentComp, BookSelection } from '../reader';
 import { generateQuoteLink } from './common';
-import { useCopy, linkToString } from '../core';
+import { useCopy, linkToString } from '../application';
 import { ColorizedRange } from '../reader/BookFragmentComp.blocks';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { CardCollection, Callback, LibraryCard, CardCollectionName } from 'booka-common';
 import { Column, BookListComp, Themed } from '../atoms';
 
-import { useAppDispatch, useTheme, useAppSelector } from '../core';
+import { useAppDispatch, useTheme, useAppSelector } from '../application';
 
 export function CollectionsConnected() {
     const dispatch = useAppDispatch();

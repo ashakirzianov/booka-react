@@ -6,7 +6,7 @@ import {
     WithPopover, TextLine, IconButton, TagButton, Themed,
 } from '../atoms';
 import { AccountState } from '../ducks';
-import { useAppDispatch, useAppSelector, useTheme } from '../core';
+import { useAppDispatch, useAppSelector, useTheme } from '../application';
 
 export function ConnectedAccountButton() {
     const theme = useTheme();

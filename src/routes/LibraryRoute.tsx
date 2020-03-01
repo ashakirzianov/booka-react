@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { LibraryScreenComp } from '../render';
-import { useAppDispatch, useTheme, useAppSelector } from '../core';
+import { useAppDispatch, useTheme, useAppSelector } from '../application';
 import { RouteProps } from '../atoms';
 
 export function LibraryRoute(_: RouteProps) {

@@ -7,7 +7,7 @@ import {
     StretchTextLink, TextLine, Themed, Modal, Callback,
 } from '../atoms';
 import { pageForPosition } from './common';
-import { linkToString } from '../core';
+import { linkToString } from '../application';
 
 export type TableOfContentsProps = Themed & {
     toc: TableOfContents,

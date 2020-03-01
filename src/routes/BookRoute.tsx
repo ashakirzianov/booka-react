@@ -4,7 +4,7 @@ import { pathFromString, rangeFromString } from 'booka-common';
 import { BookScreenConnected } from '../render';
 import {
     useAppDispatch, BookLink,
-} from '../core';
+} from '../application';
 import { RouteProps } from '../atoms';
 import { HistoryLocation } from '@reach/router';
 

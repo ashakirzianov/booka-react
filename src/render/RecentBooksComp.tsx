@@ -3,7 +3,7 @@ import { pathLessThan, BookPath, ResolvedCurrentPosition } from 'booka-common';
 import {
     CurrentPositionsState,
 } from '../ducks';
-import { useTheme, useAppSelector, linkToString, BookLink } from '../core';
+import { useTheme, useAppSelector, linkToString, BookLink } from '../application';
 import {
     Column, Themed, Callback, WithChildren, navigate,
 } from '../atoms';

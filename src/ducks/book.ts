@@ -7,7 +7,7 @@ import {
 import { openLink } from '../api';
 import { AppAction, AppEpic } from './app';
 import { ofAppType } from './utils';
-import { BookLink } from '../core';
+import { BookLink } from '../application';
 
 type BookStateBase<K extends string> = {
     state: K,

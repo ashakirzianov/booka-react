@@ -2,7 +2,7 @@ import React from 'react';
 
 import { LibraryCard, Callback } from 'booka-common';
 import { BookCoverComp, Column, Modal, Themed, navigate } from '../atoms';
-import { useTheme, useAppDispatch, useAppSelector, linkToString } from '../core';
+import { useTheme, useAppDispatch, useAppSelector, linkToString } from '../application';
 
 export function LibraryCardConnected() {
     const dispatch = useAppDispatch();
