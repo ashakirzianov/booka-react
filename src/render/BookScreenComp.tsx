@@ -139,13 +139,8 @@ function AddBookmarkButton({ theme }: Themed) {
             type: 'book-bm-add',
             payload: {
                 bookmark: {
-                    source: 'not-implemented',
-                    kind: 'manual',
-                    location: {
-                        bookId: currentLink.bookId,
-                        path: currentLink.path || firstPath(),
-                    },
-                    created: new Date(Date.now()),
+                    bookId: currentLink.bookId,
+                    path: currentLink.path || firstPath(),
                 },
             },
         })}

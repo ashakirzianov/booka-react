@@ -60,9 +60,7 @@ export function BookViewComp({
         target={menuTarget}
         onAddHighlight={group => selection.current && addHighlight({
             group,
-            location: {
-                bookId, range: selection.current?.range,
-            },
+            bookId, range: selection.current?.range,
         })}
     >
         <AnchorLink
@@ -128,7 +126,7 @@ function quoteColorization(quote: BookRange | undefined, theme: Theme): Colorize
 function highlightsColorization(highlights: Highlight[], theme: Theme): ColorizedRange[] {
     return highlights.map(h => ({
         color: colorForGroup(h.group),
-        range: h.location.range,
+        range: h.range,
     }));
 }
 

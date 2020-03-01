@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BackContract, AuthToken, BookPath, BookmarkSource, BookmarkPost } from 'booka-common';
+import { BackContract, AuthToken, BookPath, EntitySource, BookmarkPost } from 'booka-common';
 import { createFetcher } from './fetcher';
 import { config } from '../config';
 import { RecentBook } from '../ducks';
@@ -8,7 +8,7 @@ import { RecentBook } from '../ducks';
 const back = createFetcher<BackContract>(config().backUrl);
 
 export function getRecentBooks(token: AuthToken): Observable<RecentBook[]> {
-    return back.get('/bookmarks/current', {
+    return back.get('/current-position', {
         auth: token.token,
     }).pipe(
         map((res): RecentBook[] => {
@@ -28,18 +28,14 @@ export function getRecentBooks(token: AuthToken): Observable<RecentBook[]> {
 export function sendCurrentPathUpdate({ bookId, path, source, token }: {
     bookId: string,
     path: BookPath,
-    source: BookmarkSource,
+    source: EntitySource,
     token: AuthToken,
 }) {
     const created = new Date(Date.now());
-    return back.put('/bookmarks/current', {
+    return back.put('/current-position', {
         auth: token.token,
         body: {
-            source,
-            location: {
-                bookId, path,
-            },
-            created,
+            source, bookId, path, created,
         },
     });
 }

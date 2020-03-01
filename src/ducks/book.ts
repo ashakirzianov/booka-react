@@ -242,7 +242,7 @@ const postHighlightEpic: AppEpic = (action$, state$) => action$.pipe(
                 (): AppAction => ({
                     type: 'book-highlights-fetch',
                     payload: {
-                        bookId: action.payload.highlight.location.bookId,
+                        bookId: action.payload.highlight.bookId,
                     },
                 }),
             ),
@@ -275,7 +275,7 @@ const postAddBookmarkEpic: AppEpic = (action$, state$) => action$.pipe(
                 (): AppAction => ({
                     type: 'book-bm-fetch',
                     payload: {
-                        bookId: action.payload.bookmark.location.bookId,
+                        bookId: action.payload.bookmark.bookId,
                     },
                 }),
             ),
@@ -292,7 +292,7 @@ const postRemoveBookmarkEpic: AppEpic = (action$, state$) => action$.pipe(
                 (): AppAction => ({
                     type: 'book-bm-fetch',
                     payload: {
-                        bookId: action.payload.bookmark.location.bookId,
+                        bookId: action.payload.bookmark.bookId,
                     },
                 }),
             ),
