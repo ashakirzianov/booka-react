@@ -1,5 +1,5 @@
 import {
-    Bookmark, Highlight, CardCollectionName, BookPath,
+    Bookmark, Highlight, CardCollectionName, BookPath, CardCollection, LibraryCard,
 } from 'booka-common';
 
 type DefChange<K extends string> = {
@@ -21,7 +21,7 @@ type RemoveHighlightChange = DefChange<'highlight-remove'> & {
 };
 
 type AddToCollectionChange = DefChange<'collection-add'> & {
-    bookId: string,
+    card: LibraryCard,
     collection: CardCollectionName,
 };
 type RemoveFromCollectionChange = DefChange<'collection-remove'> & {
@@ -60,6 +60,20 @@ export const applyBookmarkChanges = makeApplyChanges<Bookmark[]>((entities, chan
             return entities.filter(e => e._id !== change.entityId);
         default:
             return entities;
+    }
+});
+
+// TODO: move to 'common'
+export type CardCollections = {
+    [n in CardCollectionName]?: CardCollection;
+};
+export const applyCollectionsChanges = makeApplyChanges<CardCollections>((collections, change) => {
+    switch (change.change) {
+        case 'collection-add': {
+            return collections;
+        }
+        default:
+            return collections;
     }
 });
 

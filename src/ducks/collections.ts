@@ -5,9 +5,10 @@ import { CardCollection, CardCollectionName } from 'booka-common';
 import { getCollections, postAddToCollection } from '../api';
 import { AppAction, AppState } from './app';
 import { ofAppType, appAuth } from './utils';
+import { CardCollections } from '../core';
 
 export type CollectionsState = {
-    collections: CardCollection[],
+    collections: CardCollections,
 };
 
 type CollectionsFetchAction = {
@@ -35,14 +36,17 @@ export type CollectionsAction =
     ;
 
 const initial: CollectionsState = {
-    collections: [],
+    collections: {},
 };
 export function collectionsReducer(state: CollectionsState = initial, action: AppAction): CollectionsState {
     switch (action.type) {
-        case 'collections-fulfilled':
-            return {
-                collections: action.payload,
-            };
+        case 'collections-fulfilled': {
+            const dic = action.payload.reduce(
+                (res, col) => ({ ...res, [col.name]: col }),
+                {},
+            );
+            return { collections: dic };
+        }
         default:
             return state;
     }
