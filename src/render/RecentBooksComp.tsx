@@ -1,9 +1,8 @@
 import React from 'react';
 import { pathLessThan, BookPath, ResolvedCurrentPosition } from 'booka-common';
-import {
-    CurrentPositionsState,
-} from '../ducks';
-import { useTheme, useAppSelector, linkToString, BookLink } from '../application';
+import { linkToString, BookLink } from '../core';
+import { CurrentPositionsState } from '../ducks';
+import { useTheme, useAppSelector } from '../application';
 import {
     Column, Themed, Callback, WithChildren, navigate,
 } from '../atoms';

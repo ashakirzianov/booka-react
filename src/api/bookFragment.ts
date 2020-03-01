@@ -6,9 +6,9 @@ import {
     pathToString, findReference, firstPath, AuthToken,
 } from 'booka-common';
 import { config } from '../config';
+import { BookLink } from '../core';
 import { createFetcher } from './fetcher';
 import { withPartial } from './operators';
-import { BookLink } from '../application';
 
 type OpenLinkResult = {
     fragment: BookFragment,

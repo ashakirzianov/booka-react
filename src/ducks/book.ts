@@ -4,10 +4,10 @@ import { combineEpics } from 'redux-observable';
 import {
     BookFragment, BookRange, BookPath,
 } from 'booka-common';
+import { BookLink } from '../core';
 import { openLink } from '../api';
 import { AppAction, AppEpic } from './app';
 import { ofAppType } from './utils';
-import { BookLink } from '../application';
 
 type BookStateBase<K extends string> = {
     state: K,

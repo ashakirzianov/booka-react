@@ -1,10 +1,9 @@
 import React from 'react';
 import { parse } from 'query-string';
 import { pathFromString, rangeFromString } from 'booka-common';
+import { BookLink } from '../core';
 import { BookScreenConnected } from '../render';
-import {
-    useAppDispatch, BookLink,
-} from '../application';
+import { useAppDispatch } from '../application';
 import { RouteProps } from '../atoms';
 import { HistoryLocation } from '@reach/router';
 

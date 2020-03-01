@@ -8,10 +8,10 @@ import {
     Themed, colors, getFontSize, Row,
     point, Callback, getHighlights, BorderLink, Theme,
 } from '../atoms';
-import { BookFragmentComp, BookSelection } from '../reader';
+import { BookFragmentComp, BookSelection, ColorizedRange } from '../reader';
+import { useCopy } from '../application';
+import { linkToString } from '../core';
 import { generateQuoteLink } from './common';
-import { useCopy, linkToString } from '../application';
-import { ColorizedRange } from '../reader/BookFragmentComp.blocks';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
 
 export type BookViewCompProps = Themed & {

@@ -6,8 +6,8 @@ import {
     Row, Tab, Column, point,
     StretchTextLink, TextLine, Themed, Modal, Callback,
 } from '../atoms';
+import { linkToString } from '../core';
 import { pageForPosition } from './common';
-import { linkToString } from '../application';
 
 export type TableOfContentsProps = Themed & {
     toc: TableOfContents,
