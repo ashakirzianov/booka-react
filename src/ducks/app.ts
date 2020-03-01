@@ -7,6 +7,7 @@ import { SearchAction, SearchState } from './search';
 import { RecentBooksAction, RecentBooksState } from './recentBooks';
 import { CollectionsAction, CollectionsState } from './collections';
 import { BookmarksAction, BookmarksState } from './bookmarks';
+import { HighlightsState, HighlightsAction } from './highlights';
 import { Epic } from 'redux-observable';
 
 export type AppAction =
@@ -18,6 +19,7 @@ export type AppAction =
     | RecentBooksAction
     | CollectionsAction
     | BookmarksAction
+    | HighlightsAction
     ;
 export type ActionForType<T extends AppAction['type']> =
     Extract<AppAction, { type: T }>;
@@ -32,6 +34,7 @@ export type AppState = {
     recentBooks: RecentBooksState,
     collections: CollectionsState,
     bookmarks: BookmarksState,
+    highlights: HighlightsState,
 };
 
 export type AppEpic = Epic<AppAction, AppAction, AppState>;

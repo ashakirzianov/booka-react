@@ -1,14 +1,12 @@
 import { of } from 'rxjs';
-import { map, mergeMap, catchError, withLatestFrom } from 'rxjs/operators';
-import { Epic, combineEpics } from 'redux-observable';
+import { map, mergeMap, catchError } from 'rxjs/operators';
+import { combineEpics } from 'redux-observable';
 import {
-    BookFragment, BookRange, BookPath, Highlight, HighlightPost,
+    BookFragment, BookRange, BookPath,
 } from 'booka-common';
-import {
-    openLink, getHighlights, postHighlight,
-} from '../api';
+import { openLink } from '../api';
 import { AppAction, AppEpic } from './app';
-import { ofAppType, appAuth } from './utils';
+import { ofAppType } from './utils';
 import { BookLink } from '../core';
 
 type BookStateBase<K extends string> = {
@@ -21,7 +19,6 @@ export type BookErrorState = BookStateBase<'error'>;
 export type BookLoadingState = BookStateBase<'loading'>;
 export type BookReadyState = BookStateBase<'ready'> & {
     fragment: BookFragment,
-    highlights: Highlight[],
 };
 export type BookState =
     | BookReadyState
@@ -58,32 +55,12 @@ type ToggleTocAction = {
 type ToggleControlsAction = {
     type: 'book-toggle-controls',
 };
-type BookHighlightsAddAction = {
-    type: 'book-highlights-add',
-    payload: {
-        highlight: HighlightPost,
-    },
-};
-type BookHighlightsFetchAction = {
-    type: 'book-highlights-fetch',
-    payload: {
-        bookId: string,
-    },
-};
-type BookHighlightsFulfilledAction = {
-    type: 'book-highlights-fulfilled',
-    payload: {
-        bookId: string,
-        highlights: Highlight[],
-    },
-};
 export type BookFragmentAction =
     | BookOpenAction
     | BookFetchFulfilledAction
     | BookFetchRejectedAction
     | SetQuoteRangeAction | UpdateCurrentPathAction
     | ToggleTocAction | ToggleControlsAction
-    | BookHighlightsAddAction | BookHighlightsFetchAction | BookHighlightsFulfilledAction
     ;
 
 const defaultState: BookState = {
@@ -105,7 +82,6 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
                 state: 'ready',
                 link: action.payload.link,
                 fragment: action.payload.fragment,
-                highlights: [],
                 showControls: true,
                 needToScroll: true,
             };
@@ -143,16 +119,12 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
                 : state;
         case 'book-toggle-controls':
             return { ...state, showControls: !state.showControls };
-        case 'book-highlights-fulfilled':
-            return state.link.bookId === action.payload.bookId && state.state === 'ready'
-                ? { ...state, highlights: action.payload.highlights }
-                : state;
         default:
             return state;
     }
 }
 
-const fetchBookFragmentEpic: Epic<AppAction> = (action$) => action$.pipe(
+const fetchBookFragmentEpic: AppEpic = (action$) => action$.pipe(
     ofAppType('book-open'),
     mergeMap(
         action => openLink(action.payload).pipe(
@@ -172,54 +144,6 @@ const fetchBookFragmentEpic: Epic<AppAction> = (action$) => action$.pipe(
     ),
 );
 
-const fetchBookHighlightsEpic: AppEpic = action$ => action$.pipe(
-    ofAppType('book-fetch-fulfilled'),
-    mergeMap(
-        action => of<AppAction>({
-            type: 'book-highlights-fetch',
-            payload: {
-                bookId: action.payload.link.bookId,
-            },
-        }),
-    ),
-);
-
-const getHighlightsEpic: AppEpic = (action$, state$) => action$.pipe(
-    ofAppType('book-highlights-fetch'),
-    withLatestFrom(appAuth(state$)),
-    mergeMap(
-        ([action, token]) => getHighlights(action.payload.bookId, token).pipe(
-            map((highlights): AppAction => ({
-                type: 'book-highlights-fulfilled',
-                payload: {
-                    bookId: action.payload.bookId,
-                    highlights,
-                },
-            })),
-        )
-    )
-);
-
-const postHighlightEpic: AppEpic = (action$, state$) => action$.pipe(
-    ofAppType('book-highlights-add'),
-    withLatestFrom(appAuth(state$)),
-    mergeMap(
-        ([action, token]) => postHighlight(action.payload.highlight, token).pipe(
-            map(
-                (): AppAction => ({
-                    type: 'book-highlights-fetch',
-                    payload: {
-                        bookId: action.payload.highlight.bookId,
-                    },
-                }),
-            ),
-        ),
-    ),
-);
-
 export const bookFragmentEpic = combineEpics(
     fetchBookFragmentEpic,
-    fetchBookHighlightsEpic,
-    getHighlightsEpic,
-    postHighlightEpic,
 );

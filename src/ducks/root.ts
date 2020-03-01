@@ -9,7 +9,8 @@ import { accountReducer, accountEpic } from './account';
 import { searchReducer, searchEpic } from './search';
 import { recentBooksEpic, recentBooksReducer } from './recentBooks';
 import { collectionsReducer, collectionsEpic } from './collections';
-import { bookmarksReducer } from './bookmarks';
+import { bookmarksReducer, bookmarksEpic } from './bookmarks';
+import { highlightsReducer, highlightsEpic } from './highlights';
 
 export const rootReducer = combineReducers<AppState, AppAction>({
     library: libraryReducer,
@@ -21,6 +22,7 @@ export const rootReducer = combineReducers<AppState, AppAction>({
     search: searchReducer,
     collections: collectionsReducer,
     bookmarks: bookmarksReducer,
+    highlights: highlightsReducer,
 });
 
 export const rootEpic = combineEpics(
@@ -30,4 +32,6 @@ export const rootEpic = combineEpics(
     searchEpic,
     recentBooksEpic,
     collectionsEpic,
+    bookmarksEpic,
+    highlightsEpic,
 );

@@ -1,10 +1,7 @@
 import React from 'react';
 import {
-    BookFragment, BookPath,
-    BookRange,
-    Highlight,
-    HighlightPost,
-    BookAnchor,
+    BookFragment, BookPath, BookRange,
+    Highlight, BookAnchor, uuid,
 } from 'booka-common';
 
 import {
@@ -24,7 +21,7 @@ export type BookViewCompProps = Themed & {
     updateBookPosition: Callback<BookPath>,
     quoteRange: BookRange | undefined,
     highlights: Highlight[],
-    addHighlight: Callback<HighlightPost>,
+    addHighlight: Callback<Highlight>,
     setQuoteRange: Callback<BookRange | undefined>,
     openRef: Callback<string>,
 };
@@ -59,8 +56,12 @@ export function BookViewComp({
     return <BookContextMenu
         target={menuTarget}
         onAddHighlight={group => selection.current && addHighlight({
+            entity: 'highlight',
+            _id: uuid(),
+            local: true,
             group,
-            bookId, range: selection.current?.range,
+            bookId,
+            range: selection.current?.range,
         })}
     >
         <AnchorLink
