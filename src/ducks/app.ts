@@ -4,7 +4,7 @@ import { BookFragmentAction, BookState } from './book';
 import { AccountState, AccountAction } from './account';
 import { ScreenState } from './screen';
 import { SearchAction, SearchState } from './search';
-import { RecentBooksAction, RecentBooksState } from './recentBooks';
+import { CurrentPositionsAction, CurrentPositionsState } from './currentPositions';
 import { CollectionsAction, CollectionsState } from './collections';
 import { BookmarksAction, BookmarksState } from './bookmarks';
 import { HighlightsState, HighlightsAction } from './highlights';
@@ -16,7 +16,7 @@ export type AppAction =
     | ThemeAction
     | AccountAction
     | SearchAction
-    | RecentBooksAction
+    | CurrentPositionsAction
     | CollectionsAction
     | BookmarksAction
     | HighlightsAction
@@ -31,7 +31,7 @@ export type AppState = {
     screen: ScreenState,
     account: AccountState,
     search: SearchState,
-    recentBooks: RecentBooksState,
+    currentPositions: CurrentPositionsState,
     collections: CollectionsState,
     bookmarks: BookmarksState,
     highlights: HighlightsState,

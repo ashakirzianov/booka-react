@@ -1,27 +1,16 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BackContract, AuthToken, BookPath, EntitySource, BookmarkPost } from 'booka-common';
+import { BackContract, AuthToken, BookPath, EntitySource, BookmarkPost, ResolvedCurrentPosition } from 'booka-common';
 import { createFetcher } from './fetcher';
 import { config } from '../config';
-import { RecentBook } from '../ducks';
 
 const back = createFetcher<BackContract>(config().backUrl);
 
-export function getRecentBooks(token: AuthToken): Observable<RecentBook[]> {
+export function getCurrentPositions(token: AuthToken): Observable<ResolvedCurrentPosition[]> {
     return back.get('/current-position', {
         auth: token.token,
     }).pipe(
-        map((res): RecentBook[] => {
-            const all = res.value;
-            return all.map(b => ({
-                card: b.card,
-                locations: b.locations.map(l => ({
-                    path: l.path,
-                    created: l.created,
-                    preview: l.preview,
-                })),
-            }));
-        }),
+        map(res => res.value),
     );
 }
 
