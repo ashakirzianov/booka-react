@@ -2,11 +2,10 @@ import { of } from 'rxjs';
 import { map, mergeMap, catchError, withLatestFrom } from 'rxjs/operators';
 import { Epic, combineEpics } from 'redux-observable';
 import {
-    BookFragment, BookRange, BookPath, Highlight, HighlightPost, Bookmark, BookmarkPost,
+    BookFragment, BookRange, BookPath, Highlight, HighlightPost,
 } from 'booka-common';
 import {
     openLink, getHighlights, postHighlight,
-    getBookmarks, sendAddBookmark, sendRemoveBookmark,
 } from '../api';
 import { AppAction, AppEpic } from './app';
 import { ofAppType, appAuth } from './utils';
@@ -23,7 +22,6 @@ export type BookLoadingState = BookStateBase<'loading'>;
 export type BookReadyState = BookStateBase<'ready'> & {
     fragment: BookFragment,
     highlights: Highlight[],
-    bookmarks: Bookmark[],
 };
 export type BookState =
     | BookReadyState
@@ -79,31 +77,6 @@ type BookHighlightsFulfilledAction = {
         highlights: Highlight[],
     },
 };
-type BookmarkAddAction = {
-    type: 'book-bm-add',
-    payload: {
-        bookmark: BookmarkPost,
-    },
-};
-type BookmarkRemoveAction = {
-    type: 'book-bm-remove',
-    payload: {
-        bookmark: Bookmark,
-    },
-};
-type BookmarksFetchAction = {
-    type: 'book-bm-fetch',
-    payload: {
-        bookId: string,
-    },
-};
-type BookmarksFulfilledAction = {
-    type: 'book-bm-fulfilled',
-    payload: {
-        bookId: string,
-        bookmarks: Bookmark[],
-    },
-};
 export type BookFragmentAction =
     | BookOpenAction
     | BookFetchFulfilledAction
@@ -111,7 +84,6 @@ export type BookFragmentAction =
     | SetQuoteRangeAction | UpdateCurrentPathAction
     | ToggleTocAction | ToggleControlsAction
     | BookHighlightsAddAction | BookHighlightsFetchAction | BookHighlightsFulfilledAction
-    | BookmarkAddAction | BookmarkRemoveAction | BookmarksFetchAction | BookmarksFulfilledAction
     ;
 
 const defaultState: BookState = {
@@ -134,7 +106,6 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
                 link: action.payload.link,
                 fragment: action.payload.fragment,
                 highlights: [],
-                bookmarks: [],
                 showControls: true,
                 needToScroll: true,
             };
@@ -175,10 +146,6 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
         case 'book-highlights-fulfilled':
             return state.link.bookId === action.payload.bookId && state.state === 'ready'
                 ? { ...state, highlights: action.payload.highlights }
-                : state;
-        case 'book-bm-fulfilled':
-            return state.link.bookId === action.payload.bookId && state.state === 'ready'
-                ? { ...state, bookmarks: action.payload.bookmarks }
                 : state;
         default:
             return state;
@@ -250,62 +217,9 @@ const postHighlightEpic: AppEpic = (action$, state$) => action$.pipe(
     ),
 );
 
-const getBookmarksEpic: AppEpic = (action$, state$) => action$.pipe(
-    ofAppType('book-bm-fetch'),
-    withLatestFrom(appAuth(state$)),
-    mergeMap(
-        ([action, token]) => getBookmarks(action.payload.bookId, token).pipe(
-            map((bookmarks): AppAction => ({
-                type: 'book-bm-fulfilled',
-                payload: {
-                    bookId: action.payload.bookId,
-                    bookmarks,
-                },
-            })),
-        )
-    )
-);
-
-const postAddBookmarkEpic: AppEpic = (action$, state$) => action$.pipe(
-    ofAppType('book-bm-add'),
-    withLatestFrom(appAuth(state$)),
-    mergeMap(
-        ([action, token]) => sendAddBookmark(action.payload.bookmark, token).pipe(
-            map(
-                (): AppAction => ({
-                    type: 'book-bm-fetch',
-                    payload: {
-                        bookId: action.payload.bookmark.bookId,
-                    },
-                }),
-            ),
-        ),
-    ),
-);
-
-const postRemoveBookmarkEpic: AppEpic = (action$, state$) => action$.pipe(
-    ofAppType('book-bm-remove'),
-    withLatestFrom(appAuth(state$)),
-    mergeMap(
-        ([action, token]) => sendRemoveBookmark(action.payload.bookmark._id, token).pipe(
-            map(
-                (): AppAction => ({
-                    type: 'book-bm-fetch',
-                    payload: {
-                        bookId: action.payload.bookmark.bookId,
-                    },
-                }),
-            ),
-        ),
-    ),
-);
-
 export const bookFragmentEpic = combineEpics(
     fetchBookFragmentEpic,
     fetchBookHighlightsEpic,
     getHighlightsEpic,
     postHighlightEpic,
-    getBookmarksEpic,
-    postAddBookmarkEpic,
-    postRemoveBookmarkEpic,
 );

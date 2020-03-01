@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    assertNever, BookRange, positionForPath, BookPath, HighlightPost, firstPath,
+    assertNever, BookRange, positionForPath, BookPath, HighlightPost, firstPath, uuid,
 } from 'booka-common';
 
 import { BookState, BookReadyState } from '../ducks';
@@ -136,9 +136,12 @@ function AddBookmarkButton({ theme }: Themed) {
         fontSize='normal'
         fontFamily='menu'
         onClick={() => dispatch({
-            type: 'book-bm-add',
+            type: 'bookmarks-add',
             payload: {
                 bookmark: {
+                    entity: 'bookmark',
+                    _id: uuid(),
+                    local: true,
                     bookId: currentLink.bookId,
                     path: currentLink.path || firstPath(),
                 },
