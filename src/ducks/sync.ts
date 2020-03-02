@@ -1,10 +1,11 @@
+import { of } from 'rxjs';
+import { withLatestFrom, map, mergeMap } from 'rxjs/operators';
 import { combineEpics } from 'redux-observable';
 import { AppEpic, AppAction } from './app';
-import { withLatestFrom, map, mergeMap } from 'rxjs/operators';
 import { appAuth, ofAppType } from './utils';
 import {
     getBookmarks, getHighlights, getCollections,
-    sendAddBookmark, postHighlight,
+    sendAddBookmark, postHighlight, postAddToCollection,
 } from '../api';
 
 const fetchBookmarksEpic: AppEpic = (action$, state$) => action$.pipe(
@@ -98,7 +99,17 @@ const fetchCollectionsEpic: AppEpic = (action$, state$) => action$.pipe(
     ),
 );
 
+const postAddToCollectionEpic: AppEpic = (action$, state$) => action$.pipe(
+    ofAppType('collections-add-card'),
+    withLatestFrom(appAuth(state$)),
+    mergeMap(
+        ([action, token]) => postAddToCollection(action.payload.card.id, action.payload.collection, token).pipe(
+            mergeMap(() => of<AppAction>()),
+        ),
+    ),
+);
+
 export const syncEpic = combineEpics(
     fetchBookmarksEpic, fetchHighlightsEpic, fetchCollectionsEpic,
-    postBookmarkEpic, postHighlightEpic,
+    postBookmarkEpic, postHighlightEpic, postAddToCollectionEpic,
 );
