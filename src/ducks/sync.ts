@@ -2,7 +2,10 @@ import { combineEpics } from 'redux-observable';
 import { AppEpic, AppAction } from './app';
 import { withLatestFrom, map, mergeMap } from 'rxjs/operators';
 import { appAuth, ofAppType } from './utils';
-import { getBookmarks, getHighlights, getCollections } from '../api';
+import {
+    getBookmarks, getHighlights, getCollections,
+    sendAddBookmark,
+} from '../api';
 
 const fetchBookmarksEpic: AppEpic = (action$, state$) => action$.pipe(
     ofAppType('book-open'),
@@ -14,6 +17,26 @@ const fetchBookmarksEpic: AppEpic = (action$, state$) => action$.pipe(
                 payload: {
                     bookId: action.payload.bookId,
                     bookmarks,
+                },
+            })),
+        ),
+    ),
+);
+
+const postBookmarkEpic: AppEpic = (action$, state$) => action$.pipe(
+    ofAppType('bookmarks-add'),
+    withLatestFrom(appAuth(state$)),
+    mergeMap(
+        ([action, token]) => sendAddBookmark(action.payload.bookmark, token).pipe(
+            map((result): AppAction => ({
+                type: 'bookmarks-replace-one',
+                payload: {
+                    replaceId: action.payload.bookmark._id,
+                    bookmark: {
+                        ...action.payload.bookmark,
+                        local: undefined,
+                        _id: result.value._id,
+                    },
                 },
             })),
         ),
@@ -59,4 +82,5 @@ export const syncEpic = combineEpics(
     fetchBookmarksEpic,
     fetchHighlightsEpic,
     fetchCollectionsEpic,
+    postBookmarkEpic,
 );
