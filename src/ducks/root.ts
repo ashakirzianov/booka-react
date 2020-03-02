@@ -8,7 +8,7 @@ import { screenReducer } from './screen';
 import { accountReducer, accountEpic } from './account';
 import { searchReducer, searchEpic } from './search';
 import { currentPositionsEpic, currentPositionsReducer } from './currentPositions';
-import { collectionsReducer, collectionsEpic } from './collections';
+import { collectionsReducer } from './collections';
 import { bookmarksReducer } from './bookmarks';
 import { highlightsReducer } from './highlights';
 import { changesReducer } from './changes';
@@ -33,5 +33,4 @@ export const rootEpic = combineEpics(
     accountEpic,
     searchEpic,
     currentPositionsEpic,
-    collectionsEpic,
 );

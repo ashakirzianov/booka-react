@@ -3,7 +3,7 @@ import { CardCollection, Callback, LibraryCard } from 'booka-common';
 import { Column, BookListComp, Themed } from '../atoms';
 
 import { useAppDispatch, useTheme, useAppSelector } from '../application';
-import { CardCollections } from '../core';
+import { CardCollections } from '../ducks';
 
 export function CollectionsConnected() {
     const dispatch = useAppDispatch();

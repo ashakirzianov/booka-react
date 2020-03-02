@@ -1,5 +1,5 @@
 import {
-    Bookmark, Highlight, CardCollectionName, BookPath, CardCollection, LibraryCard,
+    Bookmark, Highlight, CardCollectionName, BookPath, LibraryCard,
 } from 'booka-common';
 
 type DefChange<K extends string> = {
@@ -63,30 +63,26 @@ export const applyBookmarkChanges = makeApplyChanges<Bookmark[]>((entities, chan
     }
 });
 
-// TODO: move to 'common'
-export type CardCollections = {
-    [n in CardCollectionName]?: CardCollection;
-};
-export const applyCollectionsChanges = makeApplyChanges<CardCollections>((collections, change) => {
-    switch (change.change) {
-        case 'collection-add': {
-            const originalCards = collections[change.collection]?.cards ?? [];
-            if (originalCards.find(c => c.id === change.card.id)) {
-                return collections;
-            } else {
-                return {
-                    ...collections,
-                    [change.collection]: {
-                        name: change.collection,
-                        cards: [change.card, ...originalCards],
-                    },
-                };
-            }
-        }
-        default:
-            return collections;
-    }
-});
+// export const applyCollectionsChanges = makeApplyChanges<CardCollections>((collections, change) => {
+//     switch (change.change) {
+//         case 'collection-add': {
+//             const originalCards = collections[change.collection]?.cards ?? [];
+//             if (originalCards.find(c => c.id === change.card.id)) {
+//                 return collections;
+//             } else {
+//                 return {
+//                     ...collections,
+//                     [change.collection]: {
+//                         name: change.collection,
+//                         cards: [change.card, ...originalCards],
+//                     },
+//                 };
+//             }
+//         }
+//         default:
+//             return collections;
+//     }
+// });
 
 function makeApplyChanges<T>(fn: (t: T, change: Change) => T) {
     return (t: T, changes: Change[]): T => {
