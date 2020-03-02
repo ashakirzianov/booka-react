@@ -4,7 +4,7 @@ import { withLatestFrom, map, mergeMap } from 'rxjs/operators';
 import { appAuth, ofAppType } from './utils';
 import {
     getBookmarks, getHighlights, getCollections,
-    sendAddBookmark,
+    sendAddBookmark, postHighlight,
 } from '../api';
 
 const fetchBookmarksEpic: AppEpic = (action$, state$) => action$.pipe(
@@ -59,6 +59,26 @@ const fetchHighlightsEpic: AppEpic = (action$, state$) => action$.pipe(
     ),
 );
 
+const postHighlightEpic: AppEpic = (action$, state$) => action$.pipe(
+    ofAppType('highlights-add'),
+    withLatestFrom(appAuth(state$)),
+    mergeMap(
+        ([action, token]) => postHighlight(action.payload.highlight, token).pipe(
+            map((result): AppAction => ({
+                type: 'highlights-replace-one',
+                payload: {
+                    replaceId: action.payload.highlight._id,
+                    highlight: {
+                        ...action.payload.highlight,
+                        local: undefined,
+                        _id: result.value._id,
+                    },
+                },
+            })),
+        ),
+    ),
+);
+
 const fetchCollectionsEpic: AppEpic = (action$, state$) => action$.pipe(
     ofAppType('library-open'),
     withLatestFrom(appAuth(state$)),
@@ -79,8 +99,6 @@ const fetchCollectionsEpic: AppEpic = (action$, state$) => action$.pipe(
 );
 
 export const syncEpic = combineEpics(
-    fetchBookmarksEpic,
-    fetchHighlightsEpic,
-    fetchCollectionsEpic,
-    postBookmarkEpic,
+    fetchBookmarksEpic, fetchHighlightsEpic, fetchCollectionsEpic,
+    postBookmarkEpic, postHighlightEpic,
 );
