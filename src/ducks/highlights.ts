@@ -1,9 +1,5 @@
-import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
-import { combineEpics } from 'redux-observable';
 import { Highlight } from 'booka-common';
-import { getHighlights } from '../api';
-import { AppAction, AppEpic } from './app';
-import { ofAppType, appAuth } from './utils';
+import { AppAction } from './app';
 
 export type HighlightsState = Highlight[];
 
@@ -14,48 +10,46 @@ type HighlightsAddAction = {
     },
 };
 type HighlightsRemoveAction = {
-    type: 'highlight-remove',
+    type: 'highlights-remove',
     payload: {
         highlightId: string,
     },
 };
-type HighlightsFulfilledAction = {
-    type: 'highlights-fulfilled',
+type HighlightsReplaceAllAction = {
+    type: 'highlights-replace-all',
     payload: {
         bookId: string,
         highlights: Highlight[],
     },
 };
+type HighlightsReplaceOneAction = {
+    type: 'highlights-replace-one',
+    payload: {
+        replaceId: string,
+        highlight: Highlight,
+    },
+};
 export type HighlightsAction =
-    | HighlightsAddAction | HighlightsRemoveAction | HighlightsFulfilledAction
+    | HighlightsAddAction | HighlightsRemoveAction
+    | HighlightsReplaceAllAction | HighlightsReplaceOneAction
     ;
 
 const defaultState: HighlightsState = [];
 export function highlightsReducer(state: HighlightsState = defaultState, action: AppAction): HighlightsState {
     switch (action.type) {
-        case 'highlights-fulfilled':
+        case 'highlights-add':
+            return [action.payload.highlight, ...state];
+        case 'highlights-remove':
+            return state.filter(h => h._id !== action.payload.highlightId);
+        case 'highlights-replace-one':
+            return state.map(h =>
+                h._id === action.payload.replaceId
+                    ? action.payload.highlight
+                    : h
+            );
+        case 'highlights-replace-all':
             return action.payload.highlights;
         default:
             return state;
     }
 }
-
-const fetchHighlightsEpic: AppEpic = (action$, state$) => action$.pipe(
-    ofAppType('book-open'),
-    withLatestFrom(appAuth(state$)),
-    mergeMap(
-        ([{ payload }, token]) => getHighlights(payload.bookId, token).pipe(
-            map((highlights): AppAction => ({
-                type: 'highlights-fulfilled',
-                payload: {
-                    bookId: payload.bookId,
-                    highlights,
-                },
-            })),
-        ),
-    ),
-);
-
-export const highlightsEpic = combineEpics(
-    fetchHighlightsEpic,
-);

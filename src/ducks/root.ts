@@ -10,7 +10,7 @@ import { searchReducer, searchEpic } from './search';
 import { currentPositionsEpic, currentPositionsReducer } from './currentPositions';
 import { collectionsReducer, collectionsEpic } from './collections';
 import { bookmarksReducer } from './bookmarks';
-import { highlightsReducer, highlightsEpic } from './highlights';
+import { highlightsReducer } from './highlights';
 import { changesReducer } from './changes';
 
 export const rootReducer = combineReducers<AppState, AppAction>({
@@ -34,5 +34,4 @@ export const rootEpic = combineEpics(
     searchEpic,
     currentPositionsEpic,
     collectionsEpic,
-    highlightsEpic,
 );
