@@ -1,9 +1,5 @@
-import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
-import { combineEpics } from 'redux-observable';
 import { Bookmark } from 'booka-common';
-import { getBookmarks } from '../api';
-import { AppAction, AppEpic } from './app';
-import { ofAppType, appAuth } from './utils';
+import { AppAction } from './app';
 
 export type BookmarksState = Bookmark[];
 
@@ -19,44 +15,41 @@ type BookmarksRemoveAction = {
         bookmarkId: string,
     },
 };
-type BookmarksFulfilledAction = {
-    type: 'bookmarks-fulfilled',
+type BookmarksReplaceAllAction = {
+    type: 'bookmarks-replace-all',
     payload: {
         bookId: string,
         bookmarks: Bookmark[],
     },
 };
+type BookmarksReplaceOneAction = {
+    type: 'bookmarks-replace-one',
+    payload: {
+        replaceId: string,
+        bookmark: Bookmark,
+    },
+};
 export type BookmarksAction =
     | BookmarksAddAction | BookmarksRemoveAction
-    | BookmarksFulfilledAction
+    | BookmarksReplaceAllAction | BookmarksReplaceOneAction
     ;
 
 const defaultState: BookmarksState = [];
 export function bookmarksReducer(state: BookmarksState = defaultState, action: AppAction): BookmarksState {
     switch (action.type) {
-        case 'bookmarks-fulfilled':
+        case 'bookmarks-add':
+            return [action.payload.bookmark, ...state];
+        case 'bookmarks-remove':
+            return state.filter(b => b._id !== action.payload.bookmarkId);
+        case 'bookmarks-replace-one':
+            return state.map(b =>
+                b._id === action.payload.replaceId
+                    ? action.payload.bookmark
+                    : b
+            );
+        case 'bookmarks-replace-all':
             return action.payload.bookmarks;
         default:
             return state;
     }
 }
-
-const fetchBookmarksEpic: AppEpic = (action$, state$) => action$.pipe(
-    ofAppType('book-open'),
-    withLatestFrom(appAuth(state$)),
-    mergeMap(
-        ([{ payload }, token]) => getBookmarks(payload.bookId, token).pipe(
-            map((bms): AppAction => ({
-                type: 'bookmarks-fulfilled',
-                payload: {
-                    bookId: payload.bookId,
-                    bookmarks: bms,
-                },
-            })),
-        ),
-    ),
-);
-
-export const bookmarksEpic = combineEpics(
-    fetchBookmarksEpic,
-);
