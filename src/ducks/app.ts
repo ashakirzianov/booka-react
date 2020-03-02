@@ -10,7 +10,6 @@ import { BookmarksAction, BookmarksState } from './bookmarks';
 import { HighlightsState, HighlightsAction } from './highlights';
 import { ChangesState, ChangesAction } from './changes';
 import { Epic } from 'redux-observable';
-import { SyncAction, SyncState } from './sync';
 
 export type AppAction =
     | LibraryAction
@@ -23,7 +22,6 @@ export type AppAction =
     | BookmarksAction
     | HighlightsAction
     | ChangesAction
-    | SyncAction
     ;
 export type ActionForType<T extends AppAction['type']> =
     Extract<AppAction, { type: T }>;
@@ -40,7 +38,6 @@ export type AppState = {
     bookmarks: BookmarksState,
     highlights: HighlightsState,
     changes: ChangesState,
-    sync: SyncState,
 };
 
 export type AppEpic = Epic<AppAction, AppAction, AppState>;

@@ -8,32 +8,6 @@ import {
     sendAddBookmark, postHighlight, postAddToCollection,
 } from '../api';
 
-type SyncItem = AppAction;
-export type SyncState = SyncItem[];
-
-type SyncAddAction = {
-    type: 'sync-add',
-    payload: SyncItem,
-};
-type SyncRemoveAction = {
-    type: 'sync-remove',
-    payload: SyncItem,
-};
-export type SyncAction = | SyncAddAction | SyncRemoveAction;
-
-const defaultState: SyncState = [];
-export function syncReducer(state: SyncState = defaultState, action: AppAction): SyncState {
-    switch (action.type) {
-        case 'sync-add':
-            return [action.payload, ...state];
-        case 'sync-remove':
-            // TODO: be careful -- ref comparison
-            return state.filter(i => i !== action.payload);
-        default:
-            return state;
-    }
-}
-
 const fetchBookmarksEpic: AppEpic = (action$, state$) => action$.pipe(
     ofAppType('book-open'),
     withLatestFrom(appAuth(state$)),
