@@ -12,6 +12,7 @@ import { collectionsReducer } from './collections';
 import { bookmarksReducer } from './bookmarks';
 import { highlightsReducer } from './highlights';
 import { changesReducer } from './changes';
+import { syncEpic } from './sync';
 
 export const rootReducer = combineReducers<AppState, AppAction>({
     library: libraryReducer,
@@ -33,4 +34,5 @@ export const rootEpic = combineEpics(
     accountEpic,
     searchEpic,
     currentPositionsEpic,
+    syncEpic,
 );
