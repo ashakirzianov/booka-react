@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     BookFragment, BookPath, BookRange,
-    Highlight, BookAnchor, uuid,
+    Highlight, BookAnchor, uuid, pathLessThan,
 } from 'booka-common';
 
 import {
@@ -49,8 +49,17 @@ export function BookViewComp({
         .concat(highlightsColorization(highlights, theme))
         ;
 
+    const currentSelection = selection.current;
+    const selectedHighlight = currentSelection !== undefined
+        ? highlights.find(h => doesRangeOverlap(h.range, currentSelection.range))
+        : undefined;
+
     const menuTarget: ContextMenuTarget = selection.current
-        ? { target: 'selection', selection: selection.current }
+        ? (
+            selectedHighlight
+                ? { target: 'highlight', highlight: selectedHighlight }
+                : { target: 'selection', selection: selection.current }
+        )
         : { target: 'empty' };
 
     return <BookContextMenu
@@ -134,4 +143,17 @@ function highlightsColorization(highlights: Highlight[], theme: Theme): Colorize
 function colorForGroup(group: string) {
     // TODO: implement
     return 'green';
+}
+
+// TODO: move to 'common'
+function doesRangeOverlap(r1: BookRange, r2: BookRange): boolean {
+    if (pathLessThan(r1.start, r2.start)) {
+        return r1.end
+            ? !pathLessThan(r1.end, r2.start)
+            : true;
+    } else {
+        return r2.end
+            ? !pathLessThan(r2.end, r1.start)
+            : true;
+    }
 }
