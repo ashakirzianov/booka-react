@@ -1,44 +1,33 @@
-import { BookPath, LibraryCard } from 'booka-common';
+import { ResolvedCurrentPosition } from 'booka-common';
 import { of } from 'rxjs';
 import { mergeMap, withLatestFrom, map, catchError } from 'rxjs/operators';
 import { combineEpics, Epic } from 'redux-observable';
-import { getRecentBooks, sendCurrentPathUpdate } from '../api';
+import { getCurrentPositions, sendCurrentPathUpdate } from '../api';
 import { AppAction, AppState } from './app';
 import { ofAppType, appAuth } from './utils';
 
-export type RecentBookLocation = {
-    path: BookPath,
-    created: Date,
-    preview?: string,
-};
+export type CurrentPositionsState = ResolvedCurrentPosition[];
 
-export type RecentBook = {
-    card: LibraryCard,
-    locations: RecentBookLocation[],
+type CurrentPositionsFetchAction = {
+    type: 'current-positions-fetch',
 };
-
-export type RecentBooksState = RecentBook[];
-
-export type RecentBooksFetchAction = {
-    type: 'recent-books-fetch',
+type CurrentPositionsFulfilledAction = {
+    type: 'current-positions-fulfilled',
+    payload: ResolvedCurrentPosition[],
 };
-export type RecentBooksFulfilledAction = {
-    type: 'recent-books-fulfilled',
-    payload: RecentBook[],
-};
-export type RecentBooksRejectedAction = {
-    type: 'recent-books-rejected',
+type CurrentPositionsRejectedAction = {
+    type: 'current-positions-rejected',
     payload?: any,
 };
-export type RecentBooksAction =
-    | RecentBooksFetchAction
-    | RecentBooksFulfilledAction
-    | RecentBooksRejectedAction
+export type CurrentPositionsAction =
+    | CurrentPositionsFetchAction
+    | CurrentPositionsFulfilledAction
+    | CurrentPositionsRejectedAction
     ;
 
-export function recentBooksReducer(state: RecentBooksState = [], action: AppAction): RecentBooksState {
+export function currentPositionsReducer(state: CurrentPositionsState = [], action: AppAction): CurrentPositionsState {
     switch (action.type) {
-        case 'recent-books-fulfilled':
+        case 'current-positions-fulfilled':
             return action.payload;
         default:
             return state;
@@ -49,27 +38,27 @@ const fetchEpic: Epic<AppAction> =
     action$ => action$.pipe(
         ofAppType('account-info'),
         mergeMap(
-            action => of<AppAction>({
-                type: 'recent-books-fetch',
+            () => of<AppAction>({
+                type: 'current-positions-fetch',
             }),
         ),
     );
 
 const processFetchEpic: Epic<AppAction, AppAction, AppState> =
     (action$, state$) => action$.pipe(
-        ofAppType('recent-books-fetch'),
+        ofAppType('current-positions-fetch'),
         withLatestFrom(appAuth(state$)),
         mergeMap(
-            ([_, token]) => getRecentBooks(token).pipe(
+            ([_, token]) => getCurrentPositions(token).pipe(
                 map((res): AppAction => {
                     return {
-                        type: 'recent-books-fulfilled',
+                        type: 'current-positions-fulfilled',
                         payload: res,
                     };
                 }),
                 catchError(err => {
                     return of<AppAction>({
-                        type: 'recent-books-rejected',
+                        type: 'current-positions-rejected',
                         payload: err,
                     });
                 }),
@@ -94,7 +83,7 @@ const updateCurrentPathEpic: Epic<AppAction, AppAction, AppState> =
         }),
     );
 
-export const recentBooksEpic = combineEpics(
+export const currentPositionsEpic = combineEpics(
     fetchEpic,
     processFetchEpic,
     updateCurrentPathEpic,

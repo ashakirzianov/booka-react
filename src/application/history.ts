@@ -1,7 +1,7 @@
 import { createBrowserHistory, LocationDescriptorObject } from 'history';
 
 import { AppState } from '../ducks';
-import { AppLink, pathForLink, queryForLink } from './link';
+import { AppLink, pathForLink, queryForLink } from '../core';
 
 const history = createBrowserHistory();
 export function updateHistoryFromState(state: AppState) {

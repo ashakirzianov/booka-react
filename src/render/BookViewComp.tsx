@@ -1,20 +1,17 @@
 import React from 'react';
 import {
-    BookFragment, BookPath,
-    BookRange,
-    Highlight,
-    HighlightPost,
-    BookAnchor,
+    BookFragment, BookPath, BookRange,
+    Highlight, BookAnchor, uuid,
 } from 'booka-common';
 
 import {
     Themed, colors, getFontSize, Row,
     point, Callback, getHighlights, BorderLink, Theme,
 } from '../atoms';
-import { BookFragmentComp, BookSelection } from '../reader';
+import { BookFragmentComp, BookSelection, ColorizedRange } from '../reader';
+import { useCopy } from '../application';
+import { linkToString } from '../core';
 import { generateQuoteLink } from './common';
-import { useCopy, linkToString } from '../core';
-import { ColorizedRange } from '../reader/BookFragmentComp.blocks';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
 
 export type BookViewCompProps = Themed & {
@@ -24,7 +21,7 @@ export type BookViewCompProps = Themed & {
     updateBookPosition: Callback<BookPath>,
     quoteRange: BookRange | undefined,
     highlights: Highlight[],
-    addHighlight: Callback<HighlightPost>,
+    addHighlight: Callback<Highlight>,
     setQuoteRange: Callback<BookRange | undefined>,
     openRef: Callback<string>,
 };
@@ -59,10 +56,12 @@ export function BookViewComp({
     return <BookContextMenu
         target={menuTarget}
         onAddHighlight={group => selection.current && addHighlight({
+            entity: 'highlight',
+            _id: uuid(),
+            local: true,
             group,
-            location: {
-                bookId, range: selection.current?.range,
-            },
+            bookId,
+            range: selection.current?.range,
         })}
     >
         <AnchorLink
@@ -128,7 +127,7 @@ function quoteColorization(quote: BookRange | undefined, theme: Theme): Colorize
 function highlightsColorization(highlights: Highlight[], theme: Theme): ColorizedRange[] {
     return highlights.map(h => ({
         color: colorForGroup(h.group),
-        range: h.location.range,
+        range: h.range,
     }));
 }
 

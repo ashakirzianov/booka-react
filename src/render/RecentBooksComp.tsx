@@ -1,15 +1,14 @@
 import React from 'react';
-import { pathLessThan, BookPath } from 'booka-common';
-import {
-    RecentBooksState, RecentBook, RecentBookLocation,
-} from '../ducks';
-import { useTheme, useAppSelector, linkToString, BookLink } from '../core';
+import { pathLessThan, BookPath, ResolvedCurrentPosition } from 'booka-common';
+import { linkToString, BookLink } from '../core';
+import { CurrentPositionsState } from '../ducks';
+import { useTheme, useAppSelector } from '../application';
 import {
     Column, Themed, Callback, WithChildren, navigate,
 } from '../atoms';
 
 export function RecentBooksConnected() {
-    const state = useAppSelector(s => s.recentBooks);
+    const state = useAppSelector(s => s.currentPositions);
     const openBook = React.useCallback((link: BookLink) => navigate(linkToString(link)), []);
 
     const theme = useTheme();
@@ -22,7 +21,7 @@ export function RecentBooksConnected() {
 }
 
 type RecentBooksProps = Themed & {
-    state: RecentBooksState,
+    state: CurrentPositionsState,
     onBookNavigate: Callback<BookLink>,
 };
 function RecentBooksComp({ state, onBookNavigate }: RecentBooksProps) {
@@ -30,9 +29,9 @@ function RecentBooksComp({ state, onBookNavigate }: RecentBooksProps) {
         <span key='label'>Recent books: {state.length}</span>
         {
             state.map((recentBook, idx) => {
-                return <RecentBookComp
+                return <CurrentBookComp
                     key={idx}
-                    recentBook={recentBook}
+                    currentPosition={recentBook}
                     onBookNavigate={onBookNavigate}
                 />;
             })
@@ -40,8 +39,8 @@ function RecentBooksComp({ state, onBookNavigate }: RecentBooksProps) {
     </Column>;
 }
 
-function RecentBookComp({ recentBook, onBookNavigate, }: {
-    recentBook: RecentBook,
+function CurrentBookComp({ currentPosition: recentBook, onBookNavigate, }: {
+    currentPosition: ResolvedCurrentPosition,
     onBookNavigate: Callback<BookLink>,
 }) {
     if (recentBook.locations.length === 0) {
@@ -87,6 +86,7 @@ function RecentBookComp({ recentBook, onBookNavigate, }: {
     }
 }
 
+type RecentBookLocation = ResolvedCurrentPosition['locations'][0];
 function getMostRecentLocation(rbls: RecentBookLocation[]): RecentBookLocation {
     return rbls.reduce(
         (last, curr) =>

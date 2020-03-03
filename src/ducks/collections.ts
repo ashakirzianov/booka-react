@@ -1,93 +1,75 @@
-import { of } from 'rxjs';
-import { mergeMap, withLatestFrom, map } from 'rxjs/operators';
-import { combineEpics, Epic } from 'redux-observable';
-import { CardCollection, CardCollectionName } from 'booka-common';
-import { getCollections, postAddToCollection } from '../api';
-import { AppAction, AppState } from './app';
-import { ofAppType, appAuth } from './utils';
+import { CardCollection, CardCollectionName, LibraryCard } from 'booka-common';
+import { AppAction } from './app';
+import { replaceOrAdd } from './utils';
+
+// TODO: move to 'common'
+export type CardCollections = {
+    [n in CardCollectionName]?: CardCollection;
+};
 
 export type CollectionsState = {
-    collections: CardCollection[],
+    collections: CardCollections,
 };
 
-type CollectionsFetchAction = {
-    type: 'collections-fetch',
-};
-type CollectionsFulfilledAction = {
-    type: 'collections-fulfilled',
-    payload: CardCollection[],
-};
-type CollectionsRejectedAction = {
-    type: 'collections-rejected',
-    payload?: any,
-};
-type AddToCollectionAction = {
-    type: 'collections-add',
+type CollectionsAddCardAction = {
+    type: 'collections-add-card',
     payload: {
-        bookId: string,
+        card: LibraryCard,
         collection: CardCollectionName,
     },
 };
+type CollectionRemoveCardAction = {
+    type: 'collections-remove-card',
+    payload: {
+        card: LibraryCard,
+        collection: CardCollectionName,
+    },
+};
+type CollectionsReplaceAllAction = {
+    type: 'collections-replace-all',
+    payload: CardCollections,
+};
 
 export type CollectionsAction =
-    | CollectionsFetchAction | CollectionsFulfilledAction | CollectionsRejectedAction
-    | AddToCollectionAction
+    | CollectionsAddCardAction | CollectionRemoveCardAction
+    | CollectionsReplaceAllAction
     ;
 
 const initial: CollectionsState = {
-    collections: [],
+    collections: {},
 };
 export function collectionsReducer(state: CollectionsState = initial, action: AppAction): CollectionsState {
     switch (action.type) {
-        case 'collections-fulfilled':
+        case 'collections-add-card':
             return {
-                collections: action.payload,
+                ...state,
+                collections: {
+                    ...state.collections,
+                    [action.payload.collection]: {
+                        name: action.payload.collection,
+                        cards: replaceOrAdd(
+                            state.collections[action.payload.collection]?.cards ?? [],
+                            c => c.id === action.payload.card.id,
+                            action.payload.card,
+                        ),
+                    },
+                },
             };
+        case 'collections-remove-card':
+            return {
+                ...state,
+                collections: {
+                    ...state.collections,
+                    [action.payload.collection]: {
+                        name: action.payload.collection,
+                        cards: (state.collections[action.payload.collection]?.cards ?? [])
+                            .filter(c => c.id !== action.payload.card.id),
+                    },
+                },
+            };
+        case 'collections-replace-all':
+            return { collections: action.payload };
         default:
             return state;
     }
 }
-
-const fetchEpic: Epic<AppAction> = action$ => action$.pipe(
-    ofAppType('account-info'),
-    mergeMap(
-        action => of<AppAction>({
-            type: 'collections-fetch',
-        }),
-    ),
-);
-
-const processFetchEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
-    action$.pipe(
-        ofAppType('collections-fetch'),
-        withLatestFrom(appAuth(state$)),
-        mergeMap(
-            ([_, token]) => getCollections(token).pipe(
-                map((res): AppAction => {
-                    return {
-                        type: 'collections-fulfilled',
-                        payload: res,
-                    };
-                }),
-            ),
-        ),
-    );
-
-const addToCollectionEpic: Epic<AppAction, AppAction, AppState> =
-    (action$, state$) => action$.pipe(
-        ofAppType('collections-add'),
-        withLatestFrom(state$),
-        mergeMap(([{ payload }, state]) => {
-            if (state.account.state === 'signed') {
-                postAddToCollection(payload.bookId, payload.collection, state.account.token)
-                    .subscribe();
-            }
-            return of<AppAction>();
-        }),
-    );
-
-export const collectionsEpic = combineEpics(
-    fetchEpic,
-    processFetchEpic,
-    addToCollectionEpic,
-);

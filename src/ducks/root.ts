@@ -7,18 +7,23 @@ import { bookReducer, bookFragmentEpic } from './book';
 import { screenReducer } from './screen';
 import { accountReducer, accountEpic } from './account';
 import { searchReducer, searchEpic } from './search';
-import { recentBooksEpic, recentBooksReducer } from './recentBooks';
-import { collectionsReducer, collectionsEpic } from './collections';
+import { currentPositionsEpic, currentPositionsReducer } from './currentPositions';
+import { collectionsReducer } from './collections';
+import { bookmarksReducer } from './bookmarks';
+import { highlightsReducer } from './highlights';
+import { syncEpic } from './sync';
 
 export const rootReducer = combineReducers<AppState, AppAction>({
     library: libraryReducer,
     theme: themeReducer,
     book: bookReducer,
-    recentBooks: recentBooksReducer,
+    currentPositions: currentPositionsReducer,
     screen: screenReducer,
     account: accountReducer,
     search: searchReducer,
     collections: collectionsReducer,
+    bookmarks: bookmarksReducer,
+    highlights: highlightsReducer,
 });
 
 export const rootEpic = combineEpics(
@@ -26,6 +31,6 @@ export const rootEpic = combineEpics(
     bookFragmentEpic,
     accountEpic,
     searchEpic,
-    recentBooksEpic,
-    collectionsEpic,
+    currentPositionsEpic,
+    syncEpic,
 );

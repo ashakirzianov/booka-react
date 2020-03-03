@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ConnectedProvider } from './core';
+import { ConnectedProvider } from './application';
 import { whileDebug } from './config';
 import { Routes } from './routes';
 

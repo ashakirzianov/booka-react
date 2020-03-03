@@ -2,11 +2,12 @@ import React from 'react';
 
 import { LibraryCard, Callback } from 'booka-common';
 import { BookCoverComp, Column, Modal, Themed, navigate } from '../atoms';
-import { useTheme, useAppDispatch, useAppSelector, linkToString } from '../core';
+import { useTheme, useAppDispatch, useAppSelector } from '../application';
+import { linkToString } from '../core';
 
 export function LibraryCardConnected() {
     const dispatch = useAppDispatch();
-    const card = useAppSelector(s => s.library.show);
+    const showCard = useAppSelector(s => s.library.show);
 
     const closeCard = React.useCallback(() => dispatch({
         type: 'card-close',
@@ -17,20 +18,20 @@ export function LibraryCardConnected() {
         bookId,
     })), []);
 
-    const addToReadingList = React.useCallback((bookId: string) => dispatch({
-        type: 'collections-add',
+    const addToReadingList = React.useCallback((card: LibraryCard) => dispatch({
+        type: 'collections-add-card',
         payload: {
             collection: 'reading-list',
-            bookId,
+            card,
         },
     }), [dispatch]);
 
     const theme = useTheme();
 
-    if (card) {
+    if (showCard) {
         return <LibraryCardModal
             theme={theme}
-            card={card}
+            card={showCard}
             toggleCard={closeCard}
             readFromStart={readFromStart}
             addToReadingList={addToReadingList}
@@ -44,7 +45,7 @@ type LibraryCardProps = Themed & {
     card: LibraryCard,
     toggleCard: Callback,
     readFromStart: Callback<string>,
-    addToReadingList: Callback<string>,
+    addToReadingList: Callback<LibraryCard>,
 };
 function LibraryCardModal({
     theme, toggleCard, card, readFromStart, addToReadingList,
@@ -58,7 +59,7 @@ function LibraryCardModal({
             <BookCoverComp {...card} />
             <span>{card.title}</span>
             <span onClick={() => readFromStart(card.id)}>Read</span>
-            <span onClick={() => addToReadingList(card.id)}>Add to reading list</span>
+            <span onClick={() => addToReadingList(card)}>Add to reading list</span>
         </Column>
     </Modal>;
 }

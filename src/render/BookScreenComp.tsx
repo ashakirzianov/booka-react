@@ -1,10 +1,11 @@
 import React from 'react';
 import {
-    assertNever, BookRange, positionForPath, BookPath, HighlightPost, firstPath,
+    assertNever, BookRange, positionForPath, BookPath,
+    Highlight, firstPath, uuid,
 } from 'booka-common';
 
 import { BookState, BookReadyState } from '../ducks';
-import { useAppDispatch, useAppSelector } from '../core';
+import { useAppDispatch, useAppSelector, useTheme } from '../application';
 import {
     Column, point, Row, Callback, Themed,
     Triad, IconButton, TopBar, EmptyLine, Clickable,
@@ -17,9 +18,60 @@ import { TableOfContentsComp } from './TableOfContentsComp';
 import { ConnectedAccountButton } from './AccountButton';
 import { FullScreenActivityIndicator } from '../atoms/Basics.native';
 
+export function BookScreenConnected() {
+    const dispatch = useAppDispatch();
+
+    const theme = useTheme();
+    const controlsVisible = useAppSelector(s => s.book.showControls || false);
+    const highlights = useAppSelector(s => s.highlights);
+    const book = useAppSelector(s => s.book);
+
+    const bookId = book.link.bookId;
+
+    const setQuoteRange = React.useCallback((range: BookRange | undefined) => dispatch({
+        type: 'book-set-quote',
+        payload: range,
+    }), [dispatch]);
+    const updateCurrentPath = React.useCallback((path: BookPath) => dispatch({
+        type: 'book-update-path',
+        payload: path,
+    }), [dispatch]);
+    const toggleControls = React.useCallback(() => dispatch({
+        type: 'book-toggle-controls',
+    }), [dispatch]);
+    const toggleToc = React.useCallback(() => dispatch({
+        type: 'book-toggle-toc',
+    }), [dispatch]);
+    const openRef = React.useCallback((refId: string) => dispatch({
+        type: 'book-open',
+        payload: {
+            link: 'book', bookId, refId,
+        },
+    }), [dispatch, bookId]);
+    const addHighlight = React.useCallback((highlight: Highlight) => dispatch({
+        type: 'highlights-add',
+        payload: {
+            highlight,
+        },
+    }), [dispatch]);
+
+    return <BookScreenComp
+        theme={theme}
+        book={book}
+        highlights={highlights}
+        controlsVisible={controlsVisible}
+        updateCurrentPath={updateCurrentPath}
+        addHighlight={addHighlight}
+        setQuoteRange={setQuoteRange}
+        toggleControls={toggleControls}
+        toggleToc={toggleToc}
+        openRef={openRef}
+    />;
+}
+
 type BookScreenPropsBase = Themed & {
     controlsVisible: boolean,
-    addHighlight: Callback<HighlightPost>,
+    addHighlight: Callback<Highlight>,
     openRef: Callback<string>,
     setQuoteRange: Callback<BookRange | undefined>,
     updateCurrentPath: Callback<BookPath>,
@@ -27,23 +79,24 @@ type BookScreenPropsBase = Themed & {
     toggleToc: Callback,
 };
 
-export type BookScreenProps = BookScreenPropsBase & {
-    screen: BookState,
+type BookScreenProps = BookScreenPropsBase & {
+    book: BookState,
+    highlights: Highlight[],
 };
-export function BookScreenComp(props: BookScreenProps) {
-    switch (props.screen.state) {
+function BookScreenComp(props: BookScreenProps) {
+    switch (props.book.state) {
         case 'loading':
             return <FullScreenActivityIndicator
                 theme={props.theme}
             />;
         case 'ready':
-            const readyProps = { ...props, screen: props.screen };
+            const readyProps = { ...props, book: props.book };
             return <BookScreenReadyComp {...readyProps} />;
         case 'error':
             return <Column>
                 <TextLine
                     theme={props.theme}
-                    text={`Error opening ${props.screen.link.bookId}`}
+                    text={`Error opening ${props.book.link.bookId}`}
                 />
                 <TextLink
                     theme={props.theme}
@@ -52,17 +105,18 @@ export function BookScreenComp(props: BookScreenProps) {
                 />
             </Column>;
         default:
-            assertNever(props.screen);
+            assertNever(props.book);
             return <span>Should not happen</span>;
     }
 }
 
 type BookScreenReadyProps = BookScreenPropsBase & {
-    screen: BookReadyState,
+    book: BookReadyState,
+    highlights: Highlight[],
 };
 function BookScreenReadyComp(props: BookScreenReadyProps) {
-    const pathToScroll = props.screen.needToScroll
-        ? props.screen.link.path
+    const pathToScroll = props.book.needToScroll
+        ? props.book.link.path
         : undefined;
     return <>
         <BookScreenHeader
@@ -77,23 +131,23 @@ function BookScreenReadyComp(props: BookScreenReadyProps) {
                 <Column maxWidth={point(50)} fullWidth padding={point(1)} centered>
                     <EmptyLine />
                     <BookViewComp
-                        bookId={props.screen.link.bookId}
+                        bookId={props.book.link.bookId}
                         theme={props.theme}
-                        fragment={props.screen.fragment}
+                        fragment={props.book.fragment}
                         pathToScroll={pathToScroll}
                         updateBookPosition={props.updateCurrentPath}
-                        highlights={props.screen.highlights}
+                        highlights={props.highlights}
                         addHighlight={props.addHighlight}
-                        quoteRange={props.screen.link.quote}
+                        quoteRange={props.book.link.quote}
                         setQuoteRange={props.setQuoteRange}
                         openRef={props.openRef}
                     />
                     {
-                        props.screen.link.toc && props.screen.fragment.toc
+                        props.book.link.toc && props.book.fragment.toc
                             ? <TableOfContentsComp
                                 theme={props.theme}
-                                toc={props.screen.fragment.toc}
-                                id={props.screen.link.bookId}
+                                toc={props.book.fragment.toc}
+                                id={props.book.link.bookId}
                                 toggleToc={props.toggleToc}
                             />
                             : null
@@ -136,16 +190,14 @@ function AddBookmarkButton({ theme }: Themed) {
         fontSize='normal'
         fontFamily='menu'
         onClick={() => dispatch({
-            type: 'book-bm-add',
+            type: 'bookmarks-add',
             payload: {
                 bookmark: {
-                    source: 'not-implemented',
-                    kind: 'manual',
-                    location: {
-                        bookId: currentLink.bookId,
-                        path: currentLink.path || firstPath(),
-                    },
-                    created: new Date(Date.now()),
+                    entity: 'bookmark',
+                    _id: uuid(),
+                    local: true,
+                    bookId: currentLink.bookId,
+                    path: currentLink.path || firstPath(),
                 },
             },
         })}
@@ -276,7 +328,7 @@ function TocButton({ theme, total, current, toggleToc }: TocButtonProps) {
 // TODO: decouple props
 type BookScreenFooterProps = BookScreenProps;
 function BookScreenFooter({
-    screen, theme, controlsVisible, toggleToc,
+    book: screen, theme, controlsVisible, toggleToc,
 }: BookScreenFooterProps) {
     if (screen.state === 'ready') {
         const fragment = screen.fragment;

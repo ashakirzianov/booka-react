@@ -1,7 +1,7 @@
 import React from 'react';
 import { Callback, LibraryCard } from 'booka-common';
 import { SearchState } from '../ducks';
-import { useAppDispatch, useTheme, useAppSelector } from '../core';
+import { useAppDispatch, useTheme, useAppSelector } from '../application';
 import {
     Column, SearchBox, BookListComp, ActivityIndicator, Themed,
 } from '../atoms';
