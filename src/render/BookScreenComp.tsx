@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     assertNever, BookRange, positionForPath, BookPath,
-    Highlight, firstPath, uuid,
+    Highlight, firstPath, uuid, Bookmark, samePath,
 } from 'booka-common';
 
 import { BookState, BookReadyState } from '../ducks';
@@ -172,36 +172,62 @@ function BookScreenHeader({ theme, visible }: BookScreenHeaderProps) {
             left={<LibButton theme={theme} />}
             right={
                 <>
-                    <AddBookmarkButton theme={theme} />
+                    <AddBookmarkButton />
                     <AppearanceButton theme={theme} />
-                    <ConnectedAccountButton
-                    />
+                    <ConnectedAccountButton />
                 </>}
         />
     </TopBar>;
 }
 
-function AddBookmarkButton({ theme }: Themed) {
+function AddBookmarkButton() {
     const dispatch = useAppDispatch();
-    const currentLink = useAppSelector(state => state.book.link);
-    return <TextButton
-        theme={theme}
-        text='Add Bookmark'
-        fontSize='normal'
-        fontFamily='menu'
-        onClick={() => dispatch({
-            type: 'bookmarks-add',
-            payload: {
-                bookmark: {
-                    entity: 'bookmark',
-                    _id: uuid(),
-                    local: true,
-                    bookId: currentLink.bookId,
-                    path: currentLink.path || firstPath(),
+    const theme = useTheme();
+    const { bookId, path } = useAppSelector(state => state.book.link);
+    const bookmarks = useAppSelector(state => state.bookmarks);
+
+    const currentBookmark = path
+        ? findBookmark(bookmarks, bookId, path) : undefined;
+    if (currentBookmark) {
+        return <TextButton
+            theme={theme}
+            text='Remove Bookmark'
+            fontSize='small'
+            fontFamily='menu'
+            onClick={() => dispatch({
+                type: 'bookmarks-remove',
+                payload: {
+                    bookmarkId: currentBookmark._id,
                 },
-            },
-        })}
-    />;
+            })}
+        />;
+    } else {
+        return <TextButton
+            theme={theme}
+            text='Add Bookmark'
+            fontSize='small'
+            fontFamily='menu'
+            onClick={() => dispatch({
+                type: 'bookmarks-add',
+                payload: {
+                    bookmark: {
+                        entity: 'bookmark',
+                        _id: uuid(),
+                        local: true,
+                        bookId,
+                        path: path || firstPath(),
+                    },
+                },
+            })}
+        />;
+    }
+}
+
+// TODO: move to 'common'
+function findBookmark(bookmarks: Bookmark[], bookId: string, path: BookPath): Bookmark | undefined {
+    return bookmarks.find(
+        b => b.bookId === bookId && samePath(b.path, path),
+    );
 }
 
 type LibButtonProps = Themed;
