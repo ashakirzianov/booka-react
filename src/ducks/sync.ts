@@ -9,6 +9,7 @@ import {
 } from '../api';
 import { bookmarksReducer } from './bookmarks';
 import { highlightsReducer } from './highlights';
+import { collectionsReducer, CollectionsState } from './collections';
 
 const fetchBookmarksEpic: AppEpic = (action$, state$) => action$.pipe(
     ofAppType('book-open'),
@@ -97,25 +98,32 @@ const fetchCollectionsEpic: AppEpic = (action$, state$) => action$.pipe(
     withLatestFrom(appAuth(state$)),
     mergeMap(
         ([_, token]) => getCollections(token).pipe(
-            map((collections): AppAction => ({
-                type: 'collections-replace-all',
-                payload: collections.reduce(
-                    (res, col) => ({
-                        ...res,
-                        [col.name]: col,
-                    }),
-                    {},
-                ),
-            })),
+            map((collections): AppAction => {
+                const withLocals = applyLocalChanges<CollectionsState>({
+                    collections: collections.reduce(
+                        (res, col) => ({
+                            ...res,
+                            [col.name]: col,
+                        }),
+                        {},
+                    ),
+                }, collectionsReducer);
+                return {
+                    type: 'collections-replace-all',
+                    payload: withLocals.collections,
+                };
+            }),
         ),
     ),
 );
 
 const postAddToCollectionEpic: AppEpic = (action$, state$) => action$.pipe(
     ofAppType('collections-add-card'),
+    addLocalChange(),
     withLatestFrom(appAuth(state$)),
     mergeMap(
         ([action, token]) => postAddToCollection(action.payload.card.id, action.payload.collection, token).pipe(
+            removeLocalChange(action),
             mergeMap(() => of<AppAction>()),
         ),
     ),
