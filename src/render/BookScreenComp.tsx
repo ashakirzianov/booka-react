@@ -18,6 +18,7 @@ import { TableOfContentsComp } from './TableOfContentsComp';
 import { ConnectedAccountButton } from './AccountButton';
 import { FullScreenActivityIndicator } from '../atoms/Basics.native';
 
+// TODO: refactor: do not pass so many props
 export function BookScreenConnected() {
     const dispatch = useAppDispatch();
 
@@ -54,6 +55,12 @@ export function BookScreenConnected() {
             highlight,
         },
     }), [dispatch]);
+    const removeHighlight = React.useCallback((highlight: Highlight) => dispatch({
+        type: 'highlights-remove',
+        payload: {
+            highlightId: highlight._id,
+        },
+    }), [dispatch]);
 
     return <BookScreenComp
         theme={theme}
@@ -62,6 +69,7 @@ export function BookScreenConnected() {
         controlsVisible={controlsVisible}
         updateCurrentPath={updateCurrentPath}
         addHighlight={addHighlight}
+        removeHighlight={removeHighlight}
         setQuoteRange={setQuoteRange}
         toggleControls={toggleControls}
         toggleToc={toggleToc}
@@ -72,6 +80,7 @@ export function BookScreenConnected() {
 type BookScreenPropsBase = Themed & {
     controlsVisible: boolean,
     addHighlight: Callback<Highlight>,
+    removeHighlight: Callback<Highlight>,
     openRef: Callback<string>,
     setQuoteRange: Callback<BookRange | undefined>,
     updateCurrentPath: Callback<BookPath>,
@@ -138,6 +147,7 @@ function BookScreenReadyComp(props: BookScreenReadyProps) {
                         updateBookPosition={props.updateCurrentPath}
                         highlights={props.highlights}
                         addHighlight={props.addHighlight}
+                        removeHighlight={props.removeHighlight}
                         quoteRange={props.book.link.quote}
                         setQuoteRange={props.setQuoteRange}
                         openRef={props.openRef}

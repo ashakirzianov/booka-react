@@ -22,13 +22,14 @@ export type BookViewCompProps = Themed & {
     quoteRange: BookRange | undefined,
     highlights: Highlight[],
     addHighlight: Callback<Highlight>,
+    removeHighlight: Callback<Highlight>,
     setQuoteRange: Callback<BookRange | undefined>,
     openRef: Callback<string>,
 };
 export function BookViewComp({
     bookId, fragment, theme,
     pathToScroll, updateBookPosition,
-    highlights, addHighlight,
+    highlights, addHighlight, removeHighlight,
     quoteRange, setQuoteRange,
     openRef,
 }: BookViewCompProps) {
@@ -72,6 +73,7 @@ export function BookViewComp({
             bookId,
             range: selection.current?.range,
         })}
+        onRemoveHighlight={removeHighlight}
     >
         <AnchorLink
             theme={theme}

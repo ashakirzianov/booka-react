@@ -24,9 +24,13 @@ export type ContextMenuTarget =
     | EmptyTarget
     ;
 
-export function BookContextMenu({ children, target, onAddHighlight }: WithChildren<{
+export function BookContextMenu({
+    children, target,
+    onAddHighlight, onRemoveHighlight,
+}: WithChildren<{
     target: ContextMenuTarget,
     onAddHighlight: Callback<string>,
+    onRemoveHighlight: Callback<Highlight>,
 }>) {
     if (target.target === 'empty') {
         return <>{children}</>;
@@ -37,12 +41,12 @@ export function BookContextMenu({ children, target, onAddHighlight }: WithChildr
             style={{
                 display: 'inline-block',
             }}
-            event='onClick'
         >
             {children}
         </MenuProvider>
         <Menu id='book-menu'>
             <AddHighlightItem target={target} onAddHighlight={onAddHighlight} />
+            <RemoveHighlightItem target={target} onRemoveHighlight={onRemoveHighlight} />
         </Menu>
     </>;
 }
@@ -59,5 +63,20 @@ function AddHighlightItem({ target, onAddHighlight }: {
         onClick={() => onAddHighlight('main')}
     >
         Add highlight
+    </Item>;
+}
+
+function RemoveHighlightItem({ target, onRemoveHighlight }: {
+    target: ContextMenuTarget,
+    onRemoveHighlight: Callback<Highlight>,
+}) {
+    if (target.target !== 'highlight') {
+        return null;
+    }
+
+    return <Item
+        onClick={() => onRemoveHighlight(target.highlight)}
+    >
+        Remove highlight
     </Item>;
 }
