@@ -5,28 +5,40 @@ import 'react-contexify/dist/ReactContexify.min.css';
 
 import { WithChildren } from '../atoms';
 import { BookSelection } from '../reader';
-import { Callback } from 'booka-common';
+import { Callback, Highlight } from 'booka-common';
 
-type ContextMenuSelectionTarget = {
+type HighlightTarget = {
+    target: 'highlight',
+    highlight: Highlight,
+};
+type SelectionTarget = {
     target: 'selection',
     selection: BookSelection,
 };
-type ContextMenuEmptyTarget = {
+type EmptyTarget = {
     target: 'empty',
 };
 export type ContextMenuTarget =
-    | ContextMenuSelectionTarget
-    | ContextMenuEmptyTarget
+    | HighlightTarget
+    | SelectionTarget
+    | EmptyTarget
     ;
 
 export function BookContextMenu({ children, target, onAddHighlight }: WithChildren<{
     target: ContextMenuTarget,
     onAddHighlight: Callback<string>,
 }>) {
+    if (target.target === 'empty') {
+        return <>{children}</>;
+    }
     return <>
-        <MenuProvider id='book-menu' style={{
-            display: 'inline-block',
-        }}>
+        <MenuProvider
+            id='book-menu'
+            style={{
+                display: 'inline-block',
+            }}
+            event='onClick'
+        >
             {children}
         </MenuProvider>
         <Menu id='book-menu'>
