@@ -1,5 +1,5 @@
-import { of } from 'rxjs';
-import { withLatestFrom, map, mergeMap } from 'rxjs/operators';
+import { of, MonoTypeOperatorFunction } from 'rxjs';
+import { withLatestFrom, map, mergeMap, tap } from 'rxjs/operators';
 import { combineEpics } from 'redux-observable';
 import { AppEpic, AppAction } from './app';
 import { appAuth, ofAppType } from './utils';
@@ -7,28 +7,34 @@ import {
     getBookmarks, getHighlights, getCollections,
     sendAddBookmark, postHighlight, postAddToCollection,
 } from '../api';
+import { bookmarksReducer } from './bookmarks';
 
 const fetchBookmarksEpic: AppEpic = (action$, state$) => action$.pipe(
     ofAppType('book-open'),
     withLatestFrom(appAuth(state$)),
     mergeMap(
         ([action, token]) => getBookmarks(action.payload.bookId, token).pipe(
-            map((bookmarks): AppAction => ({
-                type: 'bookmarks-replace-all',
-                payload: {
-                    bookId: action.payload.bookId,
-                    bookmarks,
-                },
-            })),
+            map((bookmarks): AppAction => {
+                bookmarks = applyLocalChanges(bookmarks, bookmarksReducer);
+                return {
+                    type: 'bookmarks-replace-all',
+                    payload: {
+                        bookId: action.payload.bookId,
+                        bookmarks,
+                    },
+                };
+            }),
         ),
     ),
 );
 
 const postBookmarkEpic: AppEpic = (action$, state$) => action$.pipe(
     ofAppType('bookmarks-add'),
+    addLocalChange(),
     withLatestFrom(appAuth(state$)),
     mergeMap(
         ([action, token]) => sendAddBookmark(action.payload.bookmark, token).pipe(
+            removeLocalChange(action),
             map((result): AppAction => ({
                 type: 'bookmarks-replace-one',
                 payload: {
@@ -113,3 +119,21 @@ export const syncEpic = combineEpics(
     fetchBookmarksEpic, fetchHighlightsEpic, fetchCollectionsEpic,
     postBookmarkEpic, postHighlightEpic, postAddToCollectionEpic,
 );
+
+let locals: AppAction[] = [];
+function addLocalChange<A extends AppAction>() {
+    return tap<A>(
+        action => locals = [action, ...locals],
+    );
+}
+function removeLocalChange<T>(action: AppAction) {
+    return tap<T>(
+        () => locals = locals.filter(c => c !== action),
+    );
+}
+function applyLocalChanges<T>(state: T, reducer: (s: T, a: AppAction) => T) {
+    return locals.reduce(
+        reducer,
+        state,
+    );
+}
