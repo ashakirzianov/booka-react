@@ -1,4 +1,4 @@
-import { of, MonoTypeOperatorFunction } from 'rxjs';
+import { of } from 'rxjs';
 import { withLatestFrom, map, mergeMap, tap } from 'rxjs/operators';
 import { combineEpics } from 'redux-observable';
 import { AppEpic, AppAction } from './app';
@@ -8,6 +8,7 @@ import {
     sendAddBookmark, postHighlight, postAddToCollection,
 } from '../api';
 import { bookmarksReducer } from './bookmarks';
+import { highlightsReducer } from './highlights';
 
 const fetchBookmarksEpic: AppEpic = (action$, state$) => action$.pipe(
     ofAppType('book-open'),
@@ -55,22 +56,27 @@ const fetchHighlightsEpic: AppEpic = (action$, state$) => action$.pipe(
     withLatestFrom(appAuth(state$)),
     mergeMap(
         ([action, token]) => getHighlights(action.payload.bookId, token).pipe(
-            map((highlights): AppAction => ({
-                type: 'highlights-replace-all',
-                payload: {
-                    bookId: action.payload.bookId,
-                    highlights,
-                },
-            })),
+            map((highlights): AppAction => {
+                highlights = applyLocalChanges(highlights, highlightsReducer);
+                return {
+                    type: 'highlights-replace-all',
+                    payload: {
+                        bookId: action.payload.bookId,
+                        highlights,
+                    },
+                };
+            }),
         ),
     ),
 );
 
 const postHighlightEpic: AppEpic = (action$, state$) => action$.pipe(
     ofAppType('highlights-add'),
+    addLocalChange(),
     withLatestFrom(appAuth(state$)),
     mergeMap(
         ([action, token]) => postHighlight(action.payload.highlight, token).pipe(
+            removeLocalChange(action),
             map((result): AppAction => ({
                 type: 'highlights-replace-one',
                 payload: {
