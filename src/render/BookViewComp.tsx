@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     BookFragment, BookPath, BookRange,
-    Highlight, BookAnchor, pathLessThan,
+    Highlight, BookAnchor, doesRangeOverlap,
 } from 'booka-common';
 
 import {
@@ -134,17 +134,4 @@ function highlightsColorization(highlights: Highlight[], theme: Theme): Colorize
 function colorForGroup(group: string) {
     // TODO: implement
     return group;
-}
-
-// TODO: move to 'common'
-function doesRangeOverlap(r1: BookRange, r2: BookRange): boolean {
-    if (pathLessThan(r1.start, r2.start)) {
-        return r1.end
-            ? !pathLessThan(r1.end, r2.start)
-            : true;
-    } else {
-        return r2.end
-            ? !pathLessThan(r2.end, r1.start)
-            : true;
-    }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     assertNever, BookRange, positionForPath, BookPath,
-    Highlight, firstPath, uuid, Bookmark, samePath,
+    Highlight, firstPath, uuid, findBookmark,
 } from 'booka-common';
 
 import { BookState, BookReadyState } from '../ducks';
@@ -213,13 +213,6 @@ function AddBookmarkButton() {
             })}
         />;
     }
-}
-
-// TODO: move to 'common'
-function findBookmark(bookmarks: Bookmark[], bookId: string, path: BookPath): Bookmark | undefined {
-    return bookmarks.find(
-        b => b.bookId === bookId && samePath(b.path, path),
-    );
 }
 
 type LibButtonProps = Themed;

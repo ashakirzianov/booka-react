@@ -1,6 +1,7 @@
-import { CardCollections, CardCollectionName, LibraryCard } from 'booka-common';
+import {
+    CardCollections, CardCollectionName, LibraryCard, replaceOrAdd,
+} from 'booka-common';
 import { AppAction } from './app';
-import { replaceOrAdd } from './utils';
 
 export type CollectionsState = {
     collections: CardCollections,
