@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { Menu, Item, MenuProvider } from 'react-contexify';
 import 'react-contexify/dist/ReactContexify.min.css';
 
 import { WithChildren } from '../atoms';
 import { BookSelection } from '../reader';
-import { Callback, Highlight } from 'booka-common';
+import { Callback, Highlight, uuid } from 'booka-common';
+import { useAppDispatch, useAppSelector } from '../application';
 
 type HighlightTarget = {
     target: 'highlight',
@@ -26,12 +27,28 @@ export type ContextMenuTarget =
 
 export function BookContextMenu({
     children, target,
-    onAddHighlight, onRemoveHighlight,
 }: WithChildren<{
     target: ContextMenuTarget,
-    onAddHighlight: Callback<string>,
-    onRemoveHighlight: Callback<Highlight>,
 }>) {
+    const dispatch = useAppDispatch();
+    const bookId = useAppSelector(s => s.book.link.bookId);
+
+    const addHighlight = useCallback((highlight: Highlight) => dispatch({
+        type: 'highlights-add',
+        payload: { highlight },
+    }), [dispatch]);
+
+    const removeHighlight = useCallback((highlightId: string) => dispatch({
+        type: 'highlights-remove',
+        payload: { highlightId },
+    }), [dispatch]);
+    const setHighlightGroup = useCallback((highlightId: string, group: string) => dispatch({
+        type: 'highlights-set-group',
+        payload: {
+            highlightId, group,
+        },
+    }), [dispatch]);
+
     if (target.target === 'empty') {
         return <>{children}</>;
     }
@@ -45,61 +62,78 @@ export function BookContextMenu({
             {children}
         </MenuProvider>
         <Menu id='book-menu'>
-            <AddHighlightItem target={target} onAddHighlight={onAddHighlight} />
-            <RemoveHighlightItem target={target} onRemoveHighlight={onRemoveHighlight} />
+            <AddHighlightItem
+                target={target}
+                bookId={bookId}
+                addHighlight={addHighlight}
+            />
+            <RemoveHighlightItem
+                target={target}
+                removeHighlight={removeHighlight}
+            />
             <SetHighlightGroupItem target={target} group='green'
-                onSetGroup={() => undefined} />
+                setHighlightGroup={setHighlightGroup} />
             <SetHighlightGroupItem target={target} group='red'
-                onSetGroup={() => undefined} />
+                setHighlightGroup={setHighlightGroup} />
             <SetHighlightGroupItem target={target} group='yellow'
-                onSetGroup={() => undefined} />
+                setHighlightGroup={setHighlightGroup} />
         </Menu>
     </>;
 }
 
-function AddHighlightItem({ target, onAddHighlight }: {
+function AddHighlightItem({
+    target, bookId, addHighlight,
+}: {
     target: ContextMenuTarget,
-    onAddHighlight: Callback<string>,
+    bookId: string,
+    addHighlight: Callback<Highlight>,
 }) {
     if (target.target !== 'selection') {
         return null;
     }
 
     return <Item
-        onClick={() => onAddHighlight('main')}
+        onClick={() => addHighlight({
+            entity: 'highlight',
+            _id: uuid(),
+            group: 'green',
+            bookId, range: target.selection.range,
+        })}
     >
         Add highlight
     </Item>;
 }
 
-function RemoveHighlightItem({ target, onRemoveHighlight }: {
+function RemoveHighlightItem({
+    target, removeHighlight,
+}: {
     target: ContextMenuTarget,
-    onRemoveHighlight: Callback<Highlight>,
+    removeHighlight: Callback<string>,
 }) {
     if (target.target !== 'highlight') {
         return null;
     }
 
     return <Item
-        onClick={() => onRemoveHighlight(target.highlight)}
+        onClick={() => removeHighlight(target.highlight._id)}
     >
         Remove highlight
     </Item>;
 }
 
 function SetHighlightGroupItem({
-    target, group, onSetGroup,
+    target, group, setHighlightGroup,
 }: {
     target: ContextMenuTarget,
     group: string,
-    onSetGroup: Callback<string>,
+    setHighlightGroup: (id: string, group: string) => void,
 }) {
     if (target.target !== 'highlight' || target.highlight.group === group) {
         return null;
     }
 
     return <Item
-        onClick={() => onSetGroup(group)}
+        onClick={() => setHighlightGroup(target.highlight._id, group)}
     >
         Make highlight {group}
     </Item>;

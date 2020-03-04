@@ -49,18 +49,6 @@ export function BookScreenConnected() {
             link: 'book', bookId, refId,
         },
     }), [dispatch, bookId]);
-    const addHighlight = React.useCallback((highlight: Highlight) => dispatch({
-        type: 'highlights-add',
-        payload: {
-            highlight,
-        },
-    }), [dispatch]);
-    const removeHighlight = React.useCallback((highlight: Highlight) => dispatch({
-        type: 'highlights-remove',
-        payload: {
-            highlightId: highlight._id,
-        },
-    }), [dispatch]);
 
     return <BookScreenComp
         theme={theme}
@@ -68,8 +56,6 @@ export function BookScreenConnected() {
         highlights={highlights}
         controlsVisible={controlsVisible}
         updateCurrentPath={updateCurrentPath}
-        addHighlight={addHighlight}
-        removeHighlight={removeHighlight}
         setQuoteRange={setQuoteRange}
         toggleControls={toggleControls}
         toggleToc={toggleToc}
@@ -79,8 +65,6 @@ export function BookScreenConnected() {
 
 type BookScreenPropsBase = Themed & {
     controlsVisible: boolean,
-    addHighlight: Callback<Highlight>,
-    removeHighlight: Callback<Highlight>,
     openRef: Callback<string>,
     setQuoteRange: Callback<BookRange | undefined>,
     updateCurrentPath: Callback<BookPath>,
@@ -146,8 +130,6 @@ function BookScreenReadyComp(props: BookScreenReadyProps) {
                         pathToScroll={pathToScroll}
                         updateBookPosition={props.updateCurrentPath}
                         highlights={props.highlights}
-                        addHighlight={props.addHighlight}
-                        removeHighlight={props.removeHighlight}
                         quoteRange={props.book.link.quote}
                         setQuoteRange={props.setQuoteRange}
                         openRef={props.openRef}

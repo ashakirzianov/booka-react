@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     BookFragment, BookPath, BookRange,
-    Highlight, BookAnchor, uuid, pathLessThan,
+    Highlight, BookAnchor, pathLessThan,
 } from 'booka-common';
 
 import {
@@ -21,15 +21,13 @@ export type BookViewCompProps = Themed & {
     updateBookPosition: Callback<BookPath>,
     quoteRange: BookRange | undefined,
     highlights: Highlight[],
-    addHighlight: Callback<Highlight>,
-    removeHighlight: Callback<Highlight>,
     setQuoteRange: Callback<BookRange | undefined>,
     openRef: Callback<string>,
 };
 export function BookViewComp({
     bookId, fragment, theme,
     pathToScroll, updateBookPosition,
-    highlights, addHighlight, removeHighlight,
+    highlights,
     quoteRange, setQuoteRange,
     openRef,
 }: BookViewCompProps) {
@@ -65,15 +63,6 @@ export function BookViewComp({
 
     return <BookContextMenu
         target={menuTarget}
-        onAddHighlight={group => selection.current && addHighlight({
-            entity: 'highlight',
-            _id: uuid(),
-            local: true,
-            group,
-            bookId,
-            range: selection.current?.range,
-        })}
-        onRemoveHighlight={removeHighlight}
     >
         <AnchorLink
             theme={theme}
@@ -144,7 +133,7 @@ function highlightsColorization(highlights: Highlight[], theme: Theme): Colorize
 
 function colorForGroup(group: string) {
     // TODO: implement
-    return 'green';
+    return group;
 }
 
 // TODO: move to 'common'
