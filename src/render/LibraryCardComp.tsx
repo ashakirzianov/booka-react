@@ -10,7 +10,7 @@ export function LibraryCardConnected() {
     const theme = useTheme();
     const showCard = useAppSelector(s => s.library.show);
     const collections = useAppSelector(s => s.collections.collections);
-    const readingListCard = collections['reading-list']?.cards ?? [];
+    const readingListCards = collections['reading-list'] ?? [];
 
     const closeCard = React.useCallback(() => dispatch({
         type: 'card-close',
@@ -40,7 +40,7 @@ export function LibraryCardConnected() {
         return <LibraryCardModal
             theme={theme}
             card={showCard}
-            readingListCards={readingListCard}
+            readingListCards={readingListCards}
             toggleCard={closeCard}
             readFromStart={readFromStart}
             addToReadingList={addToReadingList}
