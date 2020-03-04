@@ -1,5 +1,5 @@
 import { of } from 'rxjs';
-import { withLatestFrom, map, mergeMap, tap, skipWhile } from 'rxjs/operators';
+import { withLatestFrom, map, mergeMap, tap } from 'rxjs/operators';
 import { combineEpics } from 'redux-observable';
 import { AppEpic, AppAction } from './app';
 import { appAuth, ofAppType } from './utils';

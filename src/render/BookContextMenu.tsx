@@ -47,6 +47,12 @@ export function BookContextMenu({
         <Menu id='book-menu'>
             <AddHighlightItem target={target} onAddHighlight={onAddHighlight} />
             <RemoveHighlightItem target={target} onRemoveHighlight={onRemoveHighlight} />
+            <SetHighlightGroupItem target={target} group='green'
+                onSetGroup={() => undefined} />
+            <SetHighlightGroupItem target={target} group='red'
+                onSetGroup={() => undefined} />
+            <SetHighlightGroupItem target={target} group='yellow'
+                onSetGroup={() => undefined} />
         </Menu>
     </>;
 }
@@ -78,5 +84,23 @@ function RemoveHighlightItem({ target, onRemoveHighlight }: {
         onClick={() => onRemoveHighlight(target.highlight)}
     >
         Remove highlight
+    </Item>;
+}
+
+function SetHighlightGroupItem({
+    target, group, onSetGroup,
+}: {
+    target: ContextMenuTarget,
+    group: string,
+    onSetGroup: Callback<string>,
+}) {
+    if (target.target !== 'highlight' || target.highlight.group === group) {
+        return null;
+    }
+
+    return <Item
+        onClick={() => onSetGroup(group)}
+    >
+        Make highlight {group}
     </Item>;
 }
