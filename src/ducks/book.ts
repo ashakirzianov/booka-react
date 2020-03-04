@@ -2,7 +2,7 @@ import { of } from 'rxjs';
 import { map, mergeMap, catchError } from 'rxjs/operators';
 import { combineEpics } from 'redux-observable';
 import {
-    BookFragment, BookRange, BookPath,
+    BookFragment, BookRange, BookPath, LibraryCard,
 } from 'booka-common';
 import { BookLink } from '../core';
 import { openLink } from '../api';
@@ -19,6 +19,7 @@ export type BookErrorState = BookStateBase<'error'>;
 export type BookLoadingState = BookStateBase<'loading'>;
 export type BookReadyState = BookStateBase<'ready'> & {
     fragment: BookFragment,
+    card: LibraryCard,
 };
 export type BookState =
     | BookReadyState
@@ -35,6 +36,7 @@ type BookFetchFulfilledAction = {
     payload: {
         link: BookLink,
         fragment: BookFragment,
+        card: LibraryCard,
     },
 };
 type BookFetchRejectedAction = {
@@ -82,6 +84,7 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
                 state: 'ready',
                 link: action.payload.link,
                 fragment: action.payload.fragment,
+                card: action.payload.card,
                 showControls: true,
                 needToScroll: true,
             };
@@ -128,10 +131,10 @@ const fetchBookFragmentEpic: AppEpic = (action$) => action$.pipe(
     ofAppType('book-open'),
     mergeMap(
         action => openLink(action.payload).pipe(
-            map(({ fragment, link }): AppAction => ({
+            map(({ fragment, card, link }): AppAction => ({
                 type: 'book-fetch-fulfilled',
                 payload: {
-                    fragment, link,
+                    fragment, link, card,
                 },
             })),
             catchError(() => {
