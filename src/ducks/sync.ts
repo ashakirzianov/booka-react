@@ -114,15 +114,10 @@ const fetchCollectionsEpic: AppEpic = (action$, state$) => action$.pipe(
     mergeMap(
         ([_, token]) => getCollections(token).pipe(
             map((collections): AppAction => {
-                const withLocals = applyLocalChanges<CollectionsState>({
-                    collections: collections.reduce(
-                        (res, col) => ({
-                            ...res,
-                            [col.name]: col,
-                        }),
-                        {},
-                    ),
-                }, collectionsReducer);
+                const withLocals = applyLocalChanges<CollectionsState>(
+                    { collections },
+                    collectionsReducer,
+                );
                 return {
                     type: 'collections-replace-all',
                     payload: withLocals.collections,
