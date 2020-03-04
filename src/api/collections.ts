@@ -21,3 +21,12 @@ export function postAddToCollection(bookId: string, collection: CardCollectionNa
         auth: token.token,
     });
 }
+
+export function postRemoveFromCollection(bookId: string, collection: CardCollectionName, token: AuthToken) {
+    return back.delete('/collections', {
+        query: {
+            bookId, collection,
+        },
+        auth: token.token,
+    });
+}

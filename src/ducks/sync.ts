@@ -4,8 +4,9 @@ import { combineEpics } from 'redux-observable';
 import { AppEpic, AppAction } from './app';
 import { appAuth, ofAppType } from './utils';
 import {
-    getBookmarks, getHighlights, getCollections,
-    sendAddBookmark, postHighlight, postAddToCollection, postHighlightUpdate,
+    getBookmarks, sendAddBookmark,
+    getHighlights, postHighlight, postHighlightUpdate,
+    getCollections, postAddToCollection, postRemoveFromCollection,
 } from '../api';
 import { bookmarksReducer } from './bookmarks';
 import { highlightsReducer } from './highlights';
@@ -131,10 +132,22 @@ const postAddToCollectionEpic: AppEpic = (action$, state$) => action$.pipe(
     ),
 );
 
+const postRemoveFromCollectionEpic: AppEpic = (action$, state$) => action$.pipe(
+    ofAppType('collections-remove-card'),
+    addLocalChange(),
+    withLatestFrom(appAuth(state$)),
+    mergeMap(
+        ([action, token]) => postRemoveFromCollection(action.payload.card.id, action.payload.collection, token).pipe(
+            removeLocalChange(action),
+            produceNoAction(),
+        ),
+    ),
+);
+
 export const syncEpic = combineEpics(
     fetchBookmarksEpic, postBookmarkEpic,
     fetchHighlightsEpic, postHighlightEpic, postSetHighlightGroupEpic,
-    fetchCollectionsEpic, postAddToCollectionEpic,
+    fetchCollectionsEpic, postAddToCollectionEpic, postRemoveFromCollectionEpic,
 );
 
 function produceNoAction() {
