@@ -1,21 +1,25 @@
 import React from 'react';
 
-import { LibraryCard, Callback } from 'booka-common';
+import { LibraryCard, Callback, BookPath, getLocationsData, ResolvedCurrentPosition } from 'booka-common';
 import { BookCoverComp, Column, Modal, Themed, navigate } from '../atoms';
 import { useTheme, useAppDispatch, useAppSelector } from '../application';
 import { linkToString } from '../core';
 
 export function LibraryCardConnected() {
     const dispatch = useAppDispatch();
+    const theme = useTheme();
     const showCard = useAppSelector(s => s.library.show);
+    const collections = useAppSelector(s => s.collections.collections);
+    const { positions } = useAppSelector(s => s.currentPositions);
+    const readingListCards = collections['reading-list'] ?? [];
 
     const closeCard = React.useCallback(() => dispatch({
         type: 'card-close',
     }), [dispatch]);
 
-    const readFromStart = React.useCallback((bookId: string) => navigate(linkToString({
+    const readFromPath = React.useCallback((bookId: string, path?: BookPath) => navigate(linkToString({
         link: 'book',
-        bookId,
+        bookId, path,
     })), []);
 
     const addToReadingList = React.useCallback((card: LibraryCard) => dispatch({
@@ -25,31 +29,49 @@ export function LibraryCardConnected() {
             card,
         },
     }), [dispatch]);
+    const removeFromReadingList = React.useCallback((card: LibraryCard) => dispatch({
+        type: 'collections-remove-card',
+        payload: {
+            collection: 'reading-list',
+            card,
+        },
+    }), [dispatch]);
 
-    const theme = useTheme();
+    const currentPosition = positions.find(
+        p => p.card.id === showCard?.id
+    );
 
     if (showCard) {
         return <LibraryCardModal
             theme={theme}
             card={showCard}
+            readingListCards={readingListCards}
+            currentPosition={currentPosition}
             toggleCard={closeCard}
-            readFromStart={readFromStart}
+            readFromPath={readFromPath}
             addToReadingList={addToReadingList}
+            removeFromReadingList={removeFromReadingList}
         />;
     } else {
         return null;
     }
 }
 
-type LibraryCardProps = Themed & {
-    card: LibraryCard,
-    toggleCard: Callback,
-    readFromStart: Callback<string>,
-    addToReadingList: Callback<LibraryCard>,
-};
 function LibraryCardModal({
-    theme, toggleCard, card, readFromStart, addToReadingList,
-}: LibraryCardProps) {
+    theme, toggleCard, card, readingListCards, currentPosition,
+    readFromPath, removeFromReadingList, addToReadingList,
+}: Themed & {
+    card: LibraryCard,
+    readingListCards: LibraryCard[],
+    currentPosition: ResolvedCurrentPosition | undefined,
+    toggleCard: Callback,
+    readFromPath: (bookId: string, path?: BookPath) => void,
+    addToReadingList: Callback<LibraryCard>,
+    removeFromReadingList: Callback<LibraryCard>,
+}) {
+    const isInReadingList = readingListCards.find(c => c.id === card.id) !== undefined;
+    const locationsData = currentPosition && getLocationsData(currentPosition);
+    const continueReadPosition = locationsData?.mostRecent;
     return <Modal
         theme={theme}
         toggle={toggleCard}
@@ -58,8 +80,18 @@ function LibraryCardModal({
         <Column>
             <BookCoverComp {...card} />
             <span>{card.title}</span>
-            <span onClick={() => readFromStart(card.id)}>Read</span>
-            <span onClick={() => addToReadingList(card)}>Add to reading list</span>
+            <span onClick={() => readFromPath(card.id)}>Read from start</span>
+            {
+                continueReadPosition
+                    ? <span onClick={() => readFromPath(card.id, continueReadPosition.path)}>Continue reading</span>
+                    : null
+            }
+            {
+                !isInReadingList
+                    ? <span onClick={() => addToReadingList(card)}>Add to reading list</span>
+                    : <span onClick={() => removeFromReadingList(card)}>Remove from reading list</span>
+            }
+
         </Column>
     </Modal>;
 }

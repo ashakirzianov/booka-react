@@ -4,8 +4,10 @@ import { combineEpics } from 'redux-observable';
 import { AppEpic, AppAction } from './app';
 import { appAuth, ofAppType } from './utils';
 import {
-    getBookmarks, getHighlights, getCollections,
-    sendAddBookmark, postHighlight, postAddToCollection,
+    getBookmarks, sendAddBookmark,
+    getHighlights, postHighlight, postHighlightUpdate,
+    getCollections, postAddToCollection, postRemoveFromCollection,
+    sendCurrentPathUpdate,
 } from '../api';
 import { bookmarksReducer } from './bookmarks';
 import { highlightsReducer } from './highlights';
@@ -41,11 +43,7 @@ const postBookmarkEpic: AppEpic = (action$, state$) => action$.pipe(
                 type: 'bookmarks-replace-one',
                 payload: {
                     replaceId: action.payload.bookmark._id,
-                    bookmark: {
-                        ...action.payload.bookmark,
-                        local: undefined,
-                        _id: result.value._id,
-                    },
+                    bookmark: result.value,
                 },
             })),
         ),
@@ -82,13 +80,24 @@ const postHighlightEpic: AppEpic = (action$, state$) => action$.pipe(
                 type: 'highlights-replace-one',
                 payload: {
                     replaceId: action.payload.highlight._id,
-                    highlight: {
-                        ...action.payload.highlight,
-                        local: undefined,
-                        _id: result.value._id,
-                    },
+                    highlight: result.value,
                 },
             })),
+        ),
+    ),
+);
+
+const postSetHighlightGroupEpic: AppEpic = (action$, state$) => action$.pipe(
+    ofAppType('highlights-set-group'),
+    addLocalChange(),
+    withLatestFrom(appAuth(state$)),
+    mergeMap(
+        ([action, token]) => postHighlightUpdate({
+            _id: action.payload.highlightId,
+            group: action.payload.group,
+        }, token).pipe(
+            removeLocalChange(action),
+            produceNoAction(),
         ),
     ),
 );
@@ -99,15 +108,10 @@ const fetchCollectionsEpic: AppEpic = (action$, state$) => action$.pipe(
     mergeMap(
         ([_, token]) => getCollections(token).pipe(
             map((collections): AppAction => {
-                const withLocals = applyLocalChanges<CollectionsState>({
-                    collections: collections.reduce(
-                        (res, col) => ({
-                            ...res,
-                            [col.name]: col,
-                        }),
-                        {},
-                    ),
-                }, collectionsReducer);
+                const withLocals = applyLocalChanges<CollectionsState>(
+                    { collections },
+                    collectionsReducer,
+                );
                 return {
                     type: 'collections-replace-all',
                     payload: withLocals.collections,
@@ -124,15 +128,52 @@ const postAddToCollectionEpic: AppEpic = (action$, state$) => action$.pipe(
     mergeMap(
         ([action, token]) => postAddToCollection(action.payload.card.id, action.payload.collection, token).pipe(
             removeLocalChange(action),
-            mergeMap(() => of<AppAction>()),
+            produceNoAction(),
+        ),
+    ),
+);
+
+const postRemoveFromCollectionEpic: AppEpic = (action$, state$) => action$.pipe(
+    ofAppType('collections-remove-card'),
+    addLocalChange(),
+    withLatestFrom(appAuth(state$)),
+    mergeMap(
+        ([action, token]) => postRemoveFromCollection(action.payload.card.id, action.payload.collection, token).pipe(
+            removeLocalChange(action),
+            produceNoAction(),
+        ),
+    ),
+);
+
+const postUpdateCurrentPositionEpic: AppEpic = (action$, state$) => action$.pipe(
+    ofAppType('book-update-path'),
+    addLocalChange(),
+    withLatestFrom(appAuth(state$)),
+    mergeMap(
+        ([action, token]) => sendCurrentPathUpdate({
+            token,
+            bookId: action.payload.card.id,
+            path: action.payload.path,
+            // TODO: implement
+            source: 'not-implemented',
+        }).pipe(
+            removeLocalChange(action),
+            produceNoAction(),
         ),
     ),
 );
 
 export const syncEpic = combineEpics(
-    fetchBookmarksEpic, fetchHighlightsEpic, fetchCollectionsEpic,
-    postBookmarkEpic, postHighlightEpic, postAddToCollectionEpic,
+    fetchBookmarksEpic, postBookmarkEpic,
+    fetchHighlightsEpic, postHighlightEpic, postSetHighlightGroupEpic,
+    fetchCollectionsEpic, postAddToCollectionEpic, postRemoveFromCollectionEpic,
+    postUpdateCurrentPositionEpic,
 );
+
+function produceNoAction() {
+    // TODO: find better solution to ignore ?
+    return mergeMap(() => of<AppAction>());
+}
 
 let locals: AppAction[] = [];
 function addLocalChange<A extends AppAction>() {

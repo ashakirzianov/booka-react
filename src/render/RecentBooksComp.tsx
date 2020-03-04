@@ -1,5 +1,7 @@
 import React from 'react';
-import { pathLessThan, BookPath, ResolvedCurrentPosition } from 'booka-common';
+import {
+    getLocationsData, BookPath, ResolvedCurrentPosition,
+} from 'booka-common';
 import { linkToString, BookLink } from '../core';
 import { CurrentPositionsState } from '../ducks';
 import { useTheme, useAppSelector } from '../application';
@@ -26,9 +28,9 @@ type RecentBooksProps = Themed & {
 };
 function RecentBooksComp({ state, onBookNavigate }: RecentBooksProps) {
     return <Column>
-        <span key='label'>Recent books: {state.length}</span>
+        <span key='label'>Recent books: {state.positions.length}</span>
         {
-            state.map((recentBook, idx) => {
+            state.positions.map((recentBook, idx) => {
                 return <CurrentBookComp
                     key={idx}
                     currentPosition={recentBook}
@@ -43,12 +45,12 @@ function CurrentBookComp({ currentPosition: recentBook, onBookNavigate, }: {
     currentPosition: ResolvedCurrentPosition,
     onBookNavigate: Callback<BookLink>,
 }) {
-    if (recentBook.locations.length === 0) {
+    const data = getLocationsData(recentBook);
+    if (!data) {
         return null;
     }
-    const mostRecent = getMostRecentLocation(recentBook.locations);
-    const farthest = getFarthestLocation(recentBook.locations);
-    if (mostRecent === farthest) {
+    const { mostRecent, furthest } = data;
+    if (mostRecent === furthest) {
         return <Column>
             <span>Title: {recentBook.card.title}</span>
             <span>Recent and furthest</span>
@@ -74,31 +76,16 @@ function CurrentBookComp({ currentPosition: recentBook, onBookNavigate, }: {
                 Continue
             </NavigationLink>
             <span>Furthest</span>
-            <span>{farthest.preview?.substr(0, 300)}</span>
+            <span>{furthest.preview?.substr(0, 300)}</span>
             <NavigationLink
                 bookId={recentBook.card.id}
-                path={farthest.path}
+                path={furthest.path}
                 onBookNavigate={onBookNavigate}
             >
                 Continue
             </NavigationLink>
         </Column>;
     }
-}
-
-type RecentBookLocation = ResolvedCurrentPosition['locations'][0];
-function getMostRecentLocation(rbls: RecentBookLocation[]): RecentBookLocation {
-    return rbls.reduce(
-        (last, curr) =>
-            curr.created > last.created ? curr : last
-    );
-}
-
-function getFarthestLocation(rbls: RecentBookLocation[]): RecentBookLocation {
-    return rbls.reduce(
-        (farthest, curr) =>
-            pathLessThan(farthest.path, curr.path) ? curr : farthest
-    );
 }
 
 function NavigationLink({ bookId, path, onBookNavigate, children }: WithChildren<{

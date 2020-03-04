@@ -1,11 +1,7 @@
-import { CardCollection, CardCollectionName, LibraryCard } from 'booka-common';
+import {
+    CardCollections, CardCollectionName, LibraryCard, replaceOrAdd,
+} from 'booka-common';
 import { AppAction } from './app';
-import { replaceOrAdd } from './utils';
-
-// TODO: move to 'common'
-export type CardCollections = {
-    [n in CardCollectionName]?: CardCollection;
-};
 
 export type CollectionsState = {
     collections: CardCollections,
@@ -45,14 +41,11 @@ export function collectionsReducer(state: CollectionsState = initial, action: Ap
                 ...state,
                 collections: {
                     ...state.collections,
-                    [action.payload.collection]: {
-                        name: action.payload.collection,
-                        cards: replaceOrAdd(
-                            state.collections[action.payload.collection]?.cards ?? [],
-                            c => c.id === action.payload.card.id,
-                            action.payload.card,
-                        ),
-                    },
+                    [action.payload.collection]: replaceOrAdd(
+                        state.collections[action.payload.collection] ?? [],
+                        c => c.id === action.payload.card.id,
+                        action.payload.card,
+                    ),
                 },
             };
         case 'collections-remove-card':
@@ -60,11 +53,8 @@ export function collectionsReducer(state: CollectionsState = initial, action: Ap
                 ...state,
                 collections: {
                     ...state.collections,
-                    [action.payload.collection]: {
-                        name: action.payload.collection,
-                        cards: (state.collections[action.payload.collection]?.cards ?? [])
-                            .filter(c => c.id !== action.payload.card.id),
-                    },
+                    [action.payload.collection]: (state.collections[action.payload.collection] ?? [])
+                        .filter(c => c.id !== action.payload.card.id),
                 },
             };
         case 'collections-replace-all':

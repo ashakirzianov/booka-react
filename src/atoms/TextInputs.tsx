@@ -4,13 +4,17 @@ import { Callback } from 'booka-common';
 export type SearchBoxProps = {
     placeholder?: string,
     onSearch: Callback<string>,
-    onClear?: Callback,
+    onClear: Callback,
 };
-export function SearchBox({ onSearch }: SearchBoxProps) {
+export function SearchBox({ onSearch, onClear }: SearchBoxProps) {
     return <input
         type='text'
         onChange={event => {
-            onSearch(event.target.value);
+            if (event.target.value) {
+                onSearch(event.target.value);
+            } else {
+                onClear();
+            }
         }}
     />;
 }

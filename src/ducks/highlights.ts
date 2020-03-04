@@ -15,6 +15,13 @@ type HighlightsRemoveAction = {
         highlightId: string,
     },
 };
+type HighlightsSetGroupAction = {
+    type: 'highlights-set-group',
+    payload: {
+        highlightId: string,
+        group: string,
+    },
+};
 type HighlightsReplaceAllAction = {
     type: 'highlights-replace-all',
     payload: {
@@ -32,6 +39,7 @@ type HighlightsReplaceOneAction = {
 export type HighlightsAction =
     | HighlightsAddAction | HighlightsRemoveAction
     | HighlightsReplaceAllAction | HighlightsReplaceOneAction
+    | HighlightsSetGroupAction
     ;
 
 const defaultState: HighlightsState = [];
@@ -41,6 +49,12 @@ export function highlightsReducer(state: HighlightsState = defaultState, action:
             return [action.payload.highlight, ...state];
         case 'highlights-remove':
             return state.filter(h => h._id !== action.payload.highlightId);
+        case 'highlights-set-group':
+            return state.map(
+                h => h._id === action.payload.highlightId
+                    ? { ...h, group: action.payload.group }
+                    : h
+            );
         case 'highlights-replace-one':
             return state.map(h =>
                 h._id === action.payload.replaceId

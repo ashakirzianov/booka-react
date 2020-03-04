@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     BookFragment, BookPath, BookRange,
-    Highlight, BookAnchor, uuid,
+    Highlight, BookAnchor, doesRangeOverlap,
 } from 'booka-common';
 
 import {
@@ -21,14 +21,13 @@ export type BookViewCompProps = Themed & {
     updateBookPosition: Callback<BookPath>,
     quoteRange: BookRange | undefined,
     highlights: Highlight[],
-    addHighlight: Callback<Highlight>,
     setQuoteRange: Callback<BookRange | undefined>,
     openRef: Callback<string>,
 };
 export function BookViewComp({
     bookId, fragment, theme,
     pathToScroll, updateBookPosition,
-    highlights, addHighlight,
+    highlights,
     quoteRange, setQuoteRange,
     openRef,
 }: BookViewCompProps) {
@@ -49,20 +48,21 @@ export function BookViewComp({
         .concat(highlightsColorization(highlights, theme))
         ;
 
+    const currentSelection = selection.current;
+    const selectedHighlight = currentSelection !== undefined
+        ? highlights.find(h => doesRangeOverlap(h.range, currentSelection.range))
+        : undefined;
+
     const menuTarget: ContextMenuTarget = selection.current
-        ? { target: 'selection', selection: selection.current }
+        ? (
+            selectedHighlight
+                ? { target: 'highlight', highlight: selectedHighlight }
+                : { target: 'selection', selection: selection.current }
+        )
         : { target: 'empty' };
 
     return <BookContextMenu
         target={menuTarget}
-        onAddHighlight={group => selection.current && addHighlight({
-            entity: 'highlight',
-            _id: uuid(),
-            local: true,
-            group,
-            bookId,
-            range: selection.current?.range,
-        })}
     >
         <AnchorLink
             theme={theme}
@@ -133,5 +133,5 @@ function highlightsColorization(highlights: Highlight[], theme: Theme): Colorize
 
 function colorForGroup(group: string) {
     // TODO: implement
-    return 'green';
+    return group;
 }

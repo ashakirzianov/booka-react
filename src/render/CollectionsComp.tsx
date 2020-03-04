@@ -1,9 +1,8 @@
 import React from 'react';
-import { CardCollection, Callback, LibraryCard } from 'booka-common';
+import { CardCollections, Callback, LibraryCard } from 'booka-common';
 import { Column, BookListComp, Themed } from '../atoms';
 
 import { useAppDispatch, useTheme, useAppSelector } from '../application';
-import { CardCollections } from '../ducks';
 
 export function CollectionsConnected() {
     const dispatch = useAppDispatch();
@@ -33,25 +32,25 @@ function CollectionsComp({ collections, openCard, theme }: Themed & {
         <CardCollectionComp
             theme={theme}
             displayName='Reading List'
-            collection={readingList}
+            cards={readingList}
             openCard={openCard}
         />
     </Column>;
 }
 
-function CardCollectionComp({ collection, displayName, openCard }: Themed & {
-    collection: CardCollection | undefined,
+function CardCollectionComp({ cards, displayName, openCard }: Themed & {
+    cards: LibraryCard[] | undefined,
     displayName: string,
     openCard: Callback<LibraryCard>,
 }) {
-    if (!collection?.cards?.length) {
+    if (!cards?.length) {
         return null;
     }
 
     return <Column>
         <span>{displayName}</span>
         <BookListComp
-            books={collection.cards}
+            books={cards}
             onClick={openCard}
         />
     </Column>;

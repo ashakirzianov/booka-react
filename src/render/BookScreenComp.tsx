@@ -1,7 +1,8 @@
 import React from 'react';
 import {
     assertNever, BookRange, positionForPath, BookPath,
-    Highlight, firstPath, uuid, Bookmark, samePath,
+    Highlight, firstPath, uuid,
+    findBookmark, fragmentPreviewForPath,
 } from 'booka-common';
 
 import { BookState, BookReadyState } from '../ducks';
@@ -18,6 +19,7 @@ import { TableOfContentsComp } from './TableOfContentsComp';
 import { ConnectedAccountButton } from './AccountButton';
 import { FullScreenActivityIndicator } from '../atoms/Basics.native';
 
+// TODO: refactor: do not pass so many props
 export function BookScreenConnected() {
     const dispatch = useAppDispatch();
 
@@ -32,10 +34,18 @@ export function BookScreenConnected() {
         type: 'book-set-quote',
         payload: range,
     }), [dispatch]);
-    const updateCurrentPath = React.useCallback((path: BookPath) => dispatch({
-        type: 'book-update-path',
-        payload: path,
-    }), [dispatch]);
+    const updateCurrentPath = React.useCallback((path: BookPath) => {
+        if (book.state === 'ready') {
+            const preview = fragmentPreviewForPath(book.fragment, path);
+            dispatch({
+                type: 'book-update-path',
+                payload: {
+                    path, preview,
+                    card: book.card,
+                },
+            });
+        }
+    }, [dispatch, book]);
     const toggleControls = React.useCallback(() => dispatch({
         type: 'book-toggle-controls',
     }), [dispatch]);
@@ -48,12 +58,6 @@ export function BookScreenConnected() {
             link: 'book', bookId, refId,
         },
     }), [dispatch, bookId]);
-    const addHighlight = React.useCallback((highlight: Highlight) => dispatch({
-        type: 'highlights-add',
-        payload: {
-            highlight,
-        },
-    }), [dispatch]);
 
     return <BookScreenComp
         theme={theme}
@@ -61,7 +65,6 @@ export function BookScreenConnected() {
         highlights={highlights}
         controlsVisible={controlsVisible}
         updateCurrentPath={updateCurrentPath}
-        addHighlight={addHighlight}
         setQuoteRange={setQuoteRange}
         toggleControls={toggleControls}
         toggleToc={toggleToc}
@@ -71,7 +74,6 @@ export function BookScreenConnected() {
 
 type BookScreenPropsBase = Themed & {
     controlsVisible: boolean,
-    addHighlight: Callback<Highlight>,
     openRef: Callback<string>,
     setQuoteRange: Callback<BookRange | undefined>,
     updateCurrentPath: Callback<BookPath>,
@@ -137,7 +139,6 @@ function BookScreenReadyComp(props: BookScreenReadyProps) {
                         pathToScroll={pathToScroll}
                         updateBookPosition={props.updateCurrentPath}
                         highlights={props.highlights}
-                        addHighlight={props.addHighlight}
                         quoteRange={props.book.link.quote}
                         setQuoteRange={props.setQuoteRange}
                         openRef={props.openRef}
@@ -221,13 +222,6 @@ function AddBookmarkButton() {
             })}
         />;
     }
-}
-
-// TODO: move to 'common'
-function findBookmark(bookmarks: Bookmark[], bookId: string, path: BookPath): Bookmark | undefined {
-    return bookmarks.find(
-        b => b.bookId === bookId && samePath(b.path, path),
-    );
 }
 
 type LibButtonProps = Themed;

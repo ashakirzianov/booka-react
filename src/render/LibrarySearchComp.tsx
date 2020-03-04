@@ -34,16 +34,17 @@ export function LibrarySearchConnected() {
     />;
 }
 
-function LibrarySearchComp({ searchState, onSearch, onSelectBook, }: Themed & {
+function LibrarySearchComp({ searchState, onSearch, onSelectBook, onClear, }: Themed & {
     onSearch: Callback<string>,
     onSelectBook: Callback<LibraryCard>,
-    onClear?: Callback,
+    onClear: Callback,
     searchState: SearchState,
 }) {
     return <Column>
         <LibraryCardConnected />
         <SearchBox
             onSearch={onSearch}
+            onClear={onClear}
         />
         <SearchStateComp
             state={searchState}
