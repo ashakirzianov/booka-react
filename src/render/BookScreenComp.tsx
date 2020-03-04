@@ -1,7 +1,8 @@
 import React from 'react';
 import {
     assertNever, BookRange, positionForPath, BookPath,
-    Highlight, firstPath, uuid, findBookmark,
+    Highlight, firstPath, uuid,
+    findBookmark, fragmentPreviewForPath,
 } from 'booka-common';
 
 import { BookState, BookReadyState } from '../ducks';
@@ -33,10 +34,18 @@ export function BookScreenConnected() {
         type: 'book-set-quote',
         payload: range,
     }), [dispatch]);
-    const updateCurrentPath = React.useCallback((path: BookPath) => dispatch({
-        type: 'book-update-path',
-        payload: path,
-    }), [dispatch]);
+    const updateCurrentPath = React.useCallback((path: BookPath) => {
+        if (book.state === 'ready') {
+            const preview = fragmentPreviewForPath(book.fragment, path);
+            dispatch({
+                type: 'book-update-path',
+                payload: {
+                    path, preview,
+                    card: book.card,
+                },
+            });
+        }
+    }, [dispatch, book]);
     const toggleControls = React.useCallback(() => dispatch({
         type: 'book-toggle-controls',
     }), [dispatch]);

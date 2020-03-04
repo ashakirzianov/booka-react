@@ -49,7 +49,11 @@ type SetQuoteRangeAction = {
 };
 type UpdateCurrentPathAction = {
     type: 'book-update-path',
-    payload: BookPath,
+    payload: {
+        preview?: string,
+        card: LibraryCard,
+        path: BookPath,
+    },
 };
 type ToggleTocAction = {
     type: 'book-toggle-toc',
@@ -106,7 +110,7 @@ export function bookReducer(state: BookState = defaultState, action: AppAction):
                 ...state,
                 link: {
                     ...state.link,
-                    path: action.payload,
+                    path: action.payload.path,
                 },
                 needToScroll: false,
             };
