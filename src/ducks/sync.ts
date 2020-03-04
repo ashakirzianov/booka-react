@@ -41,11 +41,7 @@ const postBookmarkEpic: AppEpic = (action$, state$) => action$.pipe(
                 type: 'bookmarks-replace-one',
                 payload: {
                     replaceId: action.payload.bookmark._id,
-                    bookmark: {
-                        ...action.payload.bookmark,
-                        local: undefined,
-                        _id: result.value._id,
-                    },
+                    bookmark: result.value,
                 },
             })),
         ),
@@ -82,11 +78,7 @@ const postHighlightEpic: AppEpic = (action$, state$) => action$.pipe(
                 type: 'highlights-replace-one',
                 payload: {
                     replaceId: action.payload.highlight._id,
-                    highlight: {
-                        ...action.payload.highlight,
-                        local: undefined,
-                        _id: result.value._id,
-                    },
+                    highlight: result.value,
                 },
             })),
         ),
