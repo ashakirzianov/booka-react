@@ -7,6 +7,7 @@ import {
     getBookmarks, sendAddBookmark,
     getHighlights, postHighlight, postHighlightUpdate,
     getCollections, postAddToCollection, postRemoveFromCollection,
+    sendCurrentPathUpdate,
 } from '../api';
 import { bookmarksReducer } from './bookmarks';
 import { highlightsReducer } from './highlights';
@@ -144,10 +145,29 @@ const postRemoveFromCollectionEpic: AppEpic = (action$, state$) => action$.pipe(
     ),
 );
 
+const postUpdateCurrentPositionEpic: AppEpic = (action$, state$) => action$.pipe(
+    ofAppType('book-update-path'),
+    addLocalChange(),
+    withLatestFrom(appAuth(state$)),
+    mergeMap(
+        ([action, token]) => sendCurrentPathUpdate({
+            token,
+            bookId: action.payload.card.id,
+            path: action.payload.path,
+            // TODO: implement
+            source: 'not-implemented',
+        }).pipe(
+            removeLocalChange(action),
+            produceNoAction(),
+        ),
+    ),
+);
+
 export const syncEpic = combineEpics(
     fetchBookmarksEpic, postBookmarkEpic,
     fetchHighlightsEpic, postHighlightEpic, postSetHighlightGroupEpic,
     fetchCollectionsEpic, postAddToCollectionEpic, postRemoveFromCollectionEpic,
+    postUpdateCurrentPositionEpic,
 );
 
 function produceNoAction() {
