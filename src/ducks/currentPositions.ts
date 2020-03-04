@@ -1,12 +1,15 @@
-import { ResolvedCurrentPosition } from 'booka-common';
+import { ResolvedCurrentPosition, LibraryCard, BookPath, replaceOrAdd, EntitySource } from 'booka-common';
 import { of } from 'rxjs';
-import { mergeMap, withLatestFrom, map, catchError } from 'rxjs/operators';
+import { mergeMap, withLatestFrom, map } from 'rxjs/operators';
 import { combineEpics, Epic } from 'redux-observable';
-import { getCurrentPositions, sendCurrentPathUpdate } from '../api';
+import { getCurrentPositions } from '../api';
 import { AppAction, AppState } from './app';
 import { ofAppType, appAuth } from './utils';
 
-export type CurrentPositionsState = ResolvedCurrentPosition[];
+export type CurrentPositionsState = {
+    positions: ResolvedCurrentPosition[],
+    source: EntitySource,
+};
 
 type CurrentPositionsFetchAction = {
     type: 'current-positions-fetch',
@@ -15,20 +18,35 @@ type CurrentPositionsFulfilledAction = {
     type: 'current-positions-fulfilled',
     payload: ResolvedCurrentPosition[],
 };
-type CurrentPositionsRejectedAction = {
-    type: 'current-positions-rejected',
-    payload?: any,
-};
 export type CurrentPositionsAction =
-    | CurrentPositionsFetchAction
-    | CurrentPositionsFulfilledAction
-    | CurrentPositionsRejectedAction
+    | CurrentPositionsFetchAction | CurrentPositionsFulfilledAction
     ;
 
-export function currentPositionsReducer(state: CurrentPositionsState = [], action: AppAction): CurrentPositionsState {
+const defaultState: CurrentPositionsState = {
+    positions: [],
+    source: 'not-implemented',
+};
+export function currentPositionsReducer(
+    state: CurrentPositionsState = defaultState,
+    action: AppAction,
+): CurrentPositionsState {
     switch (action.type) {
         case 'current-positions-fulfilled':
-            return action.payload;
+            return {
+                ...state,
+                positions: action.payload,
+            };
+        case 'book-update-path':
+            return {
+                ...state,
+                positions: updateCurrentPositions({
+                    currentPositions: state.positions,
+                    cardToUpdate: action.payload.card,
+                    path: action.payload.path,
+                    source: state.source,
+                    preview: action.payload.preview,
+                }),
+            };
         default:
             return state;
     }
@@ -56,35 +74,43 @@ const processFetchEpic: Epic<AppAction, AppAction, AppState> =
                         payload: res,
                     };
                 }),
-                catchError(err => {
-                    return of<AppAction>({
-                        type: 'current-positions-rejected',
-                        payload: err,
-                    });
-                }),
             ),
         ),
-    );
-
-const updateCurrentPathEpic: Epic<AppAction, AppAction, AppState> =
-    (action$, state$) => action$.pipe(
-        ofAppType('book-update-path'),
-        withLatestFrom(state$),
-        mergeMap(([action, state]) => {
-            if (state.account.state === 'signed') {
-                sendCurrentPathUpdate({
-                    token: state.account.token,
-                    bookId: state.book.link.bookId,
-                    path: action.payload,
-                    source: 'not-implemented',
-                }).subscribe();
-            }
-            return of<AppAction>();
-        }),
     );
 
 export const currentPositionsEpic = combineEpics(
     fetchEpic,
     processFetchEpic,
-    updateCurrentPathEpic,
 );
+
+function updateCurrentPositions({
+    currentPositions, cardToUpdate, path, source, preview,
+}: {
+    currentPositions: ResolvedCurrentPosition[],
+    cardToUpdate: LibraryCard,
+    path: BookPath,
+    source: EntitySource,
+    preview: string | undefined,
+}): ResolvedCurrentPosition[] {
+    const created = new Date(Date.now());
+    const existing = currentPositions.find(cp => cp.card.id === cardToUpdate.id);
+    if (existing) {
+        const locations = replaceOrAdd(
+            existing.locations,
+            l => l.source === source,
+            { source, path, created, preview }
+        );
+        const replacement = { ...existing, locations };
+        return currentPositions.map(
+            cp => cp === existing ? replacement : cp
+        );
+    } else {
+        const toAdd: ResolvedCurrentPosition = {
+            card: cardToUpdate,
+            locations: [{
+                source, path, created, preview,
+            }],
+        };
+        return [toAdd, ...currentPositions];
+    }
+}

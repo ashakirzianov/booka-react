@@ -26,9 +26,9 @@ type RecentBooksProps = Themed & {
 };
 function RecentBooksComp({ state, onBookNavigate }: RecentBooksProps) {
     return <Column>
-        <span key='label'>Recent books: {state.length}</span>
+        <span key='label'>Recent books: {state.positions.length}</span>
         {
-            state.map((recentBook, idx) => {
+            state.positions.map((recentBook, idx) => {
                 return <CurrentBookComp
                     key={idx}
                     currentPosition={recentBook}

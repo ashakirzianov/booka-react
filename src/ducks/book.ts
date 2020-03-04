@@ -50,7 +50,7 @@ type SetQuoteRangeAction = {
 type UpdateCurrentPathAction = {
     type: 'book-update-path',
     payload: {
-        preview?: string,
+        preview: string | undefined,
         card: LibraryCard,
         path: BookPath,
     },
