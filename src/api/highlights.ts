@@ -1,6 +1,6 @@
 import { map } from 'rxjs/operators';
 import {
-    BackContract, AuthToken, HighlightPost,
+    BackContract, AuthToken, HighlightPost, HighlightUpdate,
 } from 'booka-common';
 import { config } from '../config';
 import { createFetcher } from './fetcher';
@@ -19,6 +19,13 @@ export function getHighlights(bookId: string, token: AuthToken) {
 
 export function postHighlight(highlight: HighlightPost, token: AuthToken) {
     return backFetcher.post('/highlights', {
+        auth: token.token,
+        body: highlight,
+    });
+}
+
+export function postHighlightUpdate(highlight: HighlightUpdate, token: AuthToken) {
+    return backFetcher.patch('/highlights', {
         auth: token.token,
         body: highlight,
     });

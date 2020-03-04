@@ -1,11 +1,11 @@
 import { of } from 'rxjs';
-import { withLatestFrom, map, mergeMap, tap } from 'rxjs/operators';
+import { withLatestFrom, map, mergeMap, tap, skipWhile } from 'rxjs/operators';
 import { combineEpics } from 'redux-observable';
 import { AppEpic, AppAction } from './app';
 import { appAuth, ofAppType } from './utils';
 import {
     getBookmarks, getHighlights, getCollections,
-    sendAddBookmark, postHighlight, postAddToCollection,
+    sendAddBookmark, postHighlight, postAddToCollection, postHighlightUpdate,
 } from '../api';
 import { bookmarksReducer } from './bookmarks';
 import { highlightsReducer } from './highlights';
@@ -93,6 +93,21 @@ const postHighlightEpic: AppEpic = (action$, state$) => action$.pipe(
     ),
 );
 
+const postSetHighlightGroupEpic: AppEpic = (action$, state$) => action$.pipe(
+    ofAppType('highlights-set-group'),
+    addLocalChange(),
+    withLatestFrom(appAuth(state$)),
+    mergeMap(
+        ([action, token]) => postHighlightUpdate({
+            _id: action.payload.highlightId,
+            group: action.payload.group,
+        }, token).pipe(
+            removeLocalChange(action),
+            produceNoAction(),
+        ),
+    ),
+);
+
 const fetchCollectionsEpic: AppEpic = (action$, state$) => action$.pipe(
     ofAppType('library-open'),
     withLatestFrom(appAuth(state$)),
@@ -124,15 +139,21 @@ const postAddToCollectionEpic: AppEpic = (action$, state$) => action$.pipe(
     mergeMap(
         ([action, token]) => postAddToCollection(action.payload.card.id, action.payload.collection, token).pipe(
             removeLocalChange(action),
-            mergeMap(() => of<AppAction>()),
+            produceNoAction(),
         ),
     ),
 );
 
 export const syncEpic = combineEpics(
-    fetchBookmarksEpic, fetchHighlightsEpic, fetchCollectionsEpic,
-    postBookmarkEpic, postHighlightEpic, postAddToCollectionEpic,
+    fetchBookmarksEpic, postBookmarkEpic,
+    fetchHighlightsEpic, postHighlightEpic, postSetHighlightGroupEpic,
+    fetchCollectionsEpic, postAddToCollectionEpic,
 );
+
+function produceNoAction() {
+    // TODO: find better solution to ignore ?
+    return mergeMap(() => of<AppAction>());
+}
 
 let locals: AppAction[] = [];
 function addLocalChange<A extends AppAction>() {
