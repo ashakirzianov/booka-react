@@ -3,15 +3,18 @@ import { map } from 'rxjs/operators';
 import {
     BookFragment, BookPath, Book, fragmentForPath,
     defaultFragmentLength, tocForBook, LibContract,
-    pathToString, findReference, firstPath, AuthToken,
+    pathToString, findReference, firstPath, AuthToken, LibraryCard,
 } from 'booka-common';
 import { config } from '../config';
 import { BookLink } from '../core';
 import { createFetcher } from './fetcher';
 import { withPartial } from './operators';
 
+// TODO: fix naming (related to 'book' and 'card')
+
 type OpenLinkResult = {
     fragment: BookFragment,
+    card: LibraryCard,
     link: BookLink,
 };
 export function openLink(bookLink: BookLink, auth?: AuthToken) {
@@ -25,9 +28,9 @@ export function openLink(bookLink: BookLink, auth?: AuthToken) {
 type RefIdLink = BookLink & { refId: string };
 function openRefId(link: RefIdLink): Observable<OpenLinkResult> {
     return getFragmentWithPathForId(link.bookId, link.refId).pipe(
-        map(({ fragment, path }) => {
+        map(({ fragment, card, path }) => {
             return {
-                fragment,
+                fragment, card,
                 link: {
                     ...link,
                     path,
@@ -42,9 +45,9 @@ type PathLink = BookLink;
 function openPath(link: PathLink): Observable<OpenLinkResult> {
     const path = link.path || (link.quote && link.quote.start) || firstPath();
     return getBookFragment(link.bookId, path).pipe(
-        map((fragment) => {
+        map(({ fragment, card }) => {
             return {
-                fragment,
+                fragment, card,
                 link: {
                     ...link,
                     path,
@@ -55,11 +58,14 @@ function openPath(link: PathLink): Observable<OpenLinkResult> {
     );
 }
 
-function getBookFragment(bookId: string, path: BookPath): Observable<BookFragment> {
+function getBookFragment(bookId: string, path: BookPath) {
     return withPartial(
         getBookCached(bookId).pipe(
             map(book => {
-                return resolveFragment(book, path);
+                return {
+                    fragment: resolveFragment(book.book, path),
+                    card: book.card,
+                };
             })
         ),
         fetchBookFragment(bookId, path).pipe(
@@ -72,12 +78,16 @@ function getBookFragment(bookId: string, path: BookPath): Observable<BookFragmen
 
 function getFragmentWithPathForId(
     bookId: string, refId: string,
-): Observable<FragmentWithPath> {
+) {
     return getBookCached(bookId).pipe(
         map(book => {
-            const pair = resolveRefId(book, refId);
+            const pair = resolveRefId(book.book, refId);
             if (pair) {
-                return pair;
+                return {
+                    card: book.card,
+                    fragment: pair.fragment,
+                    path: pair.path,
+                };
             } else {
                 throw new Error(`Could not resolve an id: ${refId}`);
             }
@@ -85,6 +95,7 @@ function getFragmentWithPathForId(
     );
 }
 
+// TODO: rethink this type
 type FragmentWithPath = {
     fragment: BookFragment,
     path: BookPath,
@@ -110,9 +121,9 @@ function resolveFragment(book: Book, path: BookPath): BookFragment {
 }
 
 const cache: {
-    [id: string]: Book,
+    [id: string]: { book: Book, card: LibraryCard },
 } = {};
-function getBookCached(id: string): Observable<Book> {
+function getBookCached(id: string) {
     const cached = cache[id];
     if (cached) {
         return of(cached);
