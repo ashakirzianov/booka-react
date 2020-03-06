@@ -1,5 +1,5 @@
 import {
-    BookPath, HighlightGroup, Bookmark, Highlight,
+    BookPath, HighlightGroup, Bookmark, Highlight, LibraryCard,
 } from 'booka-common';
 import { Subject } from 'rxjs';
 
@@ -29,8 +29,11 @@ type UpdateHighlightChange = DefChange<'highlight-update'> & {
 };
 
 type UpdateCurrentPositionChange = DefChange<'current-position-update'> & {
-    bookId: string,
     path: BookPath,
+    created: Date,
+    // TODO: rethink and remove ?
+    preview: string | undefined,
+    card: LibraryCard,
 };
 
 export type LocalChange =
