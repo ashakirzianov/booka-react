@@ -1,8 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
 import {
-    AuthToken, Bookmark, Highlight, ResolvedCurrentPosition,
+    AuthToken, Bookmark, Highlight, ResolvedCurrentPosition, BookFragment,
 } from 'booka-common';
 import { dataProvider } from '../data';
+import { BookLink } from '../core';
+import { map } from 'rxjs/operators';
 
 function useDataProvider() {
     // TODO: get from context
@@ -52,4 +54,32 @@ export function usePositionsData(token?: AuthToken) {
         return () => sub.unsubscribe();
     }, [subject]);
     return { positions, add };
+}
+
+type BookState = {
+    state: 'loading',
+} | {
+    state: 'ready',
+    fragment: BookFragment,
+};
+export function useBookData(link: BookLink) {
+    const data = useDataProvider();
+    const [state, setState] = useState<BookState>({ state: 'loading' });
+    const subject = useMemo(
+        () => data.openLink(link),
+        [link, data],
+    );
+    useEffect(() => {
+        const sub = subject
+            .pipe(
+                map((r): BookState => ({
+                    state: 'ready',
+                    fragment: r.fragment,
+                })),
+            )
+            .subscribe(setState);
+        return () => sub.unsubscribe();
+    }, [subject]);
+
+    return state;
 }
