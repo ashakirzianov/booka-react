@@ -1,46 +1,36 @@
-import { Subject } from 'rxjs';
 import {
     Bookmark, AuthToken, BackContract, BookPath, uuid,
 } from 'booka-common';
 import { config } from '../config';
-import { LocalChange, addLocalChange, applyLocalChanges } from './localChange';
+import { LocalChange, connectedState } from './localChange';
 import { createFetcher } from './fetcher';
-import { map } from 'rxjs/operators';
 
 const back = createFetcher<BackContract>(config().backUrl);
 export function bookmarksForId(bookId: string, token?: AuthToken) {
-    let bookmarks: Bookmark[] = applyLocalChanges([], applyChange);
-    const subject = new Subject<Bookmark[]>();
-    subject.next(bookmarks);
+    const { subject, addChange, replaceState } = connectedState([], applyChange);
 
     if (token) {
         back.get('/bookmarks', {
             query: { bookId },
             auth: token.token,
-        }).pipe(
-            map(r => {
-                bookmarks = applyLocalChanges(r.value, applyChange);
-                return bookmarks;
-            }),
-        ).subscribe(subject);
+        }).subscribe(r => replaceState(r.value));
     }
 
     function add(path: BookPath) {
-        const bookmark: Bookmark = {
-            entity: 'bookmark',
-            _id: uuid(),
-            bookId, path,
-        };
-        const change: LocalChange = { change: 'bookmark-add', bookmark };
-        addLocalChange(change);
-        bookmarks = applyChange(bookmarks, change);
-        subject.next(bookmarks);
+        addChange({
+            change: 'bookmark-add',
+            bookmark: {
+                entity: 'bookmark',
+                _id: uuid(),
+                bookId, path,
+            },
+        });
     }
     function remove(bookmarkId: string) {
-        const change: LocalChange = { change: 'bookmark-remove', bookmarkId };
-        addLocalChange(change);
-        bookmarks = applyChange(bookmarks, change);
-        subject.next(bookmarks);
+        addChange({
+            change: 'bookmark-remove',
+            bookmarkId,
+        });
     }
 
     return { subject, add, remove };
