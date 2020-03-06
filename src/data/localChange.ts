@@ -1,12 +1,13 @@
-import { BookPath, HighlightGroup, BookRange } from 'booka-common';
+import {
+    BookPath, HighlightGroup, BookRange, Bookmark, Highlight,
+} from 'booka-common';
 
 type DefChange<Key extends string> = {
     change: Key,
 };
 
 type AddBookmarkChange = DefChange<'bookmark-add'> & {
-    bookId: string,
-    path: BookPath,
+    bookmark: Bookmark,
 };
 
 type RemoveBookmarkChange = DefChange<'bookmark-remove'> & {
@@ -14,9 +15,7 @@ type RemoveBookmarkChange = DefChange<'bookmark-remove'> & {
 };
 
 type AddHighlightChange = DefChange<'highlight-add'> & {
-    bookId: string,
-    group: HighlightGroup,
-    range: BookRange,
+    highlight: Highlight,
 };
 
 type RemoveHighlightChange = DefChange<'highlight-remove'> & {
