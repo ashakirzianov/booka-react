@@ -59,6 +59,9 @@ export function usePositionsData(token?: AuthToken) {
 type BookState = {
     state: 'loading',
 } | {
+    state: 'error',
+    err?: any,
+} | {
     state: 'ready',
     fragment: BookFragment,
 };
@@ -77,7 +80,10 @@ export function useBookData(link: BookLink) {
                     fragment: r.fragment,
                 })),
             )
-            .subscribe(setState);
+            .subscribe(s => {
+                console.log(s);
+                setState(s);
+            });
         return () => sub.unsubscribe();
     }, [subject]);
 
