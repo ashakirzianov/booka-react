@@ -1,5 +1,6 @@
 import { Observable, Subscription } from 'rxjs';
 
+// TODO: remove this nonsense
 export function withPartial<T>(actual: Observable<T>, partial: Observable<T>): Observable<T> {
     return new Observable(observer => {
         let partialSub: Subscription | undefined;
