@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { LibraryCard } from 'booka-common';
 
 import {
     Themed, TopBar, point, Triad, EmptyLine,
@@ -8,11 +7,10 @@ import { ConnectedAccountButton } from './AccountButton';
 import { LibrarySearchConnected } from './LibrarySearchComp';
 import { CollectionsConnected } from './CollectionsComp';
 import { RecentBooksConnected } from './RecentBooksComp';
+import { useTheme } from '../application';
 
-export type LibraryScreenProps = Themed & {
-    books: LibraryCard[],
-};
-export function LibraryScreenComp({ theme, books }: LibraryScreenProps) {
+export function LibraryScreen() {
+    const theme = useTheme();
     return <>
         <LibraryScreenHeader theme={theme} />
         <EmptyLine />

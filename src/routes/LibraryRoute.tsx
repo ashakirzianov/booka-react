@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { LibraryScreenComp } from '../render';
-import { useAppDispatch, useTheme, useAppSelector } from '../application';
+import { LibraryScreen } from '../render';
+import { useAppDispatch } from '../application';
 import { RouteProps } from '../atoms';
 
 export function LibraryRoute(_: RouteProps) {
@@ -9,11 +9,6 @@ export function LibraryRoute(_: RouteProps) {
     React.useEffect(() => {
         dispatch({ type: 'library-open' });
     }, [dispatch]);
-    const theme = useTheme();
-    const books = useAppSelector(s => s.library.books);
 
-    return <LibraryScreenComp
-        theme={theme}
-        books={books}
-    />;
+    return <LibraryScreen />;
 }
