@@ -1,2 +1,2 @@
 export * from './LibraryScreenComp';
-export * from './BookScreenComp';
+export * from './BookScreen';

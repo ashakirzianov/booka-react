@@ -2,7 +2,7 @@ import React from 'react';
 import { parse } from 'query-string';
 import { pathFromString, rangeFromString } from 'booka-common';
 import { BookLink } from '../core';
-import { BookScreenConnected } from '../render';
+import { BookScreen } from '../render';
 import { useAppDispatch } from '../application';
 import { RouteProps } from '../atoms';
 import { HistoryLocation } from '@reach/router';
@@ -17,7 +17,7 @@ export function BookRoute({ bookId, location }: RouteProps) {
         });
     }, [dispatch, bookId, location]);
 
-    return <BookScreenConnected />;
+    return <BookScreen bookId={bookId} />;
 }
 
 function buildLink(bookId: string, location: HistoryLocation): BookLink {
