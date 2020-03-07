@@ -80,10 +80,7 @@ export function useBookData(link: BookLink) {
                     fragment: r.fragment,
                 })),
             )
-            .subscribe(s => {
-                console.log(s);
-                setState(s);
-            });
+            .subscribe(setState);
         return () => sub.unsubscribe();
     }, [subject]);
 
