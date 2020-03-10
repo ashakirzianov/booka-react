@@ -5,7 +5,6 @@ import { useAppDispatch, useTheme, useAppSelector } from '../application';
 import {
     Column, SearchBox, BookListComp, ActivityIndicator, Themed,
 } from '../atoms';
-import { LibraryCardConnected } from './LibraryCardComp';
 
 export function LibrarySearchConnected() {
     const dispatch = useAppDispatch();
@@ -35,7 +34,6 @@ function LibrarySearchComp({ searchState, onSearch, onClear, }: Themed & {
     searchState: SearchState,
 }) {
     return <Column>
-        <LibraryCardConnected />
         <SearchBox
             onSearch={onSearch}
             onClear={onClear}

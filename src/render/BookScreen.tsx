@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
 import {
     assertNever, positionForPath, BookPath, firstPath, uuid,
     findBookmark, BookFragment,
@@ -22,10 +21,9 @@ import { ConnectedAccountButton } from './AccountButton';
 import { FullScreenActivityIndicator } from '../atoms/Basics.native';
 import { BookLink } from '../core';
 
-export function BookScreen() {
-    // TODO: make type safe ?
-    const { bookId } = useParams<{ bookId: string }>();
-
+export function BookScreen({ bookId }: {
+    bookId: string,
+}) {
     const theme = useTheme();
     const link = useMemo((): BookLink => ({
         link: 'book',

@@ -9,7 +9,9 @@ import { LibrarySearchConnected } from './LibrarySearchComp';
 import { CollectionsConnected } from './CollectionsComp';
 import { RecentBooksConnected } from './RecentBooksComp';
 
-export function FeedScreen() {
+export function FeedScreen({ show }: {
+    show: string | undefined,
+}) {
     const theme = useTheme();
     return <>
         <FeedScreenHeader theme={theme} />
