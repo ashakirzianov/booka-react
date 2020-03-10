@@ -75,7 +75,7 @@ function LibraryCardModal({
         open={true}
     >
         <Column>
-            <BookCoverComp {...card} />
+            <BookCoverComp card={card} />
             <span>{card.title}</span>
             <span onClick={() => readFromPath(card.id)}>Read from start</span>
             {

@@ -1,13 +1,12 @@
 import React from 'react';
 import { LibraryCard } from 'booka-common';
 import { Column, Row } from './Layout';
-import { Callback } from './common';
+import { Link } from 'react-router-dom';
 
-export type BookListProps = {
+// TODO: move from atoms
+export function BookListComp({ books }: {
     books: LibraryCard[],
-    onClick: Callback<LibraryCard>,
-};
-export function BookListComp({ books, onClick }: BookListProps) {
+}) {
     return <Column>
         <Row
             maxWidth='100%'
@@ -18,7 +17,6 @@ export function BookListComp({ books, onClick }: BookListProps) {
                     <BookItemComp
                         key={idx}
                         card={desc}
-                        onClick={onClick}
                     />
                 )
             }
@@ -26,28 +24,23 @@ export function BookListComp({ books, onClick }: BookListProps) {
     </Column>;
 }
 
-type BookItemProps = {
+function BookItemComp({ card }: {
     card: LibraryCard,
-    onClick: Callback<LibraryCard>,
-};
-function BookItemComp({ card, onClick }: BookItemProps) {
-    return <div
-        onClick={() => onClick(card)}
-        style={{
-            cursor: 'pointer',
-        }}
-    >
+}) {
+    return <Link to={`/?show=${card.id}`}>
         <Column
             centered
             width={200} height={200}
         >
-            <BookCoverComp {...card} />
-            <BookTitleComp {...card} />
+            <BookCoverComp card={card} />
+            <BookTitleComp title={card.title} />
         </Column>
-    </div>;
+    </Link>;
 }
 
-export function BookCoverComp(card: LibraryCard) {
+export function BookCoverComp({ card }: {
+    card: LibraryCard,
+}) {
     if (card.coverUrl) {
         return <BookImageCover {...card} />;
     } else {
@@ -55,6 +48,7 @@ export function BookCoverComp(card: LibraryCard) {
     }
 }
 
+// TODO: decouple props ?
 function BookImageCover({ coverUrl, title }: LibraryCard) {
     return <div style={{
         height: 180,
@@ -86,7 +80,9 @@ function BookEmptyCover({ title }: LibraryCard) {
     </div>;
 }
 
-function BookTitleComp({ title }: LibraryCard) {
+function BookTitleComp({ title }: {
+    title: string,
+}) {
     return <div style={{
         display: 'block',
         whiteSpace: 'nowrap',

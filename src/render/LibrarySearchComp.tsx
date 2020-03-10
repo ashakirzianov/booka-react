@@ -1,5 +1,5 @@
 import React from 'react';
-import { Callback, LibraryCard } from 'booka-common';
+import { Callback } from 'booka-common';
 import { SearchState } from '../ducks';
 import { useAppDispatch, useTheme, useAppSelector } from '../application';
 import {
@@ -18,10 +18,6 @@ export function LibrarySearchConnected() {
     const clearSearch = React.useCallback(() => dispatch({
         type: 'search-clear',
     }), [dispatch]);
-    const openBook = React.useCallback((card: LibraryCard) => dispatch({
-        type: 'card-show',
-        payload: card,
-    }), [dispatch]);
 
     const theme = useTheme();
 
@@ -29,14 +25,12 @@ export function LibrarySearchConnected() {
         theme={theme}
         onSearch={querySearch}
         onClear={clearSearch}
-        onSelectBook={openBook}
         searchState={searchState}
     />;
 }
 
-function LibrarySearchComp({ searchState, onSearch, onSelectBook, onClear, }: Themed & {
+function LibrarySearchComp({ searchState, onSearch, onClear, }: Themed & {
     onSearch: Callback<string>,
-    onSelectBook: Callback<LibraryCard>,
     onClear: Callback,
     searchState: SearchState,
 }) {
@@ -48,14 +42,12 @@ function LibrarySearchComp({ searchState, onSearch, onSelectBook, onClear, }: Th
         />
         <SearchStateComp
             state={searchState}
-            onSelectBook={onSelectBook}
         />
     </Column>;
 }
 
-function SearchStateComp({ state, onSelectBook }: {
+function SearchStateComp({ state }: {
     state: SearchState,
-    onSelectBook: Callback<LibraryCard>,
 }) {
     switch (state.state) {
         case 'error':
@@ -63,10 +55,7 @@ function SearchStateComp({ state, onSelectBook }: {
         case 'loading':
             return <ActivityIndicator />;
         case 'ready':
-            return <BookListComp
-                books={state.results.map(r => r.desc)}
-                onClick={onSelectBook}
-            />;
+            return <BookListComp books={state.results.map(r => r.desc)} />;
         case 'empty':
         default:
             return null;
