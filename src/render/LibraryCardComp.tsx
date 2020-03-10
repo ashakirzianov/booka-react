@@ -1,9 +1,8 @@
 import React from 'react';
 
 import { LibraryCard, Callback, BookPath, getLocationsData, ResolvedCurrentPosition } from 'booka-common';
-import { BookCoverComp, Column, Modal, Themed, navigate } from '../atoms';
+import { BookCoverComp, Column, Modal, Themed } from '../atoms';
 import { useTheme, useAppDispatch, useAppSelector } from '../application';
-import { linkToString } from '../core';
 
 export function LibraryCardConnected() {
     const dispatch = useAppDispatch();
@@ -17,10 +16,8 @@ export function LibraryCardConnected() {
         type: 'card-close',
     }), [dispatch]);
 
-    const readFromPath = React.useCallback((bookId: string, path?: BookPath) => navigate(linkToString({
-        link: 'book',
-        bookId, path,
-    })), []);
+    // TODO: implement
+    const readFromPath = React.useCallback((bookId: string, path?: BookPath) => undefined, []);
 
     const addToReadingList = React.useCallback((card: LibraryCard) => dispatch({
         type: 'collections-add-card',

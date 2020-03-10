@@ -10,7 +10,6 @@ export * from './Modal';
 export * from './Layout';
 export * from './Links';
 export * from './Popover';
-export * from './Router';
 export * from './TextInputs';
 export * from './theme';
 

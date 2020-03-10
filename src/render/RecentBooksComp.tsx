@@ -2,16 +2,17 @@ import React from 'react';
 import {
     getLocationsData, BookPath, ResolvedCurrentPosition,
 } from 'booka-common';
-import { linkToString, BookLink } from '../core';
+import { BookLink } from '../core';
 import { CurrentPositionsState } from '../ducks';
 import { useTheme, useAppSelector } from '../application';
 import {
-    Column, Themed, Callback, WithChildren, navigate,
+    Column, Themed, Callback, WithChildren,
 } from '../atoms';
 
 export function RecentBooksConnected() {
     const state = useAppSelector(s => s.currentPositions);
-    const openBook = React.useCallback((link: BookLink) => navigate(linkToString(link)), []);
+    // TODO: implement
+    const openBook = React.useCallback((link: BookLink) => undefined, []);
 
     const theme = useTheme();
 
