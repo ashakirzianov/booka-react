@@ -3,11 +3,11 @@ import * as React from 'react';
 import {
     Themed, TopBar, point, Triad, EmptyLine,
 } from '../atoms';
+import { useTheme } from '../application';
 import { ConnectedAccountButton } from './AccountButton';
 import { LibrarySearchConnected } from './LibrarySearchComp';
 import { CollectionsConnected } from './CollectionsComp';
 import { RecentBooksConnected } from './RecentBooksComp';
-import { useTheme } from '../application';
 
 export function LibraryScreen() {
     const theme = useTheme();
