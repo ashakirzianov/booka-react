@@ -9,10 +9,10 @@ import { LibrarySearchConnected } from './LibrarySearchComp';
 import { CollectionsConnected } from './CollectionsComp';
 import { RecentBooksConnected } from './RecentBooksComp';
 
-export function LibraryScreen() {
+export function FeedScreen() {
     const theme = useTheme();
     return <>
-        <LibraryScreenHeader theme={theme} />
+        <FeedScreenHeader theme={theme} />
         <EmptyLine />
         <LibrarySearchConnected />
         <CollectionsConnected />
@@ -20,8 +20,7 @@ export function LibraryScreen() {
     </>;
 }
 
-type LibraryScreenHeaderProps = Themed;
-function LibraryScreenHeader({ theme }: LibraryScreenHeaderProps) {
+function FeedScreenHeader({ theme }: Themed) {
     return <TopBar
         theme={theme}
         open={true}
