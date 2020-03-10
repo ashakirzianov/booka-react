@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ConnectedProvider } from './application';
 import { whileDebug } from './config';
-import { Routes } from './routes';
+import { Routes } from './render';
 
 export const App: React.FC = () => {
     return <ConnectedProvider>
