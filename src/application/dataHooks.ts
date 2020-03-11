@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import {
-    AuthToken, Bookmark, Highlight, ResolvedCurrentPosition, BookFragment,
+    AuthToken, Bookmark, Highlight, ResolvedCurrentPosition, BookFragment, LibraryCard,
 } from 'booka-common';
 import { dataProvider } from '../data';
 import { BookLink } from '../core';
@@ -83,6 +83,29 @@ export function useBookData(link: BookLink) {
             .subscribe(setState);
         return () => sub.unsubscribe();
     }, [subject]);
+
+    return state;
+}
+
+export type LibraryCardState = { state: 'loading' } | {
+    state: 'ready',
+    card: LibraryCard,
+};
+export function useLibraryCardData(bookId: string) {
+    const data = useDataProvider();
+    const [state, setState] = useState<LibraryCardState>({ state: 'loading' });
+    const { observable } = useMemo(
+        () => data.libraryCard({ bookId }),
+        [data],
+    );
+    useEffect(() => {
+        const sub = observable.pipe(
+            map((card): LibraryCardState => ({
+                state: 'ready', card,
+            }))
+        ).subscribe(setState);
+        return () => sub.unsubscribe();
+    }, [observable]);
 
     return state;
 }
