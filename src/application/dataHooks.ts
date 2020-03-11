@@ -96,7 +96,7 @@ export function useLibraryCardData(bookId: string) {
     const [state, setState] = useState<LibraryCardState>({ state: 'loading' });
     const { observable } = useMemo(
         () => data.libraryCard({ bookId }),
-        [data],
+        [data, bookId],
     );
     useEffect(() => {
         const sub = observable.pipe(

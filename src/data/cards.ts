@@ -1,11 +1,11 @@
 import {
-    LibContract, LibraryCard,
+    LibContract,
 } from 'booka-common';
 import { config } from '../config';
 import { createFetcher } from './fetcher';
 import { map } from 'rxjs/operators';
 
-const lib = createFetcher<LibContract>(config().backUrl);
+const lib = createFetcher<LibContract>(config().libUrl);
 
 export function libraryCard({ bookId }: {
     bookId: string,

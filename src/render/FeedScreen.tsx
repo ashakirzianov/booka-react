@@ -8,12 +8,14 @@ import { ConnectedAccountButton } from './AccountButton';
 import { LibrarySearchConnected } from './LibrarySearchComp';
 import { CollectionsConnected } from './CollectionsComp';
 import { RecentBooksConnected } from './RecentBooksComp';
+import { LibraryCardComp } from './LibraryCard';
 
 export function FeedScreen({ show }: {
     show: string | undefined,
 }) {
     const theme = useTheme();
     return <>
+        {show ? <LibraryCardComp bookId={show} /> : null}
         <FeedScreenHeader theme={theme} />
         <EmptyLine />
         <LibrarySearchConnected />
