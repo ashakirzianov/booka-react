@@ -1,4 +1,4 @@
-import { Observable, of, race } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
     BookFragment, BookPath, Book, fragmentForPath,
@@ -131,7 +131,7 @@ function getBookCached(id: string) {
 }
 
 const libFetcher = createFetcher<LibContract>(config().libUrl);
-function fetchBookFragment(id: string, path: BookPath) {
+export function fetchBookFragment(id: string, path: BookPath) {
     return libFetcher.get('/fragment', {
         query: {
             id,

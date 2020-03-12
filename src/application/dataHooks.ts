@@ -6,9 +6,10 @@ import { dataProvider } from '../data';
 import { BookLink } from '../core';
 import { map } from 'rxjs/operators';
 
+const dp = dataProvider();
 function useDataProvider() {
     // TODO: get from context
-    return dataProvider();
+    return dp;
 }
 
 type BookmarksState = Bookmark[];
