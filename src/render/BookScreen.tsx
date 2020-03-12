@@ -3,7 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 
 import {
     assertNever, positionForPath, BookPath, firstPath, uuid,
-    findBookmark, BookFragment,
+    findBookmark, BookFragment, BookRange,
 } from 'booka-common';
 
 import {
@@ -22,12 +22,13 @@ import { TableOfContentsComp } from './TableOfContentsComp';
 import { ConnectedAccountButton } from './AccountButton';
 import { FullScreenActivityIndicator } from '../atoms/Basics.native';
 import { BookLink } from '../core';
-import { navigateToBookPath } from './Navigation';
+import { setBookPathUrl, setQuoteRangeUrl } from './Navigation';
 
-export function BookScreen({ bookId, showToc, path }: {
+export function BookScreen({ bookId, showToc, path, quote }: {
     bookId: string,
     showToc: boolean,
     path?: BookPath,
+    quote?: BookRange,
 }) {
     const theme = useTheme();
     const link = useMemo((): BookLink => ({
@@ -47,8 +48,11 @@ export function BookScreen({ bookId, showToc, path }: {
     const [needToScroll, setNeedToScroll] = useState(true);
     const updatePath = useCallback((p: BookPath | undefined) => {
         setNeedToScroll(false);
-        navigateToBookPath(p, history);
+        setBookPathUrl(p, history);
     }, [setNeedToScroll, history]);
+    const updateQuoteRange = useCallback((r: BookRange | undefined) => {
+        setQuoteRangeUrl(r, history);
+    }, [history]);
 
     switch (state.state) {
         case 'loading':
@@ -83,8 +87,8 @@ export function BookScreen({ bookId, showToc, path }: {
                                 highlights={highlights}
                                 pathToScroll={needToScroll ? path : undefined}
                                 updateBookPosition={updatePath}
-                                quoteRange={undefined}
-                                setQuoteRange={() => undefined}
+                                quoteRange={quote}
+                                setQuoteRange={updateQuoteRange}
                                 openRef={() => undefined}
                             />
                             {

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { History } from 'history';
 
 import {
-    BookPath, pathToString,
+    BookPath, pathToString, BookRange, rangeToString,
 } from 'booka-common';
 import { WithChildren } from '../atoms';
 
@@ -21,12 +21,21 @@ export function LinkToPath({ bookId, path, children }: WithChildren & {
     </Link>;
 }
 
-export function navigateToBookPath(path: BookPath | undefined, history: History) {
+export function setBookPathUrl(path: BookPath | undefined, history: History) {
 
     history.replace({
         ...history.location,
         search: path
             ? `?p=${pathToString(path)}`
+            : undefined,
+    });
+}
+
+export function setQuoteRangeUrl(range: BookRange | undefined, history: History) {
+    history.replace({
+        ...history.location,
+        search: range
+            ? `?q=${rangeToString(range)}`
             : undefined,
     });
 }

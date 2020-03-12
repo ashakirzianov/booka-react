@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch, useParams, useLocation } from 'react-rout
 import { FeedScreen } from './FeedScreen';
 import { BookScreen } from './BookScreen';
 import { parse } from 'query-string';
-import { pathFromString } from 'booka-common';
+import { pathFromString, rangeFromString } from 'booka-common';
 
 export function Routes() {
     return <BrowserRouter>
@@ -26,13 +26,15 @@ function FeedRoute() {
 function BookRoute() {
     // TODO: make type safe ?
     const { bookId } = useParams<{ bookId: string }>();
-    const { toc, p } = useQuery();
+    const { toc, p, q } = useQuery();
     const path = typeof p === 'string' ? pathFromString(p) : undefined;
+    const quote = typeof q === 'string' ? rangeFromString(q) : undefined;
 
     return <BookScreen
         bookId={bookId}
         showToc={toc !== undefined}
-        path={path}
+        path={path ?? quote?.start}
+        quote={quote}
     />;
 }
 
