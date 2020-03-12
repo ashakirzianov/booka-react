@@ -1,4 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
+import { Link } from 'react-router-dom';
+
 import {
     assertNever, positionForPath, BookPath, firstPath, uuid,
     findBookmark, BookFragment,
@@ -58,7 +60,6 @@ export function BookScreen({ bookId, showToc }: {
                     visible={visible}
                     // TODO: implement
                     path={fragment.current.path}
-                    toggleToc={() => undefined}
                 />
                 <Row fullWidth centered
                     backgroundColor={colors(theme).primary}
@@ -282,30 +283,28 @@ function SelectPaletteButton({ theme, text, name, setPalette }: PaletteButtonPro
     />;
 }
 
-type TocButtonProps = Themed & {
+function TocButton({ theme, total, current }: Themed & {
     current: number,
     total: number | undefined,
-    toggleToc: Callback,
-};
-function TocButton({ theme, total, current, toggleToc }: TocButtonProps) {
-    return <TagButton
-        theme={theme}
-        text={
-            total !== undefined
-                ? `${current} of ${total}`
-                : `${current}`
-        }
-        onClick={toggleToc}
-    />;
+}) {
+    return <Link to='?toc'>
+        <TagButton
+            theme={theme}
+            text={
+                total !== undefined
+                    ? `${current} of ${total}`
+                    : `${current}`
+            }
+        />
+    </Link>;
 }
 
 function BookScreenFooter({
-    fragment, path, theme, visible, toggleToc,
+    fragment, path, theme, visible,
 }: Themed & {
     fragment: BookFragment,
     path: BookPath,
     visible: boolean,
-    toggleToc: () => void,
 }) {
     const total = fragment.toc
         ? pageForPosition(fragment.toc.length)
@@ -321,7 +320,6 @@ function BookScreenFooter({
                     theme={theme}
                     current={currentPage}
                     total={total}
-                    toggleToc={toggleToc}
                 />
             }
             right={<TextLine

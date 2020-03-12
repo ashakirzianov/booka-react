@@ -7,6 +7,7 @@ import {
 import { WithChildren } from '../atoms';
 
 // TODO: find better location
+// TODO: fix naming
 export function LinkToPath({ bookId, path, children }: WithChildren & {
     bookId: string,
     path?: BookPath,
