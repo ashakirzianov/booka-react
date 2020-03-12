@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { History } from 'history';
 
 import {
     BookPath, pathToString,
@@ -18,4 +19,14 @@ export function LinkToPath({ bookId, path, children }: WithChildren & {
     return <Link to={to}>
         {children}
     </Link>;
+}
+
+export function navigateToBookPath(path: BookPath | undefined, history: History) {
+
+    history.replace({
+        ...history.location,
+        search: path
+            ? `?p=${pathToString(path)}`
+            : undefined,
+    });
 }

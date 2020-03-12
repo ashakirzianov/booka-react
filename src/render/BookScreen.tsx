@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import {
     assertNever, positionForPath, BookPath, firstPath, uuid,
@@ -22,16 +22,18 @@ import { TableOfContentsComp } from './TableOfContentsComp';
 import { ConnectedAccountButton } from './AccountButton';
 import { FullScreenActivityIndicator } from '../atoms/Basics.native';
 import { BookLink } from '../core';
+import { navigateToBookPath } from './Navigation';
 
-export function BookScreen({ bookId, showToc }: {
+export function BookScreen({ bookId, showToc, path }: {
     bookId: string,
     showToc: boolean,
+    path?: BookPath,
 }) {
     const theme = useTheme();
     const link = useMemo((): BookLink => ({
         link: 'book',
-        bookId,
-    }), [bookId]);
+        bookId, path,
+    }), [bookId, path]);
     const state = useBookData(link);
     const { highlights } = useHighlightsData(bookId);
 
@@ -40,6 +42,13 @@ export function BookScreen({ bookId, showToc }: {
         () => setVisible(!visible),
         [visible, setVisible],
     );
+
+    const history = useHistory();
+    const [needToScroll, setNeedToScroll] = useState(true);
+    const updatePath = useCallback((p: BookPath | undefined) => {
+        setNeedToScroll(false);
+        navigateToBookPath(p, history);
+    }, [setNeedToScroll, history]);
 
     switch (state.state) {
         case 'loading':
@@ -72,9 +81,8 @@ export function BookScreen({ bookId, showToc }: {
                                 theme={theme}
                                 fragment={fragment}
                                 highlights={highlights}
-                                // TODO: implement
-                                pathToScroll={undefined}
-                                updateBookPosition={() => undefined}
+                                pathToScroll={needToScroll ? path : undefined}
+                                updateBookPosition={updatePath}
                                 quoteRange={undefined}
                                 setQuoteRange={() => undefined}
                                 openRef={() => undefined}

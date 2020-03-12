@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch, useParams, useLocation } from 'react-rout
 import { FeedScreen } from './FeedScreen';
 import { BookScreen } from './BookScreen';
 import { parse } from 'query-string';
+import { pathFromString } from 'booka-common';
 
 export function Routes() {
     return <BrowserRouter>
@@ -25,10 +26,13 @@ function FeedRoute() {
 function BookRoute() {
     // TODO: make type safe ?
     const { bookId } = useParams<{ bookId: string }>();
-    const { toc } = useQuery();
+    const { toc, p } = useQuery();
+    const path = typeof p === 'string' ? pathFromString(p) : undefined;
+
     return <BookScreen
         bookId={bookId}
         showToc={toc !== undefined}
+        path={path}
     />;
 }
 
