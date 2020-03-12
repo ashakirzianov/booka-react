@@ -1,33 +1,28 @@
 import React from 'react';
 import {
-    getLocationsData, BookPath, ResolvedCurrentPosition,
+    getLocationsData, ResolvedCurrentPosition,
 } from 'booka-common';
-import { BookLink } from '../core';
 import { CurrentPositionsState } from '../ducks';
 import { useTheme, useAppSelector } from '../application';
 import {
-    Column, Themed, Callback, WithChildren,
+    Column, Themed,
 } from '../atoms';
+import { LinkToPath } from './Navigation';
 
 export function RecentBooksConnected() {
     const state = useAppSelector(s => s.currentPositions);
-    // TODO: implement
-    const openBook = React.useCallback((link: BookLink) => undefined, []);
 
     const theme = useTheme();
 
     return <RecentBooksComp
         theme={theme}
         state={state}
-        onBookNavigate={openBook}
     />;
 }
 
-type RecentBooksProps = Themed & {
+function RecentBooksComp({ state }: Themed & {
     state: CurrentPositionsState,
-    onBookNavigate: Callback<BookLink>,
-};
-function RecentBooksComp({ state, onBookNavigate }: RecentBooksProps) {
+}) {
     return <Column>
         <span key='label'>Recent books: {state.positions.length}</span>
         {
@@ -35,16 +30,14 @@ function RecentBooksComp({ state, onBookNavigate }: RecentBooksProps) {
                 return <CurrentBookComp
                     key={idx}
                     currentPosition={recentBook}
-                    onBookNavigate={onBookNavigate}
                 />;
             })
         }
     </Column>;
 }
 
-function CurrentBookComp({ currentPosition: recentBook, onBookNavigate, }: {
+function CurrentBookComp({ currentPosition: recentBook, }: {
     currentPosition: ResolvedCurrentPosition,
-    onBookNavigate: Callback<BookLink>,
 }) {
     const data = getLocationsData(recentBook);
     if (!data) {
@@ -56,54 +49,32 @@ function CurrentBookComp({ currentPosition: recentBook, onBookNavigate, }: {
             <span>Title: {recentBook.card.title}</span>
             <span>Recent and furthest</span>
             <span>{mostRecent.preview?.substr(0, 300)}</span>
-            <NavigationLink
+            <LinkToPath
                 bookId={recentBook.card.id}
                 path={mostRecent.path}
-                onBookNavigate={onBookNavigate}
             >
                 Continue
-            </NavigationLink>
+            </LinkToPath>
         </Column>;
     } else {
         return <Column>
             <span>Title: {recentBook.card.title}</span>
             <span>Recent</span>
             <span>{mostRecent.preview?.substr(0, 300)}</span>
-            <NavigationLink
+            <LinkToPath
                 bookId={recentBook.card.id}
                 path={mostRecent.path}
-                onBookNavigate={onBookNavigate}
             >
                 Continue
-            </NavigationLink>
+            </LinkToPath>
             <span>Furthest</span>
             <span>{furthest.preview?.substr(0, 300)}</span>
-            <NavigationLink
+            <LinkToPath
                 bookId={recentBook.card.id}
                 path={furthest.path}
-                onBookNavigate={onBookNavigate}
             >
                 Continue
-            </NavigationLink>
+            </LinkToPath>
         </Column>;
     }
-}
-
-function NavigationLink({ bookId, path, onBookNavigate, children }: WithChildren<{
-    bookId: string,
-    path: BookPath,
-    onBookNavigate: Callback<BookLink>,
-}>) {
-    return <span
-        onClick={() => onBookNavigate({
-            link: 'book',
-            bookId, path,
-        })}
-        style={{
-            cursor: 'pointer',
-            color: 'blue',
-        }}
-    >
-        {children}
-    </span>;
 }

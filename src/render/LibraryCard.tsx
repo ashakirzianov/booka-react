@@ -1,13 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import {
-    LibraryCard, BookPath, getLocationsData, pathToString,
+    LibraryCard, getLocationsData,
 } from 'booka-common';
-import { BookCoverComp, Column, Modal, WithChildren } from '../atoms';
+import { BookCoverComp, Column, Modal } from '../atoms';
 import {
     useTheme, useAppDispatch, useAppSelector, useLibraryCardData,
 } from '../application';
+import { LinkToPath } from './Navigation';
 
 export function LibraryCardComp({ bookId }: {
     bookId: string,
@@ -90,17 +90,4 @@ export function LibraryCardComp({ bookId }: {
 
         </Column>
     </Modal>;
-}
-
-// TODO: extract
-function LinkToPath({ bookId, path, children }: WithChildren & {
-    bookId: string,
-    path?: BookPath,
-}) {
-    const to = path
-        ? `/book/${bookId}?p=${pathToString(path)}`
-        : `/book/${bookId}`;
-    return <Link to={to}>
-        {children}
-    </Link>;
 }
