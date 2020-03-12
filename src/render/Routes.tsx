@@ -25,7 +25,11 @@ function FeedRoute() {
 function BookRoute() {
     // TODO: make type safe ?
     const { bookId } = useParams<{ bookId: string }>();
-    return <BookScreen bookId={bookId} />;
+    const { toc } = useQuery();
+    return <BookScreen
+        bookId={bookId}
+        showToc={toc !== undefined}
+    />;
 }
 
 function useQuery() {

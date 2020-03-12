@@ -21,8 +21,9 @@ import { ConnectedAccountButton } from './AccountButton';
 import { FullScreenActivityIndicator } from '../atoms/Basics.native';
 import { BookLink } from '../core';
 
-export function BookScreen({ bookId }: {
+export function BookScreen({ bookId, showToc }: {
     bookId: string,
+    showToc: boolean,
 }) {
     const theme = useTheme();
     const link = useMemo((): BookLink => ({
@@ -37,9 +38,6 @@ export function BookScreen({ bookId }: {
         () => setVisible(!visible),
         [visible, setVisible],
     );
-
-    // TODO: implement
-    const showToc: boolean = false;
 
     switch (state.state) {
         case 'loading':
