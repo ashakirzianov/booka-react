@@ -1,9 +1,9 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useMemo } from 'react';
+import { Link, useLocation, useHistory } from 'react-router-dom';
 import { History } from 'history';
 
 import {
-    BookPath, pathToString, BookRange, rangeToString,
+    BookPath, pathToString,
 } from 'booka-common';
 import { WithChildren } from '../atoms';
 import { parse, stringify } from 'query-string';
@@ -49,18 +49,15 @@ function UpdateQueryLink({ queryKey, value, children }: WithChildren & {
     </Link>;
 }
 
-export function setBookPathUrl(path: BookPath | undefined, history: History) {
-    const p = path ? pathToString(path) : undefined;
-    replaceHistorySearch(history, 'p', p);
-}
+type ParamType = string | undefined | null;
+export function useHistoryAccess() {
+    const history = useHistory();
 
-export function setQuoteRangeUrl(range: BookRange | undefined, history: History) {
-    const q = range ? rangeToString(range) : undefined;
-    replaceHistorySearch(history, 'q', q);
-}
-
-export function setSearchQuery(query: string | undefined, history: History) {
-    replaceHistorySearch(history, 'q', query);
+    return useMemo(() => ({
+        replaceSearchParam(key: string, value: ParamType) {
+            replaceHistorySearch(history, key, value);
+        },
+    }), [history]);
 }
 
 function replaceHistorySearch(history: History, key: string, value: string | undefined | null) {

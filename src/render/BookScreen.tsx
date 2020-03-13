@@ -1,9 +1,8 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import {
     assertNever, positionForPath, BookPath, firstPath, uuid,
-    findBookmark, BookFragment, BookRange,
+    findBookmark, BookFragment, BookRange, pathToString, rangeToString,
 } from 'booka-common';
 
 import {
@@ -22,7 +21,7 @@ import { TableOfContentsComp } from './TableOfContentsComp';
 import { ConnectedAccountButton } from './AccountButton';
 import { FullScreenActivityIndicator } from '../atoms/Basics.native';
 import { BookLink } from '../core';
-import { setBookPathUrl, setQuoteRangeUrl, ShowTocLink } from './Navigation';
+import { useHistoryAccess, ShowTocLink } from './Navigation';
 
 export function BookScreen({ bookId, showToc, path, quote }: {
     bookId: string,
@@ -44,15 +43,15 @@ export function BookScreen({ bookId, showToc, path, quote }: {
         [visible, setVisible],
     );
 
-    const history = useHistory();
+    const { replaceSearchParam } = useHistoryAccess();
     const [needToScroll, setNeedToScroll] = useState(true);
     const updatePath = useCallback((p: BookPath | undefined) => {
         setNeedToScroll(false);
-        setBookPathUrl(p, history);
-    }, [setNeedToScroll, history]);
+        replaceSearchParam('p', p ? pathToString(p) : undefined);
+    }, [setNeedToScroll, replaceSearchParam]);
     const updateQuoteRange = useCallback((r: BookRange | undefined) => {
-        setQuoteRangeUrl(r, history);
-    }, [history]);
+        replaceSearchParam('q', r ? rangeToString(r) : undefined);
+    }, [replaceSearchParam]);
 
     switch (state.state) {
         case 'loading':
