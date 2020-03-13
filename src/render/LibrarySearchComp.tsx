@@ -1,15 +1,20 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { throttle } from 'lodash';
 
 import { useSearchData } from '../application';
 import {
     Column, SearchBox, BookListComp, ActivityIndicator,
 } from '../atoms';
+import { setSearchQuery } from './Navigation';
 
 export function LibrarySearchComp({ query }: {
     query: string | undefined,
 }) {
-    // TODO: implement
-    const querySearch = React.useCallback((q: string) => undefined, []);
+    const history = useHistory();
+    const querySearch = React.useCallback(throttle((q: string) => {
+        setSearchQuery(q, history);
+    }, 300), [history]);
 
     return <Column>
         <SearchBox

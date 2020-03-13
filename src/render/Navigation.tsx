@@ -39,3 +39,12 @@ export function setQuoteRangeUrl(range: BookRange | undefined, history: History)
             : undefined,
     });
 }
+
+export function setSearchQuery(query: string | undefined, history: History) {
+    history.replace({
+        ...history.location,
+        search: query
+            ? `?q=${query}`
+            : undefined,
+    });
+}

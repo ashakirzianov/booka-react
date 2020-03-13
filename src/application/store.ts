@@ -24,7 +24,7 @@ function configureStore() {
     const middlewares = process.env.NODE_ENV === 'development'
         ? [
             epicMiddleware,
-            // loggerMiddleware,
+            loggerMiddleware,
         ]
         : [epicMiddleware];
     const s = createStore(

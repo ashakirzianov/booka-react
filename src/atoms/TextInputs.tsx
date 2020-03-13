@@ -8,7 +8,7 @@ export function SearchBox({ initial, onSearch, onClear }: {
     onClear?: Callback,
 }) {
     return <input
-        value={initial}
+        defaultValue={initial}
         type='text'
         onChange={event => {
             if (event.target.value) {
