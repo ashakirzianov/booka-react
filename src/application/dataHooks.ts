@@ -114,7 +114,7 @@ export function useLibraryCardData(bookId: string) {
 export type SearchState = Loadable<{
     results: SearchResult[],
 }>;
-export function useSearchData(query: string | undefined) {
+export function useSearchData(query: string) {
     const data = useDataProvider();
     const [state, setState] = useState<SearchState>({ state: 'loading' });
     const { observable } = useMemo(

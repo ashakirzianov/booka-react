@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useSearchData, SearchState } from '../application';
+import { useSearchData } from '../application';
 import {
     Column, SearchBox, BookListComp, ActivityIndicator,
 } from '../atoms';
@@ -8,8 +8,6 @@ import {
 export function LibrarySearchComp({ query }: {
     query: string | undefined,
 }) {
-    const searchState = useSearchData(query);
-
     // TODO: implement
     const querySearch = React.useCallback((q: string) => undefined, []);
 
@@ -18,22 +16,24 @@ export function LibrarySearchComp({ query }: {
             initial={query}
             onSearch={querySearch}
         />
-        <SearchStateComp
-            state={searchState}
-        />
+        {query
+            ? <SearchQueryComp query={query} />
+            : null
+        }
     </Column>;
 }
 
-function SearchStateComp({ state }: {
-    state: SearchState,
+function SearchQueryComp({ query }: {
+    query: string,
 }) {
-    switch (state.state) {
+    const searchState = useSearchData(query);
+    switch (searchState.state) {
         case 'error':
             return <span>Search error</span>;
         case 'loading':
             return <ActivityIndicator />;
         case 'ready':
-            return <BookListComp books={state.results.map(r => r.desc)} />;
+            return <BookListComp books={searchState.results.map(r => r.desc)} />;
         default:
             return null;
     }
