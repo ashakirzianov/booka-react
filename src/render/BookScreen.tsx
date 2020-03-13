@@ -52,6 +52,10 @@ export function BookScreen({ bookId, showToc, path, quote }: {
     const updateQuoteRange = useCallback((r: BookRange | undefined) => {
         replaceSearchParam('q', r ? rangeToString(r) : undefined);
     }, [replaceSearchParam]);
+    const closeToc = useCallback(
+        () => replaceSearchParam('toc', undefined),
+        [replaceSearchParam],
+    );
 
     switch (state.state) {
         case 'loading':
@@ -96,8 +100,7 @@ export function BookScreen({ bookId, showToc, path, quote }: {
                                         theme={theme}
                                         toc={toc}
                                         id={bookId}
-                                        // TODO: implement
-                                        toggleToc={() => undefined}
+                                        closeToc={closeToc}
                                     />
                                     : null
                             }

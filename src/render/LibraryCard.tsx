@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import {
     LibraryCard, getLocationsData, BookPositionData,
@@ -7,7 +7,7 @@ import { Column, Modal } from '../atoms';
 import {
     useTheme, useAppDispatch, useAppSelector, useLibraryCardData, LibraryCardState,
 } from '../application';
-import { LinkToPath } from './Navigation';
+import { LinkToPath, useHistoryAccess } from './Navigation';
 import { BookCoverComp } from './BookList';
 
 export function LibraryCardComp({ bookId }: {
@@ -20,25 +20,26 @@ export function LibraryCardComp({ bookId }: {
     const { positions } = useAppSelector(s => s.currentPositions);
     const readingListCards = collections['reading-list'] ?? [];
 
-    // TODO: rethink
-    const closeCard = React.useCallback(() => dispatch({
-        type: 'card-close',
-    }), [dispatch]);
-
-    const addToReadingList = React.useCallback((card: LibraryCard) => dispatch({
+    const addToReadingList = useCallback((card: LibraryCard) => dispatch({
         type: 'collections-add-card',
         payload: {
             collection: 'reading-list',
             card,
         },
     }), [dispatch]);
-    const removeFromReadingList = React.useCallback((card: LibraryCard) => dispatch({
+    const removeFromReadingList = useCallback((card: LibraryCard) => dispatch({
         type: 'collections-remove-card',
         payload: {
             collection: 'reading-list',
             card,
         },
     }), [dispatch]);
+
+    const { replaceSearchParam } = useHistoryAccess();
+    const closeCard = useCallback(
+        () => replaceSearchParam('show', undefined),
+        [replaceSearchParam],
+    );
 
     const currentPosition = positions.find(
         p => p.card.id === bookId
@@ -47,7 +48,7 @@ export function LibraryCardComp({ bookId }: {
     const locationsData = currentPosition && getLocationsData(currentPosition);
     return <Modal
         theme={theme}
-        toggle={closeCard}
+        close={closeCard}
         open={true}
     >
         <Column>

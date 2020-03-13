@@ -6,16 +6,16 @@ import { Theme } from './theme';
 import { TextLine } from './Basics';
 import { IconButton } from './Buttons';
 import { OverlayBox } from './OverlayBox';
-import { WithChildren, defaults, Callback } from './common';
+import { WithChildren, defaults } from './common';
 import { Triad, Row } from './Layout';
 
-export type ModalProps = WithChildren<{
+export type ModalProps = Parameters<typeof Modal>[0];
+export function Modal(props: WithChildren & {
     theme: Theme,
     open: boolean,
     title?: string,
-    toggle: Callback<void>,
-}>;
-export function Modal(props: ModalProps) {
+    close: () => void,
+}) {
     return <Transition in={props.open} timeout={300}>
         {state => state === 'exited' ? null :
             <div style={{
@@ -29,7 +29,7 @@ export function Modal(props: ModalProps) {
                 transition: `${defaults.animationDuration}ms ease-in-out`,
                 opacity: state === 'entered' ? 1 : 0.01,
             }}
-                onClick={props.toggle}
+                onClick={props.close}
             >
                 <OverlayBox
                     animation={{
@@ -46,7 +46,7 @@ export function Modal(props: ModalProps) {
                                 />}
                                 left={<IconButton
                                     theme={props.theme}
-                                    onClick={props.toggle}
+                                    onClick={props.close}
                                     icon='close'
                                 />}
                             />
