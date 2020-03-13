@@ -16,10 +16,11 @@ export function Routes() {
 }
 
 function FeedRoute() {
-    const { show } = useQuery();
+    const { show, q } = useQuery();
 
     return <FeedScreen
         show={typeof show === 'string' ? show : undefined}
+        query={typeof q === 'string' ? q : undefined}
     />;
 }
 

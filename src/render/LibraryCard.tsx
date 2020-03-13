@@ -1,11 +1,11 @@
 import React from 'react';
 
 import {
-    LibraryCard, getLocationsData,
+    LibraryCard, getLocationsData, BookPositionData,
 } from 'booka-common';
 import { BookCoverComp, Column, Modal } from '../atoms';
 import {
-    useTheme, useAppDispatch, useAppSelector, useLibraryCardData,
+    useTheme, useAppDispatch, useAppSelector, useLibraryCardData, LibraryCardState,
 } from '../application';
 import { LinkToPath } from './Navigation';
 
@@ -44,50 +44,71 @@ export function LibraryCardComp({ bookId }: {
     );
     const isInReadingList = readingListCards.find(c => c.id === bookId) !== undefined;
     const locationsData = currentPosition && getLocationsData(currentPosition);
-    const continueReadPosition = locationsData?.mostRecent;
     return <Modal
         theme={theme}
         toggle={closeCard}
         open={true}
     >
         <Column>
-            {
-                // TODO: extract to separate components
-                cardState.state === 'loading'
-                    ? <span>Loading...</span>
-                    : <>
-                        <BookCoverComp card={cardState.card} />
-                        <span>{cardState.card.title}</span>
-                        <LinkToPath bookId={cardState.card.id}>Read from start</LinkToPath>
-                        {
-                            continueReadPosition
-                                ? <LinkToPath
-                                    bookId={cardState.card.id}
-                                    path={continueReadPosition.path}
-                                >
-                                    Continue reading
-                                    </LinkToPath>
-                                : null
-                        }
-                        {
-                            !isInReadingList
-                                ? <span
-                                    onClick={
-                                        () => addToReadingList(cardState.card)
-                                    }>
-                                    Add to reading list
-                                    </span>
-                                : <span
-                                    onClick={
-                                        () => removeFromReadingList(cardState.card)
-                                    }
-                                >
-                                    Remove from reading list
-                                    </span>
-                        }
-                    </>
-            }
-
+            <CardStateComp
+                cardState={cardState}
+                continueReadPosition={locationsData?.mostRecent}
+                isInReadingList={isInReadingList}
+                addToReadingList={addToReadingList}
+                removeFromReadingList={removeFromReadingList}
+            />
         </Column>
     </Modal>;
+}
+
+function CardStateComp({
+    cardState, continueReadPosition,
+    isInReadingList, addToReadingList, removeFromReadingList,
+}: {
+    cardState: LibraryCardState,
+    continueReadPosition: BookPositionData | undefined,
+    isInReadingList: boolean,
+    addToReadingList: (card: LibraryCard) => void,
+    removeFromReadingList: (card: LibraryCard) => void,
+}) {
+    switch (cardState.state) {
+        case 'loading':
+            return <span>Loading...</span>;
+        case 'error':
+            return <span>Error: ${cardState.err}</span>;
+        case 'ready':
+            return <>
+                <BookCoverComp card={cardState.card} />
+                <span>{cardState.card.title}</span>
+                <LinkToPath bookId={cardState.card.id}>Read from start</LinkToPath>
+                {
+                    continueReadPosition
+                        ? <LinkToPath
+                            bookId={cardState.card.id}
+                            path={continueReadPosition.path}
+                        >
+                            Continue reading
+                </LinkToPath>
+                        : null
+                }
+                {
+                    !isInReadingList
+                        ? <span
+                            onClick={
+                                () => addToReadingList(cardState.card)
+                            }>
+                            Add to reading list
+                </span>
+                        : <span
+                            onClick={
+                                () => removeFromReadingList(cardState.card)
+                            }
+                        >
+                            Remove from reading list
+                </span>
+                }
+            </>;
+        default:
+            return <span>Unexpected</span>;
+    }
 }

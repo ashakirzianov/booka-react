@@ -5,12 +5,13 @@ import {
 } from '../atoms';
 import { useTheme } from '../application';
 import { ConnectedAccountButton } from './AccountButton';
-import { LibrarySearchConnected } from './LibrarySearchComp';
+import { LibrarySearchComp } from './LibrarySearchComp';
 import { CollectionsConnected } from './CollectionsComp';
 import { RecentBooksConnected } from './RecentBooksComp';
 import { LibraryCardComp } from './LibraryCard';
 
-export function FeedScreen({ show }: {
+export function FeedScreen({ show, query }: {
+    query: string | undefined,
     show: string | undefined,
 }) {
     const theme = useTheme();
@@ -18,7 +19,7 @@ export function FeedScreen({ show }: {
         {show ? <LibraryCardComp bookId={show} /> : null}
         <FeedScreenHeader theme={theme} />
         <EmptyLine />
-        <LibrarySearchConnected />
+        <LibrarySearchComp query={query} />
         <CollectionsConnected />
         <RecentBooksConnected />
     </>;

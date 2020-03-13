@@ -9,6 +9,7 @@ import { map } from 'rxjs/operators';
 
 type Loadable<T> =
     | { state: 'loading' }
+    | { state: 'error', err?: any }
     | { state: 'ready' } & T
     ;
 
@@ -113,7 +114,7 @@ export function useLibraryCardData(bookId: string) {
 export type SearchState = Loadable<{
     results: SearchResult[],
 }>;
-export function useSearchData(query: string) {
+export function useSearchData(query: string | undefined) {
     const data = useDataProvider();
     const [state, setState] = useState<SearchState>({ state: 'loading' });
     const { observable } = useMemo(

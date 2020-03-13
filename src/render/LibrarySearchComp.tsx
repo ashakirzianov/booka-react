@@ -1,42 +1,22 @@
 import React from 'react';
-import { Callback } from 'booka-common';
-import { SearchState } from '../ducks';
-import { useAppDispatch, useTheme, useAppSelector } from '../application';
+
+import { useSearchData, SearchState } from '../application';
 import {
-    Column, SearchBox, BookListComp, ActivityIndicator, Themed,
+    Column, SearchBox, BookListComp, ActivityIndicator,
 } from '../atoms';
 
-export function LibrarySearchConnected() {
-    const dispatch = useAppDispatch();
-    const searchState = useAppSelector(s => s.search);
-
-    const querySearch = React.useCallback((query: string) => dispatch({
-        type: 'search-query',
-        payload: query,
-    }), [dispatch]);
-    const clearSearch = React.useCallback(() => dispatch({
-        type: 'search-clear',
-    }), [dispatch]);
-
-    const theme = useTheme();
-
-    return <LibrarySearchComp
-        theme={theme}
-        onSearch={querySearch}
-        onClear={clearSearch}
-        searchState={searchState}
-    />;
-}
-
-function LibrarySearchComp({ searchState, onSearch, onClear, }: Themed & {
-    onSearch: Callback<string>,
-    onClear: Callback,
-    searchState: SearchState,
+export function LibrarySearchComp({ query }: {
+    query: string | undefined,
 }) {
+    const searchState = useSearchData(query);
+
+    // TODO: implement
+    const querySearch = React.useCallback((q: string) => undefined, []);
+
     return <Column>
         <SearchBox
-            onSearch={onSearch}
-            onClear={onClear}
+            initial={query}
+            onSearch={querySearch}
         />
         <SearchStateComp
             state={searchState}
@@ -54,7 +34,6 @@ function SearchStateComp({ state }: {
             return <ActivityIndicator />;
         case 'ready':
             return <BookListComp books={state.results.map(r => r.desc)} />;
-        case 'empty':
         default:
             return null;
     }
