@@ -1,9 +1,8 @@
 import React from 'react';
 import { LibraryCard } from 'booka-common';
-import { Column, Row } from './Layout';
-import { Link } from 'react-router-dom';
+import { Column, Row } from '../atoms';
+import { ShowCardLink } from './Navigation';
 
-// TODO: move from atoms
 export function BookListComp({ books }: {
     books: LibraryCard[],
 }) {
@@ -27,7 +26,7 @@ export function BookListComp({ books }: {
 function BookItemComp({ card }: {
     card: LibraryCard,
 }) {
-    return <Link to={`/?show=${card.id}`}>
+    return <ShowCardLink bookId={card.id}>
         <Column
             centered
             width={200} height={200}
@@ -35,7 +34,7 @@ function BookItemComp({ card }: {
             <BookCoverComp card={card} />
             <BookTitleComp title={card.title} />
         </Column>
-    </Link>;
+    </ShowCardLink>;
 }
 
 export function BookCoverComp({ card }: {

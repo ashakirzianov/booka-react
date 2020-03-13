@@ -1,7 +1,6 @@
 export * from './common';
 export * from './Bars';
 export * from './Basics';
-export * from './BookList';
 export * from './Buttons';
 export * from './FacebookLogin';
 export { startupFbSdk } from './facebookSdk';

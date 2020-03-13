@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import {
     assertNever, positionForPath, BookPath, firstPath, uuid,
@@ -22,7 +22,7 @@ import { TableOfContentsComp } from './TableOfContentsComp';
 import { ConnectedAccountButton } from './AccountButton';
 import { FullScreenActivityIndicator } from '../atoms/Basics.native';
 import { BookLink } from '../core';
-import { setBookPathUrl, setQuoteRangeUrl } from './Navigation';
+import { setBookPathUrl, setQuoteRangeUrl, ShowTocLink } from './Navigation';
 
 export function BookScreen({ bookId, showToc, path, quote }: {
     bookId: string,
@@ -299,7 +299,7 @@ function TocButton({ theme, total, current }: Themed & {
     current: number,
     total: number | undefined,
 }) {
-    return <Link to='?toc'>
+    return <ShowTocLink toShow={true}>
         <TagButton
             theme={theme}
             text={
@@ -308,7 +308,7 @@ function TocButton({ theme, total, current }: Themed & {
                     : `${current}`
             }
         />
-    </Link>;
+    </ShowTocLink>;
 }
 
 function BookScreenFooter({

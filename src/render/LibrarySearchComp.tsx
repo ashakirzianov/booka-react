@@ -4,9 +4,10 @@ import { throttle } from 'lodash';
 
 import { useSearchData } from '../application';
 import {
-    Column, SearchBox, BookListComp, ActivityIndicator,
+    Column, SearchBox, ActivityIndicator,
 } from '../atoms';
 import { setSearchQuery } from './Navigation';
+import { BookListComp } from './BookList';
 
 export function LibrarySearchComp({ query }: {
     query: string | undefined,

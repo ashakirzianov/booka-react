@@ -3,11 +3,12 @@ import React from 'react';
 import {
     LibraryCard, getLocationsData, BookPositionData,
 } from 'booka-common';
-import { BookCoverComp, Column, Modal } from '../atoms';
+import { Column, Modal } from '../atoms';
 import {
     useTheme, useAppDispatch, useAppSelector, useLibraryCardData, LibraryCardState,
 } from '../application';
 import { LinkToPath } from './Navigation';
+import { BookCoverComp } from './BookList';
 
 export function LibraryCardComp({ bookId }: {
     bookId: string,
