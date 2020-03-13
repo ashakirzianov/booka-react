@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch, useParams, useLocation } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, useParams, useLocation, Redirect } from 'react-router-dom';
 
 import { FeedScreen } from './FeedScreen';
 import { BookScreen } from './BookScreen';
@@ -9,7 +9,8 @@ import { pathFromString, rangeFromString } from 'booka-common';
 export function Routes() {
     return <BrowserRouter>
         <Switch>
-            <Route exact path='/' children={<FeedRoute />} />
+            <Redirect exact from='/' to='/feed' />
+            <Route exact path='/feed' children={<FeedRoute />} />
             <Route path='/book/:bookId' children={<BookRoute />} />
         </Switch>
     </BrowserRouter>;
