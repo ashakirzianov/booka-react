@@ -1,10 +1,16 @@
 import { useState, useEffect, useMemo } from 'react';
 import {
-    AuthToken, Bookmark, Highlight, ResolvedCurrentPosition, BookFragment, LibraryCard,
+    AuthToken, Bookmark, Highlight, ResolvedCurrentPosition,
+    BookFragment, LibraryCard, SearchResult,
 } from 'booka-common';
 import { dataProvider } from '../data';
 import { BookLink } from '../core';
 import { map } from 'rxjs/operators';
+
+type Loadable<T> =
+    | { state: 'loading' }
+    | { state: 'ready' } & T
+    ;
 
 const dp = dataProvider();
 function useDataProvider() {
@@ -57,15 +63,9 @@ export function usePositionsData(token?: AuthToken) {
     return { positions, add };
 }
 
-type BookState = {
-    state: 'loading',
-} | {
-    state: 'error',
-    err?: any,
-} | {
-    state: 'ready',
+type BookState = Loadable<{
     fragment: BookFragment,
-};
+}>;
 export function useBookData(link: BookLink) {
     const data = useDataProvider();
     const [state, setState] = useState<BookState>({ state: 'loading' });
@@ -88,10 +88,9 @@ export function useBookData(link: BookLink) {
     return state;
 }
 
-export type LibraryCardState = { state: 'loading' } | {
-    state: 'ready',
+export type LibraryCardState = Loadable<{
     card: LibraryCard,
-};
+}>;
 export function useLibraryCardData(bookId: string) {
     const data = useDataProvider();
     const [state, setState] = useState<LibraryCardState>({ state: 'loading' });
@@ -103,6 +102,28 @@ export function useLibraryCardData(bookId: string) {
         const sub = observable.pipe(
             map((card): LibraryCardState => ({
                 state: 'ready', card,
+            }))
+        ).subscribe(setState);
+        return () => sub.unsubscribe();
+    }, [observable]);
+
+    return state;
+}
+
+export type SearchState = Loadable<{
+    results: SearchResult[],
+}>;
+export function useSearchData(query: string) {
+    const data = useDataProvider();
+    const [state, setState] = useState<SearchState>({ state: 'loading' });
+    const { observable } = useMemo(
+        () => data.search({ query }),
+        [data, query],
+    );
+    useEffect(() => {
+        const sub = observable.pipe(
+            map((results): SearchState => ({
+                state: 'ready', results,
             }))
         ).subscribe(setState);
         return () => sub.unsubscribe();
