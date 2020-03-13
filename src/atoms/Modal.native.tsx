@@ -9,11 +9,11 @@ import { TextLine } from './Basics';
 import { ModalProps } from './Modal';
 import { Row, Triad } from './Layout';
 
-export function Modal({ theme, open, title, toggle, children }: ModalProps) {
+export function Modal({ theme, open, title, close, children }: ModalProps) {
     return <NativeModal
         visible={open}
         animationType='slide'
-        onRequestClose={toggle}
+        onRequestClose={close}
     >
         <SafeAreaView>
             <View style={{
@@ -28,7 +28,7 @@ export function Modal({ theme, open, title, toggle, children }: ModalProps) {
                         />}
                         left={<IconButton
                             theme={theme}
-                            onClick={toggle}
+                            onClick={close}
                             icon='close'
                         />}
                     />

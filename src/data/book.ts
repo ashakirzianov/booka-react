@@ -1,4 +1,4 @@
-import { Observable, of, race } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
     BookFragment, BookPath, Book, fragmentForPath,
@@ -9,6 +9,7 @@ import { config } from '../config';
 import { BookLink } from '../core';
 import { createFetcher } from './fetcher';
 
+// TODO: fix this mess
 // TODO: fix naming (related to 'book' and 'card')
 
 type OpenLinkResult = {
@@ -58,20 +59,13 @@ function openPath(link: PathLink): Observable<OpenLinkResult> {
 }
 
 function getBookFragment(bookId: string, path: BookPath) {
-    return race(
-        getBookCached(bookId).pipe(
-            map(book => {
-                return {
-                    fragment: resolveFragment(book.book, path),
-                    card: book.card,
-                };
-            })
-        ),
-        fetchBookFragment(bookId, path).pipe(
-            map(res => {
-                return res.value;
-            })
-        ),
+    return getBookCached(bookId).pipe(
+        map(book => {
+            return {
+                fragment: resolveFragment(book.book, path),
+                card: book.card,
+            };
+        })
     );
 }
 
@@ -137,7 +131,7 @@ function getBookCached(id: string) {
 }
 
 const libFetcher = createFetcher<LibContract>(config().libUrl);
-function fetchBookFragment(id: string, path: BookPath) {
+export function fetchBookFragment(id: string, path: BookPath) {
     return libFetcher.get('/fragment', {
         query: {
             id,

@@ -1,73 +1,44 @@
 import React from 'react';
-import { Callback, LibraryCard } from 'booka-common';
-import { SearchState } from '../ducks';
-import { useAppDispatch, useTheme, useAppSelector } from '../application';
+import { throttle } from 'lodash';
+
+import { useSearchData } from '../application';
 import {
-    Column, SearchBox, BookListComp, ActivityIndicator, Themed,
+    Column, SearchBox, ActivityIndicator,
 } from '../atoms';
-import { LibraryCardConnected } from './LibraryCardComp';
+import { useHistoryAccess } from './Navigation';
+import { BookListComp } from './BookList';
 
-export function LibrarySearchConnected() {
-    const dispatch = useAppDispatch();
-    const searchState = useAppSelector(s => s.search);
-
-    const querySearch = React.useCallback((query: string) => dispatch({
-        type: 'search-query',
-        payload: query,
-    }), [dispatch]);
-    const clearSearch = React.useCallback(() => dispatch({
-        type: 'search-clear',
-    }), [dispatch]);
-    const openBook = React.useCallback((card: LibraryCard) => dispatch({
-        type: 'card-show',
-        payload: card,
-    }), [dispatch]);
-
-    const theme = useTheme();
-
-    return <LibrarySearchComp
-        theme={theme}
-        onSearch={querySearch}
-        onClear={clearSearch}
-        onSelectBook={openBook}
-        searchState={searchState}
-    />;
-}
-
-function LibrarySearchComp({ searchState, onSearch, onSelectBook, onClear, }: Themed & {
-    onSearch: Callback<string>,
-    onSelectBook: Callback<LibraryCard>,
-    onClear: Callback,
-    searchState: SearchState,
+export function LibrarySearchComp({ query }: {
+    query: string | undefined,
 }) {
+    const { replaceSearchParam } = useHistoryAccess();
+    const querySearch = React.useCallback(throttle((q: string) => {
+        replaceSearchParam('q', q ? q : undefined);
+    }, 300), [replaceSearchParam]);
+
     return <Column>
-        <LibraryCardConnected />
         <SearchBox
-            onSearch={onSearch}
-            onClear={onClear}
+            initial={query}
+            onSearch={querySearch}
         />
-        <SearchStateComp
-            state={searchState}
-            onSelectBook={onSelectBook}
-        />
+        {query
+            ? <SearchQueryComp query={query} />
+            : null
+        }
     </Column>;
 }
 
-function SearchStateComp({ state, onSelectBook }: {
-    state: SearchState,
-    onSelectBook: Callback<LibraryCard>,
+function SearchQueryComp({ query }: {
+    query: string,
 }) {
-    switch (state.state) {
+    const searchState = useSearchData(query);
+    switch (searchState.state) {
         case 'error':
             return <span>Search error</span>;
         case 'loading':
             return <ActivityIndicator />;
         case 'ready':
-            return <BookListComp
-                books={state.results.map(r => r.desc)}
-                onClick={onSelectBook}
-            />;
-        case 'empty':
+            return <BookListComp books={searchState.results.map(r => r.desc)} />;
         default:
             return null;
     }

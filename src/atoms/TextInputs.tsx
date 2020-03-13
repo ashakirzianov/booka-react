@@ -1,20 +1,15 @@
 import React from 'react';
-import { Callback } from 'booka-common';
 
-export type SearchBoxProps = {
+export function SearchBox({ initial, onSearch }: {
     placeholder?: string,
-    onSearch: Callback<string>,
-    onClear: Callback,
-};
-export function SearchBox({ onSearch, onClear }: SearchBoxProps) {
+    initial?: string,
+    onSearch: (query: string) => void,
+}) {
     return <input
+        defaultValue={initial}
         type='text'
         onChange={event => {
-            if (event.target.value) {
-                onSearch(event.target.value);
-            } else {
-                onClear();
-            }
+            onSearch(event.target.value);
         }}
     />;
 }

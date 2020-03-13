@@ -1,12 +1,12 @@
 // import React from 'react';
 import { View } from 'react-native';
+import { Link } from 'react-router-dom';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 
 import {
     Themed, colors, getFontSize, getFontFamily, FontFamilies,
 } from './theme';
-import { Link } from './Router';
 import { point, WithChildren } from './common';
 import { IconName, Icon } from './Icons';
 

@@ -3,25 +3,29 @@ import * as React from 'react';
 import {
     Themed, TopBar, point, Triad, EmptyLine,
 } from '../atoms';
+import { useTheme } from '../application';
 import { ConnectedAccountButton } from './AccountButton';
-import { LibrarySearchConnected } from './LibrarySearchComp';
+import { LibrarySearchComp } from './LibrarySearchComp';
 import { CollectionsConnected } from './CollectionsComp';
 import { RecentBooksConnected } from './RecentBooksComp';
-import { useTheme } from '../application';
+import { LibraryCardComp } from './LibraryCard';
 
-export function LibraryScreen() {
+export function FeedScreen({ show, query }: {
+    query: string | undefined,
+    show: string | undefined,
+}) {
     const theme = useTheme();
     return <>
-        <LibraryScreenHeader theme={theme} />
+        {show ? <LibraryCardComp bookId={show} /> : null}
+        <FeedScreenHeader theme={theme} />
         <EmptyLine />
-        <LibrarySearchConnected />
+        <LibrarySearchComp query={query} />
         <CollectionsConnected />
         <RecentBooksConnected />
     </>;
 }
 
-type LibraryScreenHeaderProps = Themed;
-function LibraryScreenHeader({ theme }: LibraryScreenHeaderProps) {
+function FeedScreenHeader({ theme }: Themed) {
     return <TopBar
         theme={theme}
         open={true}

@@ -1,7 +1,8 @@
 import React, { useState, useCallback, useMemo } from 'react';
+
 import {
     assertNever, positionForPath, BookPath, firstPath, uuid,
-    findBookmark, BookFragment,
+    findBookmark, BookFragment, BookRange, pathToString, rangeToString,
 } from 'booka-common';
 
 import {
@@ -20,18 +21,19 @@ import { TableOfContentsComp } from './TableOfContentsComp';
 import { ConnectedAccountButton } from './AccountButton';
 import { FullScreenActivityIndicator } from '../atoms/Basics.native';
 import { BookLink } from '../core';
+import { useHistoryAccess, ShowTocLink } from './Navigation';
 
-export function BookScreen({
-    bookId,
-}: {
-    // TODO: get from path ?
+export function BookScreen({ bookId, showToc, path, quote }: {
     bookId: string,
+    showToc: boolean,
+    path?: BookPath,
+    quote?: BookRange,
 }) {
     const theme = useTheme();
     const link = useMemo((): BookLink => ({
         link: 'book',
-        bookId,
-    }), [bookId]);
+        bookId, path,
+    }), [bookId, path]);
     const state = useBookData(link);
     const { highlights } = useHighlightsData(bookId);
 
@@ -41,8 +43,19 @@ export function BookScreen({
         [visible, setVisible],
     );
 
-    // TODO: implement
-    const showToc: boolean = false;
+    const { replaceSearchParam } = useHistoryAccess();
+    const [needToScroll, setNeedToScroll] = useState(true);
+    const updatePath = useCallback((p: BookPath | undefined) => {
+        setNeedToScroll(false);
+        replaceSearchParam('p', p ? pathToString(p) : undefined);
+    }, [setNeedToScroll, replaceSearchParam]);
+    const updateQuoteRange = useCallback((r: BookRange | undefined) => {
+        replaceSearchParam('q', r ? rangeToString(r) : undefined);
+    }, [replaceSearchParam]);
+    const closeToc = useCallback(
+        () => replaceSearchParam('toc', undefined),
+        [replaceSearchParam],
+    );
 
     switch (state.state) {
         case 'loading':
@@ -63,7 +76,6 @@ export function BookScreen({
                     visible={visible}
                     // TODO: implement
                     path={fragment.current.path}
-                    toggleToc={() => undefined}
                 />
                 <Row fullWidth centered
                     backgroundColor={colors(theme).primary}
@@ -76,11 +88,10 @@ export function BookScreen({
                                 theme={theme}
                                 fragment={fragment}
                                 highlights={highlights}
-                                // TODO: implement
-                                pathToScroll={undefined}
-                                updateBookPosition={() => undefined}
-                                quoteRange={undefined}
-                                setQuoteRange={() => undefined}
+                                pathToScroll={needToScroll ? path : undefined}
+                                updateBookPosition={updatePath}
+                                quoteRange={quote}
+                                setQuoteRange={updateQuoteRange}
                                 openRef={() => undefined}
                             />
                             {
@@ -89,8 +100,7 @@ export function BookScreen({
                                         theme={theme}
                                         toc={toc}
                                         id={bookId}
-                                        // TODO: implement
-                                        toggleToc={() => undefined}
+                                        closeToc={closeToc}
                                     />
                                     : null
                             }
@@ -287,30 +297,28 @@ function SelectPaletteButton({ theme, text, name, setPalette }: PaletteButtonPro
     />;
 }
 
-type TocButtonProps = Themed & {
+function TocButton({ theme, total, current }: Themed & {
     current: number,
     total: number | undefined,
-    toggleToc: Callback,
-};
-function TocButton({ theme, total, current, toggleToc }: TocButtonProps) {
-    return <TagButton
-        theme={theme}
-        text={
-            total !== undefined
-                ? `${current} of ${total}`
-                : `${current}`
-        }
-        onClick={toggleToc}
-    />;
+}) {
+    return <ShowTocLink toShow={true}>
+        <TagButton
+            theme={theme}
+            text={
+                total !== undefined
+                    ? `${current} of ${total}`
+                    : `${current}`
+            }
+        />
+    </ShowTocLink>;
 }
 
 function BookScreenFooter({
-    fragment, path, theme, visible, toggleToc,
+    fragment, path, theme, visible,
 }: Themed & {
     fragment: BookFragment,
     path: BookPath,
     visible: boolean,
-    toggleToc: () => void,
 }) {
     const total = fragment.toc
         ? pageForPosition(fragment.toc.length)
@@ -326,7 +334,6 @@ function BookScreenFooter({
                     theme={theme}
                     current={currentPage}
                     total={total}
-                    toggleToc={toggleToc}
                 />
             }
             right={<TextLine

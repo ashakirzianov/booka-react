@@ -4,24 +4,23 @@ import { TableOfContents, TableOfContentsItem, pathToString } from 'booka-common
 
 import {
     Row, Tab, Column, point,
-    StretchTextLink, TextLine, Themed, Modal, Callback,
+    StretchTextLink, TextLine, Themed, Modal,
 } from '../atoms';
 import { linkToString } from '../core';
 import { pageForPosition } from './common';
 
-export type TableOfContentsProps = Themed & {
+export function TableOfContentsComp({
+    theme, toc, id, closeToc,
+}: Themed & {
     toc: TableOfContents,
     id: string,
-    toggleToc: Callback,
-};
-export function TableOfContentsComp({
-    theme, toc, id, toggleToc,
-}: TableOfContentsProps) {
+    closeToc: () => void,
+}) {
     const maxLevel = toc.items.reduce((max, i) => Math.max(max, i.level), 0);
     return <Modal
         theme={theme}
         title={toc.title}
-        toggle={toggleToc}
+        close={closeToc}
         open={true}
     >
         <Column margin={point(1)}>
