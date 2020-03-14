@@ -21,7 +21,7 @@ import { TableOfContentsComp } from './TableOfContentsComp';
 import { ConnectedAccountButton } from './AccountButton';
 import { FullScreenActivityIndicator } from '../atoms/Basics.native';
 import { BookLink } from '../core';
-import { useHistoryAccess, ShowTocLink } from './Navigation';
+import { useUrlActions, ShowTocLink } from './Navigation';
 
 export function BookScreen({ bookId, showToc, path, quote }: {
     bookId: string,
@@ -43,18 +43,15 @@ export function BookScreen({ bookId, showToc, path, quote }: {
         [visible, setVisible],
     );
 
-    const { replaceSearchParam } = useHistoryAccess();
+    const { updateBookPath, updateQuoteRange, updateToc } = useUrlActions();
     const [needToScroll, setNeedToScroll] = useState(true);
     const updatePath = useCallback((p: BookPath | undefined) => {
         setNeedToScroll(false);
-        replaceSearchParam('p', p ? pathToString(p) : undefined);
-    }, [setNeedToScroll, replaceSearchParam]);
-    const updateQuoteRange = useCallback((r: BookRange | undefined) => {
-        replaceSearchParam('q', r ? rangeToString(r) : undefined);
-    }, [replaceSearchParam]);
+        updateBookPath(p);
+    }, [setNeedToScroll, updateBookPath]);
     const closeToc = useCallback(
-        () => replaceSearchParam('toc', undefined),
-        [replaceSearchParam],
+        () => updateToc(false),
+        [updateToc],
     );
 
     switch (state.state) {

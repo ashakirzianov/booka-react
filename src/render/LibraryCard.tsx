@@ -7,7 +7,7 @@ import { Column, Modal } from '../atoms';
 import {
     useTheme, useAppDispatch, useAppSelector, useLibraryCardData, LibraryCardState,
 } from '../application';
-import { LinkToPath, useHistoryAccess } from './Navigation';
+import { LinkToPath, useUrlActions } from './Navigation';
 import { BookCoverComp } from './BookList';
 
 export function LibraryCardComp({ bookId }: {
@@ -35,10 +35,10 @@ export function LibraryCardComp({ bookId }: {
         },
     }), [dispatch]);
 
-    const { replaceSearchParam } = useHistoryAccess();
+    const { updateShowCard } = useUrlActions();
     const closeCard = useCallback(
-        () => replaceSearchParam('show', undefined),
-        [replaceSearchParam],
+        () => updateShowCard(undefined),
+        [updateShowCard],
     );
 
     const currentPosition = positions.find(

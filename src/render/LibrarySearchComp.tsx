@@ -5,16 +5,16 @@ import { useSearchData } from '../application';
 import {
     Column, SearchBox, ActivityIndicator,
 } from '../atoms';
-import { useHistoryAccess } from './Navigation';
+import { useUrlActions } from './Navigation';
 import { BookListComp } from './BookList';
 
 export function LibrarySearchComp({ query }: {
     query: string | undefined,
 }) {
-    const { replaceSearchParam } = useHistoryAccess();
+    const { updateSearchQuery } = useUrlActions();
     const querySearch = React.useCallback(throttle((q: string) => {
-        replaceSearchParam('q', q ? q : undefined);
-    }, 300), [replaceSearchParam]);
+        updateSearchQuery(q ? q : undefined);
+    }, 300), [updateSearchQuery]);
 
     return <Column>
         <SearchBox

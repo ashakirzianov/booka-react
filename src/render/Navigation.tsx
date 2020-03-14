@@ -3,13 +3,11 @@ import { Link, useLocation, useHistory } from 'react-router-dom';
 import { History } from 'history';
 
 import {
-    BookPath, pathToString,
+    BookPath, pathToString, BookRange, rangeToString,
 } from 'booka-common';
 import { WithChildren } from '../atoms';
 import { parse, stringify } from 'query-string';
 
-// TODO: find better location
-// TODO: fix naming
 export function LinkToPath({ bookId, path, children }: WithChildren & {
     bookId: string,
     path?: BookPath,
@@ -49,13 +47,24 @@ function UpdateQueryLink({ queryKey, value, children }: WithChildren & {
     </Link>;
 }
 
-type ParamType = string | undefined | null;
-export function useHistoryAccess() {
+export function useUrlActions() {
     const history = useHistory();
 
     return useMemo(() => ({
-        replaceSearchParam(key: string, value: ParamType) {
-            replaceHistorySearch(history, key, value);
+        updateBookPath(path: BookPath | undefined) {
+            replaceHistorySearch(history, 'p', path ? pathToString(path) : undefined);
+        },
+        updateQuoteRange(range: BookRange | undefined) {
+            replaceHistorySearch(history, 'q', range ? rangeToString(range) : undefined);
+        },
+        updateToc(open: boolean) {
+            replaceHistorySearch(history, 'toc', open ? null : undefined);
+        },
+        updateShowCard(bookId: string | undefined) {
+            replaceHistorySearch(history, 'show', bookId);
+        },
+        updateSearchQuery(query: string | undefined) {
+            replaceHistorySearch(history, 'q', query);
         },
     }), [history]);
 }
