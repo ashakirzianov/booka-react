@@ -6,7 +6,7 @@ import {
 import { Column, Modal } from '../atoms';
 import {
     useTheme, useAppDispatch, useAppSelector, useLibraryCardData,
-    useUrlActions, LibraryCardState,
+    useUrlActions, LibraryCardState, useCollections,
 } from '../application';
 import { LinkToPath } from './Navigation';
 import { BookCoverComp } from './BookList';
@@ -15,26 +15,19 @@ export function LibraryCardComp({ bookId }: {
     bookId: string,
 }) {
     const cardState = useLibraryCardData(bookId);
-    const dispatch = useAppDispatch();
     const theme = useTheme();
-    const collections = useAppSelector(s => s.collections.collections);
     const { positions } = useAppSelector(s => s.currentPositions);
-    const readingListCards = collections['reading-list'] ?? [];
 
-    const addToReadingList = useCallback((card: LibraryCard) => dispatch({
-        type: 'collections-add-card',
-        payload: {
-            collection: 'reading-list',
-            card,
-        },
-    }), [dispatch]);
-    const removeFromReadingList = useCallback((card: LibraryCard) => dispatch({
-        type: 'collections-remove-card',
-        payload: {
-            collection: 'reading-list',
-            card,
-        },
-    }), [dispatch]);
+    const { state, add, remove } = useCollections();
+    const readingListCards = state.collections['reading-list'] ?? [];
+    const addToReadingList = useCallback(
+        (card: LibraryCard) => add(card, 'reading-list'),
+        [add],
+    );
+    const removeFromReadingList = useCallback((card: LibraryCard) =>
+        remove(card.id, 'reading-list'),
+        [remove],
+    );
 
     const { updateShowCard } = useUrlActions();
     const closeCard = useCallback(

@@ -16,19 +16,13 @@ export function getCollections(token?: AuthToken) {
         }).subscribe(r => replaceState(r.value));
     }
 
-    function add({ card, collection }: {
-        card: LibraryCard,
-        collection: CardCollectionName,
-    }) {
+    function add(card: LibraryCard, collection: CardCollectionName) {
         addChange({
             change: 'collection-add',
             card, collection,
         });
     }
-    function remove({ bookId, collection }: {
-        bookId: string,
-        collection: CardCollectionName,
-    }) {
+    function remove(bookId: string, collection: CardCollectionName) {
         addChange({
             change: 'collection-remove',
             bookId, collection,
