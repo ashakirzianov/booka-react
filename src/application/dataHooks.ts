@@ -95,7 +95,7 @@ export function useBookData(link: BookLink) {
 export type LibraryCardState = Loadable<{
     card: LibraryCard,
 }>;
-export function useLibraryCardData(bookId: string) {
+export function useLibraryCard(bookId: string) {
     const data = useDataProvider();
     const [state, setState] = useState<LibraryCardState>({ state: 'loading' });
     const { observable } = useMemo(
