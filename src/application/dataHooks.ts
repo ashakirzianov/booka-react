@@ -1,13 +1,14 @@
 import { useState, useEffect, useMemo } from 'react';
+import { map } from 'rxjs/operators';
+
 import {
     AuthToken, Bookmark, Highlight, ResolvedCurrentPosition,
     BookFragment, LibraryCard, SearchResult,
 } from 'booka-common';
 import { dataProvider } from '../data';
 import { BookLink } from '../core';
-import { map } from 'rxjs/operators';
 import { useUrlActions } from './urlHooks';
-import { useAppSelector } from './hooks';
+import { useAppSelector } from './reduxHooks';
 
 type Loadable<T> =
     | { state: 'loading' }
