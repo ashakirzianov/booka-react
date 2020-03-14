@@ -12,7 +12,7 @@ import { LinkToPath } from './Navigation';
 export function RecentBooksConnected() {
     const state = useAppSelector(s => s.currentPositions);
 
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     return <RecentBooksComp
         theme={theme}

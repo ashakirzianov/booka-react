@@ -40,7 +40,7 @@ export function highlightsForId(bookId: string, token?: AuthToken) {
         });
     }
 
-    return { subject, add, remove, updateGroup };
+    return { observable: subject, add, remove, updateGroup };
 }
 
 function applyChange(highlights: Highlight[], change: LocalChange): Highlight[] {

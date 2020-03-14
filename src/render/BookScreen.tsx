@@ -29,13 +29,13 @@ export function BookScreen({ bookId, showToc, path, quote }: {
     path?: BookPath,
     quote?: BookRange,
 }) {
-    const theme = useTheme();
+    const { theme } = useTheme();
     const link = useMemo((): BookLink => ({
         link: 'book',
         bookId, path,
     }), [bookId, path]);
-    const { state: bookState } = useBook(link);
-    const { state: highlights } = useHighlights(bookId);
+    const { bookState } = useBook(link);
+    const { highlights } = useHighlights(bookId);
 
     const [visible, setVisible] = useState(true);
     const toggleControls = useCallback(
@@ -149,7 +149,7 @@ function BookScreenHeader({ theme, visible }: BookScreenHeaderProps) {
 
 function AddBookmarkButton() {
     const dispatch = useAppDispatch();
-    const theme = useTheme();
+    const { theme } = useTheme();
     const { bookId, path } = useAppSelector(state => state.book.link);
     const bookmarks = useAppSelector(state => state.bookmarks);
 

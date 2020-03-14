@@ -14,7 +14,7 @@ export function FeedScreen({ show, query }: {
     query: string | undefined,
     show: string | undefined,
 }) {
-    const theme = useTheme();
+    const { theme } = useTheme();
     return <>
         {show ? <LibraryCardComp bookId={show} /> : null}
         <FeedScreenHeader theme={theme} />

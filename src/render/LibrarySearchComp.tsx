@@ -10,7 +10,7 @@ import { BookListComp } from './BookList';
 export function LibrarySearchComp({ query }: {
     query: string | undefined,
 }) {
-    const { state, doQuery } = useLibrarySearch(query);
+    const { searchState, doQuery } = useLibrarySearch(query);
     const querySearch = React.useCallback(throttle((q: string) => {
         doQuery(q ? q : undefined);
     }, 300), [doQuery]);
@@ -21,7 +21,7 @@ export function LibrarySearchComp({ query }: {
             onSearch={querySearch}
         />
         {query
-            ? <SearchQueryComp state={state} />
+            ? <SearchQueryComp state={searchState} />
             : null
         }
     </Column>;

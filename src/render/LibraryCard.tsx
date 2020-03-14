@@ -14,19 +14,23 @@ import { BookCoverComp } from './BookList';
 export function LibraryCardComp({ bookId }: {
     bookId: string,
 }) {
-    const { state: cardState, closeCard } = useLibraryCard(bookId);
-    const theme = useTheme();
+    const { cardState, closeCard } = useLibraryCard(bookId);
+    const { theme } = useTheme();
     const { positions } = useAppSelector(s => s.currentPositions);
 
-    const { state: { collections }, add, remove } = useCollections();
+    const {
+        collectionsState: { collections },
+        addToCollection,
+        removeFromCollection,
+    } = useCollections();
     const readingListCards = collections['reading-list'] ?? [];
     const addToReadingList = useCallback(
-        (card: LibraryCard) => add(card, 'reading-list'),
-        [add],
+        (card: LibraryCard) => addToCollection(card, 'reading-list'),
+        [addToCollection],
     );
     const removeFromReadingList = useCallback((card: LibraryCard) =>
-        remove(card.id, 'reading-list'),
-        [remove],
+        removeFromCollection(card.id, 'reading-list'),
+        [removeFromCollection],
     );
 
     const currentPosition = positions.find(

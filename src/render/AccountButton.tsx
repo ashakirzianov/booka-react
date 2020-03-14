@@ -9,12 +9,12 @@ import { AccountState } from '../ducks';
 import { useTheme, useAccount } from '../application';
 
 export function ConnectedAccountButton() {
-    const theme = useTheme();
-    const { state, logout } = useAccount();
+    const { theme } = useTheme();
+    const { accountState, logout } = useAccount();
 
     return <AccountButton
         theme={theme}
-        account={state}
+        account={accountState}
         logout={logout}
     />;
 }
