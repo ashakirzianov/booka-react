@@ -6,7 +6,7 @@ import {
 import { useTheme } from '../application';
 import { ConnectedAccountButton } from './AccountButton';
 import { LibrarySearchComp } from './LibrarySearchComp';
-import { CollectionsConnected } from './CollectionsComp';
+import { CollectionsComp } from './CollectionsComp';
 import { RecentBooksConnected } from './RecentBooksComp';
 import { LibraryCardComp } from './LibraryCard';
 
@@ -20,7 +20,7 @@ export function FeedScreen({ show, query }: {
         <FeedScreenHeader theme={theme} />
         <EmptyLine />
         <LibrarySearchComp query={query} />
-        <CollectionsConnected />
+        <CollectionsComp />
         <RecentBooksConnected />
     </>;
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { map } from 'rxjs/operators';
 
 import {
@@ -111,7 +111,13 @@ export function useLibraryCard(bookId: string) {
         return () => sub.unsubscribe();
     }, [observable]);
 
-    return state;
+    const { updateShowCard } = useUrlActions();
+    const closeCard = useCallback(
+        () => updateShowCard(undefined),
+        [updateShowCard],
+    );
+
+    return { state, closeCard };
 }
 
 export type SearchState = Loadable<{

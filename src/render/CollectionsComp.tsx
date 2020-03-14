@@ -1,15 +1,14 @@
 import React from 'react';
-import { CardCollections, LibraryCard } from 'booka-common';
+import { LibraryCard } from 'booka-common';
 import { Column, Themed } from '../atoms';
 import { useTheme, useCollections } from '../application';
 
 import { BookListComp } from './BookList';
 
 export function CollectionsComp() {
-    const { state } = useCollections();
-
     const theme = useTheme();
 
+    const { state } = useCollections();
     const readingList = state.collections['reading-list'];
 
     return <Column>
