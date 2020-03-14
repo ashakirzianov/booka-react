@@ -1,13 +1,11 @@
 import React, { useState, useCallback, useMemo } from 'react';
 
 import {
-    assertNever, positionForPath, BookPath, firstPath, uuid,
-    findBookmark, BookFragment, BookRange,
+    assertNever, positionForPath, BookPath, findBookmark, BookFragment, BookRange,
 } from 'booka-common';
 
 import {
-    useAppDispatch, useAppSelector, useTheme,
-    useBook, useHighlights, useUrlActions,
+    useTheme, useBook, useHighlights, useUrlActions, useBookmarks,
 } from '../application';
 import {
     Column, point, Row, Callback, Themed,
@@ -64,6 +62,8 @@ export function BookScreen({ bookId, showToc, path, quote }: {
             const { toc } = fragment;
             return <>
                 <BookScreenHeader
+                    bookId={bookId}
+                    path={path}
                     theme={theme}
                     visible={visible}
                 />
@@ -126,10 +126,13 @@ export function BookScreen({ bookId, showToc, path, quote }: {
     }
 }
 
-type BookScreenHeaderProps = Themed & {
+function BookScreenHeader({
+    theme, visible, bookId, path,
+}: Themed & {
+    bookId: string,
+    path: BookPath | undefined,
     visible: boolean,
-};
-function BookScreenHeader({ theme, visible }: BookScreenHeaderProps) {
+}) {
     return <TopBar
         theme={theme}
         open={visible}
@@ -139,7 +142,7 @@ function BookScreenHeader({ theme, visible }: BookScreenHeaderProps) {
             left={<LibButton theme={theme} />}
             right={
                 <>
-                    <AddBookmarkButton />
+                    <AddBookmarkButton bookId={bookId} path={path} />
                     <AppearanceButton />
                     <ConnectedAccountButton />
                 </>}
@@ -147,26 +150,24 @@ function BookScreenHeader({ theme, visible }: BookScreenHeaderProps) {
     </TopBar>;
 }
 
-function AddBookmarkButton() {
-    const dispatch = useAppDispatch();
+function AddBookmarkButton({ bookId, path }: {
+    bookId: string,
+    path: BookPath | undefined,
+}) {
     const { theme } = useTheme();
-    const { bookId, path } = useAppSelector(state => state.book.link);
-    const bookmarks = useAppSelector(state => state.bookmarks);
+    const { bookmarks, addBookmark, removeBookmark } = useBookmarks(bookId);
 
     const currentBookmark = path
         ? findBookmark(bookmarks, bookId, path) : undefined;
-    if (currentBookmark) {
+    if (!path) {
+        return null;
+    } else if (currentBookmark) {
         return <TextButton
             theme={theme}
             text='Remove Bookmark'
             fontSize='small'
             fontFamily='menu'
-            onClick={() => dispatch({
-                type: 'bookmarks-remove',
-                payload: {
-                    bookmarkId: currentBookmark._id,
-                },
-            })}
+            onClick={() => removeBookmark(currentBookmark._id)}
         />;
     } else {
         return <TextButton
@@ -174,18 +175,7 @@ function AddBookmarkButton() {
             text='Add Bookmark'
             fontSize='small'
             fontFamily='menu'
-            onClick={() => dispatch({
-                type: 'bookmarks-add',
-                payload: {
-                    bookmark: {
-                        entity: 'bookmark',
-                        _id: uuid(),
-                        local: true,
-                        bookId,
-                        path: path || firstPath(),
-                    },
-                },
-            })}
+            onClick={() => addBookmark(path)}
         />;
     }
 }
