@@ -5,8 +5,8 @@ import {
 } from 'booka-common';
 import { Column, Modal } from '../atoms';
 import {
-    useTheme, useAppSelector, useLibraryCard,
-    LibraryCardState, useCollections,
+    useTheme, useLibraryCard,
+    LibraryCardState, useCollections, usePositions,
 } from '../application';
 import { LinkToPath } from './Navigation';
 import { BookCoverComp } from './BookList';
@@ -16,7 +16,7 @@ export function LibraryCardComp({ bookId }: {
 }) {
     const { cardState, closeCard } = useLibraryCard(bookId);
     const { theme } = useTheme();
-    const { positions } = useAppSelector(s => s.currentPositions);
+    const { positions } = usePositions();
 
     const {
         collectionsState: { collections },

@@ -2,31 +2,30 @@ import React from 'react';
 import {
     getLocationsData, ResolvedCurrentPosition,
 } from 'booka-common';
-import { CurrentPositionsState } from '../ducks';
-import { useTheme, useAppSelector } from '../application';
+import { useTheme, usePositions } from '../application';
 import {
     Column, Themed,
 } from '../atoms';
 import { LinkToPath } from './Navigation';
 
 export function RecentBooksConnected() {
-    const state = useAppSelector(s => s.currentPositions);
+    const { positions } = usePositions();
 
     const { theme } = useTheme();
 
     return <RecentBooksComp
         theme={theme}
-        state={state}
+        positions={positions}
     />;
 }
 
-function RecentBooksComp({ state }: Themed & {
-    state: CurrentPositionsState,
+function RecentBooksComp({ positions }: Themed & {
+    positions: ResolvedCurrentPosition[],
 }) {
     return <Column>
-        <span key='label'>Recent books: {state.positions.length}</span>
+        <span key='label'>Recent books: {positions.length}</span>
         {
-            state.positions.map((recentBook, idx) => {
+            positions.map((recentBook, idx) => {
                 return <CurrentBookComp
                     key={idx}
                     currentPosition={recentBook}
