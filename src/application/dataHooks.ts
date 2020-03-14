@@ -3,7 +3,7 @@ import { map } from 'rxjs/operators';
 
 import {
     AuthToken, Bookmark, Highlight, ResolvedCurrentPosition,
-    BookFragment, LibraryCard, SearchResult, AccountInfo,
+    BookFragment, LibraryCard, SearchResult, CardCollections,
 } from 'booka-common';
 import { dataProvider } from '../data';
 import { BookLink } from '../core';
@@ -149,4 +149,26 @@ export function useAccount() {
         type: 'account-logout',
     }), [dispatch]);
     return { state, logout };
+}
+
+export type CollectionsState = {
+    collections: CardCollections,
+};
+export function useCollections() {
+    const data = useDataProvider();
+    const [state, setState] = useState<CollectionsState>({ collections: {} });
+    const { observable, add, remove } = useMemo(
+        () => data.collections(),
+        [data],
+    );
+    useEffect(() => {
+        const sub = observable.pipe(
+            map((collections): CollectionsState => ({
+                collections,
+            }))
+        ).subscribe(setState);
+        return () => sub.unsubscribe();
+    }, [observable]);
+
+    return { state, add, remove };
 }
