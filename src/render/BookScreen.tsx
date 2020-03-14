@@ -140,7 +140,7 @@ function BookScreenHeader({ theme, visible }: BookScreenHeaderProps) {
             right={
                 <>
                     <AddBookmarkButton />
-                    <AppearanceButton theme={theme} />
+                    <AppearanceButton />
                     <ConnectedAccountButton />
                 </>}
         />
@@ -199,23 +199,16 @@ function LibButton({ theme }: LibButtonProps) {
     />;
 }
 
-type AppearanceButtonProps = Themed;
-function AppearanceButton({ theme }: AppearanceButtonProps) {
-    const dispatch = useAppDispatch();
+function AppearanceButton() {
+    const { theme, incrementScale, setPalette } = useTheme();
     return <WithPopover
         theme={theme}
         popoverPlacement='bottom'
         body={
             <ThemePicker
                 theme={theme}
-                setPalette={name => dispatch({
-                    type: 'theme-set-palette',
-                    payload: name,
-                })}
-                incrementScale={increment => dispatch({
-                    type: 'theme-increment-scale',
-                    payload: increment,
-                })}
+                setPalette={setPalette}
+                incrementScale={incrementScale}
             />
         }
     >

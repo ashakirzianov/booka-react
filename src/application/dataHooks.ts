@@ -9,6 +9,7 @@ import { dataProvider } from '../data';
 import { BookLink } from '../core';
 import { useUrlActions } from './urlHooks';
 import { useAppSelector, useAppDispatch } from './reduxHooks';
+import { PaletteName } from '../atoms';
 
 type Loadable<T> =
     | { state: 'loading' }
@@ -24,9 +25,17 @@ function useDataProvider() {
 
 export function useTheme() {
     const theme = useAppSelector(s => s.theme);
-    // TODO: return { state } ?
-    // TODO: return set theme action ?
-    return { theme };
+    const dispatch = useAppDispatch();
+    const setPalette = useCallback((name: PaletteName) => dispatch({
+        type: 'theme-set-palette',
+        payload: name,
+    }), [dispatch]);
+    const incrementScale = useCallback((inc: number) => dispatch({
+        type: 'theme-increment-scale',
+        payload: inc,
+    }), [dispatch]);
+
+    return { theme, setPalette, incrementScale };
 }
 
 type BookmarksState = Bookmark[];
