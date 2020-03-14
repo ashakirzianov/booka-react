@@ -11,10 +11,6 @@ export function useAppDispatch() {
     return useDispatch() as Dispatch<AppAction>;
 }
 
-export function useTheme() {
-    return useAppSelector(s => s.theme);
-}
-
 export function useCopy(callback: Callback<ClipboardEvent>) {
     useEffect(() => {
         window.addEventListener('copy', callback as any);

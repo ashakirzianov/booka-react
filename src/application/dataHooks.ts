@@ -7,6 +7,7 @@ import { dataProvider } from '../data';
 import { BookLink } from '../core';
 import { map } from 'rxjs/operators';
 import { useUrlActions } from './urlHooks';
+import { useAppSelector } from './hooks';
 
 type Loadable<T> =
     | { state: 'loading' }
@@ -133,4 +134,9 @@ export function useSearchData(query: string | undefined) {
     const { updateSearchQuery } = useUrlActions();
 
     return { state, doQuery: updateSearchQuery };
+}
+
+export function useTheme() {
+    const theme = useAppSelector(s => s.theme);
+    return theme;
 }
