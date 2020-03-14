@@ -1,25 +1,15 @@
 import React from 'react';
-import { CardCollections, LibraryCard } from 'booka-common';
+import { LibraryCard } from 'booka-common';
 import { Column, Themed } from '../atoms';
+import { useTheme, useCollections } from '../application';
+
 import { BookListComp } from './BookList';
 
-import { useTheme, useAppSelector } from '../application';
+export function CollectionsComp() {
+    const { theme } = useTheme();
 
-export function CollectionsConnected() {
-    const collectionsState = useAppSelector(s => s.collections);
-
-    const theme = useTheme();
-
-    return <CollectionsComp
-        theme={theme}
-        collections={collectionsState.collections}
-    />;
-}
-
-function CollectionsComp({ collections, theme }: Themed & {
-    collections: CardCollections,
-}) {
-    const readingList = collections['reading-list'];
+    const { collectionsState } = useCollections();
+    const readingList = collectionsState.collections['reading-list'];
 
     return <Column>
         <CardCollectionComp

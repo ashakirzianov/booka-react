@@ -6,17 +6,14 @@ import { AppAction } from './app';
 import { authFbToken, fetchAccountInfo } from '../api';
 
 export type SignInProvider = 'facebook';
-export type AccountStateNotSigned = {
+export type AccountState = {
     state: 'not-signed',
-};
-export type AccountStateSigned = {
+} | {
     state: 'signed',
     provider: SignInProvider,
     account: AccountInfo,
     token: AuthToken,
 };
-export type AccountState =
-    | AccountStateNotSigned | AccountStateSigned;
 export type ReceivedFbTokenAction = {
     type: 'account-fb-token',
     payload: {

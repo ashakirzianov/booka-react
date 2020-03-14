@@ -1,15 +1,10 @@
-import React, { useMemo } from 'react';
-import { Link, useLocation, useHistory } from 'react-router-dom';
-import { History } from 'history';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
-import {
-    BookPath, pathToString,
-} from 'booka-common';
+import { BookPath, pathToString } from 'booka-common';
 import { WithChildren } from '../atoms';
-import { parse, stringify } from 'query-string';
+import { updateSearch } from '../application';
 
-// TODO: find better location
-// TODO: fix naming
 export function LinkToPath({ bookId, path, children }: WithChildren & {
     bookId: string,
     path?: BookPath,
@@ -47,29 +42,4 @@ function UpdateQueryLink({ queryKey, value, children }: WithChildren & {
     return <Link to={search}>
         {children}
     </Link>;
-}
-
-type ParamType = string | undefined | null;
-export function useHistoryAccess() {
-    const history = useHistory();
-
-    return useMemo(() => ({
-        replaceSearchParam(key: string, value: ParamType) {
-            replaceHistorySearch(history, key, value);
-        },
-    }), [history]);
-}
-
-function replaceHistorySearch(history: History, key: string, value: string | undefined | null) {
-    history.replace({
-        ...history.location,
-        search: updateSearch(history.location.search, key, value),
-    });
-}
-
-function updateSearch(search: string, key: string, value: string | undefined | null) {
-    const obj = parse(search);
-    obj[key] = value;
-    const result = stringify(obj);
-    return result ? `?${result}` : '';
 }

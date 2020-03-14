@@ -1,27 +1,25 @@
 import React, { useState, useCallback, useMemo } from 'react';
 
 import {
-    assertNever, positionForPath, BookPath, firstPath, uuid,
-    findBookmark, BookFragment, BookRange, pathToString, rangeToString,
+    assertNever, positionForPath, BookPath, findBookmark, BookFragment, BookRange,
 } from 'booka-common';
 
 import {
-    useAppDispatch, useAppSelector, useTheme,
-    useBookData, useHighlightsData,
+    useTheme, useBook, useHighlights, useUrlActions, useBookmarks,
 } from '../application';
 import {
     Column, point, Row, Callback, Themed,
     Triad, IconButton, TopBar, EmptyLine, Clickable,
     PaletteName, PaletteButton, TextButton, Separator, WithPopover,
     colors, TextLine, BottomBar, TagButton, TextLink, IconLink,
+    FullScreenActivityIndicator,
 } from '../atoms';
+import { BookLink } from '../core';
 import { pageForPosition } from './common';
 import { BookViewComp } from './BookViewComp';
 import { TableOfContentsComp } from './TableOfContentsComp';
 import { ConnectedAccountButton } from './AccountButton';
-import { FullScreenActivityIndicator } from '../atoms/Basics.native';
-import { BookLink } from '../core';
-import { useHistoryAccess, ShowTocLink } from './Navigation';
+import { ShowTocLink } from './Navigation';
 
 export function BookScreen({ bookId, showToc, path, quote }: {
     bookId: string,
@@ -29,13 +27,13 @@ export function BookScreen({ bookId, showToc, path, quote }: {
     path?: BookPath,
     quote?: BookRange,
 }) {
-    const theme = useTheme();
+    const { theme } = useTheme();
     const link = useMemo((): BookLink => ({
         link: 'book',
         bookId, path,
     }), [bookId, path]);
-    const state = useBookData(link);
-    const { highlights } = useHighlightsData(bookId);
+    const { bookState } = useBook(link);
+    const { highlights } = useHighlights(bookId);
 
     const [visible, setVisible] = useState(true);
     const toggleControls = useCallback(
@@ -43,30 +41,29 @@ export function BookScreen({ bookId, showToc, path, quote }: {
         [visible, setVisible],
     );
 
-    const { replaceSearchParam } = useHistoryAccess();
+    const { updateBookPath, updateQuoteRange, updateToc } = useUrlActions();
     const [needToScroll, setNeedToScroll] = useState(true);
     const updatePath = useCallback((p: BookPath | undefined) => {
         setNeedToScroll(false);
-        replaceSearchParam('p', p ? pathToString(p) : undefined);
-    }, [setNeedToScroll, replaceSearchParam]);
-    const updateQuoteRange = useCallback((r: BookRange | undefined) => {
-        replaceSearchParam('q', r ? rangeToString(r) : undefined);
-    }, [replaceSearchParam]);
+        updateBookPath(p);
+    }, [setNeedToScroll, updateBookPath]);
     const closeToc = useCallback(
-        () => replaceSearchParam('toc', undefined),
-        [replaceSearchParam],
+        () => updateToc(false),
+        [updateToc],
     );
 
-    switch (state.state) {
+    switch (bookState.state) {
         case 'loading':
             return <FullScreenActivityIndicator
                 theme={theme}
             />;
         case 'ready': {
-            const { fragment } = state;
+            const { fragment } = bookState;
             const { toc } = fragment;
             return <>
                 <BookScreenHeader
+                    bookId={bookId}
+                    path={path}
                     theme={theme}
                     visible={visible}
                 />
@@ -124,15 +121,18 @@ export function BookScreen({ bookId, showToc, path, quote }: {
                 />
             </Column>;
         default:
-            assertNever(state);
+            assertNever(bookState);
             return <span>Should not happen</span>;
     }
 }
 
-type BookScreenHeaderProps = Themed & {
+function BookScreenHeader({
+    theme, visible, bookId, path,
+}: Themed & {
+    bookId: string,
+    path: BookPath | undefined,
     visible: boolean,
-};
-function BookScreenHeader({ theme, visible }: BookScreenHeaderProps) {
+}) {
     return <TopBar
         theme={theme}
         open={visible}
@@ -142,34 +142,32 @@ function BookScreenHeader({ theme, visible }: BookScreenHeaderProps) {
             left={<LibButton theme={theme} />}
             right={
                 <>
-                    <AddBookmarkButton />
-                    <AppearanceButton theme={theme} />
+                    <AddBookmarkButton bookId={bookId} path={path} />
+                    <AppearanceButton />
                     <ConnectedAccountButton />
                 </>}
         />
     </TopBar>;
 }
 
-function AddBookmarkButton() {
-    const dispatch = useAppDispatch();
-    const theme = useTheme();
-    const { bookId, path } = useAppSelector(state => state.book.link);
-    const bookmarks = useAppSelector(state => state.bookmarks);
+function AddBookmarkButton({ bookId, path }: {
+    bookId: string,
+    path: BookPath | undefined,
+}) {
+    const { theme } = useTheme();
+    const { bookmarks, addBookmark, removeBookmark } = useBookmarks(bookId);
 
     const currentBookmark = path
         ? findBookmark(bookmarks, bookId, path) : undefined;
-    if (currentBookmark) {
+    if (!path) {
+        return null;
+    } else if (currentBookmark) {
         return <TextButton
             theme={theme}
             text='Remove Bookmark'
             fontSize='small'
             fontFamily='menu'
-            onClick={() => dispatch({
-                type: 'bookmarks-remove',
-                payload: {
-                    bookmarkId: currentBookmark._id,
-                },
-            })}
+            onClick={() => removeBookmark(currentBookmark._id)}
         />;
     } else {
         return <TextButton
@@ -177,18 +175,7 @@ function AddBookmarkButton() {
             text='Add Bookmark'
             fontSize='small'
             fontFamily='menu'
-            onClick={() => dispatch({
-                type: 'bookmarks-add',
-                payload: {
-                    bookmark: {
-                        entity: 'bookmark',
-                        _id: uuid(),
-                        local: true,
-                        bookId,
-                        path: path || firstPath(),
-                    },
-                },
-            })}
+            onClick={() => addBookmark(path)}
         />;
     }
 }
@@ -202,23 +189,16 @@ function LibButton({ theme }: LibButtonProps) {
     />;
 }
 
-type AppearanceButtonProps = Themed;
-function AppearanceButton({ theme }: AppearanceButtonProps) {
-    const dispatch = useAppDispatch();
+function AppearanceButton() {
+    const { theme, incrementScale, setPalette } = useTheme();
     return <WithPopover
         theme={theme}
         popoverPlacement='bottom'
         body={
             <ThemePicker
                 theme={theme}
-                setPalette={name => dispatch({
-                    type: 'theme-set-palette',
-                    payload: name,
-                })}
-                incrementScale={increment => dispatch({
-                    type: 'theme-increment-scale',
-                    payload: increment,
-                })}
+                setPalette={setPalette}
+                incrementScale={incrementScale}
             />
         }
     >

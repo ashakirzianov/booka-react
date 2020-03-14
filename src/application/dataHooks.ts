@@ -1,11 +1,15 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import { map } from 'rxjs/operators';
+
 import {
     AuthToken, Bookmark, Highlight, ResolvedCurrentPosition,
-    BookFragment, LibraryCard, SearchResult,
+    BookFragment, LibraryCard, SearchResult, CardCollections,
 } from 'booka-common';
 import { dataProvider } from '../data';
 import { BookLink } from '../core';
-import { map } from 'rxjs/operators';
+import { useUrlActions } from './urlHooks';
+import { useAppSelector, useAppDispatch } from './reduxHooks';
+import { PaletteName } from '../atoms';
 
 type Loadable<T> =
     | { state: 'loading' }
@@ -19,8 +23,23 @@ function useDataProvider() {
     return dp;
 }
 
+export function useTheme() {
+    const theme = useAppSelector(s => s.theme);
+    const dispatch = useAppDispatch();
+    const setPalette = useCallback((name: PaletteName) => dispatch({
+        type: 'theme-set-palette',
+        payload: name,
+    }), [dispatch]);
+    const incrementScale = useCallback((inc: number) => dispatch({
+        type: 'theme-increment-scale',
+        payload: inc,
+    }), [dispatch]);
+
+    return { theme, setPalette, incrementScale };
+}
+
 type BookmarksState = Bookmark[];
-export function useBookmarksData(bookId: string, token?: AuthToken) {
+export function useBookmarks(bookId: string, token?: AuthToken) {
     const data = useDataProvider();
     const [bookmarks, setBookmarks] = useState<BookmarksState>([]);
     const { subject, add, remove } = useMemo(
@@ -31,26 +50,31 @@ export function useBookmarksData(bookId: string, token?: AuthToken) {
         const sub = subject.subscribe(setBookmarks);
         return () => sub.unsubscribe();
     }, [subject]);
-    return { bookmarks, add, remove };
+    return { bookmarks, addBookmark: add, removeBookmark: remove };
 }
 
 type HighlightsState = Highlight[];
-export function useHighlightsData(bookId: string, token?: AuthToken) {
+export function useHighlights(bookId: string, token?: AuthToken) {
     const data = useDataProvider();
     const [highlights, setHighlights] = useState<HighlightsState>([]);
-    const { subject, add, remove } = useMemo(
+    const { observable, add, remove, updateGroup } = useMemo(
         () => data.highlightsForId(bookId, token),
         [bookId, token, data],
     );
     useEffect(() => {
-        const sub = subject.subscribe(setHighlights);
+        const sub = observable.subscribe(setHighlights);
         return () => sub.unsubscribe();
-    }, [subject]);
-    return { highlights, add, remove };
+    }, [observable]);
+    return {
+        highlights,
+        addHighlight: add,
+        removeHighlight: remove,
+        updateGroup,
+    };
 }
 
 type PositionsState = ResolvedCurrentPosition[];
-export function usePositionsData(token?: AuthToken) {
+export function usePositions(token?: AuthToken) {
     const data = useDataProvider();
     const [positions, setPositions] = useState<PositionsState>([]);
     const { subject, add } = useMemo(
@@ -61,15 +85,15 @@ export function usePositionsData(token?: AuthToken) {
         const sub = subject.subscribe(setPositions);
         return () => sub.unsubscribe();
     }, [subject]);
-    return { positions, add };
+    return { positions, addPosition: add };
 }
 
 type BookState = Loadable<{
     fragment: BookFragment,
 }>;
-export function useBookData(link: BookLink) {
+export function useBook(link: BookLink) {
     const data = useDataProvider();
-    const [state, setState] = useState<BookState>({ state: 'loading' });
+    const [bookState, setBookState] = useState<BookState>({ state: 'loading' });
     const subject = useMemo(
         () => data.openLink(link),
         [link, data],
@@ -82,19 +106,19 @@ export function useBookData(link: BookLink) {
                     fragment: r.fragment,
                 })),
             )
-            .subscribe(setState);
+            .subscribe(setBookState);
         return () => sub.unsubscribe();
     }, [subject]);
 
-    return state;
+    return { bookState };
 }
 
 export type LibraryCardState = Loadable<{
     card: LibraryCard,
 }>;
-export function useLibraryCardData(bookId: string) {
+export function useLibraryCard(bookId: string) {
     const data = useDataProvider();
-    const [state, setState] = useState<LibraryCardState>({ state: 'loading' });
+    const [cardState, setCardState] = useState<LibraryCardState>({ state: 'loading' });
     const { observable } = useMemo(
         () => data.libraryCard({ bookId }),
         [data, bookId],
@@ -104,19 +128,25 @@ export function useLibraryCardData(bookId: string) {
             map((card): LibraryCardState => ({
                 state: 'ready', card,
             }))
-        ).subscribe(setState);
+        ).subscribe(setCardState);
         return () => sub.unsubscribe();
     }, [observable]);
 
-    return state;
+    const { updateShowCard } = useUrlActions();
+    const closeCard = useCallback(
+        () => updateShowCard(undefined),
+        [updateShowCard],
+    );
+
+    return { cardState, closeCard };
 }
 
 export type SearchState = Loadable<{
     results: SearchResult[],
 }>;
-export function useSearchData(query: string) {
+export function useLibrarySearch(query: string | undefined) {
     const data = useDataProvider();
-    const [state, setState] = useState<SearchState>({ state: 'loading' });
+    const [searchState, setSearchState] = useState<SearchState>({ state: 'loading' });
     const { observable } = useMemo(
         () => data.search({ query }),
         [data, query],
@@ -126,9 +156,45 @@ export function useSearchData(query: string) {
             map((results): SearchState => ({
                 state: 'ready', results,
             }))
-        ).subscribe(setState);
+        ).subscribe(setSearchState);
+        return () => sub.unsubscribe();
+    }, [observable]);
+    const { updateSearchQuery } = useUrlActions();
+
+    return { searchState, doQuery: updateSearchQuery };
+}
+
+export function useAccount() {
+    const accountState = useAppSelector(s => s.account);
+    const dispatch = useAppDispatch();
+    const logout = React.useCallback(() => dispatch({
+        type: 'account-logout',
+    }), [dispatch]);
+    return { accountState, logout };
+}
+
+export type CollectionsState = {
+    collections: CardCollections,
+};
+export function useCollections() {
+    const data = useDataProvider();
+    const [collectionsState, setCollectionsState] = useState<CollectionsState>({ collections: {} });
+    const { observable, add, remove } = useMemo(
+        () => data.collections(),
+        [data],
+    );
+    useEffect(() => {
+        const sub = observable.pipe(
+            map((collections): CollectionsState => ({
+                collections,
+            }))
+        ).subscribe(setCollectionsState);
         return () => sub.unsubscribe();
     }, [observable]);
 
-    return state;
+    return {
+        collectionsState,
+        addToCollection: add,
+        removeFromCollection: remove,
+    };
 }

@@ -5,40 +5,32 @@ import {
 } from 'booka-common';
 import { Column, Modal } from '../atoms';
 import {
-    useTheme, useAppDispatch, useAppSelector, useLibraryCardData, LibraryCardState,
+    useTheme, useLibraryCard,
+    LibraryCardState, useCollections, usePositions,
 } from '../application';
-import { LinkToPath, useHistoryAccess } from './Navigation';
+import { LinkToPath } from './Navigation';
 import { BookCoverComp } from './BookList';
 
 export function LibraryCardComp({ bookId }: {
     bookId: string,
 }) {
-    const cardState = useLibraryCardData(bookId);
-    const dispatch = useAppDispatch();
-    const theme = useTheme();
-    const collections = useAppSelector(s => s.collections.collections);
-    const { positions } = useAppSelector(s => s.currentPositions);
+    const { cardState, closeCard } = useLibraryCard(bookId);
+    const { theme } = useTheme();
+    const { positions } = usePositions();
+
+    const {
+        collectionsState: { collections },
+        addToCollection,
+        removeFromCollection,
+    } = useCollections();
     const readingListCards = collections['reading-list'] ?? [];
-
-    const addToReadingList = useCallback((card: LibraryCard) => dispatch({
-        type: 'collections-add-card',
-        payload: {
-            collection: 'reading-list',
-            card,
-        },
-    }), [dispatch]);
-    const removeFromReadingList = useCallback((card: LibraryCard) => dispatch({
-        type: 'collections-remove-card',
-        payload: {
-            collection: 'reading-list',
-            card,
-        },
-    }), [dispatch]);
-
-    const { replaceSearchParam } = useHistoryAccess();
-    const closeCard = useCallback(
-        () => replaceSearchParam('show', undefined),
-        [replaceSearchParam],
+    const addToReadingList = useCallback(
+        (card: LibraryCard) => addToCollection(card, 'reading-list'),
+        [addToCollection],
+    );
+    const removeFromReadingList = useCallback((card: LibraryCard) =>
+        removeFromCollection(card.id, 'reading-list'),
+        [removeFromCollection],
     );
 
     const currentPosition = positions.find(

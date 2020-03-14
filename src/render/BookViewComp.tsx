@@ -62,6 +62,7 @@ export function BookViewComp({
         : { target: 'empty' };
 
     return <BookContextMenu
+        bookId={bookId}
         target={menuTarget}
     >
         <AnchorLink

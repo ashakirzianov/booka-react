@@ -1,20 +1,19 @@
 import React from 'react';
 import { throttle } from 'lodash';
 
-import { useSearchData } from '../application';
+import { useLibrarySearch, SearchState } from '../application';
 import {
     Column, SearchBox, ActivityIndicator,
 } from '../atoms';
-import { useHistoryAccess } from './Navigation';
 import { BookListComp } from './BookList';
 
 export function LibrarySearchComp({ query }: {
     query: string | undefined,
 }) {
-    const { replaceSearchParam } = useHistoryAccess();
+    const { searchState, doQuery } = useLibrarySearch(query);
     const querySearch = React.useCallback(throttle((q: string) => {
-        replaceSearchParam('q', q ? q : undefined);
-    }, 300), [replaceSearchParam]);
+        doQuery(q ? q : undefined);
+    }, 300), [doQuery]);
 
     return <Column>
         <SearchBox
@@ -22,23 +21,22 @@ export function LibrarySearchComp({ query }: {
             onSearch={querySearch}
         />
         {query
-            ? <SearchQueryComp query={query} />
+            ? <SearchQueryComp state={searchState} />
             : null
         }
     </Column>;
 }
 
-function SearchQueryComp({ query }: {
-    query: string,
+function SearchQueryComp({ state }: {
+    state: SearchState,
 }) {
-    const searchState = useSearchData(query);
-    switch (searchState.state) {
+    switch (state.state) {
         case 'error':
             return <span>Search error</span>;
         case 'loading':
             return <ActivityIndicator />;
         case 'ready':
-            return <BookListComp books={searchState.results.map(r => r.desc)} />;
+            return <BookListComp books={state.results.map(r => r.desc)} />;
         default:
             return null;
     }
