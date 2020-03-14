@@ -6,6 +6,7 @@ import {
 import { dataProvider } from '../data';
 import { BookLink } from '../core';
 import { map } from 'rxjs/operators';
+import { useUrlActions } from './urlHooks';
 
 type Loadable<T> =
     | { state: 'loading' }
@@ -114,7 +115,7 @@ export function useLibraryCardData(bookId: string) {
 export type SearchState = Loadable<{
     results: SearchResult[],
 }>;
-export function useSearchData(query: string) {
+export function useSearchData(query: string | undefined) {
     const data = useDataProvider();
     const [state, setState] = useState<SearchState>({ state: 'loading' });
     const { observable } = useMemo(
@@ -129,6 +130,7 @@ export function useSearchData(query: string) {
         ).subscribe(setState);
         return () => sub.unsubscribe();
     }, [observable]);
+    const { updateSearchQuery } = useUrlActions();
 
-    return state;
+    return { state, doQuery: updateSearchQuery };
 }
