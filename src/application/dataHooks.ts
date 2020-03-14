@@ -57,7 +57,7 @@ type HighlightsState = Highlight[];
 export function useHighlights(bookId: string, token?: AuthToken) {
     const data = useDataProvider();
     const [highlights, setHighlights] = useState<HighlightsState>([]);
-    const { observable, add, remove } = useMemo(
+    const { observable, add, remove, updateGroup } = useMemo(
         () => data.highlightsForId(bookId, token),
         [bookId, token, data],
     );
@@ -65,7 +65,12 @@ export function useHighlights(bookId: string, token?: AuthToken) {
         const sub = observable.subscribe(setHighlights);
         return () => sub.unsubscribe();
     }, [observable]);
-    return { highlights, addHighlight: add, removeHighlight: remove };
+    return {
+        highlights,
+        addHighlight: add,
+        removeHighlight: remove,
+        updateGroup,
+    };
 }
 
 type PositionsState = ResolvedCurrentPosition[];
