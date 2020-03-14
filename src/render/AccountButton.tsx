@@ -6,19 +6,15 @@ import {
     WithPopover, TextLine, IconButton, TagButton, Themed,
 } from '../atoms';
 import { AccountState } from '../ducks';
-import { useAppDispatch, useAppSelector, useTheme } from '../application';
+import { useTheme, useAccount } from '../application';
 
 export function ConnectedAccountButton() {
     const theme = useTheme();
-    const account = useAppSelector(s => s.account);
-    const dispatch = useAppDispatch();
-    const logout = React.useCallback(() => dispatch({
-        type: 'account-logout',
-    }), [dispatch]);
+    const { state, logout } = useAccount();
 
     return <AccountButton
         theme={theme}
-        account={account}
+        account={state}
         logout={logout}
     />;
 }

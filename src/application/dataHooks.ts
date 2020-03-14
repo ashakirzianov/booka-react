@@ -3,12 +3,12 @@ import { map } from 'rxjs/operators';
 
 import {
     AuthToken, Bookmark, Highlight, ResolvedCurrentPosition,
-    BookFragment, LibraryCard, SearchResult,
+    BookFragment, LibraryCard, SearchResult, AccountInfo,
 } from 'booka-common';
 import { dataProvider } from '../data';
 import { BookLink } from '../core';
 import { useUrlActions } from './urlHooks';
-import { useAppSelector } from './reduxHooks';
+import { useAppSelector, useAppDispatch } from './reduxHooks';
 
 type Loadable<T> =
     | { state: 'loading' }
@@ -140,4 +140,13 @@ export function useSearchData(query: string | undefined) {
 export function useTheme() {
     const theme = useAppSelector(s => s.theme);
     return theme;
+}
+
+export function useAccount() {
+    const state = useAppSelector(s => s.account);
+    const dispatch = useAppDispatch();
+    const logout = React.useCallback(() => dispatch({
+        type: 'account-logout',
+    }), [dispatch]);
+    return { state, logout };
 }
