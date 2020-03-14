@@ -2,26 +2,26 @@ import React, { useState, useCallback, useMemo } from 'react';
 
 import {
     assertNever, positionForPath, BookPath, firstPath, uuid,
-    findBookmark, BookFragment, BookRange, pathToString, rangeToString,
+    findBookmark, BookFragment, BookRange,
 } from 'booka-common';
 
 import {
     useAppDispatch, useAppSelector, useTheme,
-    useBookData, useHighlightsData,
+    useBookData, useHighlightsData, useUrlActions,
 } from '../application';
 import {
     Column, point, Row, Callback, Themed,
     Triad, IconButton, TopBar, EmptyLine, Clickable,
     PaletteName, PaletteButton, TextButton, Separator, WithPopover,
     colors, TextLine, BottomBar, TagButton, TextLink, IconLink,
+    FullScreenActivityIndicator,
 } from '../atoms';
+import { BookLink } from '../core';
 import { pageForPosition } from './common';
 import { BookViewComp } from './BookViewComp';
 import { TableOfContentsComp } from './TableOfContentsComp';
 import { ConnectedAccountButton } from './AccountButton';
-import { FullScreenActivityIndicator } from '../atoms/Basics.native';
-import { BookLink } from '../core';
-import { useUrlActions, ShowTocLink } from './Navigation';
+import { ShowTocLink } from './Navigation';
 
 export function BookScreen({ bookId, showToc, path, quote }: {
     bookId: string,

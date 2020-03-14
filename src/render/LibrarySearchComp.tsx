@@ -1,11 +1,10 @@
 import React from 'react';
 import { throttle } from 'lodash';
 
-import { useSearchData } from '../application';
+import { useSearchData, useUrlActions } from '../application';
 import {
     Column, SearchBox, ActivityIndicator,
 } from '../atoms';
-import { useUrlActions } from './Navigation';
 import { BookListComp } from './BookList';
 
 export function LibrarySearchComp({ query }: {

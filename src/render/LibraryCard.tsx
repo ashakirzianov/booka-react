@@ -5,9 +5,10 @@ import {
 } from 'booka-common';
 import { Column, Modal } from '../atoms';
 import {
-    useTheme, useAppDispatch, useAppSelector, useLibraryCardData, LibraryCardState,
+    useTheme, useAppDispatch, useAppSelector, useLibraryCardData,
+    useUrlActions, LibraryCardState,
 } from '../application';
-import { LinkToPath, useUrlActions } from './Navigation';
+import { LinkToPath } from './Navigation';
 import { BookCoverComp } from './BookList';
 
 export function LibraryCardComp({ bookId }: {

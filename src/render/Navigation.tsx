@@ -1,12 +1,9 @@
-import React, { useMemo } from 'react';
-import { Link, useLocation, useHistory } from 'react-router-dom';
-import { History } from 'history';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
-import {
-    BookPath, pathToString, BookRange, rangeToString,
-} from 'booka-common';
+import { BookPath, pathToString } from 'booka-common';
 import { WithChildren } from '../atoms';
-import { parse, stringify } from 'query-string';
+import { updateSearch } from '../application';
 
 export function LinkToPath({ bookId, path, children }: WithChildren & {
     bookId: string,
@@ -45,40 +42,4 @@ function UpdateQueryLink({ queryKey, value, children }: WithChildren & {
     return <Link to={search}>
         {children}
     </Link>;
-}
-
-export function useUrlActions() {
-    const history = useHistory();
-
-    return useMemo(() => ({
-        updateBookPath(path: BookPath | undefined) {
-            replaceHistorySearch(history, 'p', path ? pathToString(path) : undefined);
-        },
-        updateQuoteRange(range: BookRange | undefined) {
-            replaceHistorySearch(history, 'q', range ? rangeToString(range) : undefined);
-        },
-        updateToc(open: boolean) {
-            replaceHistorySearch(history, 'toc', open ? null : undefined);
-        },
-        updateShowCard(bookId: string | undefined) {
-            replaceHistorySearch(history, 'show', bookId);
-        },
-        updateSearchQuery(query: string | undefined) {
-            replaceHistorySearch(history, 'q', query);
-        },
-    }), [history]);
-}
-
-function replaceHistorySearch(history: History, key: string, value: string | undefined | null) {
-    history.replace({
-        ...history.location,
-        search: updateSearch(history.location.search, key, value),
-    });
-}
-
-function updateSearch(search: string, key: string, value: string | undefined | null) {
-    const obj = parse(search);
-    obj[key] = value;
-    const result = stringify(obj);
-    return result ? `?${result}` : '';
 }
