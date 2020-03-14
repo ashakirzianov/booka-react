@@ -1,7 +1,7 @@
 import React from 'react';
 import { throttle } from 'lodash';
 
-import { useSearchData, SearchState } from '../application';
+import { useLibrarySearch, SearchState } from '../application';
 import {
     Column, SearchBox, ActivityIndicator,
 } from '../atoms';
@@ -10,7 +10,7 @@ import { BookListComp } from './BookList';
 export function LibrarySearchComp({ query }: {
     query: string | undefined,
 }) {
-    const { state, doQuery } = useSearchData(query);
+    const { state, doQuery } = useLibrarySearch(query);
     const querySearch = React.useCallback(throttle((q: string) => {
         doQuery(q ? q : undefined);
     }, 300), [doQuery]);

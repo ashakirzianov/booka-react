@@ -22,55 +22,62 @@ function useDataProvider() {
     return dp;
 }
 
+export function useTheme() {
+    const theme = useAppSelector(s => s.theme);
+    // TODO: return { state } ?
+    // TODO: return set theme action ?
+    return theme;
+}
+
 type BookmarksState = Bookmark[];
-export function useBookmarksData(bookId: string, token?: AuthToken) {
+export function useBookmarks(bookId: string, token?: AuthToken) {
     const data = useDataProvider();
-    const [bookmarks, setBookmarks] = useState<BookmarksState>([]);
+    const [state, setState] = useState<BookmarksState>([]);
     const { subject, add, remove } = useMemo(
         () => data.bookmarksForId(bookId, token),
         [bookId, token, data],
     );
     useEffect(() => {
-        const sub = subject.subscribe(setBookmarks);
+        const sub = subject.subscribe(setState);
         return () => sub.unsubscribe();
     }, [subject]);
-    return { bookmarks, add, remove };
+    return { state, add, remove };
 }
 
 type HighlightsState = Highlight[];
-export function useHighlightsData(bookId: string, token?: AuthToken) {
+export function useHighlights(bookId: string, token?: AuthToken) {
     const data = useDataProvider();
-    const [highlights, setHighlights] = useState<HighlightsState>([]);
+    const [state, setState] = useState<HighlightsState>([]);
     const { subject, add, remove } = useMemo(
         () => data.highlightsForId(bookId, token),
         [bookId, token, data],
     );
     useEffect(() => {
-        const sub = subject.subscribe(setHighlights);
+        const sub = subject.subscribe(setState);
         return () => sub.unsubscribe();
     }, [subject]);
-    return { highlights, add, remove };
+    return { state, add, remove };
 }
 
 type PositionsState = ResolvedCurrentPosition[];
-export function usePositionsData(token?: AuthToken) {
+export function usePositions(token?: AuthToken) {
     const data = useDataProvider();
-    const [positions, setPositions] = useState<PositionsState>([]);
+    const [state, setState] = useState<PositionsState>([]);
     const { subject, add } = useMemo(
         () => data.currentPositions(token),
         [token, data],
     );
     useEffect(() => {
-        const sub = subject.subscribe(setPositions);
+        const sub = subject.subscribe(setState);
         return () => sub.unsubscribe();
     }, [subject]);
-    return { positions, add };
+    return { state, add };
 }
 
 type BookState = Loadable<{
     fragment: BookFragment,
 }>;
-export function useBookData(link: BookLink) {
+export function useBook(link: BookLink) {
     const data = useDataProvider();
     const [state, setState] = useState<BookState>({ state: 'loading' });
     const subject = useMemo(
@@ -89,7 +96,7 @@ export function useBookData(link: BookLink) {
         return () => sub.unsubscribe();
     }, [subject]);
 
-    return state;
+    return { state };
 }
 
 export type LibraryCardState = Loadable<{
@@ -123,7 +130,7 @@ export function useLibraryCard(bookId: string) {
 export type SearchState = Loadable<{
     results: SearchResult[],
 }>;
-export function useSearchData(query: string | undefined) {
+export function useLibrarySearch(query: string | undefined) {
     const data = useDataProvider();
     const [state, setState] = useState<SearchState>({ state: 'loading' });
     const { observable } = useMemo(
@@ -141,11 +148,6 @@ export function useSearchData(query: string | undefined) {
     const { updateSearchQuery } = useUrlActions();
 
     return { state, doQuery: updateSearchQuery };
-}
-
-export function useTheme() {
-    const theme = useAppSelector(s => s.theme);
-    return theme;
 }
 
 export function useAccount() {

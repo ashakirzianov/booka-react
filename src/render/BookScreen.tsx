@@ -7,7 +7,7 @@ import {
 
 import {
     useAppDispatch, useAppSelector, useTheme,
-    useBookData, useHighlightsData, useUrlActions,
+    useBook, useHighlights, useUrlActions,
 } from '../application';
 import {
     Column, point, Row, Callback, Themed,
@@ -34,8 +34,8 @@ export function BookScreen({ bookId, showToc, path, quote }: {
         link: 'book',
         bookId, path,
     }), [bookId, path]);
-    const state = useBookData(link);
-    const { highlights } = useHighlightsData(bookId);
+    const { state: bookState } = useBook(link);
+    const { state: highlights } = useHighlights(bookId);
 
     const [visible, setVisible] = useState(true);
     const toggleControls = useCallback(
@@ -54,13 +54,13 @@ export function BookScreen({ bookId, showToc, path, quote }: {
         [updateToc],
     );
 
-    switch (state.state) {
+    switch (bookState.state) {
         case 'loading':
             return <FullScreenActivityIndicator
                 theme={theme}
             />;
         case 'ready': {
-            const { fragment } = state;
+            const { fragment } = bookState;
             const { toc } = fragment;
             return <>
                 <BookScreenHeader
@@ -121,7 +121,7 @@ export function BookScreen({ bookId, showToc, path, quote }: {
                 />
             </Column>;
         default:
-            assertNever(state);
+            assertNever(bookState);
             return <span>Should not happen</span>;
     }
 }
