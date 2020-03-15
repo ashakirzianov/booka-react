@@ -1,7 +1,7 @@
 import {
     BookPath, HighlightGroup, Bookmark, Highlight, LibraryCard, CardCollectionName,
 } from 'booka-common';
-import { Subject } from 'rxjs';
+import { Subject, ReplaySubject, Observable, BehaviorSubject } from 'rxjs';
 
 type DefChange<Key extends string> = {
     change: Key,
@@ -51,6 +51,31 @@ export type LocalChange =
     | UpdateCurrentPositionChange
     | AddToCollectionChange | RemoveFromCollectionChange
     ;
+
+export function createLocalChangeStore() {
+    const changesSubject = new Subject<LocalChange>();
+    let changes: LocalChange[] = [];
+
+    return {
+        addChange(change: LocalChange) {
+            changes = [...changes, change];
+            changesSubject.next(change);
+            return () => {
+                changes = changes.filter(c => c !== change);
+            };
+        },
+        observe<T>(state: T, reducer: (s: T, ch: LocalChange) => T): Observable<T> {
+            state = changes.reduce(reducer, state);
+            const stateSubject = new BehaviorSubject(state);
+            changesSubject.subscribe(ch => {
+                state = reducer(state, ch);
+                stateSubject.next(state);
+            });
+            return stateSubject;
+        },
+    };
+}
+export type LocalChangeStore = ReturnType<typeof createLocalChangeStore>;
 
 let local: LocalChange[] = [];
 function addLocalChange(change: LocalChange) {
