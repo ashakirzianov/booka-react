@@ -40,52 +40,40 @@ export function useTheme() {
 
 type BookmarksState = Bookmark[];
 export function useBookmarks(bookId: string, token?: AuthToken) {
-    const data = useDataProvider();
+    const { bookmarksForId, addBookmark, removeBookmark } = useDataProvider();
     const [bookmarks, setBookmarks] = useState<BookmarksState>([]);
-    const { subject, add, remove } = useMemo(
-        () => data.bookmarksForId(bookId, token),
-        [bookId, token, data],
-    );
     useEffect(() => {
-        const sub = subject.subscribe(setBookmarks);
+        const sub = bookmarksForId(bookId).subscribe(setBookmarks);
         return () => sub.unsubscribe();
-    }, [subject]);
-    return { bookmarks, addBookmark: add, removeBookmark: remove };
+    }, [bookmarksForId, bookId]);
+    return { bookmarks, addBookmark, removeBookmark };
 }
 
 type HighlightsState = Highlight[];
 export function useHighlights(bookId: string, token?: AuthToken) {
-    const data = useDataProvider();
+    const { highlightsForId, addHighlight, removeHighlight, updateHighlightGroup } = useDataProvider();
     const [highlights, setHighlights] = useState<HighlightsState>([]);
-    const { observable, add, remove, updateGroup } = useMemo(
-        () => data.highlightsForId(bookId, token),
-        [bookId, token, data],
-    );
     useEffect(() => {
-        const sub = observable.subscribe(setHighlights);
+        const sub = highlightsForId(bookId).subscribe(setHighlights);
         return () => sub.unsubscribe();
-    }, [observable]);
+    }, [highlightsForId, bookId]);
     return {
         highlights,
-        addHighlight: add,
-        removeHighlight: remove,
-        updateGroup,
+        addHighlight,
+        removeHighlight,
+        updateHighlightGroup,
     };
 }
 
 type PositionsState = ResolvedCurrentPosition[];
 export function usePositions(token?: AuthToken) {
-    const data = useDataProvider();
+    const { addCurrentPosition, currentPositions } = useDataProvider();
     const [positions, setPositions] = useState<PositionsState>([]);
-    const { subject, add } = useMemo(
-        () => data.currentPositions(token),
-        [token, data],
-    );
     useEffect(() => {
-        const sub = subject.subscribe(setPositions);
+        const sub = currentPositions().subscribe(setPositions);
         return () => sub.unsubscribe();
-    }, [subject]);
-    return { positions, addPosition: add };
+    }, [currentPositions]);
+    return { positions, addCurrentPosition };
 }
 
 type BookState = Loadable<{
@@ -119,7 +107,7 @@ export type LibraryCardState = Loadable<{
 export function useLibraryCard(bookId: string) {
     const data = useDataProvider();
     const [cardState, setCardState] = useState<LibraryCardState>({ state: 'loading' });
-    const { observable } = useMemo(
+    const observable = useMemo(
         () => data.libraryCard({ bookId }),
         [data, bookId],
     );
@@ -167,7 +155,7 @@ export function useLibrarySearch(query: string | undefined) {
 export function useAccount() {
     const accountState = useAppSelector(s => s.account);
     const dispatch = useAppDispatch();
-    const logout = React.useCallback(() => dispatch({
+    const logout = useCallback(() => dispatch({
         type: 'account-logout',
     }), [dispatch]);
     return { accountState, logout };
@@ -177,24 +165,20 @@ export type CollectionsState = {
     collections: CardCollections,
 };
 export function useCollections() {
-    const data = useDataProvider();
+    const { collections, addToCollection, removeFromCollection } = useDataProvider();
     const [collectionsState, setCollectionsState] = useState<CollectionsState>({ collections: {} });
-    const { observable, add, remove } = useMemo(
-        () => data.collections(),
-        [data],
-    );
     useEffect(() => {
-        const sub = observable.pipe(
-            map((collections): CollectionsState => ({
-                collections,
+        const sub = collections().pipe(
+            map((c): CollectionsState => ({
+                collections: c,
             }))
         ).subscribe(setCollectionsState);
         return () => sub.unsubscribe();
-    }, [observable]);
+    }, [collections]);
 
     return {
         collectionsState,
-        addToCollection: add,
-        removeFromCollection: remove,
+        addToCollection,
+        removeFromCollection,
     };
 }

@@ -175,7 +175,7 @@ function AddBookmarkButton({ bookId, path }: {
             text='Add Bookmark'
             fontSize='small'
             fontFamily='menu'
-            onClick={() => addBookmark(path)}
+            onClick={() => addBookmark(bookId, path)}
         />;
     }
 }

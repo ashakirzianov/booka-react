@@ -1,46 +1,42 @@
+import { switchMap } from 'rxjs/operators';
 import {
-    Highlight, AuthToken, BackContract, BookRange, uuid, HighlightGroup,
+    Highlight, AuthToken, BookRange, uuid, HighlightGroup,
 } from 'booka-common';
-import { config } from '../config';
-import { LocalChange, connectedState } from './localChange';
-import { createFetcher } from './fetcher';
+import { LocalChange, LocalChangeStore } from './localChange';
+import { api } from './api';
 
-const back = createFetcher<BackContract>(config().backUrl);
-export function highlightsForId(bookId: string, token?: AuthToken) {
-    const { subject, addChange, replaceState } = connectedState([], applyChange);
-
-    if (token) {
-        back.get('/highlights', {
-            query: { bookId },
-            auth: token.token,
-        }).subscribe(r => replaceState(r.value));
-    }
-
-    function add(range: BookRange, group: HighlightGroup) {
-        addChange({
-            change: 'highlight-add',
-            highlight: {
-                entity: 'highlight',
-                _id: uuid(),
-                bookId, range, group,
-            },
-        });
-    }
-    function remove(highlightId: string) {
-        addChange({
-            change: 'highlight-remove',
-            highlightId,
-        });
-    }
-    function updateGroup(highlightId: string, group: HighlightGroup) {
-        addChange({
-            change: 'highlight-update',
-            highlightId,
-            group,
-        });
-    }
-
-    return { observable: subject, add, remove, updateGroup };
+export function highlightsProvider(localChangeStore: LocalChangeStore) {
+    return {
+        highlightsForId(bookId: string, token?: AuthToken) {
+            return api().getHighlights(bookId, token).pipe(
+                switchMap(hs =>
+                    localChangeStore.observe(hs, applyChange)
+                )
+            );
+        },
+        addHighlight(bookId: string, range: BookRange, group: HighlightGroup) {
+            localChangeStore.addChange({
+                change: 'highlight-add',
+                highlight: {
+                    entity: 'highlight',
+                    _id: uuid(),
+                    bookId, range, group,
+                },
+            });
+        },
+        removeHighlight(highlightId: string) {
+            localChangeStore.addChange({
+                change: 'highlight-remove',
+                highlightId,
+            });
+        },
+        updateHighlightGroup(highlightId: string, group: HighlightGroup) {
+            localChangeStore.addChange({
+                change: 'highlight-update',
+                highlightId, group,
+            });
+        },
+    };
 }
 
 function applyChange(highlights: Highlight[], change: LocalChange): Highlight[] {

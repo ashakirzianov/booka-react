@@ -1,23 +1,25 @@
-import { bookmarksForId } from './bookmarks';
-import { highlightsForId } from './highlights';
-import { currentPositions } from './currentPositions';
+import { bookmarksProvider } from './bookmarks';
+import { highlightsProvider } from './highlights';
+import { currentPositionsProvider } from './currentPositions';
+import { collectionsProvider } from './collections';
 import { libraryCard } from './cards';
 import { search } from './search';
 import { openLink } from './book';
-import { getCollections } from './collections';
+import { createLocalChangeStore } from './localChange';
 
 export type DataProvider = ReturnType<typeof dataProvider>;
 
 // TODO: rename
 export function dataProvider() {
+    const localChangeStore = createLocalChangeStore();
     return {
-        bookmarksForId,
-        highlightsForId,
-        currentPositions,
-        libraryCard,
-        search,
-        collections: getCollections,
+        ...bookmarksProvider(localChangeStore),
+        ...highlightsProvider(localChangeStore),
+        ...currentPositionsProvider(localChangeStore),
+        ...collectionsProvider(localChangeStore),
         // TODO: rethink
         openLink,
+        search,
+        libraryCard,
     };
 }

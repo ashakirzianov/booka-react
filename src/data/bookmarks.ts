@@ -1,39 +1,36 @@
+import { switchMap } from 'rxjs/operators';
 import {
-    Bookmark, AuthToken, BackContract, BookPath, uuid,
+    Bookmark, AuthToken, uuid, BookPath,
 } from 'booka-common';
-import { config } from '../config';
-import { LocalChange, connectedState } from './localChange';
-import { createFetcher } from './fetcher';
+import { LocalChange, LocalChangeStore } from './localChange';
+import { api } from './api';
 
-const back = createFetcher<BackContract>(config().backUrl);
-export function bookmarksForId(bookId: string, token?: AuthToken) {
-    const { subject, addChange, replaceState } = connectedState([], applyChange);
-
-    if (token) {
-        back.get('/bookmarks', {
-            query: { bookId },
-            auth: token.token,
-        }).subscribe(r => replaceState(r.value));
-    }
-
-    function add(path: BookPath) {
-        addChange({
-            change: 'bookmark-add',
-            bookmark: {
-                entity: 'bookmark',
-                _id: uuid(),
-                bookId, path,
-            },
-        });
-    }
-    function remove(bookmarkId: string) {
-        addChange({
-            change: 'bookmark-remove',
-            bookmarkId,
-        });
-    }
-
-    return { subject, add, remove };
+export function bookmarksProvider(localChangeStore: LocalChangeStore) {
+    return {
+        bookmarksForId(bookId: string, token?: AuthToken) {
+            return api().getBookmarks(bookId, token).pipe(
+                switchMap(bs =>
+                    localChangeStore.observe(bs, applyChange)
+                )
+            );
+        },
+        addBookmark(bookId: string, path: BookPath) {
+            localChangeStore.addChange({
+                change: 'bookmark-add',
+                bookmark: {
+                    entity: 'bookmark',
+                    _id: uuid(),
+                    bookId, path,
+                },
+            });
+        },
+        removeBookmark(bookmarkId: string) {
+            localChangeStore.addChange({
+                change: 'bookmark-remove',
+                bookmarkId,
+            });
+        },
+    };
 }
 
 function applyChange(bookmarks: Bookmark[], change: LocalChange): Bookmark[] {
