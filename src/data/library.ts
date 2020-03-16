@@ -2,9 +2,10 @@ import { of, concat } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
     Book, BookPath, fragmentForPath, LibraryCard,
-    findReference, BookFragment, defaultFragmentLength, tocForBook,
+    findReference, BookFragment, defaultFragmentLength, tocForBook, firstPath,
 } from 'booka-common';
 import { Api } from './api';
+import { Storage } from './storage';
 
 export function libraryProvider(api: Api, storage: Storage) {
     const bookCache: StringMap<Book> = {};
@@ -37,7 +38,8 @@ export function libraryProvider(api: Api, storage: Storage) {
                 return api.getBook(bookId).pipe(
                     map(book => {
                         bookCache[bookId] = book;
-                        return resolveRefId(book, refId);
+                        const fragment = resolveRefId(book, refId);
+                        return fragment;
                     })
                 );
             }
@@ -69,9 +71,10 @@ function resolveRefId(book: Book, refId: string) {
     if (reference) {
         const path = reference[1];
         const fragment = resolveFragment(book, path);
-        return { fragment, path };
+        return fragment;
     } else {
-        return undefined;
+        // TODO: handle properly
+        return resolveFragment(book, firstPath());
     }
 }
 

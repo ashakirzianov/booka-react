@@ -5,11 +5,11 @@ import { currentPositionsProvider } from './currentPositions';
 import { collectionsProvider } from './collections';
 import { cardsProvider } from './cards';
 import { searchProvider } from './search';
-import { openLink } from './book';
 import { createLocalChangeStore } from './localChange';
 import { createApi } from './api';
 import { postLocalChange } from './post';
 import { createStorage } from './storage';
+import { libraryProvider } from './library';
 
 export type DataProvider = ReturnType<typeof createDataProvider>;
 
@@ -31,7 +31,6 @@ export function createDataProvider(info: UserInfo | undefined) {
         ...collectionsProvider(localChangeStore, api),
         ...cardsProvider(api),
         ...searchProvider(api),
-        // TODO: rethink
-        openLink,
+        ...libraryProvider(api, storage.sub('library')),
     };
 }
