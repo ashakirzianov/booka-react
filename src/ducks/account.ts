@@ -3,7 +3,7 @@ import { mergeMap, map } from 'rxjs/operators';
 import { AuthToken, AccountInfo } from 'booka-common';
 import { ofAppType } from './utils';
 import { AppAction } from './app';
-import { authFbToken, fetchAccountInfo } from '../api';
+import { createAuthApi } from '../data/api';
 
 export type SignInProvider = 'facebook';
 export type AccountState = {
@@ -63,13 +63,13 @@ export function accountReducer(state: AccountState = defaultState, action: AppAc
 const accountFbTokenEpic: Epic<AppAction> = action$ => action$.pipe(
     ofAppType('account-fb-token'),
     mergeMap(
-        action => authFbToken(action.payload.token).pipe(
-            map((res): AppAction => {
+        action => createAuthApi().getAuthFbToken(action.payload.token).pipe(
+            map((token): AppAction => {
                 return {
                     type: 'account-auth-success',
                     payload: {
                         provider: 'facebook',
-                        token: res.value,
+                        token,
                     },
                 };
             }),
@@ -80,12 +80,12 @@ const accountFbTokenEpic: Epic<AppAction> = action$ => action$.pipe(
 const accountAuthSuccessEpic: Epic<AppAction> = action$ => action$.pipe(
     ofAppType('account-auth-success'),
     mergeMap(
-        action => fetchAccountInfo(action.payload.token).pipe(
-            map((res): AppAction => {
+        action => createAuthApi().getAccountInfo(action.payload.token).pipe(
+            map((account): AppAction => {
                 return {
                     type: 'account-info',
                     payload: {
-                        account: res.value,
+                        account,
                         token: action.payload.token,
                         provider: action.payload.provider,
                     },
