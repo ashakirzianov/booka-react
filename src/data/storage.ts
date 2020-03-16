@@ -6,11 +6,8 @@ export type StorageCell<T> = {
 };
 
 export type Storage = ReturnType<typeof createStorage>;
-export function createStorage() {
-    return storage('');
-}
-
-function storage(prefix: string) {
+export function createStorage(prefix?: string) {
+    prefix = prefix ?? '';
     return {
         cell<T>(key: string): StorageCell<T> {
             const fullKey = `${prefix}:${key}`;
@@ -24,7 +21,7 @@ function storage(prefix: string) {
             };
         },
         sub(p: string) {
-            return storage(`${prefix}.${p}`);
+            return createStorage(`${prefix}.${p}`);
         },
     };
 }
