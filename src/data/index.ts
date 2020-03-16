@@ -1,3 +1,4 @@
+import { AuthToken } from 'booka-common';
 import { bookmarksProvider } from './bookmarks';
 import { highlightsProvider } from './highlights';
 import { currentPositionsProvider } from './currentPositions';
@@ -7,7 +8,6 @@ import { searchProvider } from './search';
 import { openLink } from './book';
 import { createLocalChangeStore } from './localChange';
 import { createApi } from './api';
-import { AuthToken } from 'booka-common';
 
 export type DataProvider = ReturnType<typeof createDataProvider>;
 
