@@ -122,7 +122,7 @@ function getBookCached(id: string) {
         return of(cached);
     } else {
         return fetchBook(id).pipe(
-            map(({ value: book }) => {
+            map((book) => {
                 cache[id] = book;
                 return book;
             })

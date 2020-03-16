@@ -1,35 +1,33 @@
+import { switchMap } from 'rxjs/operators';
 import {
-    ResolvedCurrentPosition, AuthToken, BackContract,
+    ResolvedCurrentPosition, AuthToken,
     replaceOrAdd, BookPath, LibraryCard,
 } from 'booka-common';
-import { config } from '../config';
-import { LocalChange, connectedState } from './localChange';
-import { createFetcher } from './fetcher';
+import { LocalChange, LocalChangeStore } from './localChange';
+import { api } from './api';
 
-const back = createFetcher<BackContract>(config().backUrl);
-export function currentPositions(token?: AuthToken) {
-    const { subject, addChange, replaceState } = connectedState([], applyChange);
-
-    if (token) {
-        back.get('/current-position', {
-            auth: token.token,
-        }).subscribe(r => replaceState(r.value));
-    }
-
-    function add(params: {
-        path: BookPath,
-        preview: string | undefined,
-        card: LibraryCard,
-    }) {
-        const created = new Date(Date.now());
-        addChange({
-            change: 'current-position-update',
-            created,
-            ...params,
-        });
-    }
-
-    return { subject, add };
+export function currentPositionsProvider(localChangeStore: LocalChangeStore) {
+    return {
+        currentPositions(token?: AuthToken) {
+            return api().getCurrentPositions(token).pipe(
+                switchMap(ps =>
+                    localChangeStore.observe(ps, applyChange)
+                )
+            );
+        },
+        addCurrentPosition(params: {
+            path: BookPath,
+            preview: string | undefined,
+            card: LibraryCard,
+        }) {
+            const created = new Date(Date.now());
+            localChangeStore.addChange({
+                change: 'current-position-update',
+                created,
+                ...params,
+            });
+        },
+    };
 }
 
 const source = 'not-implemented';

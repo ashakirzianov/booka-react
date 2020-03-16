@@ -6,10 +6,7 @@ import { map } from 'rxjs/operators';
 import { AjaxRequest, ajax } from 'rxjs/ajax';
 import { Observable } from 'rxjs';
 
-export type FetchReturn<C extends PathMethodContract> = {
-    status: number,
-    value: C['return'],
-};
+export type FetchReturn<C extends PathMethodContract> = C['return'];
 
 export type FetchParam<C extends PathMethodContract> = Omit<C, 'return' | 'files'> & {
     extra?: {
@@ -43,10 +40,7 @@ export function createFetcher<C extends ApiContract>(baseUrl: string): Fetcher<C
             };
             return ajax(req).pipe(
                 map(res => {
-                    return {
-                        status: res.status,
-                        value: res.response,
-                    };
+                    return res.response;
                 }),
             );
         };

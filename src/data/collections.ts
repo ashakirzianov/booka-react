@@ -1,35 +1,31 @@
+import { switchMap } from 'rxjs/operators';
 import {
-    AuthToken, BackContract, CardCollections,
+    AuthToken, CardCollections,
     LibraryCard, CardCollectionName, replaceOrAdd,
 } from 'booka-common';
-import { config } from '../config';
-import { LocalChange, connectedState } from './localChange';
-import { createFetcher } from './fetcher';
+import { LocalChange, LocalChangeStore } from './localChange';
+import { api } from './api';
 
-const back = createFetcher<BackContract>(config().backUrl);
-export function getCollections(token?: AuthToken) {
-    const { subject, addChange, replaceState } = connectedState({}, applyChange);
-
-    if (token) {
-        back.get('/collections', {
-            auth: token.token,
-        }).subscribe(r => replaceState(r.value));
-    }
-
-    function add(card: LibraryCard, collection: CardCollectionName) {
-        addChange({
-            change: 'collection-add',
-            card, collection,
-        });
-    }
-    function remove(bookId: string, collection: CardCollectionName) {
-        addChange({
-            change: 'collection-remove',
-            bookId, collection,
-        });
-    }
-
-    return { observable: subject, add, remove };
+export function collectionsProvider(localChangeStore: LocalChangeStore) {
+    return {
+        collections(token?: AuthToken) {
+            return api().getCollections(token).pipe(
+                switchMap(cs => localChangeStore.observe({}, applyChange))
+            );
+        },
+        addToCollection(card: LibraryCard, collection: CardCollectionName) {
+            localChangeStore.addChange({
+                change: 'collection-add',
+                card, collection,
+            });
+        },
+        removeFromCollection(bookId: string, collection: CardCollectionName) {
+            localChangeStore.addChange({
+                change: 'collection-remove',
+                bookId, collection,
+            });
+        },
+    };
 }
 
 function applyChange(collections: CardCollections, change: LocalChange): CardCollections {

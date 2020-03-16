@@ -32,7 +32,7 @@ export function BookContextMenu({
     target: ContextMenuTarget,
 }) {
     const {
-        addHighlight, removeHighlight, updateGroup,
+        addHighlight, removeHighlight, updateHighlightGroup,
     } = useHighlights(bookId);
 
     if (target.target === 'empty') {
@@ -58,11 +58,11 @@ export function BookContextMenu({
                 removeHighlight={removeHighlight}
             />
             <SetHighlightGroupItem target={target} group='green'
-                setHighlightGroup={updateGroup} />
+                setHighlightGroup={updateHighlightGroup} />
             <SetHighlightGroupItem target={target} group='red'
-                setHighlightGroup={updateGroup} />
+                setHighlightGroup={updateHighlightGroup} />
             <SetHighlightGroupItem target={target} group='yellow'
-                setHighlightGroup={updateGroup} />
+                setHighlightGroup={updateHighlightGroup} />
         </Menu>
     </>;
 }
@@ -72,14 +72,14 @@ function AddHighlightItem({
 }: {
     target: ContextMenuTarget,
     bookId: string,
-    addHighlight: (range: BookRange, group: HighlightGroup) => void,
+    addHighlight: (bookId: string, range: BookRange, group: HighlightGroup) => void,
 }) {
     if (target.target !== 'selection') {
         return null;
     }
 
     return <Item
-        onClick={() => addHighlight(target.selection.range, 'green')}
+        onClick={() => addHighlight(bookId, target.selection.range, 'green')}
     >
         Add highlight
     </Item>;

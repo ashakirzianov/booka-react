@@ -14,7 +14,7 @@ export function search({ query }: {
     const observable = lib.get('/search', {
         query: { query },
     }).pipe(
-        map(res => res.value.values)
+        map(res => res.values)
     );
 
     return { observable };
