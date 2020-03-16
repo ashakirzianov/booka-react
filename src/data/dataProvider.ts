@@ -8,12 +8,16 @@ import { searchProvider } from './search';
 import { openLink } from './book';
 import { createLocalChangeStore } from './localChange';
 import { createApi } from './api';
+import { postLocalChange } from './post';
 
 export type DataProvider = ReturnType<typeof createDataProvider>;
 
 export function createDataProvider(token: AuthToken | undefined) {
     const api = createApi(token);
-    const localChangeStore = createLocalChangeStore();
+    const localChangeStore = createLocalChangeStore({
+        post: ch => postLocalChange(api, ch),
+        initial: [],
+    });
     return {
         ...bookmarksProvider(localChangeStore, api),
         ...highlightsProvider(localChangeStore, api),

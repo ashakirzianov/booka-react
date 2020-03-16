@@ -53,17 +53,25 @@ export type LocalChange =
     | AddToCollectionChange | RemoveFromCollectionChange
     ;
 
-export function createLocalChangeStore() {
+export function createLocalChangeStore({ post, initial }: {
+    post: (ch: LocalChange) => Observable<any>,
+    initial: LocalChange[],
+}) {
     const changesSubject = new Subject<LocalChange>();
-    let changes: LocalChange[] = [];
+    let changes = initial;
+    initial.forEach(postChange);
+
+    function postChange(change: LocalChange) {
+        post(change).subscribe(() => {
+            changes = changes.filter(c => c !== change);
+        });
+    }
 
     return {
         addChange(change: LocalChange) {
             changes = [...changes, change];
             changesSubject.next(change);
-            return () => {
-                changes = changes.filter(c => c !== change);
-            };
+            postChange(change);
         },
         observe<T>(state: T, reducer: (s: T, ch: LocalChange) => T): Observable<T> {
             state = changes.reduce(reducer, state);
