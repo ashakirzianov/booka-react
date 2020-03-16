@@ -10,7 +10,6 @@ import {
 } from '../atoms';
 import { BookFragmentComp, BookSelection, ColorizedRange } from '../reader';
 import { useCopy } from '../application';
-import { linkToString } from '../core';
 import { generateQuoteLink } from './common';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
 
@@ -101,11 +100,7 @@ function AnchorLink({ theme, text, anchor, bookId }: Themed & {
         <BorderLink
             theme={theme}
             text={anchor.title || text}
-            to={linkToString({
-                link: 'book',
-                bookId,
-                path: anchor.path,
-            })}
+            to={`/book/${bookId}?p=${anchor.path}`}
             fontFamily='book'
         />
     </Row>;

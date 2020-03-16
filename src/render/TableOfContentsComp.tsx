@@ -8,7 +8,6 @@ import {
     Row, Tab, Column, point,
     StretchTextLink, TextLine, Themed, Modal,
 } from '../atoms';
-import { linkToString } from '../core';
 import { pageForPosition } from './common';
 
 export function TableOfContentsComp({
@@ -52,11 +51,7 @@ function TocItemComp({
         {range(0, tabs).map(i => <Tab key={i.toString()} />)}
         <StretchTextLink
             theme={theme}
-            to={linkToString({
-                link: 'book',
-                bookId: id,
-                path: item.path,
-            })}
+            to={`/book/${id}?p=${item.path}`}
         >
             <TextLine
                 key='title'
