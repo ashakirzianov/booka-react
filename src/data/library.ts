@@ -8,12 +8,12 @@ import { Api } from './api';
 import { Storage } from './storage';
 
 export function libraryProvider(api: Api, storage: Storage) {
-    const bookCache: StringMap<Book> = {};
-    const cardCache: StringMap<LibraryCard> = {};
+    const bookCache = cache<Book>(storage.sub('books'));
+    const cardCache = cache<LibraryCard>(storage.sub('cards'));
 
     return {
         fragmentForPath(bookId: string, path: BookPath) {
-            const cached = bookCache[bookId];
+            const cached = bookCache.existing(bookId);
             if (cached) {
                 const fragment = resolveFragment(cached, path);
                 return of(fragment);
@@ -22,7 +22,7 @@ export function libraryProvider(api: Api, storage: Storage) {
                     api.getFragment(bookId, path),
                     api.getBook(bookId).pipe(
                         map(book => {
-                            bookCache[bookId] = book;
+                            bookCache.add(bookId, book);;
                             return resolveFragment(book, path);
                         })
                     ),
@@ -30,14 +30,14 @@ export function libraryProvider(api: Api, storage: Storage) {
             }
         },
         fragmentForRef(bookId: string, refId: string) {
-            const cached = bookCache[bookId];
+            const cached = bookCache.existing(bookId);
             if (cached) {
                 const fragment = resolveRefId(cached, refId);
                 return of(fragment);
             } else {
                 return api.getBook(bookId).pipe(
                     map(book => {
-                        bookCache[bookId] = book;
+                        bookCache.add(bookId, book);
                         const fragment = resolveRefId(book, refId);
                         return fragment;
                     })
@@ -45,13 +45,13 @@ export function libraryProvider(api: Api, storage: Storage) {
             }
         },
         cardForId(bookId: string) {
-            const cached = cardCache[bookId];
+            const cached = cardCache.existing(bookId);
             if (cached) {
                 return of(cached);
             } else {
                 return api.getLibraryCard(bookId).pipe(
                     map(card => {
-                        cardCache[bookId] = card;
+                        cardCache.add(bookId, card);
                         return card;
                     })
                 );
@@ -62,9 +62,16 @@ export function libraryProvider(api: Api, storage: Storage) {
 
 // TODO: move to 'common' ?
 
-type StringMap<T> = {
-    [key in string]: T | undefined;
-};
+function cache<T>(storage: Storage) {
+    return {
+        existing(key: string): T | undefined {
+            return storage.cell<T>(key).restore();
+        },
+        add(key: string, data: T) {
+            storage.cell<T>(key).store(data);
+        },
+    };
+}
 
 function resolveRefId(book: Book, refId: string) {
     const reference = findReference(book.nodes, refId);
