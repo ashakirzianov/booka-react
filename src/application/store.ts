@@ -44,7 +44,7 @@ startupFbSdk(config().facebook.clientId);
 fbState().subscribe(state => {
     if (state.state === 'logged' && state.token) {
         store.dispatch({
-            type: 'account-fb-token',
+            type: 'account-receive-fb-token',
             payload: {
                 token: state.token,
             },

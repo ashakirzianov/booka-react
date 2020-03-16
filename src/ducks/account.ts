@@ -13,39 +13,40 @@ export type AccountState = {
     account: AccountInfo,
     token: AuthToken,
 };
-export type ReceivedFbTokenAction = {
-    type: 'account-fb-token',
+type ReceivedFbTokenAction = {
+    type: 'account-receive-fb-token',
     payload: {
         token: string,
     },
 };
-export type AuthSuccessAction = {
+type AuthSuccessAction = {
     type: 'account-auth-success',
     payload: {
         provider: SignInProvider,
         token: AuthToken,
     },
 };
-export type ReceivedAccountInfoAction = {
-    type: 'account-info',
+type ReceivedAccountInfoAction = {
+    type: 'account-receive-info',
     payload: {
         provider: SignInProvider,
         token: AuthToken,
         account: AccountInfo,
     },
 };
-export type LogoutAction = {
+type LogoutAction = {
     type: 'account-logout',
 };
 export type AccountAction =
-    | ReceivedFbTokenAction | AuthSuccessAction | ReceivedAccountInfoAction
+    | ReceivedFbTokenAction | ReceivedAccountInfoAction
+    | AuthSuccessAction
     | LogoutAction
     ;
 
 const defaultState: AccountState = { state: 'not-signed' };
 export function accountReducer(state: AccountState = defaultState, action: AppAction): AccountState {
     switch (action.type) {
-        case 'account-info':
+        case 'account-receive-info':
             return {
                 state: 'signed',
                 account: action.payload.account,
@@ -60,7 +61,7 @@ export function accountReducer(state: AccountState = defaultState, action: AppAc
 }
 
 const accountFbTokenEpic: Epic<AppAction> = action$ => action$.pipe(
-    ofAppType('account-fb-token'),
+    ofAppType('account-receive-fb-token'),
     mergeMap(
         action => createAuthApi().getAuthFbToken(action.payload.token).pipe(
             map((token): AppAction => {
@@ -82,7 +83,7 @@ const accountAuthSuccessEpic: Epic<AppAction> = action$ => action$.pipe(
         action => createAuthApi().getAccountInfo(action.payload.token).pipe(
             map((account): AppAction => {
                 return {
-                    type: 'account-info',
+                    type: 'account-receive-info',
                     payload: {
                         account,
                         token: action.payload.token,
