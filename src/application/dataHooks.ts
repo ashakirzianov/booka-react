@@ -108,7 +108,7 @@ export function useLibraryCard(bookId: string) {
     const data = useDataProvider();
     const [cardState, setCardState] = useState<LibraryCardState>({ state: 'loading' });
     const observable = useMemo(
-        () => data.libraryCard({ bookId }),
+        () => data.libraryCardForId(bookId),
         [data, bookId],
     );
     useEffect(() => {
@@ -135,8 +135,8 @@ export type SearchState = Loadable<{
 export function useLibrarySearch(query: string | undefined) {
     const data = useDataProvider();
     const [searchState, setSearchState] = useState<SearchState>({ state: 'loading' });
-    const { observable } = useMemo(
-        () => data.search({ query }),
+    const observable = useMemo(
+        () => data.querySearch(query),
         [data, query],
     );
     useEffect(() => {

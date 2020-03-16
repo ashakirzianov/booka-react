@@ -1,15 +1,14 @@
 import { switchMap } from 'rxjs/operators';
 import {
-    AuthToken, CardCollections,
-    LibraryCard, CardCollectionName, replaceOrAdd,
+    CardCollections, LibraryCard, CardCollectionName, replaceOrAdd,
 } from 'booka-common';
 import { LocalChange, LocalChangeStore } from './localChange';
-import { api } from './api';
+import { Api } from './api';
 
-export function collectionsProvider(localChangeStore: LocalChangeStore) {
+export function collectionsProvider(localChangeStore: LocalChangeStore, api: Api) {
     return {
-        collections(token?: AuthToken) {
-            return api().getCollections(token).pipe(
+        collections() {
+            return api.getCollections().pipe(
                 switchMap(cs => localChangeStore.observe({}, applyChange))
             );
         },

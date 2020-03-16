@@ -1,7 +1,9 @@
-import { api } from './api';
+import { Api } from './api';
 
-export function libraryCard({ bookId }: {
-    bookId: string,
-}) {
-    return api().getLibraryCard(bookId);
+export function cardsProvider(api: Api) {
+    return {
+        libraryCardForId(bookId: string) {
+            return api.getLibraryCard(bookId);
+        },
+    };
 }

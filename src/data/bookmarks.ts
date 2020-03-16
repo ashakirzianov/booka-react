@@ -1,14 +1,14 @@
 import { switchMap } from 'rxjs/operators';
 import {
-    Bookmark, AuthToken, uuid, BookPath,
+    Bookmark, uuid, BookPath,
 } from 'booka-common';
 import { LocalChange, LocalChangeStore } from './localChange';
-import { api } from './api';
+import { Api } from './api';
 
-export function bookmarksProvider(localChangeStore: LocalChangeStore) {
+export function bookmarksProvider(localChangeStore: LocalChangeStore, api: Api) {
     return {
-        bookmarksForId(bookId: string, token?: AuthToken) {
-            return api().getBookmarks(bookId, token).pipe(
+        bookmarksForId(bookId: string) {
+            return api.getBookmarks(bookId).pipe(
                 switchMap(bs =>
                     localChangeStore.observe(bs, applyChange)
                 )

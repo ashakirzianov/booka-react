@@ -9,21 +9,22 @@ import { createFetcher } from './fetcher';
 const back = createFetcher<BackContract>(config().backUrl);
 const lib = createFetcher<LibContract>(config().libUrl);
 
-export function api() {
+export type Api = ReturnType<typeof createApi>;
+export function createApi(token?: AuthToken) {
     return {
-        getBookmarks(bookId: string, token?: AuthToken) {
+        getBookmarks(bookId: string) {
             return withInitial([], token && back.get('/bookmarks', {
                 auth: token.token,
                 query: { bookId },
             }));
         },
-        getHighlights(bookId: string, token?: AuthToken) {
+        getHighlights(bookId: string) {
             return withInitial([], token && back.get('/highlights', {
                 auth: token.token,
                 query: { bookId },
             }));
         },
-        getCurrentPositions(token?: AuthToken) {
+        getCurrentPositions() {
             return withInitial([], token && back.get('/current-position', {
                 auth: token.token,
             }));
@@ -42,12 +43,12 @@ export function api() {
                 })
             );
         },
-        getCollections(token?: AuthToken) {
+        getCollections() {
             return withInitial({}, token && back.get('/collections', {
                 auth: token.token,
             }));
         },
-        getSearchResults(query: string, token?: AuthToken) {
+        getSearchResults(query: string) {
             return withInitial([], lib.get('/search', {
                 auth: token?.token,
                 query: { query },
