@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from 'react';
 
 import {
-    assertNever, positionForPath, BookPath, BookFragment, BookRange, TableOfContents, Highlight,
+    assertNever, positionForPath, BookPath,
+    BookFragment, BookRange, TableOfContents,
 } from 'booka-common';
 
 import {
@@ -12,9 +13,8 @@ import {
     Clickable, colors, TextLine, BottomBar,
     TextLink, FullScreenActivityIndicator,
 } from '../atoms';
-import { pageForPosition } from './common';
 import { BookViewComp } from './BookViewComp';
-import { TableOfContentsComp } from './TableOfContentsComp';
+import { TableOfContentsComp, pageForPosition } from './TableOfContentsComp';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
 import { LibButton, AddBookmarkButton, TocButton } from './PanelButtons';

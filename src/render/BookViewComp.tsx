@@ -1,7 +1,7 @@
 import React, { useRef, useCallback } from 'react';
 import {
     BookFragment, BookPath, BookRange,
-    Highlight, BookAnchor, doesRangeOverlap,
+    Highlight, BookAnchor, doesRangeOverlap, rangeToString,
 } from 'booka-common';
 
 import {
@@ -10,7 +10,7 @@ import {
 } from '../atoms';
 import { BookFragmentComp, BookSelection, ColorizedRange } from '../reader';
 import { useCopy } from '../application';
-import { generateQuoteLink } from './common';
+import { config } from '../config';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
 
 export function BookViewComp({
@@ -124,4 +124,8 @@ function highlightsColorization(highlights: Highlight[], theme: Theme): Colorize
 
 function colorForGroup(group: string) {
     return group;
+}
+
+function generateQuoteLink(id: string, quote: BookRange) {
+    return `${config().frontUrl}/book/${id}?q=${rangeToString(quote)}`;
 }

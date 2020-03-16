@@ -8,7 +8,6 @@ import {
     Row, Tab, Column, point,
     StretchTextLink, TextLine, Themed, Modal,
 } from '../atoms';
-import { pageForPosition } from './common';
 
 export function TableOfContentsComp({
     theme, toc, id, closeToc,
@@ -65,4 +64,8 @@ function TocItemComp({
             />
         </StretchTextLink>
     </Row>;
+}
+
+export function pageForPosition(position: number): number {
+    return Math.floor(position / 1500) + 1;
 }
