@@ -3,6 +3,7 @@ import {
     LibraryCard, CardCollectionName,
 } from 'booka-common';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
+import { StorageCell } from './storage';
 
 type DefChange<Key extends string> = {
     change: Key,
@@ -53,23 +54,25 @@ export type LocalChange =
     | AddToCollectionChange | RemoveFromCollectionChange
     ;
 
-export function createLocalChangeStore({ post, initial }: {
+export function createLocalChangeStore({ post, storage }: {
     post: (ch: LocalChange) => Observable<any>,
-    initial: LocalChange[],
+    storage: StorageCell<LocalChange[]>,
 }) {
     const changesSubject = new Subject<LocalChange>();
-    let changes = initial;
-    initial.forEach(postChange);
+    let changes = storage.restore() ?? [];
+    changes.forEach(postChange);
 
     function postChange(change: LocalChange) {
         post(change).subscribe(() => {
             changes = changes.filter(c => c !== change);
+            storage.store(changes);
         });
     }
 
     return {
         addChange(change: LocalChange) {
             changes = [...changes, change];
+            storage.store(changes);
             changesSubject.next(change);
             postChange(change);
         },
