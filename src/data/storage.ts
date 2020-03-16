@@ -7,7 +7,7 @@ export type StorageCell<T> = {
 
 export type Storage = ReturnType<typeof createStorage>;
 export function createStorage(prefix?: string) {
-    prefix = prefix ?? '';
+    prefix = prefix ?? '<default>';
     return {
         cell<T>(key: string): StorageCell<T> {
             const fullKey = `${prefix}:${key}`;

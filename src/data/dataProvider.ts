@@ -13,9 +13,13 @@ import { createStorage } from './storage';
 
 export type DataProvider = ReturnType<typeof createDataProvider>;
 
-export function createDataProvider(token: AuthToken | undefined) {
-    const storage = createStorage();
-    const api = createApi(token);
+type UserInfo = {
+    token: AuthToken,
+    accountId: string,
+};
+export function createDataProvider(info: UserInfo | undefined) {
+    const storage = createStorage(info?.accountId);
+    const api = createApi(info?.token);
     const localChangeStore = createLocalChangeStore({
         post: ch => postLocalChange(api, ch),
         storage: storage.cell('local-changes'),
