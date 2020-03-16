@@ -43,8 +43,8 @@ export type AccountAction =
     | LogoutAction
     ;
 
-const defaultState: AccountState = { state: 'not-signed' };
-export function accountReducer(state: AccountState = defaultState, action: AppAction): AccountState {
+const init: AccountState = { state: 'not-signed' };
+export function accountReducer(state: AccountState = init, action: AppAction): AccountState {
     switch (action.type) {
         case 'account-receive-info':
             return {
