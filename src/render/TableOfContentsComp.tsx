@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { range } from 'lodash';
-import { TableOfContents, TableOfContentsItem, pathToString } from 'booka-common';
+import {
+    TableOfContents, TableOfContentsItem, pathToString,
+} from 'booka-common';
 
 import {
     Row, Tab, Column, point,
@@ -38,13 +40,14 @@ export function TableOfContentsComp({
     </Modal>;
 }
 
-type TocItemProps = Themed & {
+function TocItemComp({
+    id, item, tabs, page, theme,
+}: Themed & {
     tabs: number,
     id: string,
     item: TableOfContentsItem,
     page: number,
-};
-function TocItemComp({ id, item, tabs, page, theme }: TocItemProps) {
+}) {
     return <Row>
         {range(0, tabs).map(i => <Tab key={i.toString()} />)}
         <StretchTextLink
