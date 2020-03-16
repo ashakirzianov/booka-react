@@ -3,6 +3,7 @@ import {
 } from 'booka-common';
 import { config } from '../config';
 
+// TODO: remove this file
 export function generateQuoteLink(id: string, quote: BookRange) {
     return `${config().frontUrl}/book/${id}?q=${rangeToString(quote)}`;
 }

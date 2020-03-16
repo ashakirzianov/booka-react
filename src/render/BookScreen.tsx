@@ -1,23 +1,23 @@
 import React, { useState, useCallback } from 'react';
 
 import {
-    assertNever, positionForPath, BookPath, findBookmark, BookFragment, BookRange,
+    assertNever, positionForPath, BookPath, BookFragment, BookRange,
 } from 'booka-common';
 
 import {
-    useTheme, useBook, useHighlights, useUrlActions, useBookmarks,
+    useTheme, useBook, useHighlights, useUrlActions,
 } from '../application';
 import {
     Column, point, Row, Themed, Triad, TopBar, EmptyLine,
-    Clickable, TextButton, colors, TextLine, BottomBar,
-    TagButton, TextLink, IconLink, FullScreenActivityIndicator,
+    Clickable, colors, TextLine, BottomBar,
+    TextLink, FullScreenActivityIndicator,
 } from '../atoms';
 import { pageForPosition } from './common';
 import { BookViewComp } from './BookViewComp';
 import { TableOfContentsComp } from './TableOfContentsComp';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
-import { ShowTocLink } from './Navigation';
+import { LibButton, AddBookmarkButton, TocButton } from './PanelButtons';
 
 export function BookScreen({ bookId, showToc, path, quote }: {
     bookId: string,
@@ -144,60 +144,6 @@ function BookScreenHeader({
                 </>}
         />
     </TopBar>;
-}
-
-function AddBookmarkButton({ bookId, path }: {
-    bookId: string,
-    path: BookPath | undefined,
-}) {
-    const { theme } = useTheme();
-    const { bookmarks, addBookmark, removeBookmark } = useBookmarks(bookId);
-
-    const currentBookmark = path
-        ? findBookmark(bookmarks, bookId, path) : undefined;
-    if (!path) {
-        return null;
-    } else if (currentBookmark) {
-        return <TextButton
-            theme={theme}
-            text='Remove Bookmark'
-            fontSize='small'
-            fontFamily='menu'
-            onClick={() => removeBookmark(currentBookmark._id)}
-        />;
-    } else {
-        return <TextButton
-            theme={theme}
-            text='Add Bookmark'
-            fontSize='small'
-            fontFamily='menu'
-            onClick={() => addBookmark(bookId, path)}
-        />;
-    }
-}
-
-function LibButton({ theme }: Themed) {
-    return <IconLink
-        theme={theme}
-        icon='left'
-        to='/'
-    />;
-}
-
-function TocButton({ theme, total, current }: Themed & {
-    current: number,
-    total: number | undefined,
-}) {
-    return <ShowTocLink toShow={true}>
-        <TagButton
-            theme={theme}
-            text={
-                total !== undefined
-                    ? `${current} of ${total}`
-                    : `${current}`
-            }
-        />
-    </ShowTocLink>;
 }
 
 function BookScreenFooter({
