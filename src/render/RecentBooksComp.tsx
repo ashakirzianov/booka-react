@@ -2,26 +2,13 @@ import React from 'react';
 import {
     getLocationsData, ResolvedCurrentPosition,
 } from 'booka-common';
-import { useTheme, usePositions } from '../application';
-import {
-    Column, Themed,
-} from '../atoms';
+import { usePositions } from '../application';
+import { Column } from '../atoms';
 import { LinkToPath } from './Navigation';
 
-export function RecentBooksConnected() {
+export function RecentBooksComp() {
     const { positions } = usePositions();
 
-    const { theme } = useTheme();
-
-    return <RecentBooksComp
-        theme={theme}
-        positions={positions}
-    />;
-}
-
-function RecentBooksComp({ positions }: Themed & {
-    positions: ResolvedCurrentPosition[],
-}) {
     return <Column>
         <span key='label'>Recent books: {positions.length}</span>
         {
