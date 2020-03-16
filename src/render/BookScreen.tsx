@@ -177,8 +177,7 @@ function AddBookmarkButton({ bookId, path }: {
     }
 }
 
-type LibButtonProps = Themed;
-function LibButton({ theme }: LibButtonProps) {
+function LibButton({ theme }: Themed) {
     return <IconLink
         theme={theme}
         icon='left'
@@ -203,11 +202,10 @@ function AppearanceButton() {
     </WithPopover>;
 }
 
-type ThemePickerProps = Themed & {
+function ThemePicker({ theme, setPalette, incrementScale }: Themed & {
     setPalette: Callback<PaletteName>,
     incrementScale: Callback<number>,
-};
-function ThemePicker({ theme, setPalette, incrementScale }: ThemePickerProps) {
+}) {
     return <Column width={point(14)}>
         <FontScale theme={theme} incrementScale={incrementScale} />
         <Separator />
@@ -215,10 +213,9 @@ function ThemePicker({ theme, setPalette, incrementScale }: ThemePickerProps) {
     </Column>;
 }
 
-type FontScaleProps = Themed & {
+function FontScale({ theme, incrementScale }: Themed & {
     incrementScale: Callback<number>,
-};
-function FontScale({ theme, incrementScale }: FontScaleProps) {
+}) {
     return <Row centered justified height={point(5)}>
         <FontScaleButton
             theme={theme} increment={-0.1} size='smallest' incrementScale={incrementScale} />
@@ -227,14 +224,13 @@ function FontScale({ theme, incrementScale }: FontScaleProps) {
     </Row>;
 }
 
-type FontScaleButtonProps = Themed & {
+function FontScaleButton({
+    theme, size, increment, incrementScale,
+}: Themed & {
     size: 'largest' | 'smallest',
     increment: number,
     incrementScale: Callback<number>,
-};
-function FontScaleButton({
-    theme, size, increment, incrementScale,
-}: FontScaleButtonProps) {
+}) {
     return <Column centered>
         <TextButton
             theme={theme}
@@ -246,10 +242,9 @@ function FontScaleButton({
     </Column>;
 }
 
-type PalettePickerProps = Themed & {
+function PalettePicker({ theme, setPalette }: Themed & {
     setPalette: Callback<PaletteName>,
-};
-function PalettePicker({ theme, setPalette }: PalettePickerProps) {
+}) {
     return <Row centered justified height={point(5)}>
         <SelectPaletteButton
             theme={theme} name='light' text='L' setPalette={setPalette} />
@@ -260,12 +255,11 @@ function PalettePicker({ theme, setPalette }: PalettePickerProps) {
     </Row>;
 }
 
-type PaletteButtonProps = Themed & {
+function SelectPaletteButton({ theme, text, name, setPalette }: Themed & {
     text: string,
     name: PaletteName,
     setPalette: Callback<PaletteName>,
-};
-function SelectPaletteButton({ theme, text, name, setPalette }: PaletteButtonProps) {
+}) {
     return <PaletteButton
         theme={theme}
         text={text}
