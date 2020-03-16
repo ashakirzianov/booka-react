@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { BrowserRouter, Route, Switch, useParams, useLocation, Redirect } from 'react-router-dom';
 
 import { FeedScreen } from './FeedScreen';
@@ -29,7 +29,10 @@ function BookRoute() {
     // TODO: make type safe ?
     const { bookId } = useParams<{ bookId: string }>();
     const { toc, p, q } = useQuery();
-    const path = typeof p === 'string' ? pathFromString(p) : undefined;
+    const path = useMemo(
+        () => typeof p === 'string' ? pathFromString(p) : undefined,
+        [p],
+    );
     const quote = typeof q === 'string' ? rangeFromString(q) : undefined;
 
     return <BookScreen

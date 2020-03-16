@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback } from 'react';
 
 import {
     assertNever, positionForPath, BookPath, findBookmark, BookFragment, BookRange,
@@ -14,7 +14,6 @@ import {
     colors, TextLine, BottomBar, TagButton, TextLink, IconLink,
     FullScreenActivityIndicator,
 } from '../atoms';
-import { BookLink } from '../core';
 import { pageForPosition } from './common';
 import { BookViewComp } from './BookViewComp';
 import { TableOfContentsComp } from './TableOfContentsComp';
@@ -28,11 +27,9 @@ export function BookScreen({ bookId, showToc, path, quote }: {
     quote?: BookRange,
 }) {
     const { theme } = useTheme();
-    const link = useMemo((): BookLink => ({
-        link: 'book',
+    const { bookState } = useBook({
         bookId, path,
-    }), [bookId, path]);
-    const { bookState } = useBook(link);
+    });
     const { highlights } = useHighlights(bookId);
 
     const [visible, setVisible] = useState(true);

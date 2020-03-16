@@ -3,7 +3,7 @@ import { concat, map } from 'rxjs/operators';
 import {
     AuthToken, BackContract, LibContract,
     Bookmark, Highlight, HighlightUpdate,
-    CardCollectionName, CurrentPositionPost,
+    CardCollectionName, CurrentPositionPost, BookPath, pathToString,
 } from 'booka-common';
 import { config } from '../config';
 import { createFetcher } from './fetcher';
@@ -14,6 +14,24 @@ const lib = createFetcher<LibContract>(config().libUrl);
 export type Api = ReturnType<typeof createApi>;
 export function createApi(token?: AuthToken) {
     return {
+        getFragment(bookId: string, path: BookPath) {
+            return lib.get('/fragment', {
+                auth: token?.token,
+                query: {
+                    id: bookId,
+                    path: pathToString(path),
+                },
+            }).pipe(
+                map(r => r.fragment),
+            );
+        },
+        getBook(bookId: string) {
+            return lib.get('/full', {
+                query: { id: bookId },
+            }).pipe(
+                map(r => r.book),
+            );
+        },
         getBookmarks(bookId: string) {
             return withInitial([], optional(token && back.get('/bookmarks', {
                 auth: token.token,

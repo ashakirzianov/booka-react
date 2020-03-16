@@ -3,11 +3,10 @@ import { map } from 'rxjs/operators';
 
 import {
     AuthToken, Bookmark, Highlight, ResolvedCurrentPosition,
-    BookFragment, LibraryCard, SearchResult, CardCollections,
+    BookFragment, LibraryCard, SearchResult, CardCollections, BookPath, firstPath,
 } from 'booka-common';
 import { PaletteName } from '../atoms';
 import { createDataProvider } from '../data';
-import { BookLink } from '../core';
 import { useUrlActions } from './urlHooks';
 import { useAppSelector, useAppDispatch } from './reduxHooks';
 
@@ -20,9 +19,14 @@ type Loadable<T> =
 function useDataProvider() {
     const { accountState } = useAccount();
     const token = accountState.state === 'signed' ? accountState.token : undefined;
+    const accountId = accountState.state === 'signed' ? accountState.account._id : undefined;
     const dp = useMemo(
-        () => createDataProvider(token),
-        [token]
+        () => createDataProvider(
+            token && accountId
+                ? { token, accountId }
+                : undefined
+        ),
+        [token, accountId],
     );
     return dp;
 }
@@ -83,19 +87,25 @@ export function usePositions(token?: AuthToken) {
 type BookState = Loadable<{
     fragment: BookFragment,
 }>;
-export function useBook(link: BookLink) {
+export function useBook({ bookId, path, refId }: {
+    bookId: string,
+    path?: BookPath,
+    refId?: string,
+}) {
     const data = useDataProvider();
     const [bookState, setBookState] = useState<BookState>({ state: 'loading' });
     const subject = useMemo(
-        () => data.openLink(link),
-        [link, data],
+        () => refId
+            ? data.fragmentForRef(bookId, refId)
+            : data.fragmentForPath(bookId, path || firstPath()),
+        [data, bookId, path, refId],
     );
     useEffect(() => {
         const sub = subject
             .pipe(
-                map((r): BookState => ({
+                map((fragment): BookState => ({
                     state: 'ready',
-                    fragment: r.fragment,
+                    fragment,
                 })),
             )
             .subscribe(setBookState);
