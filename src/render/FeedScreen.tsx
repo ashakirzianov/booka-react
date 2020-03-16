@@ -4,7 +4,7 @@ import {
     Themed, TopBar, point, Triad, EmptyLine,
 } from '../atoms';
 import { useTheme } from '../application';
-import { ConnectedAccountButton } from './AccountButton';
+import { AccountButton } from './AccountButton';
 import { LibrarySearchComp } from './LibrarySearchComp';
 import { CollectionsComp } from './CollectionsComp';
 import { RecentBooksConnected } from './RecentBooksComp';
@@ -32,7 +32,7 @@ function FeedScreenHeader({ theme }: Themed) {
         paddingHorizontal={point(1)}
     >
         <Triad
-            right={<ConnectedAccountButton />}
+            right={<AccountButton />}
         />
     </TopBar>;
 }

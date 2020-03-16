@@ -17,7 +17,7 @@ import {
 import { pageForPosition } from './common';
 import { BookViewComp } from './BookViewComp';
 import { TableOfContentsComp } from './TableOfContentsComp';
-import { ConnectedAccountButton } from './AccountButton';
+import { AccountButton } from './AccountButton';
 import { ShowTocLink } from './Navigation';
 
 export function BookScreen({ bookId, showToc, path, quote }: {
@@ -141,7 +141,7 @@ function BookScreenHeader({
                 <>
                     <AddBookmarkButton bookId={bookId} path={path} />
                     <AppearanceButton />
-                    <ConnectedAccountButton />
+                    <AccountButton />
                 </>}
         />
     </TopBar>;
