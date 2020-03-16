@@ -22,7 +22,7 @@ export function libraryProvider(api: Api, storage: Storage) {
                     api.getFragment(bookId, path),
                     api.getBook(bookId).pipe(
                         map(book => {
-                            bookCache.add(bookId, book);;
+                            bookCache.add(bookId, book);
                             return resolveFragment(book, path);
                         })
                     ),
