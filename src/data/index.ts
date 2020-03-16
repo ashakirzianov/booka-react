@@ -7,12 +7,12 @@ import { searchProvider } from './search';
 import { openLink } from './book';
 import { createLocalChangeStore } from './localChange';
 import { createApi } from './api';
+import { AuthToken } from 'booka-common';
 
-export type DataProvider = ReturnType<typeof dataProvider>;
+export type DataProvider = ReturnType<typeof createDataProvider>;
 
-// TODO: rename
-export function dataProvider() {
-    const api = createApi();
+export function createDataProvider(token: AuthToken | undefined) {
+    const api = createApi(token);
     const localChangeStore = createLocalChangeStore();
     return {
         ...bookmarksProvider(localChangeStore, api),
