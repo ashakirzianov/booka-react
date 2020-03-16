@@ -1,15 +1,14 @@
 import { switchMap } from 'rxjs/operators';
 import {
-    ResolvedCurrentPosition, AuthToken,
-    replaceOrAdd, BookPath, LibraryCard,
+    ResolvedCurrentPosition, replaceOrAdd, BookPath, LibraryCard,
 } from 'booka-common';
 import { LocalChange, LocalChangeStore } from './localChange';
-import { api } from './api';
+import { Api } from './api';
 
-export function currentPositionsProvider(localChangeStore: LocalChangeStore) {
+export function currentPositionsProvider(localChangeStore: LocalChangeStore, api: Api) {
     return {
-        currentPositions(token?: AuthToken) {
-            return api().getCurrentPositions(token).pipe(
+        currentPositions() {
+            return api.getCurrentPositions().pipe(
                 switchMap(ps =>
                     localChangeStore.observe(ps, applyChange)
                 )

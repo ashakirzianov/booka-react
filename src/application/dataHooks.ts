@@ -5,11 +5,11 @@ import {
     AuthToken, Bookmark, Highlight, ResolvedCurrentPosition,
     BookFragment, LibraryCard, SearchResult, CardCollections,
 } from 'booka-common';
-import { dataProvider } from '../data';
+import { PaletteName } from '../atoms';
+import { createDataProvider } from '../data';
 import { BookLink } from '../core';
 import { useUrlActions } from './urlHooks';
 import { useAppSelector, useAppDispatch } from './reduxHooks';
-import { PaletteName } from '../atoms';
 
 type Loadable<T> =
     | { state: 'loading' }
@@ -17,9 +17,13 @@ type Loadable<T> =
     | { state: 'ready' } & T
     ;
 
-const dp = dataProvider();
 function useDataProvider() {
-    // TODO: get from context
+    const { accountState } = useAccount();
+    const token = accountState.state === 'signed' ? accountState.token : undefined;
+    const dp = useMemo(
+        () => createDataProvider(token),
+        [token]
+    );
     return dp;
 }
 
@@ -108,7 +112,7 @@ export function useLibraryCard(bookId: string) {
     const data = useDataProvider();
     const [cardState, setCardState] = useState<LibraryCardState>({ state: 'loading' });
     const observable = useMemo(
-        () => data.libraryCard({ bookId }),
+        () => data.libraryCardForId(bookId),
         [data, bookId],
     );
     useEffect(() => {
@@ -135,8 +139,8 @@ export type SearchState = Loadable<{
 export function useLibrarySearch(query: string | undefined) {
     const data = useDataProvider();
     const [searchState, setSearchState] = useState<SearchState>({ state: 'loading' });
-    const { observable } = useMemo(
-        () => data.search({ query }),
+    const observable = useMemo(
+        () => data.querySearch(query),
         [data, query],
     );
     useEffect(() => {

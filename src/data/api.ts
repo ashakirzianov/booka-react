@@ -2,6 +2,8 @@ import { of, Observable } from 'rxjs';
 import { concat, map } from 'rxjs/operators';
 import {
     AuthToken, BackContract, LibContract,
+    Bookmark, Highlight, HighlightUpdate,
+    CardCollectionName, CurrentPositionPost,
 } from 'booka-common';
 import { config } from '../config';
 import { createFetcher } from './fetcher';
@@ -9,24 +11,25 @@ import { createFetcher } from './fetcher';
 const back = createFetcher<BackContract>(config().backUrl);
 const lib = createFetcher<LibContract>(config().libUrl);
 
-export function api() {
+export type Api = ReturnType<typeof createApi>;
+export function createApi(token?: AuthToken) {
     return {
-        getBookmarks(bookId: string, token?: AuthToken) {
-            return withInitial([], token && back.get('/bookmarks', {
+        getBookmarks(bookId: string) {
+            return withInitial([], optional(token && back.get('/bookmarks', {
                 auth: token.token,
                 query: { bookId },
-            }));
+            })));
         },
-        getHighlights(bookId: string, token?: AuthToken) {
-            return withInitial([], token && back.get('/highlights', {
+        getHighlights(bookId: string) {
+            return withInitial([], optional(token && back.get('/highlights', {
                 auth: token.token,
                 query: { bookId },
-            }));
+            })));
         },
-        getCurrentPositions(token?: AuthToken) {
-            return withInitial([], token && back.get('/current-position', {
+        getCurrentPositions() {
+            return withInitial([], optional(token && back.get('/current-position', {
                 auth: token.token,
-            }));
+            })));
         },
         getLibraryCard(bookId: string) {
             return lib.post('/card/batch', {
@@ -42,12 +45,12 @@ export function api() {
                 })
             );
         },
-        getCollections(token?: AuthToken) {
-            return withInitial({}, token && back.get('/collections', {
+        getCollections() {
+            return withInitial({}, optional(token && back.get('/collections', {
                 auth: token.token,
-            }));
+            })));
         },
-        getSearchResults(query: string, token?: AuthToken) {
+        getSearchResults(query: string) {
             return withInitial([], lib.get('/search', {
                 auth: token?.token,
                 query: { query },
@@ -55,16 +58,64 @@ export function api() {
                 map(r => r.values)
             ));
         },
+        postAddBookmark(bookmark: Bookmark) {
+            return optional(token && back.post('/bookmarks', {
+                auth: token.token,
+                body: bookmark,
+            }));
+        },
+        postRemoveBookmark(bookmarkId: string) {
+            return optional(token && back.delete('/bookmarks', {
+                auth: token.token,
+                query: { id: bookmarkId },
+            }));
+        },
+        postAddHighlight(highlight: Highlight) {
+            return optional(token && back.post('/highlights', {
+                auth: token.token,
+                body: highlight,
+            }));
+        },
+        postRemoveHighlight(highlightId: string) {
+            return optional(token && back.delete('/highlights', {
+                auth: token.token,
+                query: { highlightId },
+            }));
+        },
+        postUpdateHighlight(update: HighlightUpdate) {
+            return optional(token && back.patch('/highlights', {
+                auth: token.token,
+                body: update,
+            }));
+        },
+        postAddCurrentPosition(position: CurrentPositionPost) {
+            return optional(token && back.put('/current-position', {
+                auth: token.token,
+                body: position,
+            }));
+        },
+        postAddToCollection(bookId: string, collection: CardCollectionName) {
+            return optional(token && back.post('/collections', {
+                auth: token.token,
+                query: { bookId, collection },
+            }));
+        },
+        postRemoveFromCollection(bookId: string, collection: CardCollectionName) {
+            return optional(token && back.delete('/collections', {
+                auth: token.token,
+                query: { bookId, collection },
+            }));
+        },
     };
 }
 
 // TODO: rethink this
-function withInitial<T>(init: T, observable?: Observable<T>): Observable<T> {
-    if (observable) {
-        return of(init).pipe(
-            concat(observable),
-        );
-    } else {
-        return of(init);
-    }
+function withInitial<T>(init: T, observable: Observable<T>): Observable<T> {
+    return of(init).pipe(
+        concat(observable),
+    );
+}
+
+function optional<T>(observable?: Observable<T>): Observable<T> {
+    return observable ?? of<T>();
 }

@@ -1,14 +1,14 @@
 import { switchMap } from 'rxjs/operators';
 import {
-    Highlight, AuthToken, BookRange, uuid, HighlightGroup,
+    Highlight, BookRange, uuid, HighlightGroup,
 } from 'booka-common';
 import { LocalChange, LocalChangeStore } from './localChange';
-import { api } from './api';
+import { Api } from './api';
 
-export function highlightsProvider(localChangeStore: LocalChangeStore) {
+export function highlightsProvider(localChangeStore: LocalChangeStore, api: Api) {
     return {
-        highlightsForId(bookId: string, token?: AuthToken) {
-            return api().getHighlights(bookId, token).pipe(
+        highlightsForId(bookId: string) {
+            return api.getHighlights(bookId).pipe(
                 switchMap(hs =>
                     localChangeStore.observe(hs, applyChange)
                 )
