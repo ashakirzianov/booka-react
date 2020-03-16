@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useTheme } from '../application';
 import {
-    Column, point, Row, Callback, Themed, IconButton,
+    Column, point, Row, Themed, IconButton,
     PaletteName, PaletteButton, TextButton, Separator, WithPopover,
 } from '../atoms';
 
@@ -24,8 +24,8 @@ export function AppearanceButton() {
 }
 
 function ThemePicker({ theme, setPalette, incrementScale }: Themed & {
-    setPalette: Callback<PaletteName>,
-    incrementScale: Callback<number>,
+    setPalette: (name: PaletteName) => void,
+    incrementScale: (inc: number) => void,
 }) {
     return <Column width={point(14)}>
         <FontScale theme={theme} incrementScale={incrementScale} />
@@ -35,7 +35,7 @@ function ThemePicker({ theme, setPalette, incrementScale }: Themed & {
 }
 
 function FontScale({ theme, incrementScale }: Themed & {
-    incrementScale: Callback<number>,
+    incrementScale: (inc: number) => void,
 }) {
     return <Row centered justified height={point(5)}>
         <FontScaleButton
@@ -50,7 +50,7 @@ function FontScaleButton({
 }: Themed & {
     size: 'largest' | 'smallest',
     increment: number,
-    incrementScale: Callback<number>,
+    incrementScale: (inc: number) => void,
 }) {
     return <Column centered>
         <TextButton
@@ -64,7 +64,7 @@ function FontScaleButton({
 }
 
 function PalettePicker({ theme, setPalette }: Themed & {
-    setPalette: Callback<PaletteName>,
+    setPalette: (name: PaletteName) => void,
 }) {
     return <Row centered justified height={point(5)}>
         <SelectPaletteButton
@@ -79,7 +79,7 @@ function PalettePicker({ theme, setPalette }: Themed & {
 function SelectPaletteButton({ theme, text, name, setPalette }: Themed & {
     text: string,
     name: PaletteName,
-    setPalette: Callback<PaletteName>,
+    setPalette: (name: PaletteName) => void,
 }) {
     return <PaletteButton
         theme={theme}

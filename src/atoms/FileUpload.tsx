@@ -1,15 +1,14 @@
 import * as React from 'react';
-import { Callback } from './common';
 
 export type Data = { data: any };
 export type FileUploadDialogRef = {
-    show: Callback,
+    show: () => void,
 };
 export type FileUploadDialogProps = {
     accept?: string,
     dataKey: string,
-    refCallback: Callback<FileUploadDialogRef>,
-    onFilesSelected: Callback<Data>,
+    refCallback: (ref: FileUploadDialogRef) => void,
+    onFilesSelected: (data: Data) => void,
 };
 export function FileUploadDialog({
     refCallback, onFilesSelected,

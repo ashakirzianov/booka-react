@@ -6,7 +6,7 @@ import {
 
 import {
     Themed, colors, getFontSize, Row,
-    point, Callback, getHighlights, BorderLink, Theme,
+    point, getHighlights, BorderLink, Theme,
 } from '../atoms';
 import { BookFragmentComp, BookSelection, ColorizedRange } from '../reader';
 import { useCopy } from '../application';
@@ -21,11 +21,11 @@ export function BookViewComp({
     bookId: string,
     fragment: BookFragment,
     pathToScroll: BookPath | undefined,
-    updateBookPosition: Callback<BookPath>,
+    updateBookPosition: (path: BookPath) => void,
     quoteRange: BookRange | undefined,
     highlights: Highlight[],
-    setQuoteRange: Callback<BookRange | undefined>,
-    openRef: Callback<string>,
+    setQuoteRange: (range: BookRange | undefined) => void,
+    openRef: (refId: string) => void,
 }) {
     const selection = useRef<BookSelection | undefined>(undefined);
     const selectionHandler = useCallback((sel: BookSelection | undefined) => {

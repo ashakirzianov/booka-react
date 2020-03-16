@@ -5,10 +5,9 @@ import { platformValue } from './platform';
 import { OverlayBox } from './OverlayBox';
 import { FadeIn } from './Animations';
 import { Theme } from './theme';
-import { Callback } from './common';
 
 export type PopoverBodyParams = {
-    scheduleUpdate: Callback<void>,
+    scheduleUpdate: () => void,
 };
 export type WithPopoverProps = {
     theme: Theme,

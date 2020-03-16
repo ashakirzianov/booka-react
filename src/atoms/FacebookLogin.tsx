@@ -2,12 +2,12 @@ import * as React from 'react';
 
 import { Column, Row } from './Layout';
 import { Icon } from './Icons';
-import { point, Callback } from './common';
+import { point } from './common';
 import { FbLoginState, fbState, doFbLogin } from './facebookSdk';
 import { Themed } from './theme';
 
 type SocialButtonProps = Themed & {
-    onStatusChange?: Callback,
+    onStatusChange?: () => void,
 };
 
 export type FacebookLoginProps = SocialButtonProps;
@@ -42,7 +42,7 @@ export function FacebookLogin({ theme, onStatusChange }: FacebookLoginProps) {
 }
 
 type ActualButtonProps = Themed & {
-    onClick: Callback<void>,
+    onClick: () => void,
     user?: {
         name: string,
         pictureUrl?: string,
