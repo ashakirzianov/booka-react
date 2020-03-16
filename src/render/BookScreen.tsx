@@ -54,6 +54,7 @@ export function BookScreen({ bookId, showToc, path, quote }: {
                 theme={theme}
             />;
         case 'ready': {
+            // TODO: extract component
             const { fragment } = bookState;
             const { toc } = fragment;
             return <>

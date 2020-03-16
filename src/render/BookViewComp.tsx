@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useCallback } from 'react';
 import {
     BookFragment, BookPath, BookRange,
     Highlight, BookAnchor, doesRangeOverlap,
@@ -14,7 +14,10 @@ import { linkToString } from '../core';
 import { generateQuoteLink } from './common';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
 
-export type BookViewCompProps = Themed & {
+export function BookViewComp({
+    bookId, fragment, theme, pathToScroll, updateBookPosition,
+    highlights, quoteRange, setQuoteRange, openRef,
+}: Themed & {
     bookId: string,
     fragment: BookFragment,
     pathToScroll: BookPath | undefined,
@@ -23,19 +26,12 @@ export type BookViewCompProps = Themed & {
     highlights: Highlight[],
     setQuoteRange: Callback<BookRange | undefined>,
     openRef: Callback<string>,
-};
-export function BookViewComp({
-    bookId, fragment, theme,
-    pathToScroll, updateBookPosition,
-    highlights,
-    quoteRange, setQuoteRange,
-    openRef,
-}: BookViewCompProps) {
-    const selection = React.useRef<BookSelection | undefined>(undefined);
-    const selectionHandler = React.useCallback((sel: BookSelection | undefined) => {
+}) {
+    const selection = useRef<BookSelection | undefined>(undefined);
+    const selectionHandler = useCallback((sel: BookSelection | undefined) => {
         selection.current = sel;
     }, []);
-    useCopy(React.useCallback((e: ClipboardEvent) => {
+    useCopy(useCallback((e: ClipboardEvent) => {
         if (selection.current && e.clipboardData) {
             e.preventDefault();
             const selectionText = `${selection.current.text}\n${generateQuoteLink(bookId, selection.current.range)}`;
@@ -93,12 +89,11 @@ export function BookViewComp({
     </BookContextMenu>;
 }
 
-type PathLinkProps = Themed & {
+function AnchorLink({ theme, text, anchor, bookId }: Themed & {
     bookId: string,
     anchor: BookAnchor | undefined,
     text: string,
-};
-function AnchorLink({ theme, text, anchor, bookId }: PathLinkProps) {
+}) {
     if (!anchor) {
         return null;
     }
