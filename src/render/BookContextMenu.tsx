@@ -3,9 +3,9 @@ import React from 'react';
 import { Menu, Item, MenuProvider } from 'react-contexify';
 import 'react-contexify/dist/ReactContexify.min.css';
 
+import { Highlight, BookRange, HighlightGroup } from 'booka-common';
 import { WithChildren } from '../atoms';
 import { BookSelection } from '../reader';
-import { Highlight, BookRange, HighlightGroup } from 'booka-common';
 import { useHighlights } from '../application';
 
 type HighlightTarget = {
