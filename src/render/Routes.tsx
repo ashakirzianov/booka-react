@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { BrowserRouter, Route, Switch, useParams, useLocation, Redirect } from 'react-router-dom';
 
 import { FeedScreen } from './FeedScreen';
-import { BookScreen } from './BookScreen';
+import { BookScreenComp } from './BookScreen';
 import { parse } from 'query-string';
 import { pathFromString, rangeFromString } from 'booka-common';
 
@@ -35,7 +35,7 @@ function BookRoute() {
     );
     const quote = typeof q === 'string' ? rangeFromString(q) : undefined;
 
-    return <BookScreen
+    return <BookScreenComp
         bookId={bookId}
         showToc={toc !== undefined}
         path={path ?? quote?.start}

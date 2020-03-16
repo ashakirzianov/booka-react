@@ -19,7 +19,7 @@ import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
 import { LibButton, AddBookmarkButton, TocButton } from './PanelButtons';
 
-export function BookScreen({ bookId, showToc, path, quote }: {
+export function BookScreenComp({ bookId, showToc, path, quote }: {
     bookId: string,
     showToc: boolean,
     path?: BookPath,
