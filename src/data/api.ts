@@ -2,7 +2,8 @@ import { of, Observable } from 'rxjs';
 import { concat, map } from 'rxjs/operators';
 import {
     AuthToken, BackContract, LibContract,
-    Bookmark, Highlight, HighlightUpdate, CurrentPosition, CardCollectionName,
+    Bookmark, Highlight, HighlightUpdate,
+    CardCollectionName, CurrentPositionPost,
 } from 'booka-common';
 import { config } from '../config';
 import { createFetcher } from './fetcher';
@@ -87,7 +88,7 @@ export function createApi(token?: AuthToken) {
                 body: update,
             }));
         },
-        postAddCurrentPosition(position: CurrentPosition) {
+        postAddCurrentPosition(position: CurrentPositionPost) {
             return optional(token && back.put('/current-position', {
                 auth: token.token,
                 body: position,
