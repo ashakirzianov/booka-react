@@ -29,6 +29,7 @@
     "redux-observable": "^1.2.0",
     "rxjs": "^6.5.3",
     "serve": "^11.2.0",
+    "store2": "^2.10.0",
     "typescript": "3.7.3"
   },
   "scripts": {
