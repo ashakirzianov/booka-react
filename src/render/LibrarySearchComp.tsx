@@ -5,7 +5,7 @@ import { useLibrarySearch, SearchState } from '../application';
 import {
     Column, SearchBox, ActivityIndicator,
 } from '../atoms';
-import { BookListComp } from './BookList';
+import { BookListComp } from './BookListComp';
 
 export function LibrarySearchComp({ query }: {
     query: string | undefined,

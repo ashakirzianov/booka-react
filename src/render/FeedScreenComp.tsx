@@ -8,7 +8,7 @@ import { AccountButton } from './AccountButton';
 import { LibrarySearchComp } from './LibrarySearchComp';
 import { CollectionsComp } from './CollectionsComp';
 import { RecentBooksConnected } from './RecentBooksComp';
-import { LibraryCardComp } from './LibraryCard';
+import { LibraryCardComp } from './LibraryCardComp';
 
 export function FeedScreen({ show, query }: {
     query: string | undefined,

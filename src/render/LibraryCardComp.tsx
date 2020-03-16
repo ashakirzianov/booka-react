@@ -9,7 +9,7 @@ import {
     LibraryCardState, useCollections, usePositions,
 } from '../application';
 import { LinkToPath } from './Navigation';
-import { BookCoverComp } from './BookList';
+import { BookCoverComp } from './BookListComp';
 
 export function LibraryCardComp({ bookId }: {
     bookId: string,
