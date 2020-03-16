@@ -1,8 +1,7 @@
 import { Epic, combineEpics } from 'redux-observable';
 import { mergeMap, map } from 'rxjs/operators';
 import { AuthToken, AccountInfo } from 'booka-common';
-import { ofAppType } from './utils';
-import { AppAction } from './app';
+import { AppAction, ofAppType } from './app';
 import { createAuthApi } from '../data/api';
 
 export type SignInProvider = 'facebook';
