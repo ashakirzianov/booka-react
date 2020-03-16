@@ -123,6 +123,5 @@ function highlightsColorization(highlights: Highlight[], theme: Theme): Colorize
 }
 
 function colorForGroup(group: string) {
-    // TODO: implement
     return group;
 }

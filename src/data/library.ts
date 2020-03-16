@@ -60,8 +60,6 @@ export function libraryProvider(api: Api, storage: Storage) {
     };
 }
 
-// TODO: move to 'common' ?
-
 function cache<T>(storage: Storage) {
     return {
         existing(key: string): T | undefined {

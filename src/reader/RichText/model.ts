@@ -29,7 +29,7 @@ export type RichTextAttrs = Partial<{
     ref: string,
 }>;
 export type RichTextSimpleFragment = {
-    frag?: undefined,
+    frag?: undefined, // TODO: rethink this
     text: string,
     attrs?: RichTextAttrs,
 };

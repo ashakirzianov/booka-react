@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 
 import {
-    assertNever, positionForPath, BookPath, BookFragment, BookRange,
+    assertNever, positionForPath, BookPath, BookFragment, BookRange, TableOfContents, Highlight,
 } from 'booka-common';
 
 import {
@@ -29,24 +29,6 @@ export function BookScreenComp({ bookId, showToc, path, quote }: {
     const { bookState } = useBook({
         bookId, path,
     });
-    const { highlights } = useHighlights(bookId);
-
-    const [visible, setVisible] = useState(true);
-    const toggleControls = useCallback(
-        () => setVisible(!visible),
-        [visible, setVisible],
-    );
-
-    const { updateBookPath, updateQuoteRange, updateToc } = useUrlActions();
-    const [needToScroll, setNeedToScroll] = useState(true);
-    const updatePath = useCallback((p: BookPath | undefined) => {
-        setNeedToScroll(false);
-        updateBookPath(p);
-    }, [setNeedToScroll, updateBookPath]);
-    const closeToc = useCallback(
-        () => updateToc(false),
-        [updateToc],
-    );
 
     switch (bookState.state) {
         case 'loading':
@@ -54,55 +36,17 @@ export function BookScreenComp({ bookId, showToc, path, quote }: {
                 theme={theme}
             />;
         case 'ready': {
-            // TODO: extract component
             const { fragment } = bookState;
             const { toc } = fragment;
-            return <>
-                <BookScreenHeader
-                    bookId={bookId}
-                    path={path}
-                    theme={theme}
-                    visible={visible}
-                />
-                <BookScreenFooter
-                    theme={theme}
-                    fragment={fragment}
-                    visible={visible}
-                    // TODO: implement
-                    path={fragment.current.path}
-                />
-                <Row fullWidth centered
-                    backgroundColor={colors(theme).primary}
-                >
-                    <Clickable onClick={toggleControls}>
-                        <Column maxWidth={point(50)} fullWidth padding={point(1)} centered>
-                            <EmptyLine />
-                            <BookViewComp
-                                bookId={bookId}
-                                theme={theme}
-                                fragment={fragment}
-                                highlights={highlights}
-                                pathToScroll={needToScroll ? path : undefined}
-                                updateBookPosition={updatePath}
-                                quoteRange={quote}
-                                setQuoteRange={updateQuoteRange}
-                                openRef={() => undefined}
-                            />
-                            {
-                                toc && showToc
-                                    ? <TableOfContentsComp
-                                        theme={theme}
-                                        toc={toc}
-                                        id={bookId}
-                                        closeToc={closeToc}
-                                    />
-                                    : null
-                            }
-                            <EmptyLine />
-                        </Column>
-                    </Clickable>
-                </Row>
-            </>;
+            return <BookReadyComp
+                theme={theme}
+                bookId={bookId}
+                path={path}
+                fragment={fragment}
+                toc={toc}
+                showToc={showToc}
+                quote={quote}
+            />;
         }
 
         case 'error':
@@ -121,6 +65,83 @@ export function BookScreenComp({ bookId, showToc, path, quote }: {
             assertNever(bookState);
             return <span>Should not happen</span>;
     }
+}
+
+function BookReadyComp({
+    theme, fragment, toc, showToc, bookId, path, quote,
+}: Themed & {
+    bookId: string,
+    path: BookPath | undefined,
+    fragment: BookFragment,
+    quote: BookRange | undefined,
+    toc: TableOfContents | undefined,
+    showToc: boolean,
+}) {
+
+    const { highlights } = useHighlights(bookId);
+
+    const [controlsVisible, setControlsVisible] = useState(true);
+    const toggleControls = useCallback(
+        () => setControlsVisible(!controlsVisible),
+        [controlsVisible, setControlsVisible],
+    );
+
+    const { updateBookPath, updateQuoteRange, updateToc } = useUrlActions();
+    const [needToScroll, setNeedToScroll] = useState(true);
+    const updatePath = useCallback((p: BookPath | undefined) => {
+        setNeedToScroll(false);
+        updateBookPath(p);
+    }, [setNeedToScroll, updateBookPath]);
+    const closeToc = useCallback(
+        () => updateToc(false),
+        [updateToc],
+    );
+
+    return <>
+        <BookScreenHeader
+            bookId={bookId}
+            path={path}
+            theme={theme}
+            visible={controlsVisible}
+        />
+        <BookScreenFooter
+            theme={theme}
+            fragment={fragment}
+            visible={controlsVisible}
+            path={fragment.current.path}
+        />
+        <Row fullWidth centered
+            backgroundColor={colors(theme).primary}
+        >
+            <Clickable onClick={toggleControls}>
+                <Column maxWidth={point(50)} fullWidth padding={point(1)} centered>
+                    <EmptyLine />
+                    <BookViewComp
+                        bookId={bookId}
+                        theme={theme}
+                        fragment={fragment}
+                        highlights={highlights}
+                        pathToScroll={needToScroll ? path : undefined}
+                        updateBookPosition={updatePath}
+                        quoteRange={quote}
+                        setQuoteRange={updateQuoteRange}
+                        openRef={() => undefined}
+                    />
+                    {
+                        toc && showToc
+                            ? <TableOfContentsComp
+                                theme={theme}
+                                toc={toc}
+                                id={bookId}
+                                closeToc={closeToc}
+                            />
+                            : null
+                    }
+                    <EmptyLine />
+                </Column>
+            </Clickable>
+        </Row>
+    </>;
 }
 
 function BookScreenHeader({
