@@ -2,7 +2,8 @@ import { of, concat } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
     Book, BookPath, fragmentForPath, LibraryCard,
-    findReference, BookFragment, defaultFragmentLength, tocForBook, firstPath,
+    findReference, BookFragment, defaultFragmentLength,
+    tocForBook, firstPath,
     fragmentPreviewForPath,
 } from 'booka-common';
 import { Api } from './api';
@@ -27,7 +28,7 @@ export function libraryProvider(api: Api, storage: Storage) {
                 ),
             );
         }
-    },
+    }
 
     return {
         fragmentForPath: getFragmentForPath,
