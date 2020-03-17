@@ -1,10 +1,12 @@
 import { switchMap } from 'rxjs/operators';
 import {
-    ResolvedCurrentPosition, replaceOrAdd, BookPath, LibraryCard,
+    replaceOrAdd, BookPath, CurrentPosition, localCurrentPosition,
 } from 'booka-common';
 import { LocalChange, LocalChangeStore } from './localChange';
 import { Api } from './api';
 
+// TODO: implement
+const source = 'not-implemented';
 export function currentPositionsProvider(localChangeStore: LocalChangeStore, api: Api) {
     return {
         currentPositions() {
@@ -16,44 +18,27 @@ export function currentPositionsProvider(localChangeStore: LocalChangeStore, api
         },
         addCurrentPosition(params: {
             path: BookPath,
-            preview: string | undefined,
-            card: LibraryCard,
+            bookId: string,
         }) {
             const created = new Date(Date.now());
             localChangeStore.addChange({
                 change: 'current-position-update',
-                created,
-                ...params,
+                position: localCurrentPosition({
+                    created, source, ...params,
+                }),
             });
         },
     };
 }
 
-const source = 'not-implemented';
-function applyChange(positions: ResolvedCurrentPosition[], change: LocalChange): ResolvedCurrentPosition[] {
+function applyChange(positions: CurrentPosition[], change: LocalChange): CurrentPosition[] {
     switch (change.change) {
         case 'current-position-update': {
-            const { card, path, created, preview } = change;
-            const existing = positions.find(cp => cp.card.id === card.id);
-            if (existing) {
-                const locations = replaceOrAdd(
-                    existing.locations,
-                    l => l.source === source,
-                    { source, path, created, preview }
-                );
-                const replacement = { ...existing, locations };
-                return positions.map(
-                    cp => cp === existing ? replacement : cp
-                );
-            } else {
-                const toAdd: ResolvedCurrentPosition = {
-                    card,
-                    locations: [{
-                        source, path, created, preview,
-                    }],
-                };
-                return [toAdd, ...positions];
-            }
+            return replaceOrAdd(
+                positions,
+                p => p.bookId === change.position.bookId && p.source === change.position.source,
+                change.position,
+            );
         }
         default:
             return positions;

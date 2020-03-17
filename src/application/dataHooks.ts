@@ -2,8 +2,8 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { map } from 'rxjs/operators';
 
 import {
-    AuthToken, Bookmark, Highlight, ResolvedCurrentPosition,
-    BookFragment, LibraryCard, SearchResult, CardCollections, BookPath, firstPath,
+    AuthToken, Bookmark, Highlight, BookFragment, LibraryCard,
+    SearchResult, CardCollections, BookPath, firstPath, CurrentPosition,
 } from 'booka-common';
 import { PaletteName } from '../atoms';
 import { createDataProvider } from '../data';
@@ -73,8 +73,8 @@ export function useHighlights(bookId: string, token?: AuthToken) {
     };
 }
 
-type PositionsState = ResolvedCurrentPosition[];
-export function usePositions(token?: AuthToken) {
+type PositionsState = CurrentPosition[];
+export function usePositions() {
     const { addCurrentPosition, currentPositions } = useDataProvider();
     const [positions, setPositions] = useState<PositionsState>([]);
     useEffect(() => {

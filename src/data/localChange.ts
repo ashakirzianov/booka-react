@@ -1,6 +1,6 @@
 import {
-    BookPath, HighlightGroup, Bookmark, Highlight,
-    LibraryCard, CardCollectionName,
+    HighlightGroup, Bookmark, Highlight,
+    LibraryCard, CardCollectionName, CurrentPosition,
 } from 'booka-common';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { StorageCell } from './storage';
@@ -31,11 +31,7 @@ type UpdateHighlightChange = DefChange<'highlight-update'> & {
 };
 
 type UpdateCurrentPositionChange = DefChange<'current-position-update'> & {
-    path: BookPath,
-    created: Date,
-    // TODO: rethink and remove ?
-    preview: string | undefined,
-    card: LibraryCard,
+    position: CurrentPosition,
 };
 
 type AddToCollectionChange = DefChange<'collection-add'> & {
