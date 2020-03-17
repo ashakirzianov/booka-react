@@ -27,6 +27,7 @@ export function fragmentsLength(fragments: RichTextFragment[]): number {
 }
 
 export type PathMap<T> = {
+    map: any,
     get(path: Path): T | undefined,
     set(path: Path, value: T): void,
     iterator(): IterableIterator<[Path, T]>,
@@ -39,6 +40,7 @@ export function makePathMap<T>(): PathMap<T> {
     };
     const map: MapNode[] = [];
     return {
+        map,
         get(path) {
             const block = map[path.block];
             if (path.symbol !== undefined) {

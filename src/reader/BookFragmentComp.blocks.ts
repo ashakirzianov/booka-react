@@ -32,8 +32,9 @@ export function buildBlocksData(args: BuildBlocksDataArgs) {
 }
 
 export function bookPathForBlockPath(blockPath: Path, data: BlockData): BookPath | undefined {
-    const prefix = data[blockPath.block].path;
-    const bookPath = blockPath.symbol !== undefined
+    // TODO: investigate this bug further: why we need '?' here?
+    const prefix = data[blockPath.block]?.path;
+    const bookPath = prefix !== undefined && blockPath.symbol !== undefined
         ? pathWithSpan(prefix, blockPath.symbol)
         : prefix;
     return bookPath;
