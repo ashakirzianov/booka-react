@@ -1,7 +1,7 @@
 import React, { useRef, useCallback } from 'react';
 import {
     BookFragment, BookPath, BookRange,
-    Highlight, BookAnchor, doesRangeOverlap, rangeToString,
+    Highlight, BookAnchor, doesRangeOverlap, rangeToString, pathToString,
 } from 'booka-common';
 
 import {
@@ -100,7 +100,7 @@ function AnchorLink({ theme, text, anchor, bookId }: Themed & {
         <BorderLink
             theme={theme}
             text={anchor.title || text}
-            to={`/book/${bookId}?p=${anchor.path}`}
+            to={`/book/${bookId}?p=${pathToString(anchor.path)}`}
             fontFamily='book'
         />
     </Row>;
