@@ -196,3 +196,25 @@ export function useCollections() {
         removeFromCollection,
     };
 }
+
+export type TextPreviewState = Loadable<{
+    preview: string | undefined,
+}>;
+export function usePreview(bookId: string, path: BookPath) {
+    const data = useDataProvider();
+    const [previewState, setPreviewState] = useState<TextPreviewState>({ state: 'loading' });
+    const observable = useMemo(
+        () => data.textPreview(bookId, path),
+        [data, bookId, path],
+    );
+    useEffect(() => {
+        const sub = observable.pipe(
+            map((preview): TextPreviewState => ({
+                state: 'ready', preview,
+            }))
+        ).subscribe(setPreviewState);
+        return () => sub.unsubscribe();
+    }, [observable]);
+
+    return { previewState };
+}
