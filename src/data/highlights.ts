@@ -1,6 +1,6 @@
 import { switchMap } from 'rxjs/operators';
 import {
-    Highlight, BookRange, uuid, HighlightGroup,
+    Highlight, BookRange, HighlightGroup, localHighlight,
 } from 'booka-common';
 import { LocalChange, LocalChangeStore } from './localChange';
 import { Api } from './api';
@@ -17,11 +17,9 @@ export function highlightsProvider(localChangeStore: LocalChangeStore, api: Api)
         addHighlight(bookId: string, range: BookRange, group: HighlightGroup) {
             localChangeStore.addChange({
                 change: 'highlight-add',
-                highlight: {
-                    entity: 'highlight',
-                    _id: uuid(),
+                highlight: localHighlight({
                     bookId, range, group,
-                },
+                }),
             });
         },
         removeHighlight(highlightId: string) {
@@ -44,10 +42,10 @@ function applyChange(highlights: Highlight[], change: LocalChange): Highlight[] 
         case 'highlight-add':
             return [...highlights, change.highlight];
         case 'highlight-remove':
-            return highlights.filter(h => h._id !== change.highlightId);
+            return highlights.filter(h => h.uuid !== change.highlightId);
         case 'highlight-update':
             return highlights.map(
-                h => h._id === change.highlightId
+                h => h.uuid === change.highlightId
                     ? {
                         ...h,
                         group: change.group ?? h.group,

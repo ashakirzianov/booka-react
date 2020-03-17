@@ -15,7 +15,7 @@ export function postLocalChange(api: Api, change: LocalChange) {
             return api.postRemoveHighlight(change.highlightId);
         case 'highlight-update':
             return api.postUpdateHighlight({
-                _id: change.highlightId,
+                uuid: change.highlightId,
                 group: change.group,
             });
         case 'collection-add':

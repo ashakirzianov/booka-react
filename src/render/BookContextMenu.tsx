@@ -96,7 +96,7 @@ function RemoveHighlightItem({
     }
 
     return <Item
-        onClick={() => removeHighlight(target.highlight._id)}
+        onClick={() => removeHighlight(target.highlight.uuid)}
     >
         Remove highlight
     </Item>;
@@ -114,7 +114,7 @@ function SetHighlightGroupItem({
     }
 
     return <Item
-        onClick={() => setHighlightGroup(target.highlight._id, group)}
+        onClick={() => setHighlightGroup(target.highlight.uuid, group)}
     >
         Make highlight {group}
     </Item>;

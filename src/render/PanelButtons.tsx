@@ -22,7 +22,7 @@ export function AddBookmarkButton({ bookId, path }: {
             text='Remove Bookmark'
             fontSize='small'
             fontFamily='menu'
-            onClick={() => removeBookmark(currentBookmark._id)}
+            onClick={() => removeBookmark(currentBookmark.uuid)}
         />;
     } else {
         return <TextButton
