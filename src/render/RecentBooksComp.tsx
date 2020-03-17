@@ -3,7 +3,7 @@ import { groupBy } from 'lodash';
 import {
     findPositions, CurrentPosition, BookPath,
 } from 'booka-common';
-import { usePositions, useLibraryCard } from '../application';
+import { usePositions, useLibraryCard, usePreview } from '../application';
 import { Column } from '../atoms';
 import { LinkToPath } from './Navigation';
 
@@ -69,9 +69,14 @@ function Preview({ title, bookId, path }: {
     bookId: string,
     path: BookPath,
 }) {
-    // TODO: implement
+    const { previewState } = usePreview(bookId, path);
     return <>
         <span>{title}</span>
+        {
+            previewState.state === 'ready'
+                ? <span>{previewState.preview ?? 'preview is not available'}</span>
+                : <span>...loading</span>
+        }
         <LinkToPath
             bookId={bookId}
             path={path}
