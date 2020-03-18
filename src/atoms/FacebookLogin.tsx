@@ -14,7 +14,8 @@ export type FacebookLoginProps = SocialButtonProps;
 export function FacebookLogin({ theme, onStatusChange }: FacebookLoginProps) {
     const [loginState, setLoginState] = React.useState<FbLoginState>({ state: 'checking' });
     React.useEffect(() => {
-        fbState().subscribe(setLoginState);
+        const sub = fbState().subscribe(setLoginState);
+        return () => sub.unsubscribe();;
     }, [setLoginState]);
     React.useEffect(() => {
         if (onStatusChange) {
