@@ -129,6 +129,7 @@ export function useLibrarySearch(query: string | undefined) {
     const data = useDataProvider();
     const [searchState, setSearchState] = useState<SearchState>({ state: 'loading' });
     useEffect(() => {
+        setSearchState({ state: 'loading' });
         const sub = data.querySearch(query).pipe(
             map((results): SearchState => ({
                 state: 'ready', results,

@@ -87,12 +87,12 @@ export function createApi(token?: AuthToken) {
             })));
         },
         getSearchResults(query: string) {
-            return withInitial([], lib.get('/search', {
+            return lib.get('/search', {
                 auth: token?.token,
                 query: { query },
             }).pipe(
                 map(r => r.values)
-            ));
+            );
         },
         postAddBookmark(bookmark: Bookmark) {
             return optional(token && back.post('/bookmarks', {
