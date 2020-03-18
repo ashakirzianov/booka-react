@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { map } from 'rxjs/operators';
 
 import {
@@ -80,14 +80,11 @@ export function useBook({ bookId, path, refId }: {
 }) {
     const data = useDataProvider();
     const [bookState, setBookState] = useState<BookState>({ state: 'loading' });
-    const subject = useMemo(
-        () => refId
-            ? data.fragmentForRef(bookId, refId)
-            : data.fragmentForPath(bookId, path || firstPath()),
-        [data, bookId, path, refId],
-    );
     useEffect(() => {
-        const sub = subject
+        const observable = refId
+            ? data.fragmentForRef(bookId, refId)
+            : data.fragmentForPath(bookId, path || firstPath());
+        const sub = observable
             .pipe(
                 map((fragment): BookState => ({
                     state: 'ready',
@@ -96,7 +93,7 @@ export function useBook({ bookId, path, refId }: {
             )
             .subscribe(setBookState);
         return () => sub.unsubscribe();
-    }, [subject]);
+    }, [data, bookId, path, refId]);
 
     return { bookState };
 }
@@ -107,18 +104,14 @@ export type LibraryCardState = Loadable<{
 export function useLibraryCard(bookId: string) {
     const data = useDataProvider();
     const [cardState, setCardState] = useState<LibraryCardState>({ state: 'loading' });
-    const observable = useMemo(
-        () => data.libraryCardForId(bookId),
-        [data, bookId],
-    );
     useEffect(() => {
-        const sub = observable.pipe(
+        const sub = data.libraryCardForId(bookId).pipe(
             map((card): LibraryCardState => ({
                 state: 'ready', card,
             }))
         ).subscribe(setCardState);
         return () => sub.unsubscribe();
-    }, [observable]);
+    }, [data, bookId]);
 
     const { updateShowCard } = useUrlActions();
     const closeCard = useCallback(
@@ -135,18 +128,14 @@ export type SearchState = Loadable<{
 export function useLibrarySearch(query: string | undefined) {
     const data = useDataProvider();
     const [searchState, setSearchState] = useState<SearchState>({ state: 'loading' });
-    const observable = useMemo(
-        () => data.querySearch(query),
-        [data, query],
-    );
     useEffect(() => {
-        const sub = observable.pipe(
+        const sub = data.querySearch(query).pipe(
             map((results): SearchState => ({
                 state: 'ready', results,
             }))
         ).subscribe(setSearchState);
         return () => sub.unsubscribe();
-    }, [observable]);
+    }, [data, query]);
     const { updateSearchQuery } = useUrlActions();
 
     return { searchState, doQuery: updateSearchQuery };
@@ -192,18 +181,15 @@ export type TextPreviewState = Loadable<{
 export function usePreview(bookId: string, path: BookPath) {
     const data = useDataProvider();
     const [previewState, setPreviewState] = useState<TextPreviewState>({ state: 'loading' });
-    const observable = useMemo(
-        () => data.textPreview(bookId, path),
-        [data, bookId, path],
-    );
+
     useEffect(() => {
-        const sub = observable.pipe(
+        const sub = data.textPreview(bookId, path).pipe(
             map((preview): TextPreviewState => ({
                 state: 'ready', preview,
             }))
         ).subscribe(setPreviewState);
         return () => sub.unsubscribe();
-    }, [observable]);
+    }, [data, bookId, path]);
 
     return { previewState };
 }
