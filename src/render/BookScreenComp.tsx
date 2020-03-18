@@ -98,6 +98,16 @@ function BookReadyComp({
     );
 
     return <>
+        {
+            toc && showToc
+                ? <TableOfContentsComp
+                    theme={theme}
+                    toc={toc}
+                    id={bookId}
+                    closeToc={closeToc}
+                />
+                : null
+        }
         <BookScreenHeader
             bookId={bookId}
             path={path}
@@ -127,16 +137,6 @@ function BookReadyComp({
                         setQuoteRange={updateQuoteRange}
                         openRef={() => undefined}
                     />
-                    {
-                        toc && showToc
-                            ? <TableOfContentsComp
-                                theme={theme}
-                                toc={toc}
-                                id={bookId}
-                                closeToc={closeToc}
-                            />
-                            : null
-                    }
                     <EmptyLine />
                 </Column>
             </Clickable>
