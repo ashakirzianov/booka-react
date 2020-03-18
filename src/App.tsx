@@ -11,6 +11,6 @@ export const App: React.FC = () => {
 };
 
 whileDebug(async () => {
-    const { default: why } = await import('@welldone-software/why-did-you-render');
-    why(React);
+    // const { default: why } = await import('@welldone-software/why-did-you-render');
+    // why(React);
 });
