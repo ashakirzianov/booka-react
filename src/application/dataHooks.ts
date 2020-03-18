@@ -6,31 +6,16 @@ import {
     SearchResult, CardCollections, BookPath, firstPath, CurrentPosition,
 } from 'booka-common';
 import { PaletteName } from '../atoms';
-import { createDataProvider } from '../data';
 import { useUrlActions } from './urlHooks';
 import { useAppSelector, useAppDispatch } from './reduxHooks';
 import { doFbLogout } from './facebookSdk';
+import { useDataProvider } from './dataProviderHooks';
 
 type Loadable<T> =
     | { state: 'loading' }
     | { state: 'error', err?: any }
     | { state: 'ready' } & T
     ;
-
-function useDataProvider() {
-    const { accountState } = useAccount();
-    const token = accountState.state === 'signed' ? accountState.token : undefined;
-    const accountId = accountState.state === 'signed' ? accountState.account._id : undefined;
-    const dp = useMemo(
-        () => createDataProvider(
-            token && accountId
-                ? { token, accountId }
-                : undefined
-        ),
-        [token, accountId],
-    );
-    return dp;
-}
 
 export function useTheme() {
     const theme = useAppSelector(s => s.theme);

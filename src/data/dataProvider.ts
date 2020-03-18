@@ -13,7 +13,7 @@ import { libraryProvider } from './library';
 
 export type DataProvider = ReturnType<typeof createDataProvider>;
 
-type UserInfo = {
+export type UserInfo = {
     token: AuthToken,
     accountId: string,
 };

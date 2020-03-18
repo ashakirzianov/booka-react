@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { ConnectedProvider } from './application';
+import { RootProvider } from './application';
 import { whileDebug } from './config';
 import { Routes } from './render';
 
 export const App: React.FC = () => {
-    return <ConnectedProvider>
+    return <RootProvider>
         <Routes />
-    </ConnectedProvider>;
+    </RootProvider>;
 };
 
 whileDebug(async () => {
