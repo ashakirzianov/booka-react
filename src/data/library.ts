@@ -71,7 +71,8 @@ export function libraryProvider(api: Api, storage: Storage) {
 function cache<T>(storage: Storage) {
     return {
         existing(key: string): T | undefined {
-            return storage.cell<T>(key).restore();
+            const result = storage.cell<T>(key).restore();
+            return result;
         },
         add(key: string, data: T) {
             storage.cell<T>(key).store(data);

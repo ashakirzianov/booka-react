@@ -105,7 +105,7 @@ export function useLibraryCard(bookId: string) {
     const data = useDataProvider();
     const [cardState, setCardState] = useState<LibraryCardState>({ state: 'loading' });
     useEffect(() => {
-        const sub = data.libraryCardForId(bookId).pipe(
+        const sub = data.cardForId(bookId).pipe(
             map((card): LibraryCardState => ({
                 state: 'ready', card,
             }))
