@@ -6,9 +6,8 @@ import { createEpicMiddleware } from 'redux-observable';
 import { createLogger } from 'redux-logger';
 
 import { rootReducer, rootEpic } from '../ducks';
-import { startupFbSdk } from '../atoms';
+import { startupFbSdk, fbState } from './facebookSdk';
 import { config } from '../config';
-import { fbState } from '../atoms/facebookSdk';
 
 export const ConnectedProvider: React.SFC = ({ children }) =>
     React.createElement(Provider, { store }, children);

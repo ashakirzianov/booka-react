@@ -9,6 +9,7 @@ import { PaletteName } from '../atoms';
 import { createDataProvider } from '../data';
 import { useUrlActions } from './urlHooks';
 import { useAppSelector, useAppDispatch } from './reduxHooks';
+import { doFbLogout } from './facebookSdk';
 
 type Loadable<T> =
     | { state: 'loading' }
@@ -169,9 +170,12 @@ export function useLibrarySearch(query: string | undefined) {
 export function useAccount() {
     const accountState = useAppSelector(s => s.account);
     const dispatch = useAppDispatch();
-    const logout = useCallback(() => dispatch({
-        type: 'account-logout',
-    }), [dispatch]);
+    const logout = useCallback(() => {
+        dispatch({
+            type: 'account-logout',
+        });
+        doFbLogout();
+    }, [dispatch]);
     return { accountState, logout };
 }
 
