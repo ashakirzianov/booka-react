@@ -1,4 +1,4 @@
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 import {
     Bookmark, BookPath, localBookmark,
 } from 'booka-common';
@@ -10,8 +10,10 @@ export function bookmarksProvider(localChangeStore: LocalChangeStore, api: Api) 
         bookmarksForId(bookId: string) {
             return api.getBookmarks(bookId).pipe(
                 switchMap(bs =>
-                    localChangeStore.observe(bs, applyChange)
-                )
+                    localChangeStore.observe(bs, applyChange).pipe(
+                        map(localBms => localBms.filter(b => b.bookId === bookId))
+                    ),
+                ),
             );
         },
         addBookmark(bookId: string, path: BookPath) {

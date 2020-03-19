@@ -1,4 +1,4 @@
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 import {
     Highlight, BookRange, HighlightGroup, localHighlight,
 } from 'booka-common';
@@ -10,8 +10,10 @@ export function highlightsProvider(localChangeStore: LocalChangeStore, api: Api)
         highlightsForId(bookId: string) {
             return api.getHighlights(bookId).pipe(
                 switchMap(hs =>
-                    localChangeStore.observe(hs, applyChange)
-                )
+                    localChangeStore.observe(hs, applyChange).pipe(
+                        map(localHs => localHs.filter(h => h.bookId === bookId))
+                    ),
+                ),
             );
         },
         addHighlight(bookId: string, range: BookRange, group: HighlightGroup) {

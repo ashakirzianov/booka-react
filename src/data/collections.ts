@@ -9,7 +9,7 @@ export function collectionsProvider(localChangeStore: LocalChangeStore, api: Api
     return {
         collections() {
             return api.getCollections().pipe(
-                switchMap(cs => localChangeStore.observe({}, applyChange))
+                switchMap(cs => localChangeStore.observe(cs, applyChange))
             );
         },
         addToCollection(card: LibraryCard, collection: CardCollectionName) {
