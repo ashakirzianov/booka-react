@@ -1,7 +1,7 @@
 import React, { PropsWithChildren } from 'react';
 import { View, ViewStyle } from 'react-native';
+import { Size } from './common';
 
-type Size = string | number;
 export type LayoutProps = PropsWithChildren<{
     flex?: number,
     stretched?: boolean,

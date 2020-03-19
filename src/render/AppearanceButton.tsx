@@ -2,9 +2,9 @@ import React from 'react';
 
 import { useTheme, PaletteName, Themed } from '../application';
 import {
-    Column, point, Row, IconButton,
-    PaletteButton, TextButton, Separator, WithPopover,
-} from '../atoms';
+    WithPopover, Column, Row, IconButton, PaletteButton,
+    TextButton, Separator, point, Panel,
+} from '../controls';
 
 export function AppearanceButton() {
     const { theme, incrementScale, setPalette } = useTheme();
@@ -27,11 +27,13 @@ function ThemePicker({ theme, setPalette, incrementScale }: Themed & {
     setPalette: (name: PaletteName) => void,
     incrementScale: (inc: number) => void,
 }) {
-    return <Column width={point(14)}>
-        <FontScale theme={theme} incrementScale={incrementScale} />
-        <Separator />
-        <PalettePicker theme={theme} setPalette={setPalette} />
-    </Column>;
+    return <Panel theme={theme}>
+        <Column width={point(14)}>
+            <FontScale theme={theme} incrementScale={incrementScale} />
+            <Separator />
+            <PalettePicker theme={theme} setPalette={setPalette} />
+        </Column>
+    </Panel>;
 }
 
 function FontScale({ theme, incrementScale }: Themed & {
