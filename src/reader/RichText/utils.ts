@@ -93,12 +93,14 @@ export function makeRange(left: Path, right: Path): Range {
 function pathLessThan(left: Path, right: Path): boolean {
     if (left.block < right.block) {
         return true;
-    } else {
+    } else if (left.block === right.block) {
         if (left.symbol !== undefined) {
             return right.symbol !== undefined && left.symbol < right.symbol;
         } else {
             return right.symbol !== undefined;
         }
+    } else {
+        return false;
     }
 }
 

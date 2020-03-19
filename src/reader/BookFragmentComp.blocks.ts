@@ -270,7 +270,7 @@ function colorizeFragments(
     path: BookNodePath,
 ): RichTextFragment[] {
     for (const col of colorization) {
-        const relative = colorizationRelativeToPath(path, col);
+        const relative = colorizedRangeRelativeToPath(path, col);
         if (relative) {
             fragments = applyAttrsRange(fragments, relative);
         }
@@ -279,10 +279,7 @@ function colorizeFragments(
     return fragments;
 }
 
-function colorizationRelativeToPath(path: BookNodePath, colorized: ColorizedRange): AttrsRange | undefined {
-    const attrs: RichTextAttrs = {
-        background: colorized.color,
-    };
+function colorizedRangeRelativeToPath(path: BookNodePath, colorized: ColorizedRange): AttrsRange | undefined {
     if (colorized.range.end && pathLessThan(colorized.range.end, path)) {
         return undefined;
     }
@@ -297,6 +294,10 @@ function colorizationRelativeToPath(path: BookNodePath, colorized: ColorizedRang
     if (colorized.range.end && sameNode(path, colorized.range.end)) {
         end = colorized.range.end.span;
     }
+
+    const attrs: RichTextAttrs = {
+        background: colorized.color,
+    };
 
     return start !== undefined
         ? { start, end, attrs }
