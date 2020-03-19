@@ -1,3 +1,5 @@
+// eslint-disable-next-line
+import React from 'react';
 import { View } from 'react-native';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
@@ -7,11 +9,11 @@ import {
     FontFamilies, getFontFamily,
 } from './theme';
 import { TextLine } from './Basics';
-import { point, Callback } from './common';
+import { point } from './common';
 import { Icon, IconName } from './Icons';
 
 export type ButtonProps = Themed & {
-    onClick?: Callback,
+    onClick?: () => void,
 };
 
 export type TextButtonProps = ButtonProps & {
@@ -41,8 +43,8 @@ export function TextButton({
 
 export type IconButtonProps = ButtonProps & {
     icon: IconName,
-    onHoverIn?: Callback,
-    onHoverOut?: Callback,
+    onHoverIn?: () => void,
+    onHoverOut?: () => void,
 };
 export function IconButton({
     icon, theme,

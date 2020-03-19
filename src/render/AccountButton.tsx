@@ -8,25 +8,23 @@ import {
 import { AccountState } from '../ducks';
 import { useTheme, useAccount } from '../application';
 
-export function ConnectedAccountButton() {
+export function AccountButton() {
     const { theme } = useTheme();
     const { accountState, logout } = useAccount();
 
-    return <AccountButton
+    return <AccountButtonDumb
         theme={theme}
         account={accountState}
         logout={logout}
     />;
 }
 
-type AccountButtonProps = Themed & {
+function AccountButtonDumb({
+    account, theme, logout,
+}: Themed & {
     account: AccountState,
     logout: Callback,
-};
-function AccountButton({
-    account, theme,
-    logout,
-}: AccountButtonProps) {
+}) {
     return <WithPopover
         theme={theme}
         popoverPlacement='bottom'
@@ -51,11 +49,10 @@ function AccountButton({
     </WithPopover>;
 }
 
-type ActualButtonProps = Themed & {
+function ActualButton({ theme, account, onClick }: Themed & {
     account: AccountState,
     onClick?: Callback,
-};
-function ActualButton({ theme, account, onClick }: ActualButtonProps) {
+}) {
     if (account.state === 'signed') {
         return <PictureButton
             theme={theme}
@@ -71,11 +68,10 @@ function ActualButton({ theme, account, onClick }: ActualButtonProps) {
     }
 }
 
-type AccountPanelProps = Themed & {
+function AccountPanel({ account, theme, logout }: Themed & {
     account: AccountInfo,
     logout: Callback,
-};
-function AccountPanel({ account, theme, logout }: AccountPanelProps) {
+}) {
     return <Column>
         <Row margin={point(1)} centered>
             <TextLine
@@ -94,10 +90,9 @@ function AccountPanel({ account, theme, logout }: AccountPanelProps) {
     </Column>;
 }
 
-type SignInPanelProps = Themed & {
+function SignInPanel({ theme, onStatusChanged }: Themed & {
     onStatusChanged?: Callback,
-};
-function SignInPanel({ theme, onStatusChanged }: SignInPanelProps) {
+}) {
     return <Column>
         <FacebookLogin
             theme={theme}

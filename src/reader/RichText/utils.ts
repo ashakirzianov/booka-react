@@ -27,6 +27,7 @@ export function fragmentsLength(fragments: RichTextFragment[]): number {
 }
 
 export type PathMap<T> = {
+    map: any,
     get(path: Path): T | undefined,
     set(path: Path, value: T): void,
     iterator(): IterableIterator<[Path, T]>,
@@ -39,6 +40,7 @@ export function makePathMap<T>(): PathMap<T> {
     };
     const map: MapNode[] = [];
     return {
+        map,
         get(path) {
             const block = map[path.block];
             if (path.symbol !== undefined) {
@@ -91,12 +93,14 @@ export function makeRange(left: Path, right: Path): Range {
 function pathLessThan(left: Path, right: Path): boolean {
     if (left.block < right.block) {
         return true;
-    } else {
+    } else if (left.block === right.block) {
         if (left.symbol !== undefined) {
             return right.symbol !== undefined && left.symbol < right.symbol;
         } else {
             return right.symbol !== undefined;
         }
+    } else {
+        return false;
     }
 }
 

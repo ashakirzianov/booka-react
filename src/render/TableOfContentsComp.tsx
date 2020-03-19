@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { range } from 'lodash';
-import { TableOfContents, TableOfContentsItem, pathToString } from 'booka-common';
+import {
+    TableOfContents, TableOfContentsItem, pathToString,
+} from 'booka-common';
 
 import {
     Row, Tab, Column, point,
     StretchTextLink, TextLine, Themed, Modal,
 } from '../atoms';
-import { linkToString } from '../core';
-import { pageForPosition } from './common';
 
 export function TableOfContentsComp({
     theme, toc, id, closeToc,
@@ -38,22 +38,19 @@ export function TableOfContentsComp({
     </Modal>;
 }
 
-type TocItemProps = Themed & {
+function TocItemComp({
+    id, item, tabs, page, theme,
+}: Themed & {
     tabs: number,
     id: string,
     item: TableOfContentsItem,
     page: number,
-};
-function TocItemComp({ id, item, tabs, page, theme }: TocItemProps) {
+}) {
     return <Row>
         {range(0, tabs).map(i => <Tab key={i.toString()} />)}
         <StretchTextLink
             theme={theme}
-            to={linkToString({
-                link: 'book',
-                bookId: id,
-                path: item.path,
-            })}
+            to={`/book/${id}?p=${item.path}`}
         >
             <TextLine
                 key='title'
@@ -67,4 +64,8 @@ function TocItemComp({ id, item, tabs, page, theme }: TocItemProps) {
             />
         </StretchTextLink>
     </Row>;
+}
+
+export function pageForPosition(position: number): number {
+    return Math.floor(position / 1500) + 1;
 }

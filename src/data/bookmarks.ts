@@ -1,6 +1,6 @@
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 import {
-    Bookmark, uuid, BookPath,
+    Bookmark, BookPath, localBookmark,
 } from 'booka-common';
 import { LocalChange, LocalChangeStore } from './localChange';
 import { Api } from './api';
@@ -10,18 +10,18 @@ export function bookmarksProvider(localChangeStore: LocalChangeStore, api: Api) 
         bookmarksForId(bookId: string) {
             return api.getBookmarks(bookId).pipe(
                 switchMap(bs =>
-                    localChangeStore.observe(bs, applyChange)
-                )
+                    localChangeStore.observe(bs, applyChange).pipe(
+                        map(localBms => localBms.filter(b => b.bookId === bookId))
+                    ),
+                ),
             );
         },
         addBookmark(bookId: string, path: BookPath) {
             localChangeStore.addChange({
                 change: 'bookmark-add',
-                bookmark: {
-                    entity: 'bookmark',
-                    _id: uuid(),
+                bookmark: localBookmark({
                     bookId, path,
-                },
+                }),
             });
         },
         removeBookmark(bookmarkId: string) {
@@ -38,7 +38,7 @@ function applyChange(bookmarks: Bookmark[], change: LocalChange): Bookmark[] {
         case 'bookmark-add':
             return [...bookmarks, change.bookmark];
         case 'bookmark-remove':
-            return bookmarks.filter(b => b._id !== change.bookmarkId);
+            return bookmarks.filter(b => b.uuid !== change.bookmarkId);
         default:
             return bookmarks;
     }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Text, View } from 'react-native';
 
 import { TextLine } from './Basics';
-import { point, WithChildren, Callback } from './common';
+import { point, WithChildren } from './common';
 import { Icon } from './Icons';
 import {
     TextButtonProps, IconButtonProps, TagButtonProps,
@@ -120,7 +120,7 @@ export function PaletteButton(props: PaletteButtonProps) {
 // =================================================
 
 type NativeLinkProps = WithChildren<{
-    onClick?: Callback,
+    onClick?: () => void,
 }>;
 function Link({ onClick, children }: NativeLinkProps) {
     return <Text onPress={onClick}>

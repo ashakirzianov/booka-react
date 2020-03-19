@@ -11,6 +11,24 @@ import { createFetcher } from './fetcher';
 const back = createFetcher<BackContract>(config().backUrl);
 const lib = createFetcher<LibContract>(config().libUrl);
 
+// TODO: rethink location
+export function createAuthApi() {
+    return {
+        getAuthFbToken(token: string) {
+            return back.get('/auth/fbtoken', {
+                query: {
+                    token,
+                },
+            });
+        },
+        getAccountInfo(token: AuthToken) {
+            return back.get('/me/info', {
+                auth: token.token,
+            });
+        },
+    };
+}
+
 export type Api = ReturnType<typeof createApi>;
 export function createApi(token?: AuthToken) {
     return {
@@ -69,12 +87,12 @@ export function createApi(token?: AuthToken) {
             })));
         },
         getSearchResults(query: string) {
-            return withInitial([], lib.get('/search', {
+            return lib.get('/search', {
                 auth: token?.token,
                 query: { query },
             }).pipe(
                 map(r => r.values)
-            ));
+            );
         },
         postAddBookmark(bookmark: Bookmark) {
             return optional(token && back.post('/bookmarks', {

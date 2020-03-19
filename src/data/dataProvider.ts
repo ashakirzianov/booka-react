@@ -3,7 +3,6 @@ import { bookmarksProvider } from './bookmarks';
 import { highlightsProvider } from './highlights';
 import { currentPositionsProvider } from './currentPositions';
 import { collectionsProvider } from './collections';
-import { cardsProvider } from './cards';
 import { searchProvider } from './search';
 import { createLocalChangeStore } from './localChange';
 import { createApi } from './api';
@@ -13,7 +12,7 @@ import { libraryProvider } from './library';
 
 export type DataProvider = ReturnType<typeof createDataProvider>;
 
-type UserInfo = {
+export type UserInfo = {
     token: AuthToken,
     accountId: string,
 };
@@ -29,7 +28,6 @@ export function createDataProvider(info: UserInfo | undefined) {
         ...highlightsProvider(localChangeStore, api),
         ...currentPositionsProvider(localChangeStore, api),
         ...collectionsProvider(localChangeStore, api),
-        ...cardsProvider(api),
         ...searchProvider(api),
         ...libraryProvider(api, storage.sub('library')),
     };

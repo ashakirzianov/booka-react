@@ -41,20 +41,25 @@ export function BookCoverComp({ card }: {
     card: LibraryCard,
 }) {
     if (card.coverUrl) {
-        return <BookImageCover {...card} />;
+        return <BookImageCover
+            imageUrl={card.smallCoverUrl}
+            title={card.title}
+        />;
     } else {
-        return <BookEmptyCover {...card} />;
+        return <BookEmptyCover title={card.title} />;
     }
 }
 
-// TODO: decouple props ?
-function BookImageCover({ coverUrl, title }: LibraryCard) {
+function BookImageCover({ imageUrl, title }: {
+    imageUrl: string | undefined,
+    title: string,
+}) {
     return <div style={{
         height: 180,
         width: 120,
     }}>
         <img
-            src={coverUrl}
+            src={imageUrl}
             alt={title}
             style={{
                 maxHeight: '100%',
@@ -64,7 +69,9 @@ function BookImageCover({ coverUrl, title }: LibraryCard) {
     </div>;
 }
 
-function BookEmptyCover({ title }: LibraryCard) {
+function BookEmptyCover({ title }: {
+    title: string,
+}) {
     return <div style={{
         height: 180,
         width: 120,

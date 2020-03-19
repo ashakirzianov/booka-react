@@ -7,7 +7,7 @@ import {
     FaCircle, FaSignInAlt, FaFacebookSquare, FaCloudUploadAlt,
     FaQuestion,
 } from 'react-icons/fa';
-import { Size, assertNever, Callback } from './common';
+import { Size, assertNever } from './common';
 import { PaletteColor, Themed, colors } from './theme';
 
 export type IconName =
@@ -22,9 +22,9 @@ export type IconProps = Themed & {
     margin?: Size,
     color?: PaletteColor,
     hoverColor?: PaletteColor,
-    onClick?: Callback,
-    onHoverIn?: Callback,
-    onHoverOut?: Callback,
+    onClick?: () => void,
+    onHoverIn?: () => void,
+    onHoverOut?: () => void,
 };
 
 export function Icon({

@@ -4,11 +4,11 @@ import {
     Themed, TopBar, point, Triad, EmptyLine,
 } from '../atoms';
 import { useTheme } from '../application';
-import { ConnectedAccountButton } from './AccountButton';
+import { AccountButton } from './AccountButton';
 import { LibrarySearchComp } from './LibrarySearchComp';
 import { CollectionsComp } from './CollectionsComp';
-import { RecentBooksConnected } from './RecentBooksComp';
-import { LibraryCardComp } from './LibraryCard';
+import { RecentBooksComp } from './RecentBooksComp';
+import { LibraryCardComp } from './LibraryCardComp';
 
 export function FeedScreen({ show, query }: {
     query: string | undefined,
@@ -21,7 +21,7 @@ export function FeedScreen({ show, query }: {
         <EmptyLine />
         <LibrarySearchComp query={query} />
         <CollectionsComp />
-        <RecentBooksConnected />
+        <RecentBooksComp />
     </>;
 }
 
@@ -32,7 +32,7 @@ function FeedScreenHeader({ theme }: Themed) {
         paddingHorizontal={point(1)}
     >
         <Triad
-            right={<ConnectedAccountButton />}
+            right={<AccountButton />}
         />
     </TopBar>;
 }

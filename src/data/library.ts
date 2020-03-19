@@ -2,7 +2,9 @@ import { of, concat } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
     Book, BookPath, fragmentForPath, LibraryCard,
-    findReference, BookFragment, defaultFragmentLength, tocForBook, firstPath,
+    findReference, BookFragment, defaultFragmentLength,
+    tocForBook, firstPath,
+    fragmentPreviewForPath,
 } from 'booka-common';
 import { Api } from './api';
 import { Storage } from './storage';
@@ -10,25 +12,26 @@ import { Storage } from './storage';
 export function libraryProvider(api: Api, storage: Storage) {
     const bookCache = cache<Book>(storage.sub('books'));
     const cardCache = cache<LibraryCard>(storage.sub('cards'));
+    function getFragmentForPath(bookId: string, path: BookPath) {
+        const cached = bookCache.existing(bookId);
+        if (cached) {
+            const fragment = resolveFragment(cached, path);
+            return of(fragment);
+        } else {
+            return concat(
+                api.getFragment(bookId, path),
+                api.getBook(bookId).pipe(
+                    map(book => {
+                        bookCache.add(bookId, book);
+                        return resolveFragment(book, path);
+                    })
+                ),
+            );
+        }
+    }
 
     return {
-        fragmentForPath(bookId: string, path: BookPath) {
-            const cached = bookCache.existing(bookId);
-            if (cached) {
-                const fragment = resolveFragment(cached, path);
-                return of(fragment);
-            } else {
-                return concat(
-                    api.getFragment(bookId, path),
-                    api.getBook(bookId).pipe(
-                        map(book => {
-                            bookCache.add(bookId, book);
-                            return resolveFragment(book, path);
-                        })
-                    ),
-                );
-            }
-        },
+        fragmentForPath: getFragmentForPath,
         fragmentForRef(bookId: string, refId: string) {
             const cached = bookCache.existing(bookId);
             if (cached) {
@@ -57,15 +60,19 @@ export function libraryProvider(api: Api, storage: Storage) {
                 );
             }
         },
+        textPreview(bookId: string, path: BookPath) {
+            return getFragmentForPath(bookId, path).pipe(
+                map(f => fragmentPreviewForPath(f, path))
+            );
+        },
     };
 }
-
-// TODO: move to 'common' ?
 
 function cache<T>(storage: Storage) {
     return {
         existing(key: string): T | undefined {
-            return storage.cell<T>(key).restore();
+            const result = storage.cell<T>(key).restore();
+            return result;
         },
         add(key: string, data: T) {
             storage.cell<T>(key).store(data);

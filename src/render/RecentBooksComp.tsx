@@ -1,79 +1,87 @@
 import React from 'react';
+import { groupBy } from 'lodash';
 import {
-    getLocationsData, ResolvedCurrentPosition,
+    findPositions, CurrentPosition, BookPath,
 } from 'booka-common';
-import { useTheme, usePositions } from '../application';
-import {
-    Column, Themed,
-} from '../atoms';
+import { usePositions, useLibraryCard, usePreview } from '../application';
+import { Column } from '../atoms';
 import { LinkToPath } from './Navigation';
 
-export function RecentBooksConnected() {
+export function RecentBooksComp() {
     const { positions } = usePositions();
+    const grouped = groupBy(positions, p => p.bookId);
 
-    const { theme } = useTheme();
-
-    return <RecentBooksComp
-        theme={theme}
-        positions={positions}
-    />;
-}
-
-function RecentBooksComp({ positions }: Themed & {
-    positions: ResolvedCurrentPosition[],
-}) {
     return <Column>
         <span key='label'>Recent books: {positions.length}</span>
         {
-            positions.map((recentBook, idx) => {
+            Object.entries(grouped).map(([bookId, pos], idx) => {
                 return <CurrentBookComp
                     key={idx}
-                    currentPosition={recentBook}
+                    bookId={bookId}
+                    positions={pos}
                 />;
             })
         }
     </Column>;
 }
 
-function CurrentBookComp({ currentPosition: recentBook, }: {
-    currentPosition: ResolvedCurrentPosition,
+function CurrentBookComp({ positions, bookId }: {
+    bookId: string,
+    positions: CurrentPosition[],
 }) {
-    const data = getLocationsData(recentBook);
+    const { cardState } = useLibraryCard(bookId);
+    const data = findPositions(positions);
     if (!data) {
         return null;
     }
     const { mostRecent, furthest } = data;
-    if (mostRecent === furthest) {
-        return <Column>
-            <span>Title: {recentBook.card.title}</span>
-            <span>Recent and furthest</span>
-            <span>{mostRecent.preview?.substr(0, 300)}</span>
-            <LinkToPath
-                bookId={recentBook.card.id}
-                path={mostRecent.path}
-            >
-                Continue
-            </LinkToPath>
-        </Column>;
-    } else {
-        return <Column>
-            <span>Title: {recentBook.card.title}</span>
-            <span>Recent</span>
-            <span>{mostRecent.preview?.substr(0, 300)}</span>
-            <LinkToPath
-                bookId={recentBook.card.id}
-                path={mostRecent.path}
-            >
-                Continue
-            </LinkToPath>
-            <span>Furthest</span>
-            <span>{furthest.preview?.substr(0, 300)}</span>
-            <LinkToPath
-                bookId={recentBook.card.id}
-                path={furthest.path}
-            >
-                Continue
-            </LinkToPath>
-        </Column>;
-    }
+    const title = cardState.state === 'ready'
+        ? cardState.card.title
+        : '...loading';
+
+    return <Column>
+        <span>Title: {title}</span>
+        {
+            mostRecent === furthest
+                ? <Preview
+                    title='Recent & furthest'
+                    bookId={bookId}
+                    path={mostRecent.path}
+                />
+                : <>
+                    <Preview
+                        title='Recent'
+                        bookId={bookId}
+                        path={mostRecent.path}
+                    />
+                    <Preview
+                        title='Furthest'
+                        bookId={bookId}
+                        path={furthest.path}
+                    />
+                </>
+        }
+    </Column>;
+}
+
+function Preview({ title, bookId, path }: {
+    title: string,
+    bookId: string,
+    path: BookPath,
+}) {
+    const { previewState } = usePreview(bookId, path);
+    return <>
+        <span>{title}</span>
+        {
+            previewState.state === 'ready'
+                ? <span>{previewState.preview ?? 'preview is not available'}</span>
+                : <span>...loading</span>
+        }
+        <LinkToPath
+            bookId={bookId}
+            path={path}
+        >
+            Continue
+    </LinkToPath>
+    </>;
 }

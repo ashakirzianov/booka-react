@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 
 import {
-    LibraryCard, getLocationsData, BookPositionData,
+    LibraryCard, findPositions, CurrentPosition,
 } from 'booka-common';
 import { Column, Modal } from '../atoms';
 import {
@@ -9,7 +9,7 @@ import {
     LibraryCardState, useCollections, usePositions,
 } from '../application';
 import { LinkToPath } from './Navigation';
-import { BookCoverComp } from './BookList';
+import { BookCoverComp } from './BookListComp';
 
 export function LibraryCardComp({ bookId }: {
     bookId: string,
@@ -33,11 +33,11 @@ export function LibraryCardComp({ bookId }: {
         [removeFromCollection],
     );
 
-    const currentPosition = positions.find(
-        p => p.card.id === bookId
+    const currentPositions = positions.filter(
+        p => p.bookId === bookId
     );
     const isInReadingList = readingListCards.find(c => c.id === bookId) !== undefined;
-    const locationsData = currentPosition && getLocationsData(currentPosition);
+    const positionsData = findPositions(currentPositions);
     return <Modal
         theme={theme}
         close={closeCard}
@@ -46,7 +46,7 @@ export function LibraryCardComp({ bookId }: {
         <Column>
             <CardStateComp
                 cardState={cardState}
-                continueReadPosition={locationsData?.mostRecent}
+                continueReadPosition={positionsData?.mostRecent}
                 isInReadingList={isInReadingList}
                 addToReadingList={addToReadingList}
                 removeFromReadingList={removeFromReadingList}
@@ -60,7 +60,7 @@ function CardStateComp({
     isInReadingList, addToReadingList, removeFromReadingList,
 }: {
     cardState: LibraryCardState,
-    continueReadPosition: BookPositionData | undefined,
+    continueReadPosition: CurrentPosition | undefined,
     isInReadingList: boolean,
     addToReadingList: (card: LibraryCard) => void,
     removeFromReadingList: (card: LibraryCard) => void,

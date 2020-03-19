@@ -1,4 +1,5 @@
-// import React from 'react';
+// eslint-disable-next-line
+import React from 'react';
 import { View } from 'react-native';
 import { Link } from 'react-router-dom';
 /** @jsx jsx */

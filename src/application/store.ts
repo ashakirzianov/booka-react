@@ -6,9 +6,8 @@ import { createEpicMiddleware } from 'redux-observable';
 import { createLogger } from 'redux-logger';
 
 import { rootReducer, rootEpic } from '../ducks';
-import { startupFbSdk } from '../atoms';
+import { startupFbSdk, fbState } from './facebookSdk';
 import { config } from '../config';
-import { fbState } from '../atoms/facebookSdk';
 
 export const ConnectedProvider: React.SFC = ({ children }) =>
     React.createElement(Provider, { store }, children);
@@ -44,7 +43,7 @@ startupFbSdk(config().facebook.clientId);
 fbState().subscribe(state => {
     if (state.state === 'logged' && state.token) {
         store.dispatch({
-            type: 'account-fb-token',
+            type: 'account-receive-fb-token',
             payload: {
                 token: state.token,
             },

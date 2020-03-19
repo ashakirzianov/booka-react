@@ -1,9 +1,9 @@
 import React from 'react';
 import { LibraryCard } from 'booka-common';
+
 import { Column, Themed } from '../atoms';
 import { useTheme, useCollections } from '../application';
-
-import { BookListComp } from './BookList';
+import { BookListComp } from './BookListComp';
 
 export function CollectionsComp() {
     const { theme } = useTheme();

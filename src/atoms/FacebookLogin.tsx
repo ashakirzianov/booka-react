@@ -1,20 +1,21 @@
 import * as React from 'react';
 
+import { FbLoginState, fbState, doFbLogin } from '../application';
 import { Column, Row } from './Layout';
 import { Icon } from './Icons';
-import { point, Callback } from './common';
-import { FbLoginState, fbState, doFbLogin } from './facebookSdk';
+import { point } from './common';
 import { Themed } from './theme';
 
 type SocialButtonProps = Themed & {
-    onStatusChange?: Callback,
+    onStatusChange?: () => void,
 };
 
 export type FacebookLoginProps = SocialButtonProps;
 export function FacebookLogin({ theme, onStatusChange }: FacebookLoginProps) {
     const [loginState, setLoginState] = React.useState<FbLoginState>({ state: 'checking' });
     React.useEffect(() => {
-        fbState().subscribe(setLoginState);
+        const sub = fbState().subscribe(setLoginState);
+        return () => sub.unsubscribe();;
     }, [setLoginState]);
     React.useEffect(() => {
         if (onStatusChange) {
@@ -42,7 +43,7 @@ export function FacebookLogin({ theme, onStatusChange }: FacebookLoginProps) {
 }
 
 type ActualButtonProps = Themed & {
-    onClick: Callback<void>,
+    onClick: () => void,
     user?: {
         name: string,
         pictureUrl?: string,

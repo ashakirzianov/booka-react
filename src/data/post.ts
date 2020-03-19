@@ -15,7 +15,7 @@ export function postLocalChange(api: Api, change: LocalChange) {
             return api.postRemoveHighlight(change.highlightId);
         case 'highlight-update':
             return api.postUpdateHighlight({
-                _id: change.highlightId,
+                uuid: change.highlightId,
                 group: change.group,
             });
         case 'collection-add':
@@ -23,12 +23,7 @@ export function postLocalChange(api: Api, change: LocalChange) {
         case 'collection-remove':
             return api.postRemoveFromCollection(change.bookId, change.collection);
         case 'current-position-update':
-            return api.postAddCurrentPosition({
-                bookId: change.card.id,
-                source: 'not-implemented',
-                path: change.path,
-                created: change.created,
-            });
+            return api.postAddCurrentPosition(change.position);
         default:
             assertNever(change);
             return of<{}>();

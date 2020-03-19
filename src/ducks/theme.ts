@@ -14,7 +14,7 @@ export type ThemeIncrementScaleAction = {
 export type ThemeAction =
     | ThemeSetPaletteAction | ThemeIncrementScaleAction;
 
-export function themeReducer(state: ThemeState = defaultTheme, action: AppAction) {
+export function themeReducer(state: ThemeState = init, action: AppAction) {
     switch (action.type) {
         case 'theme-set-palette':
             return {
@@ -31,7 +31,7 @@ export function themeReducer(state: ThemeState = defaultTheme, action: AppAction
     }
 }
 
-const defaultTheme: Theme = {
+const init: Theme = {
     palettes: {
         light: {
             colors: {

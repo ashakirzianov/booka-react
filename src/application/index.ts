@@ -1,4 +1,6 @@
 export * from './dataHooks';
-export { ConnectedProvider } from './store';
+export * from './facebookSdk';
+export { RootProvider } from './provider';
 export * from './urlHooks';
 export * from './utilityHooks';
+export * from './utils';

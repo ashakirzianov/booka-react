@@ -32,8 +32,9 @@ export function buildBlocksData(args: BuildBlocksDataArgs) {
 }
 
 export function bookPathForBlockPath(blockPath: Path, data: BlockData): BookPath | undefined {
-    const prefix = data[blockPath.block].path;
-    const bookPath = blockPath.symbol !== undefined
+    // TODO: investigate this bug further: why we need '?' here?
+    const prefix = data[blockPath.block]?.path;
+    const bookPath = prefix !== undefined && blockPath.symbol !== undefined
         ? pathWithSpan(prefix, blockPath.symbol)
         : prefix;
     return bookPath;
@@ -269,7 +270,7 @@ function colorizeFragments(
     path: BookNodePath,
 ): RichTextFragment[] {
     for (const col of colorization) {
-        const relative = colorizationRelativeToPath(path, col);
+        const relative = colorizedRangeRelativeToPath(path, col);
         if (relative) {
             fragments = applyAttrsRange(fragments, relative);
         }
@@ -278,10 +279,7 @@ function colorizeFragments(
     return fragments;
 }
 
-function colorizationRelativeToPath(path: BookNodePath, colorized: ColorizedRange): AttrsRange | undefined {
-    const attrs: RichTextAttrs = {
-        background: colorized.color,
-    };
+function colorizedRangeRelativeToPath(path: BookNodePath, colorized: ColorizedRange): AttrsRange | undefined {
     if (colorized.range.end && pathLessThan(colorized.range.end, path)) {
         return undefined;
     }
@@ -296,6 +294,10 @@ function colorizationRelativeToPath(path: BookNodePath, colorized: ColorizedRang
     if (colorized.range.end && sameNode(path, colorized.range.end)) {
         end = colorized.range.end.span;
     }
+
+    const attrs: RichTextAttrs = {
+        background: colorized.color,
+    };
 
     return start !== undefined
         ? { start, end, attrs }

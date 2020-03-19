@@ -1,41 +1,36 @@
-import React from 'react';
+import React, { useRef, useCallback } from 'react';
 import {
     BookFragment, BookPath, BookRange,
-    Highlight, BookAnchor, doesRangeOverlap,
+    Highlight, BookAnchor, doesRangeOverlap, rangeToString, pathToString,
 } from 'booka-common';
 
 import {
     Themed, colors, getFontSize, Row,
-    point, Callback, getHighlights, BorderLink, Theme,
+    point, getHighlights, BorderLink, Theme,
 } from '../atoms';
 import { BookFragmentComp, BookSelection, ColorizedRange } from '../reader';
 import { useCopy } from '../application';
-import { linkToString } from '../core';
-import { generateQuoteLink } from './common';
+import { config } from '../config';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
 
-export type BookViewCompProps = Themed & {
+export function BookViewComp({
+    bookId, fragment, theme, pathToScroll, updateBookPosition,
+    highlights, quoteRange, setQuoteRange, openRef,
+}: Themed & {
     bookId: string,
     fragment: BookFragment,
     pathToScroll: BookPath | undefined,
-    updateBookPosition: Callback<BookPath>,
+    updateBookPosition: (path: BookPath) => void,
     quoteRange: BookRange | undefined,
     highlights: Highlight[],
-    setQuoteRange: Callback<BookRange | undefined>,
-    openRef: Callback<string>,
-};
-export function BookViewComp({
-    bookId, fragment, theme,
-    pathToScroll, updateBookPosition,
-    highlights,
-    quoteRange, setQuoteRange,
-    openRef,
-}: BookViewCompProps) {
-    const selection = React.useRef<BookSelection | undefined>(undefined);
-    const selectionHandler = React.useCallback((sel: BookSelection | undefined) => {
+    setQuoteRange: (range: BookRange | undefined) => void,
+    openRef: (refId: string) => void,
+}) {
+    const selection = useRef<BookSelection | undefined>(undefined);
+    const selectionHandler = useCallback((sel: BookSelection | undefined) => {
         selection.current = sel;
     }, []);
-    useCopy(React.useCallback((e: ClipboardEvent) => {
+    useCopy(useCallback((e: ClipboardEvent) => {
         if (selection.current && e.clipboardData) {
             e.preventDefault();
             const selectionText = `${selection.current.text}\n${generateQuoteLink(bookId, selection.current.range)}`;
@@ -79,7 +74,7 @@ export function BookViewComp({
             fontSize={getFontSize(theme, 'text')}
             fontFamily={theme.fontFamilies.book}
             colorization={colorization}
-            pathToScroll={pathToScroll || undefined}
+            pathToScroll={pathToScroll}
             onScroll={updateBookPosition}
             onSelectionChange={selectionHandler}
             onRefClick={openRef}
@@ -93,12 +88,11 @@ export function BookViewComp({
     </BookContextMenu>;
 }
 
-type PathLinkProps = Themed & {
+function AnchorLink({ theme, text, anchor, bookId }: Themed & {
     bookId: string,
     anchor: BookAnchor | undefined,
     text: string,
-};
-function AnchorLink({ theme, text, anchor, bookId }: PathLinkProps) {
+}) {
     if (!anchor) {
         return null;
     }
@@ -106,11 +100,7 @@ function AnchorLink({ theme, text, anchor, bookId }: PathLinkProps) {
         <BorderLink
             theme={theme}
             text={anchor.title || text}
-            to={linkToString({
-                link: 'book',
-                bookId,
-                path: anchor.path,
-            })}
+            to={`/book/${bookId}?p=${pathToString(anchor.path)}`}
             fontFamily='book'
         />
     </Row>;
@@ -133,6 +123,9 @@ function highlightsColorization(highlights: Highlight[], theme: Theme): Colorize
 }
 
 function colorForGroup(group: string) {
-    // TODO: implement
     return group;
+}
+
+function generateQuoteLink(id: string, quote: BookRange) {
+    return `${config().frontUrl}/book/${id}?q=${rangeToString(quote)}`;
 }
