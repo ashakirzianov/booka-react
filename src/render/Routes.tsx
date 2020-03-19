@@ -38,7 +38,7 @@ function BookRoute() {
     return <BookScreenComp
         bookId={bookId}
         showToc={toc !== undefined}
-        path={path ?? quote?.start}
+        path={quote?.start ?? path}
         quote={quote}
     />;
 }

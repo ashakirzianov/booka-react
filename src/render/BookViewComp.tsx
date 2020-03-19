@@ -74,7 +74,7 @@ export function BookViewComp({
             fontSize={getFontSize(theme, 'text')}
             fontFamily={theme.fontFamilies.book}
             colorization={colorization}
-            pathToScroll={pathToScroll || undefined}
+            pathToScroll={pathToScroll}
             onScroll={updateBookPosition}
             onSelectionChange={selectionHandler}
             onRefClick={openRef}
