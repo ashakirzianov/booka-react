@@ -3,9 +3,8 @@ import { throttle } from 'lodash';
 
 import { useLibrarySearch, SearchState, Themed, useTheme } from '../application';
 import {
-    TextInput, Column, ActivityIndicator, Triad, Panel,
+    TextInput, Column, ActivityIndicator, Triad, Panel, BookList,
 } from '../controls';
-import { BookListComp } from './BookListComp';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
 
@@ -53,7 +52,10 @@ function SearchResultsComp({ state, theme }: Themed & {
         case 'loading':
             return <ActivityIndicator theme={theme} />;
         case 'ready':
-            return <BookListComp books={state.results.map(r => r.desc)} />;
+            return <BookList
+                theme={theme}
+                books={state.results.map(r => r.desc)}
+            />;
         default:
             return null;
     }

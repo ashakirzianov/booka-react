@@ -1,29 +1,9 @@
 import React from 'react';
 import { LibraryCard } from 'booka-common';
-import { Column, Row } from '../atoms';
+import { Column } from './Layout';
 import { ShowCardLink } from './Navigation';
 
-export function BookListComp({ books }: {
-    books: LibraryCard[],
-}) {
-    return <Column>
-        <Row
-            maxWidth='100%'
-            centered
-        >
-            {
-                books.map((desc, idx) =>
-                    <BookItemComp
-                        key={idx}
-                        card={desc}
-                    />
-                )
-            }
-        </Row>
-    </Column>;
-}
-
-function BookItemComp({ card }: {
+export function BookTile({ card }: {
     card: LibraryCard,
 }) {
     return <ShowCardLink bookId={card.id}>
@@ -31,13 +11,13 @@ function BookItemComp({ card }: {
             centered
             width={200} height={200}
         >
-            <BookCoverComp card={card} />
-            <BookTitleComp title={card.title} />
+            <BookCover card={card} />
+            <BookTitle title={card.title} />
         </Column>
     </ShowCardLink>;
 }
 
-export function BookCoverComp({ card }: {
+export function BookCover({ card }: {
     card: LibraryCard,
 }) {
     if (card.coverUrl) {
@@ -86,7 +66,7 @@ function BookEmptyCover({ title }: {
     </div>;
 }
 
-function BookTitleComp({ title }: {
+function BookTitle({ title }: {
     title: string,
 }) {
     return <div style={{

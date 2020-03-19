@@ -8,8 +8,7 @@ import {
     useTheme, useLibraryCard,
     LibraryCardState, useCollections, usePositions,
 } from '../application';
-import { LinkToPath } from './Navigation';
-import { BookCoverComp } from './BookListComp';
+import { BookTile, BookPathLink } from '../controls';
 
 export function LibraryCardComp({ bookId }: {
     bookId: string,
@@ -72,17 +71,17 @@ function CardStateComp({
             return <span>Error: ${cardState.err}</span>;
         case 'ready':
             return <>
-                <BookCoverComp card={cardState.card} />
+                <BookTile card={cardState.card} />
                 <span>{cardState.card.title}</span>
-                <LinkToPath bookId={cardState.card.id}>Read from start</LinkToPath>
+                <BookPathLink bookId={cardState.card.id}>Read from start</BookPathLink>
                 {
                     continueReadPosition
-                        ? <LinkToPath
+                        ? <BookPathLink
                             bookId={cardState.card.id}
                             path={continueReadPosition.path}
                         >
                             Continue reading
-                </LinkToPath>
+                </BookPathLink>
                         : null
                 }
                 {

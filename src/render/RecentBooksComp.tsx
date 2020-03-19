@@ -4,8 +4,7 @@ import {
     findPositions, CurrentPosition, BookPath,
 } from 'booka-common';
 import { usePositions, useLibraryCard, usePreview } from '../application';
-import { Column } from '../atoms';
-import { LinkToPath } from './Navigation';
+import { Column, BookPathLink } from '../controls';
 
 export function RecentBooksComp() {
     const { positions } = usePositions();
@@ -77,11 +76,11 @@ function Preview({ title, bookId, path }: {
                 ? <span>{previewState.preview ?? 'preview is not available'}</span>
                 : <span>...loading</span>
         }
-        <LinkToPath
+        <BookPathLink
             bookId={bookId}
             path={path}
         >
             Continue
-    </LinkToPath>
+    </BookPathLink>
     </>;
 }

@@ -5,7 +5,7 @@ import { BookPath, pathToString } from 'booka-common';
 import { WithChildren } from '../atoms';
 import { updateSearch } from '../application';
 
-export function LinkToPath({ bookId, path, children }: WithChildren & {
+export function BookPathLink({ bookId, path, children }: WithChildren & {
     bookId: string,
     path?: BookPath,
 }) {
