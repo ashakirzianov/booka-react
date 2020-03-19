@@ -16,7 +16,7 @@ export function currentPositionsProvider(localChangeStore: LocalChangeStore, api
                 )
             );
         },
-        addCurrentPosition(params: {
+        addCurrentPosition({ path, bookId }: {
             path: BookPath,
             bookId: string,
         }) {
@@ -24,7 +24,7 @@ export function currentPositionsProvider(localChangeStore: LocalChangeStore, api
             localChangeStore.addChange({
                 change: 'current-position-update',
                 position: localCurrentPosition({
-                    created, source, ...params,
+                    created, source, path, bookId,
                 }),
             });
         },

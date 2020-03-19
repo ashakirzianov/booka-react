@@ -6,7 +6,7 @@ import {
 } from 'booka-common';
 
 import {
-    useTheme, useBook, useHighlights, useUrlActions,
+    useTheme, useBook, useHighlights, useUrlActions, usePositions,
 } from '../application';
 import {
     Column, point, Row, Themed, Triad, TopBar, EmptyLine,
@@ -87,11 +87,17 @@ function BookReadyComp({
     );
 
     const { updateBookPath, updateQuoteRange, updateToc } = useUrlActions();
+    const { addCurrentPosition } = usePositions();
     const [needToScroll, setNeedToScroll] = useState(true);
     const updatePath = useCallback((p: BookPath | undefined) => {
-        setNeedToScroll(false);
+        if (needToScroll) {
+            setNeedToScroll(false);
+        }
         updateBookPath(p);
-    }, [setNeedToScroll, updateBookPath]);
+        if (p) {
+            addCurrentPosition({ path: p, bookId });
+        }
+    }, [setNeedToScroll, updateBookPath, addCurrentPosition, needToScroll, bookId]);
     const closeToc = useCallback(
         () => updateToc(false),
         [updateToc],
