@@ -1,7 +1,5 @@
 import React from 'react';
-
-import { Menu, Item, MenuProvider } from 'react-contexify';
-import 'react-contexify/dist/ReactContexify.min.css';
+import { ContextMenuTrigger, ContextMenu, MenuItem } from 'react-contextmenu';
 
 import { Highlight, BookRange, HighlightGroup } from 'booka-common';
 import { WithChildren } from '../atoms';
@@ -39,31 +37,30 @@ export function BookContextMenu({
         return <>{children}</>;
     }
     return <>
-        <MenuProvider
-            id='book-menu'
-            style={{
-                display: 'inline-block',
-            }}
-        >
+        <ContextMenuTrigger id='book-menu'>
             {children}
-        </MenuProvider>
-        <Menu id='book-menu'>
-            <AddHighlightItem
-                target={target}
-                bookId={bookId}
-                addHighlight={addHighlight}
-            />
-            <RemoveHighlightItem
-                target={target}
-                removeHighlight={removeHighlight}
-            />
-            <SetHighlightGroupItem target={target} group='green'
-                setHighlightGroup={updateHighlightGroup} />
-            <SetHighlightGroupItem target={target} group='red'
-                setHighlightGroup={updateHighlightGroup} />
-            <SetHighlightGroupItem target={target} group='yellow'
-                setHighlightGroup={updateHighlightGroup} />
-        </Menu>
+        </ContextMenuTrigger>
+        <ContextMenu id='book-menu'>
+            <div style={{
+                background: 'white',
+            }}>
+                <AddHighlightItem
+                    target={target}
+                    bookId={bookId}
+                    addHighlight={addHighlight}
+                />
+                <RemoveHighlightItem
+                    target={target}
+                    removeHighlight={removeHighlight}
+                />
+                <SetHighlightGroupItem target={target} group='green'
+                    setHighlightGroup={updateHighlightGroup} />
+                <SetHighlightGroupItem target={target} group='red'
+                    setHighlightGroup={updateHighlightGroup} />
+                <SetHighlightGroupItem target={target} group='yellow'
+                    setHighlightGroup={updateHighlightGroup} />
+            </div>
+        </ContextMenu>
     </>;
 }
 
@@ -78,11 +75,11 @@ function AddHighlightItem({
         return null;
     }
 
-    return <Item
+    return <MenuItem
         onClick={() => addHighlight(bookId, target.selection.range, 'green')}
     >
         Add highlight
-    </Item>;
+    </MenuItem>;
 }
 
 function RemoveHighlightItem({
@@ -95,11 +92,11 @@ function RemoveHighlightItem({
         return null;
     }
 
-    return <Item
+    return <MenuItem
         onClick={() => removeHighlight(target.highlight.uuid)}
     >
         Remove highlight
-    </Item>;
+    </MenuItem>;
 }
 
 function SetHighlightGroupItem({
@@ -113,9 +110,9 @@ function SetHighlightGroupItem({
         return null;
     }
 
-    return <Item
+    return <MenuItem
         onClick={() => setHighlightGroup(target.highlight.uuid, group)}
     >
         Make highlight {group}
-    </Item>;
+    </MenuItem>;
 }
