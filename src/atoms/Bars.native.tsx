@@ -4,7 +4,7 @@ import { View, SafeAreaView } from 'react-native';
 import { FadeIn } from './Animations.native';
 import { BarProps } from './Bars';
 import { point } from './common';
-import { colors } from './theme';
+import { colors } from '../application/theme';
 
 const viewOffset = 3.5;
 export const headerHeight = 3.5;

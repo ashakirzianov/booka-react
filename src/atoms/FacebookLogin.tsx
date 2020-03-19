@@ -4,7 +4,7 @@ import { FbLoginState, fbState, doFbLogin } from '../application';
 import { Column, Row } from './Layout';
 import { Icon } from './Icons';
 import { point } from './common';
-import { Themed } from './theme';
+import { Themed } from '../application/theme';
 
 type SocialButtonProps = Themed & {
     onStatusChange?: () => void,

@@ -8,7 +8,7 @@ import {
     FaQuestion,
 } from 'react-icons/fa';
 import { Size, assertNever } from './common';
-import { PaletteColor, Themed, colors } from './theme';
+import { PaletteColor, Themed, colors } from '../application/theme';
 
 export type IconName =
     | 'close' | 'left' | 'items' | 'letter'
