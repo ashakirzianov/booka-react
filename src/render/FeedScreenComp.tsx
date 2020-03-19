@@ -5,10 +5,10 @@ import {
 } from '../atoms';
 import { useTheme, Themed } from '../application';
 import { AccountButton } from './AccountButton';
-import { LibrarySearchComp } from './LibrarySearchComp';
 import { CollectionsComp } from './CollectionsComp';
 import { RecentBooksComp } from './RecentBooksComp';
 import { LibraryCardComp } from './LibraryCardComp';
+import { TopBar } from './TopBar';
 
 export function FeedScreen({ show, query }: {
     query: string | undefined,
@@ -19,7 +19,7 @@ export function FeedScreen({ show, query }: {
         {show ? <LibraryCardComp bookId={show} /> : null}
         <FeedScreenHeader theme={theme} />
         <EmptyLine />
-        <LibrarySearchComp query={query} />
+        <TopBar query={query} />
         <CollectionsComp />
         <RecentBooksComp />
     </>;
