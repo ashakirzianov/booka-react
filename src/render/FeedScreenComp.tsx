@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import {
-    Themed, TopBar, point, Triad, EmptyLine,
+    Themed, Header, point, Triad, EmptyLine,
 } from '../atoms';
 import { useTheme } from '../application';
 import { AccountButton } from './AccountButton';
@@ -26,7 +26,7 @@ export function FeedScreen({ show, query }: {
 }
 
 function FeedScreenHeader({ theme }: Themed) {
-    return <TopBar
+    return <Header
         theme={theme}
         open={true}
         paddingHorizontal={point(1)}
@@ -34,5 +34,5 @@ function FeedScreenHeader({ theme }: Themed) {
         <Triad
             right={<AccountButton />}
         />
-    </TopBar>;
+    </Header>;
 }

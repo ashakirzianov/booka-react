@@ -9,8 +9,8 @@ import {
     useTheme, useBook, useHighlights, useUrlActions, usePositions,
 } from '../application';
 import {
-    Column, point, Row, Themed, Triad, TopBar, EmptyLine,
-    Clickable, colors, TextLine, BottomBar,
+    Column, point, Row, Themed, Triad, Header, EmptyLine,
+    Clickable, colors, TextLine, Footer,
     TextLink, FullScreenActivityIndicator,
 } from '../atoms';
 import { BookViewComp } from './BookViewComp';
@@ -157,7 +157,7 @@ function BookScreenHeader({
     path: BookPath | undefined,
     visible: boolean,
 }) {
-    return <TopBar
+    return <Header
         theme={theme}
         open={visible}
         paddingHorizontal={point(1)}
@@ -171,7 +171,7 @@ function BookScreenHeader({
                     <AccountButton />
                 </>}
         />
-    </TopBar>;
+    </Header>;
 }
 
 function BookScreenFooter({
@@ -188,7 +188,7 @@ function BookScreenFooter({
     const nextChapterPage = fragment.next
         ? pageForPosition(fragment.next.position)
         : total;
-    return <BottomBar theme={theme} open={visible}>
+    return <Footer theme={theme} open={visible}>
         <Triad
             center={
                 <TocButton
@@ -208,5 +208,5 @@ function BookScreenFooter({
                 color='accent'
             />}
         />
-    </BottomBar>;
+    </Footer>;
 }

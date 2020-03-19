@@ -40,5 +40,5 @@ function bar(top: boolean) {
     };
 }
 
-export const TopBar = bar(true);
-export const BottomBar = bar(false);
+export const Header = bar(true);
+export const Footer = bar(false);
