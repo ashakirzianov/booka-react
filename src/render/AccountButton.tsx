@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Callback, AccountInfo } from 'booka-common';
+import { AccountInfo } from 'booka-common';
 
-import {
-    Column, FacebookLogin, PictureButton, Row, point,
-    WithPopover, TextLine, IconButton, TagButton,
-} from '../atoms';
 import { AccountState } from '../ducks';
 import { useTheme, useAccount, Themed } from '../application';
+import {
+    Column, Row, WithPopover, point, FacebookLogin,
+    PictureButton, IconButton, Label, ActionButton,
+} from '../controls';
 
 export function AccountButton() {
     const { theme } = useTheme();
@@ -23,7 +23,7 @@ function AccountButtonDumb({
     account, theme, logout,
 }: Themed & {
     account: AccountState,
-    logout: Callback,
+    logout: () => void,
 }) {
     return <WithPopover
         theme={theme}
@@ -51,7 +51,7 @@ function AccountButtonDumb({
 
 function ActualButton({ theme, account, onClick }: Themed & {
     account: AccountState,
-    onClick?: Callback,
+    onClick?: () => void,
 }) {
     if (account.state === 'signed') {
         return <PictureButton
@@ -70,18 +70,17 @@ function ActualButton({ theme, account, onClick }: Themed & {
 
 function AccountPanel({ account, theme, logout }: Themed & {
     account: AccountInfo,
-    logout: Callback,
+    logout: () => void,
 }) {
     return <Column>
         <Row margin={point(1)} centered>
-            <TextLine
+            <Label
                 theme={theme}
                 text={account.name}
-                fontSize='small'
             />
         </Row>
         <Row margin={point(1)} centered>
-            <TagButton
+            <ActionButton
                 theme={theme}
                 text='Logout'
                 onClick={logout}
@@ -91,7 +90,7 @@ function AccountPanel({ account, theme, logout }: Themed & {
 }
 
 function SignInPanel({ theme, onStatusChanged }: Themed & {
-    onStatusChanged?: Callback,
+    onStatusChanged?: () => void,
 }) {
     return <Column>
         <FacebookLogin
