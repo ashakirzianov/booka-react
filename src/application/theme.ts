@@ -10,6 +10,7 @@ export type Palette = {
         accent: Color,
         highlight: Color,
         shadow: Color,
+        semiTransparent: Color,
     },
     highlights: {
         quote: Color,

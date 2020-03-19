@@ -9,6 +9,5 @@ export * from './Layout';
 export * from './Links';
 export * from './Popover';
 export * from './TextInputs';
-export * from '../application/theme';
 
 export { SafeAreaView } from 'react-native';

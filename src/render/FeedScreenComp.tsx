@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import {
-    Themed, Header, point, Triad, EmptyLine,
+    Header, point, Triad, EmptyLine,
 } from '../atoms';
-import { useTheme } from '../application';
+import { useTheme, Themed } from '../application';
 import { AccountButton } from './AccountButton';
 import { LibrarySearchComp } from './LibrarySearchComp';
 import { CollectionsComp } from './CollectionsComp';

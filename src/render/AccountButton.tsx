@@ -3,10 +3,10 @@ import { Callback, AccountInfo } from 'booka-common';
 
 import {
     Column, FacebookLogin, PictureButton, Row, point,
-    WithPopover, TextLine, IconButton, TagButton, Themed,
+    WithPopover, TextLine, IconButton, TagButton,
 } from '../atoms';
 import { AccountState } from '../ducks';
-import { useTheme, useAccount } from '../application';
+import { useTheme, useAccount, Themed } from '../application';
 
 export function AccountButton() {
     const { theme } = useTheme();

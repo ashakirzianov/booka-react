@@ -5,11 +5,11 @@ import {
     AuthToken, Bookmark, Highlight, BookFragment, LibraryCard,
     SearchResult, CardCollections, BookPath, firstPath, CurrentPosition,
 } from 'booka-common';
-import { PaletteName } from '../atoms';
 import { useUrlActions } from './urlHooks';
 import { useAppSelector, useAppDispatch } from './reduxHooks';
 import { doFbLogout } from './facebookSdk';
 import { useDataProvider } from './dataProviderHooks';
+import { PaletteName } from './theme';
 
 type Loadable<T> =
     | { state: 'loading' }

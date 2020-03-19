@@ -7,10 +7,11 @@ import {
 
 import {
     useTheme, useBook, useHighlights, useUrlActions, usePositions,
+    Themed, colors,
 } from '../application';
 import {
-    Column, point, Row, Themed, Triad, Header, EmptyLine,
-    Clickable, colors, TextLine, Footer,
+    Column, point, Row, Triad, Header, EmptyLine,
+    Clickable, TextLine, Footer,
     TextLink, FullScreenActivityIndicator,
 } from '../atoms';
 import { BookViewComp } from './BookViewComp';

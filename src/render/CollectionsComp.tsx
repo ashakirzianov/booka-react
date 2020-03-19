@@ -1,8 +1,8 @@
 import React from 'react';
 import { LibraryCard } from 'booka-common';
 
-import { Column, Themed } from '../atoms';
-import { useTheme, useCollections } from '../application';
+import { Column } from '../atoms';
+import { useTheme, useCollections, Themed } from '../application';
 import { BookListComp } from './BookListComp';
 
 export function CollectionsComp() {

@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { useTheme } from '../application';
+import { useTheme, PaletteName, Themed } from '../application';
 import {
-    Column, point, Row, Themed, IconButton,
-    PaletteName, PaletteButton, TextButton, Separator, WithPopover,
+    Column, point, Row, IconButton,
+    PaletteButton, TextButton, Separator, WithPopover,
 } from '../atoms';
 
 export function AppearanceButton() {

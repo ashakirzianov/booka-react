@@ -1,5 +1,5 @@
-import { Theme, PaletteName } from '../atoms';
 import { AppAction } from './app';
+import { Theme, PaletteName } from '../application';
 
 export type ThemeState = Theme;
 
@@ -41,6 +41,7 @@ const init: Theme = {
                 accent: '#777',
                 highlight: '#aaf',
                 shadow: '#000',
+                semiTransparent: 'rgba(0, 0, 0, 0.3)',
             },
             highlights: {
                 quote: '#fbe381',
@@ -54,6 +55,7 @@ const init: Theme = {
                 accent: '#987',
                 highlight: '#000',
                 shadow: '#000',
+                semiTransparent: 'rgba(0, 0, 0, 0.3)',
             },
             highlights: {
                 quote: '#fbe381',
@@ -67,6 +69,7 @@ const init: Theme = {
                 accent: '#ddd',
                 highlight: '#fff',
                 shadow: '#000',
+                semiTransparent: 'rgba(0, 0, 0, 0.3)',
             },
             highlights: {
                 quote: '#c8b050',
