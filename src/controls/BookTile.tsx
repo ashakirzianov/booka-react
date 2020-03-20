@@ -7,6 +7,7 @@ import { LibraryCard } from 'booka-common';
 import { ShowCardLink } from './Navigation';
 import { Themed, colors, getFontFamily, getFontSize } from '../application';
 import { Style } from './common';
+import { point } from '../atoms';
 
 export function BookTile({ card, theme }: Themed & {
     card: LibraryCard,
@@ -62,18 +63,28 @@ function BookImageCover({ imageUrl, title }: {
 function BookEmptyCover({ title }: {
     title: string,
 }) {
-    return <div style={{
+    return <div css={{
         height: 180,
         width: 120,
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         textAlign: 'center',
-        fontSize: '2em',
+        paddingTop: point(1),
+        fontSize: calcFontSize(title),
         background: randomColor(),
         color: randomColor(),
     }}>
         {title}
     </div>;
+}
+
+// TODO: rethink this
+function calcFontSize(title: string) {
+    const words = title
+        .split(' ')
+        .sort((a, b) => b.length - a.length);
+    const maxLength = words[0]?.length ?? 0;
+    return `${180 / maxLength}px`;
 }
 
 const overflowLine: Style = {
