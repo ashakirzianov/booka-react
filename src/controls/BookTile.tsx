@@ -78,14 +78,14 @@ function BookEmptyCover({ title, theme }: Themed & {
 }) {
     const { back, text } = colorForString(title);
     return <div css={{
-        height: 180,
-        width: 120,
+        height: 160,
+        width: 110,
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         textAlign: 'center',
-        paddingTop: '20px',
-        paddingLeft: '5px',
-        paddingRight: '5px',
+        paddingTop: 20,
+        paddingLeft: 5,
+        paddingRight: 5,
         fontSize: calcFontSize(title),
         fontFamily: getFontFamily(theme, 'menu'),
         background: back,
@@ -102,8 +102,8 @@ function calcFontSize(title: string) {
         .sort((a, b) => b.length - a.length);
     const maxLength = words[0]?.length ?? 0;
     const count = words.length;
-    const width = 200 / maxLength;
-    const height = 180 / 2 / count;
+    const width = 110 / maxLength;
+    const height = 160 / 2 / count;
     const size = Math.min(width, height);
     return `${size}px`;
 }
