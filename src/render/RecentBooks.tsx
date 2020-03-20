@@ -4,9 +4,9 @@ import {
 } from 'booka-common';
 import { usePositions, useTheme } from '../application';
 import { GridList, TitledPanel } from '../controls';
-import { BookIdTile } from './LoadableBookTile';
+import { BookIdTile } from './LibraryCardTile';
 
-export function RecentBooksComp() {
+export function RecentBooks() {
     const { theme } = useTheme();
     const { positions } = usePositions();
     if (positions.length === 0) {

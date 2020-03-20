@@ -7,7 +7,7 @@ import {
     Column, TitledPanel,
 } from '../controls';
 import { ParagraphPreview } from './ParagraphPreview';
-import { BookIdTile } from './LoadableBookTile';
+import { BookIdTile } from './LibraryCardTile';
 
 export function CurrentBook() {
     const { theme } = useTheme();

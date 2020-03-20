@@ -6,10 +6,11 @@ import {
     useLibrarySearch, SearchState, Themed, useTheme,
 } from '../application';
 import {
-    TextInput, Column, ActivityIndicator, Panel, BookList, userAreaWidth,
+    TextInput, Column, ActivityIndicator, Panel, userAreaWidth,
 } from '../controls';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
+import { BookList } from './BookList';
 
 export function TopBar({ query }: {
     query: string | undefined,

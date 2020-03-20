@@ -1,7 +1,6 @@
 export * from './common';
 export * from './ActionButton';
 export * from './ActivityIndicator';
-export * from './BookList';
 export * from './BookTile';
 export * from './FacebookLogin';
 export * from './GridList';

@@ -3,47 +3,53 @@ import React from 'react';
 import { View } from 'react-native';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { LibraryCard } from 'booka-common';
-import { ShowCardLink } from './Navigation';
 import {
     Themed, colors, getFontFamily, getFontSize, Color,
 } from '../application';
 import { Style } from './common';
 
-export function BookTile({ card, theme }: Themed & {
-    card: LibraryCard,
+export function BookTile({
+    title, author, coverUrl, theme,
+}: Themed & {
+    coverUrl: string | undefined,
+    title: string,
+    author: string | undefined,
 }) {
-    return <ShowCardLink bookId={card.id}>
-        <View style={{
-            width: 200,
-            height: 240,
-            alignItems: 'center',
-        }}>
-            <BookCover
-                theme={theme}
-                card={card}
-            />
-            <BookTitle
-                theme={theme}
-                title={card.title}
-                author={card.author}
-            />
-        </View>
-    </ShowCardLink>;
+    return <View style={{
+        width: 200,
+        height: 240,
+        alignItems: 'center',
+    }}>
+        <BookCover
+            theme={theme}
+            title={title}
+            author={author}
+            coverUrl={coverUrl}
+        />
+        <BookTitle
+            theme={theme}
+            title={title}
+            author={author}
+        />
+    </View>;
 }
 
-function BookCover({ card, theme }: Themed & {
-    card: LibraryCard,
+function BookCover({
+    title, coverUrl, theme,
+}: Themed & {
+    coverUrl: string | undefined,
+    title: string,
+    author: string | undefined,
 }) {
-    if (card.coverUrl) {
+    if (coverUrl) {
         return <BookImageCover
-            imageUrl={card.smallCoverUrl}
-            title={card.title}
+            imageUrl={coverUrl}
+            title={title}
         />;
     } else {
         return <BookEmptyCover
             theme={theme}
-            title={card.title}
+            title={title}
         />;
     }
 }
@@ -136,7 +142,7 @@ function BookTitle({ title, author, theme }: Themed & {
                 fontWeight: 900,
             },
         ]}>
-            {title ?? '<no-title>'}
+            {title || '<no-title>'}
         </span>
     </View>;
 }

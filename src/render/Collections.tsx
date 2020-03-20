@@ -1,8 +1,9 @@
 import React from 'react';
 import { LibraryCard } from 'booka-common';
 
-import { BookList, Column, TitledPanel } from '../controls';
+import { Column, TitledPanel } from '../controls';
 import { useTheme, useCollections, Themed } from '../application';
+import { BookList } from './BookList';
 
 export function Collections() {
     const { theme } = useTheme();

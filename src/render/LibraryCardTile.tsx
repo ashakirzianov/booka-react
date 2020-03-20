@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookTile, ActivityIndicator } from '../controls';
+import { BookTile, ActivityIndicator, ShowCardLink } from '../controls';
 import { useLibraryCard, useTheme, Loadable, Themed } from '../application';
 import { LibraryCard } from 'booka-common';
 
@@ -8,22 +8,25 @@ export function BookIdTile({ bookId }: {
 }) {
     const { theme } = useTheme();
     const { card } = useLibraryCard(bookId);
-    return <LoadableBookTile
+    return <LibraryCardTile
         theme={theme}
         card={card}
     />;
 }
 
-// TODO: move to 'controls' ?
-export function LoadableBookTile({ card, theme }: Themed & {
+export function LibraryCardTile({ card, theme }: Themed & {
     card: Loadable<LibraryCard>,
 }) {
     if (card.loading) {
         return <ActivityIndicator theme={theme} />;
     } else {
-        return <BookTile
-            theme={theme}
-            card={card}
-        />;
+        return <ShowCardLink bookId={card.id}>
+            <BookTile
+                theme={theme}
+                title={card.title}
+                author={card.author}
+                coverUrl={card.coverUrl}
+            />
+        </ShowCardLink>;
     }
 }

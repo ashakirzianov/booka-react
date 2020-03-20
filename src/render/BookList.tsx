@@ -1,18 +1,19 @@
 import React from 'react';
 import { LibraryCard } from 'booka-common';
 import { Themed } from '../application';
-import { BookTile, GridList } from '../controls';
+import { GridList } from '../controls';
+import { LibraryCardTile } from './LibraryCardTile';
 
 export function BookList({ books, theme }: Themed & {
     books: LibraryCard[],
 }) {
     return <GridList>
         {
-            books.map((desc, idx) =>
-                <BookTile
+            books.map((card, idx) =>
+                <LibraryCardTile
                     key={idx}
                     theme={theme}
-                    card={desc}
+                    card={card}
                 />
             )
         }
