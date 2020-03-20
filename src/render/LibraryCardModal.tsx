@@ -9,11 +9,21 @@ import {
 import { BookPathLink } from '../controls';
 import { LoadableBookTile } from './LoadableBookTile';
 
-export function LibraryCardComp({ bookId }: {
+export function LibraryCardModal({ bookId }: {
+    bookId: string | undefined,
+}) {
+    if (bookId) {
+        return <LibraryCardModalImpl bookId={bookId} />;
+    } else {
+        return null;
+    }
+}
+
+function LibraryCardModalImpl({ bookId }: {
     bookId: string,
 }) {
-    const { card, closeCard } = useLibraryCard(bookId);
     const { theme } = useTheme();
+    const { card, closeCard } = useLibraryCard(bookId);
     const { positions } = usePositions();
 
     const {
