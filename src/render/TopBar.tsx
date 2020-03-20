@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { throttle } from 'lodash';
 
 import {
@@ -18,34 +18,29 @@ export function TopBar({ query }: {
     const querySearch = React.useCallback(throttle((q: string) => {
         doQuery(q ? q : undefined);
     }, 300), [doQuery]);
-
-    return <Column>
-        <Triad
-            left={
-                <TextInput
-                    theme={theme}
-                    initial={query}
-                    onChange={querySearch}
-                />
-            }
-            right={<>
-                <AppearanceButton />
-                <AccountButton />
-            </>}
-        />
-        {query
+    return <Layout
+        Input={<TextInput
+            theme={theme}
+            initial={query}
+            onChange={querySearch}
+        />}
+        Buttons={<>
+            <AppearanceButton />
+            <AccountButton />
+        </>}
+        Results={query
             ? <Panel theme={theme}>
-                <SearchResultsComp
+                <SearchResults
                     theme={theme}
                     state={searchState}
                 />
             </Panel>
             : null
         }
-    </Column>;
+    />;
 }
 
-function SearchResultsComp({ state, theme }: Themed & {
+function SearchResults({ state, theme }: Themed & {
     state: SearchState,
 }) {
     if (state.loading) {
@@ -56,4 +51,18 @@ function SearchResultsComp({ state, theme }: Themed & {
             books={state.results.map(r => r.desc)}
         />;
     }
+}
+
+function Layout({ Input, Buttons, Results }: {
+    Input: ReactNode,
+    Buttons: ReactNode,
+    Results: ReactNode,
+}) {
+    return <Column>
+        <Triad
+            left={Input}
+            right={Buttons}
+        />
+        {Results}
+    </Column>;
 }
