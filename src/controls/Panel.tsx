@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { HasChildren, percent, point } from './common';
+import { HasChildren, percent, point, boxShadow, userAreaWidth } from './common';
 import { Themed, colors } from '../application';
 import { defaultAnimationDuration } from './Animations';
 import { Column } from '../atoms';
@@ -13,10 +13,19 @@ export function TitledPanel({ children, theme }: HasChildren & Themed & {
     </Panel>;
 }
 
-export function Panel({ children }: HasChildren & Themed) {
-    return <Column>
+export function Panel({ theme, children }: HasChildren & Themed) {
+    return <div style={{
+        display: 'flex',
+        flex: 1,
+        flexShrink: 1,
+        boxShadow: boxShadow(colors(theme).shadow),
+        margin: point(1),
+        width: userAreaWidth,
+        flexWrap: 'wrap',
+        alignSelf: 'center',
+    }}>
         {children}
-    </Column>;
+    </div>;
 }
 
 export function OverlayPanel({ children, theme, animation }: HasChildren & Themed & {
