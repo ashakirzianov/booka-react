@@ -12,7 +12,9 @@ export function BookPathLink({ bookId, path, children }: WithChildren & {
     const to = path
         ? `/book/${bookId}?p=${pathToString(path)}`
         : `/book/${bookId}`;
-    return <Link to={to}>
+    return <Link to={to} style={{
+        textDecoration: 'none',
+    }}>
         {children}
     </Link>;
 }
@@ -39,7 +41,9 @@ function UpdateQueryLink({ queryKey, value, children }: WithChildren & {
 }) {
     const location = useLocation();
     const search = updateSearch(location.search, queryKey, value);
-    return <Link to={search}>
+    return <Link to={search} style={{
+        textDecoration: 'none',
+    }}>
         {children}
     </Link>;
 }

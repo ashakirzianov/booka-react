@@ -1,6 +1,6 @@
 import React from 'react';
-
 import { BookPath, findBookmark } from 'booka-common';
+
 import { useTheme, useBookmarks, Themed } from '../application';
 import { TextButton, TagButton, IconLink } from '../atoms';
 import { ShowTocLink } from './Navigation';
