@@ -15,10 +15,19 @@ export function BookTile({
     title: string,
     author: string | undefined,
 }) {
-    return <View style={{
+    return <div css={{
+        display: 'flex',
+        flex: 1,
+        flexDirection: 'column',
         width: 200,
         height: 240,
+        margin: 2,
         alignItems: 'center',
+        color: colors(theme).text,
+        fontFamily: getFontFamily(theme, 'menu'),
+        '&:hover': {
+            color: colors(theme).highlight,
+        },
     }}>
         <BookCover
             theme={theme}
@@ -31,7 +40,7 @@ export function BookTile({
             title={title}
             author={author}
         />
-    </View>;
+    </div>;
 }
 
 function BookCover({
@@ -124,8 +133,6 @@ function BookTitle({ title, author, theme }: Themed & {
         <span css={[
             overflowLine,
             {
-                color: colors(theme).accent,
-                fontFamily: getFontFamily(theme, 'menu'),
                 fontSize: getFontSize(theme, 'smallest'),
                 fontStyle: 'italic',
                 fontWeight: 100,
@@ -136,8 +143,6 @@ function BookTitle({ title, author, theme }: Themed & {
         <span css={[
             overflowLine,
             {
-                color: colors(theme).accent,
-                fontFamily: getFontFamily(theme, 'menu'),
                 fontSize: getFontSize(theme, 'smallest'),
                 fontWeight: 900,
             },
