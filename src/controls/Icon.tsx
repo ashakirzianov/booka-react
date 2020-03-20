@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { assertNever } from 'booka-common';

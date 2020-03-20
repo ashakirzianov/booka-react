@@ -22,6 +22,7 @@ export function TopBar({ query }: {
     return <Layout
         Input={<TextInput
             theme={theme}
+            placeholder='Search books...'
             initial={query}
             onChange={querySearch}
         />}
