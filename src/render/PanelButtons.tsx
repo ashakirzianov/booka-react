@@ -3,7 +3,7 @@ import React from 'react';
 import { BookPath, findBookmark } from 'booka-common';
 import { useTheme, useBookmarks, Themed } from '../application';
 import { TextButton, TagButton, IconLink } from '../atoms';
-import { ShowTocLink } from '../controls';
+import { ShowTocLink } from './Navigation';
 
 export function AddBookmarkButton({ bookId, path }: {
     bookId: string,

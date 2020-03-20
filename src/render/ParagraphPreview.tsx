@@ -3,9 +3,7 @@ import { BookPath } from 'booka-common';
 import {
     usePreview,
 } from '../application';
-import {
-    BookPathLink,
-} from '../controls';
+import { BookPathLink } from './Navigation';
 
 export function ParagraphPreview({ bookId, path }: {
     bookId: string,

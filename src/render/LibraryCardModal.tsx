@@ -6,8 +6,8 @@ import {
     useTheme, useLibraryCard,
     useCollections, usePositions, mostRecentPosition,
 } from '../application';
-import { BookPathLink } from '../controls';
 import { LibraryCardTile } from './LibraryCardTile';
+import { BookPathLink } from './Navigation';
 
 export function LibraryCardModal({ bookId }: {
     bookId: string | undefined,
