@@ -1,11 +1,12 @@
 import React, { ReactNode } from 'react';
+import { View } from 'react-native';
 import { throttle } from 'lodash';
 
 import {
     useLibrarySearch, SearchState, Themed, useTheme,
 } from '../application';
 import {
-    TextInput, Column, ActivityIndicator, Triad, Panel, BookList,
+    TextInput, Column, ActivityIndicator, Panel, BookList, point,
 } from '../controls';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
@@ -59,10 +60,28 @@ function Layout({ Input, Buttons, Results }: {
     Results: ReactNode,
 }) {
     return <Column>
-        <Triad
-            left={Input}
-            right={Buttons}
-        />
+        <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+        }}>
+            <View />
+            <View style={{
+                flexGrow: 1,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                maxWidth: point(50),
+            }}>
+                {Input}
+            </View>
+            <View style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+            }}>
+                {Buttons}
+            </View>
+        </View>
         {Results}
     </Column>;
 }
