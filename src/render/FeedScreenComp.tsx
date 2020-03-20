@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 
-import { CollectionsComp } from './CollectionsComp';
+import { Collections } from './Collections';
 import { LibraryCardModal } from './LibraryCardModal';
 import { TopBar } from './TopBar';
 import { CurrentBook } from './CurrentBook';
@@ -13,6 +13,6 @@ export function FeedScreen({ show, query }: {
         <LibraryCardModal bookId={show} />
         <TopBar query={query} />
         <CurrentBook />
-        <CollectionsComp />
+        <Collections />
     </>;
 }

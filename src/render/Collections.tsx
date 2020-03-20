@@ -1,17 +1,17 @@
 import React from 'react';
 import { LibraryCard } from 'booka-common';
 
-import { BookList, Column } from '../controls';
+import { BookList, Column, TitledPanel } from '../controls';
 import { useTheme, useCollections, Themed } from '../application';
 
-export function CollectionsComp() {
+export function Collections() {
     const { theme } = useTheme();
 
     const { collectionsState } = useCollections();
     const readingList = collectionsState.collections['reading-list'];
 
     return <Column>
-        <CardCollectionComp
+        <CardCollection
             theme={theme}
             displayName='Reading List'
             cards={readingList}
@@ -19,7 +19,7 @@ export function CollectionsComp() {
     </Column>;
 }
 
-function CardCollectionComp({ theme, cards, displayName }: Themed & {
+function CardCollection({ theme, cards, displayName }: Themed & {
     cards: LibraryCard[] | undefined,
     displayName: string,
 }) {
@@ -27,8 +27,10 @@ function CardCollectionComp({ theme, cards, displayName }: Themed & {
         return null;
     }
 
-    return <Column>
-        <span>{displayName}</span>
+    return <TitledPanel
+        theme={theme}
+        title={displayName}
+    >
         <BookList theme={theme} books={cards} />
-    </Column>;
+    </TitledPanel>;
 }
