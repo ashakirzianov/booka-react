@@ -2,15 +2,11 @@ import React from 'react';
 import { LibraryCard } from 'booka-common';
 import { Column } from './Layout';
 import { ShowCardLink } from './Navigation';
-import { Themed, Loadable } from '../application';
-import { ActivityIndicator } from './ActivityIndicator';
+import { Themed } from '../application';
 
-export function BookTile({ card, theme }: Themed & {
-    card: Loadable<LibraryCard>,
+export function BookTile({ card }: Themed & {
+    card: LibraryCard,
 }) {
-    if (card.loading) {
-        return <ActivityIndicator theme={theme} />;
-    }
     return <ShowCardLink bookId={card.id}>
         <Column
             centered

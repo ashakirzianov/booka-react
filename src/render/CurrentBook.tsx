@@ -1,12 +1,13 @@
 import React from 'react';
 import { CurrentPosition } from 'booka-common';
 import {
-    usePositions, useLibraryCard, useTheme, Themed,
+    usePositions, useTheme, Themed,
 } from '../application';
 import {
-    Column, TitledPanel, BookTile,
+    Column, TitledPanel,
 } from '../controls';
 import { ParagraphPreview } from './ParagraphPreview';
+import { BookIdTile } from './LoadableBookTile';
 
 export function CurrentBook() {
     const { theme } = useTheme();
@@ -21,23 +22,18 @@ export function CurrentBook() {
     );
 
     return <TitledPanel theme={theme} title='Current'>
-        <CurrentPosition
+        <CurrentBookContent
             theme={theme}
             position={mostRecent}
         />
     </TitledPanel>;
 }
 
-function CurrentPosition({ position, theme }: Themed & {
+function CurrentBookContent({ position, theme }: Themed & {
     position: CurrentPosition,
 }) {
-    const { card } = useLibraryCard(position.bookId);
-
     return <Column>
-        <BookTile
-            theme={theme}
-            card={card}
-        />
+        <BookIdTile bookId={position.bookId} />
         <ParagraphPreview
             bookId={position.bookId}
             path={position.path}

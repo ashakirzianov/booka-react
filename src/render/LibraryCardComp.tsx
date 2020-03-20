@@ -6,7 +6,8 @@ import {
     useTheme, useLibraryCard,
     useCollections, usePositions, mostRecentPosition,
 } from '../application';
-import { BookTile, BookPathLink } from '../controls';
+import { BookPathLink } from '../controls';
+import { LoadableBookTile } from './LoadableBookTile';
 
 export function LibraryCardComp({ bookId }: {
     bookId: string,
@@ -41,7 +42,7 @@ export function LibraryCardComp({ bookId }: {
         open={true}
     >
         <Column>
-            <BookTile theme={theme} card={card} />
+            <LoadableBookTile theme={theme} card={card} />
             <BookPathLink bookId={bookId}>Read from start</BookPathLink>
             {
                 continueReadPosition

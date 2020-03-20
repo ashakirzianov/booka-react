@@ -4,6 +4,7 @@ export * from './ActivityIndicator';
 export * from './BookList';
 export * from './BookTile';
 export * from './FacebookLogin';
+export * from './GridList';
 export * from './IconButton';
 export * from './Label';
 export * from './Layout';

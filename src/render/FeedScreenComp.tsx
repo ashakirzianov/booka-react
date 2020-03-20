@@ -1,38 +1,26 @@
 import * as React from 'react';
 
-import {
-    Header, point, Triad, EmptyLine,
-} from '../atoms';
-import { useTheme, Themed } from '../application';
-import { AccountButton } from './AccountButton';
 import { CollectionsComp } from './CollectionsComp';
-import { RecentBooksComp } from './RecentBooksComp';
 import { LibraryCardComp } from './LibraryCardComp';
 import { TopBar } from './TopBar';
+import { CurrentBook } from './CurrentBook';
 
 export function FeedScreen({ show, query }: {
     query: string | undefined,
     show: string | undefined,
 }) {
-    const { theme } = useTheme();
     return <>
-        {show ? <LibraryCardComp bookId={show} /> : null}
-        <FeedScreenHeader theme={theme} />
-        <EmptyLine />
+        <CurrentCardModal bookId={show} />
         <TopBar query={query} />
+        <CurrentBook />
         <CollectionsComp />
-        <RecentBooksComp />
     </>;
 }
 
-function FeedScreenHeader({ theme }: Themed) {
-    return <Header
-        theme={theme}
-        open={true}
-        paddingHorizontal={point(1)}
-    >
-        <Triad
-            right={<AccountButton />}
-        />
-    </Header>;
+function CurrentCardModal({ bookId }: {
+    bookId: string | undefined,
+}) {
+    return bookId
+        ? <LibraryCardComp bookId={bookId} />
+        : null;
 }
