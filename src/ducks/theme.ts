@@ -79,7 +79,7 @@ const init: Theme = {
     currentPalette: 'light',
     fontFamilies: {
         book: 'Georgia',
-        menu: 'Helvetica',
+        menu: 'Open Sans',
     },
     fontSizes: {
         smallest: 14,
