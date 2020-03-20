@@ -5,9 +5,10 @@ import { View } from 'react-native';
 import { jsx } from '@emotion/core';
 import { LibraryCard } from 'booka-common';
 import { ShowCardLink } from './Navigation';
-import { Themed, colors, getFontFamily, getFontSize } from '../application';
+import {
+    Themed, colors, getFontFamily, getFontSize, Color,
+} from '../application';
 import { Style } from './common';
-import { point } from '../atoms';
 
 export function BookTile({ card, theme }: Themed & {
     card: LibraryCard,
@@ -18,7 +19,10 @@ export function BookTile({ card, theme }: Themed & {
             height: 240,
             alignItems: 'center',
         }}>
-            <BookCover card={card} />
+            <BookCover
+                theme={theme}
+                card={card}
+            />
             <BookTitle
                 theme={theme}
                 title={card.title}
@@ -28,7 +32,7 @@ export function BookTile({ card, theme }: Themed & {
     </ShowCardLink>;
 }
 
-function BookCover({ card }: {
+function BookCover({ card, theme }: Themed & {
     card: LibraryCard,
 }) {
     if (card.coverUrl) {
@@ -37,7 +41,10 @@ function BookCover({ card }: {
             title={card.title}
         />;
     } else {
-        return <BookEmptyCover title={card.title} />;
+        return <BookEmptyCover
+            theme={theme}
+            title={card.title}
+        />;
     }
 }
 
@@ -60,19 +67,23 @@ function BookImageCover({ imageUrl, title }: {
     </div>;
 }
 
-function BookEmptyCover({ title }: {
+function BookEmptyCover({ title, theme }: Themed & {
     title: string,
 }) {
+    const { back, text } = colorForString(title);
     return <div css={{
         height: 180,
         width: 120,
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         textAlign: 'center',
-        paddingTop: point(1),
+        paddingTop: '20px',
+        paddingLeft: '5px',
+        paddingRight: '5px',
         fontSize: calcFontSize(title),
-        background: randomColor(),
-        color: randomColor(),
+        fontFamily: getFontFamily(theme, 'menu'),
+        background: back,
+        color: text,
     }}>
         {title}
     </div>;
@@ -84,7 +95,11 @@ function calcFontSize(title: string) {
         .split(' ')
         .sort((a, b) => b.length - a.length);
     const maxLength = words[0]?.length ?? 0;
-    return `${180 / maxLength}px`;
+    const count = words.length;
+    const width = 200 / maxLength;
+    const height = 180 / 2 / count;
+    const size = Math.min(width, height);
+    return `${size}px`;
 }
 
 const overflowLine: Style = {
@@ -126,9 +141,24 @@ function BookTitle({ title, author, theme }: Themed & {
     </View>;
 }
 
-function randomColor(): string {
-    const red = Math.random() * 255;
-    const green = Math.random() * 255;
-    const blue = Math.random() * 255;
-    return `rgb(${red}, ${green}, ${blue})`;
+function colorForString(s: string) {
+    // TODO: more & better colors
+    const coverColors: Array<{ back: Color, text: Color }> = [
+        { back: 'orange', text: 'white' },
+        { back: 'gold', text: 'white' },
+        { back: 'olive', text: 'white' },
+        { back: 'indigo', text: 'white' },
+        { back: 'steelblue', text: 'white' },
+        { back: 'brown', text: 'white' },
+        { back: 'brown', text: 'black' },
+        { back: 'pink', text: 'red' },
+        { back: 'salmon', text: 'red' },
+    ];
+
+    const rand = s
+        .split('')
+        .reduce((n, ch) => n + ch.charCodeAt(0), 0);
+    const idx = rand % coverColors.length;
+
+    return coverColors[idx];
 }
