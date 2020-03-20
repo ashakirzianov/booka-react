@@ -1,11 +1,12 @@
 import React from 'react';
-import { CurrentPosition, BookPath } from 'booka-common';
+import { CurrentPosition } from 'booka-common';
 import {
-    usePositions, useLibraryCard, usePreview, useTheme, Themed,
+    usePositions, useLibraryCard, useTheme, Themed,
 } from '../application';
 import {
-    Column, BookPathLink, TitledPanel, BookTile,
+    Column, TitledPanel, BookTile,
 } from '../controls';
+import { ParagraphPreview } from './ParagraphPreview';
 
 export function CurrentBook() {
     const { theme } = useTheme();
@@ -37,27 +38,9 @@ function CurrentPosition({ position, theme }: Themed & {
             theme={theme}
             card={card}
         />
-        <Preview
+        <ParagraphPreview
             bookId={position.bookId}
             path={position.path}
         />
     </Column>;
-}
-
-// TODO: extract
-function Preview({ bookId, path }: {
-    bookId: string,
-    path: BookPath,
-}) {
-    const { previewState } = usePreview(bookId, path);
-    return <BookPathLink
-        bookId={bookId}
-        path={path}
-    >
-        {
-            previewState.loading
-                ? <span>...loading</span>
-                : <span>{previewState.preview ?? 'preview is not available'}</span>
-        }
-    </BookPathLink>;
 }
