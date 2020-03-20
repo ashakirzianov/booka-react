@@ -3,8 +3,23 @@ import { View } from 'react-native';
 import { HasChildren, percent, point } from './common';
 import { Themed, colors } from '../application';
 import { defaultAnimationDuration } from './Animations';
+import { Column } from '../atoms';
 
-export function Panel(props: HasChildren & Themed & {
+export function TitledPanel({ children, theme }: HasChildren & Themed & {
+    title: string,
+}) {
+    return <Panel theme={theme}>
+        {children}
+    </Panel>;
+}
+
+export function Panel({ children }: HasChildren & Themed) {
+    return <Column>
+        {children}
+    </Column>;
+}
+
+export function OverlayPanel({ children, theme, animation }: HasChildren & Themed & {
     animation?: {
         entered: boolean,
     },
@@ -13,20 +28,20 @@ export function Panel(props: HasChildren & Themed & {
         style={{
             alignSelf: 'center',
             overflow: 'scroll',
-            backgroundColor: colors(props.theme).secondary,
+            backgroundColor: colors(theme).secondary,
             width: percent(100),
             maxWidth: point(50),
             maxHeight: percent(100),
             margin: '0 auto',
-            borderRadius: props.theme.radius,
+            borderRadius: theme.radius,
             padding: point(1),
             ...({
-                boxShadow: `0px 0px 10px ${colors(props.theme).shadow}`,
+                boxShadow: `0px 0px 10px ${colors(theme).shadow}`,
                 zIndex: 10,
             } as {}),
-            ...(props.animation && {
+            ...(animation && {
                 transitionDuration: `${defaultAnimationDuration}ms`,
-                transform: props.animation.entered ? [] : [{ translateY: '100%' as any }],
+                transform: animation.entered ? [] : [{ translateY: '100%' as any }],
             }),
         }}
     >
@@ -35,7 +50,7 @@ export function Panel(props: HasChildren & Themed & {
             flex: 1,
             flexDirection: 'column',
         }}>
-            {props.children}
+            {children}
         </div>
     </View>;
 }

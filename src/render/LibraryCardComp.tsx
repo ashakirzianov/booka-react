@@ -6,7 +6,7 @@ import {
 import { Column, Modal } from '../atoms';
 import {
     useTheme, useLibraryCard,
-    LibraryCardState, useCollections, usePositions,
+    LibraryCardState, useCollections, usePositions, Themed,
 } from '../application';
 import { BookTile, BookPathLink } from '../controls';
 
@@ -44,6 +44,7 @@ export function LibraryCardComp({ bookId }: {
     >
         <Column>
             <CardStateComp
+                theme={theme}
                 cardState={cardState}
                 continueReadPosition={positionsData?.mostRecent}
                 isInReadingList={isInReadingList}
@@ -55,9 +56,9 @@ export function LibraryCardComp({ bookId }: {
 }
 
 function CardStateComp({
-    cardState, continueReadPosition,
+    cardState, continueReadPosition, theme,
     isInReadingList, addToReadingList, removeFromReadingList,
-}: {
+}: Themed & {
     cardState: LibraryCardState,
     continueReadPosition: CurrentPosition | undefined,
     isInReadingList: boolean,
@@ -71,7 +72,7 @@ function CardStateComp({
             return <span>Error: ${cardState.err}</span>;
         case 'ready':
             return <>
-                <BookTile card={cardState.card} />
+                <BookTile theme={theme} card={cardState.card} />
                 <span>{cardState.card.title}</span>
                 <BookPathLink bookId={cardState.card.id}>Read from start</BookPathLink>
                 {
@@ -85,6 +86,7 @@ function CardStateComp({
                         : null
                 }
                 {
+                    // TODO: extract ?
                     !isInReadingList
                         ? <span
                             onClick={

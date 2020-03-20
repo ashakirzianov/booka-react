@@ -2,8 +2,9 @@ import React from 'react';
 import { LibraryCard } from 'booka-common';
 import { Column } from './Layout';
 import { ShowCardLink } from './Navigation';
+import { Themed } from '../application';
 
-export function BookTile({ card }: {
+export function BookTile({ card }: Themed & {
     card: LibraryCard,
 }) {
     return <ShowCardLink bookId={card.id}>
@@ -17,7 +18,7 @@ export function BookTile({ card }: {
     </ShowCardLink>;
 }
 
-export function BookCover({ card }: {
+function BookCover({ card }: {
     card: LibraryCard,
 }) {
     if (card.coverUrl) {
