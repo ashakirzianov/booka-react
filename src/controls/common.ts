@@ -1,4 +1,5 @@
 import { PropsWithChildren } from 'react';
+import { Color } from '../application';
 
 export type HasChildren = PropsWithChildren<{}>;
 
@@ -9,4 +10,8 @@ export function percent(size: number) {
 
 export function point(size: number) {
     return `${size}em`;
+}
+
+export function boxShadow(color: Color) {
+    return `2px 2px 2px ${color}`;
 }

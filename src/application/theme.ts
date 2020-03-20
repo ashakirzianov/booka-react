@@ -71,7 +71,3 @@ export function getFontSize(theme: Theme, size?: keyof FontSizes): number {
 export function getFontFamily(theme: Theme, key: keyof FontFamilies): string {
     return theme.fontFamilies[key];
 }
-
-export function getShadow(theme: Theme) {
-    return `2px 2px 2px ${colors(theme).shadow}`;
-}
