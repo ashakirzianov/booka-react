@@ -15,3 +15,5 @@ export function point(size: number) {
 export function boxShadow(color: Color) {
     return `2px 2px 2px ${color}`;
 }
+
+export const userAreaWidth = point(50);

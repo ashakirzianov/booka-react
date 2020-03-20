@@ -6,7 +6,7 @@ import {
     useLibrarySearch, SearchState, Themed, useTheme,
 } from '../application';
 import {
-    TextInput, Column, ActivityIndicator, Panel, BookList, point,
+    TextInput, Column, ActivityIndicator, Panel, BookList, userAreaWidth,
 } from '../controls';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
@@ -71,7 +71,7 @@ function Layout({ Input, Buttons, Results }: {
                 flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
-                maxWidth: point(50),
+                maxWidth: userAreaWidth,
             }}>
                 {Input}
             </View>
