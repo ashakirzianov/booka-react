@@ -1,20 +1,29 @@
+// eslint-disable-next-line
 import React from 'react';
+import { View } from 'react-native';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 import { LibraryCard } from 'booka-common';
-import { Column } from './Layout';
 import { ShowCardLink } from './Navigation';
-import { Themed } from '../application';
+import { Themed, colors, getFontFamily, getFontSize } from '../application';
+import { Style } from './common';
 
-export function BookTile({ card }: Themed & {
+export function BookTile({ card, theme }: Themed & {
     card: LibraryCard,
 }) {
     return <ShowCardLink bookId={card.id}>
-        <Column
-            centered
-            width={200} height={200}
-        >
+        <View style={{
+            width: 200,
+            height: 240,
+            alignItems: 'center',
+        }}>
             <BookCover card={card} />
-            <BookTitle title={card.title} />
-        </Column>
+            <BookTitle
+                theme={theme}
+                title={card.title}
+                author={card.author}
+            />
+        </View>
     </ShowCardLink>;
 }
 
@@ -67,20 +76,43 @@ function BookEmptyCover({ title }: {
     </div>;
 }
 
-function BookTitle({ title }: {
+const overflowLine: Style = {
+    display: 'inline-block',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+};
+function BookTitle({ title, author, theme }: Themed & {
     title: string,
+    author: string | undefined,
 }) {
-    return <div style={{
-        display: 'block',
-        whiteSpace: 'nowrap',
+    return <View style={{
         maxWidth: '100%',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        textDecoration: 'solid',
-        color: 'blue',
     }}>
-        {title ?? '<no-title>'}
-    </div>;
+        <span css={[
+            overflowLine,
+            {
+                color: colors(theme).accent,
+                fontFamily: getFontFamily(theme, 'menu'),
+                fontSize: getFontSize(theme, 'smallest'),
+                fontStyle: 'italic',
+                fontWeight: 100,
+            },
+        ]}>
+            {author}
+        </span>
+        <span css={[
+            overflowLine,
+            {
+                color: colors(theme).accent,
+                fontFamily: getFontFamily(theme, 'menu'),
+                fontSize: getFontSize(theme, 'smallest'),
+                fontWeight: 900,
+            },
+        ]}>
+            {title ?? '<no-title>'}
+        </span>
+    </View>;
 }
 
 function randomColor(): string {

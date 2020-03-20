@@ -1,7 +1,9 @@
 import { PropsWithChildren } from 'react';
 import { Color } from '../application';
+import { Interpolation } from '@emotion/core';
 
 export type HasChildren = PropsWithChildren<{}>;
+export type Style = Interpolation;
 
 export type Size = string | number;
 export function percent(size: number) {
