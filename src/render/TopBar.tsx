@@ -1,7 +1,9 @@
 import React from 'react';
 import { throttle } from 'lodash';
 
-import { useLibrarySearch, SearchState, Themed, useTheme } from '../application';
+import {
+    useLibrarySearch, SearchState, Themed, useTheme,
+} from '../application';
 import {
     TextInput, Column, ActivityIndicator, Triad, Panel, BookList,
 } from '../controls';
@@ -46,17 +48,12 @@ export function TopBar({ query }: {
 function SearchResultsComp({ state, theme }: Themed & {
     state: SearchState,
 }) {
-    switch (state.state) {
-        case 'error':
-            return <span>Search error</span>;
-        case 'loading':
-            return <ActivityIndicator theme={theme} />;
-        case 'ready':
-            return <BookList
-                theme={theme}
-                books={state.results.map(r => r.desc)}
-            />;
-        default:
-            return null;
+    if (state.loading) {
+        return <ActivityIndicator theme={theme} />;
+    } else {
+        return <BookList
+            theme={theme}
+            books={state.results.map(r => r.desc)}
+        />;
     }
 }

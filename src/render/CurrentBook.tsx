@@ -30,17 +30,13 @@ export function CurrentBook() {
 function CurrentPosition({ position, theme }: Themed & {
     position: CurrentPosition,
 }) {
-    const { cardState } = useLibraryCard(position.bookId);
+    const { card } = useLibraryCard(position.bookId);
 
     return <Column>
-        {
-            cardState.state === 'ready'
-                ? <BookTile
-                    theme={theme}
-                    card={cardState.card}
-                />
-                : null
-        }
+        <BookTile
+            theme={theme}
+            card={card}
+        />
         <Preview
             bookId={position.bookId}
             path={position.path}
@@ -59,9 +55,9 @@ function Preview({ bookId, path }: {
         path={path}
     >
         {
-            previewState.state === 'ready'
-                ? <span>{previewState.preview ?? 'preview is not available'}</span>
-                : <span>...loading</span>
+            previewState.loading
+                ? <span>...loading</span>
+                : <span>{previewState.preview ?? 'preview is not available'}</span>
         }
     </BookPathLink>;
 }

@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 
 import {
-    assertNever, positionForPath, BookPath,
+    positionForPath, BookPath,
     BookFragment, BookRange, TableOfContents,
 } from 'booka-common';
 
@@ -12,7 +12,7 @@ import {
 import {
     Column, point, Row, Triad, Header, EmptyLine,
     Clickable, TextLine, Footer,
-    TextLink, FullScreenActivityIndicator,
+    FullScreenActivityIndicator,
 } from '../atoms';
 import { BookViewComp } from './BookViewComp';
 import { TableOfContentsComp, pageForPosition } from './TableOfContentsComp';
@@ -30,41 +30,22 @@ export function BookScreenComp({ bookId, showToc, path, quote }: {
     const { bookState } = useBook({
         bookId, path,
     });
-
-    switch (bookState.state) {
-        case 'loading':
-            return <FullScreenActivityIndicator
-                theme={theme}
-            />;
-        case 'ready': {
-            const { fragment } = bookState;
-            const { toc } = fragment;
-            return <BookReadyComp
-                theme={theme}
-                bookId={bookId}
-                path={path}
-                fragment={fragment}
-                toc={toc}
-                showToc={showToc}
-                quote={quote}
-            />;
-        }
-
-        case 'error':
-            return <Column>
-                <TextLine
-                    theme={theme}
-                    text={`Error opening ${bookId}`}
-                />
-                <TextLink
-                    theme={theme}
-                    text='Back'
-                    to='/'
-                />
-            </Column>;
-        default:
-            assertNever(bookState);
-            return <span>Should not happen</span>;
+    if (bookState.loading) {
+        return <FullScreenActivityIndicator
+            theme={theme}
+        />;
+    } else {
+        const { fragment } = bookState;
+        const { toc } = fragment;
+        return <BookReadyComp
+            theme={theme}
+            bookId={bookId}
+            path={path}
+            fragment={fragment}
+            toc={toc}
+            showToc={showToc}
+            quote={quote}
+        />;
     }
 }
 

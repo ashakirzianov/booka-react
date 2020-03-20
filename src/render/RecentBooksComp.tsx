@@ -28,15 +28,13 @@ function CurrentBookComp({ positions, bookId }: {
     bookId: string,
     positions: CurrentPosition[],
 }) {
-    const { cardState } = useLibraryCard(bookId);
+    const { card } = useLibraryCard(bookId);
     const data = findPositions(positions);
     if (!data) {
         return null;
     }
     const { mostRecent, furthest } = data;
-    const title = cardState.state === 'ready'
-        ? cardState.card.title
-        : '...loading';
+    const title = 'nope';
 
     return <Column>
         <span>Title: {title}</span>
@@ -71,11 +69,6 @@ function Preview({ title, bookId, path }: {
     const { previewState } = usePreview(bookId, path);
     return <>
         <span>{title}</span>
-        {
-            previewState.state === 'ready'
-                ? <span>{previewState.preview ?? 'preview is not available'}</span>
-                : <span>...loading</span>
-        }
         <BookPathLink
             bookId={bookId}
             path={path}
