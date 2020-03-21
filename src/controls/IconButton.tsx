@@ -4,7 +4,7 @@ import { jsx } from '@emotion/core';
 
 import { Themed, colors } from '../application';
 import { IconName, Icon } from './Icon';
-import { point, actionShadow } from './common';
+import { point, actionShadow, buttonMargin, buttonHeight } from './common';
 
 export function IconButton({
     icon, theme,
@@ -16,19 +16,23 @@ export function IconButton({
     onHoverOut?: () => void,
 }) {
     return <div css={{
-        margin: point(0.5),
-        padding: point(0.7),
+        display: 'flex',
+        margin: buttonMargin,
+        height: buttonHeight,
+        width: buttonHeight,
+        color: colors(theme).accent,
         boxShadow: actionShadow(colors(theme).shadow),
         '&:hover': {
+            color: colors(theme).highlight,
             boxShadow: actionShadow(colors(theme).highlight),
         },
+        justifyContent: 'center',
+        alignItems: 'center',
     }}>
         <Icon
             theme={theme}
             name={icon}
             size={24}
-            color='accent'
-            hoverColor='highlight'
             onClick={onClick}
             onHoverIn={onHoverIn}
             onHoverOut={onHoverOut}
