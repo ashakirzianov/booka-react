@@ -38,7 +38,7 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
             flex: 1,
             flexGrow: 1,
             alignSelf: 'stretch',
-            boxShadow: panelShadow(colors(theme).shadow),
+            // boxShadow: panelShadow(colors(theme).shadow),
         }}>
             {children}
         </div>
