@@ -12,5 +12,6 @@ export * from './PaletteButton';
 export * from './Panel';
 export * from './PictureButton';
 export * from './Popover';
+export * from './PreviewText';
 export * from './TextButton';
 export * from './TextInput';

@@ -14,6 +14,7 @@ export function BookPathLink({ bookId, path, children }: WithChildren & {
         : `/book/${bookId}`;
     return <Link to={to} style={{
         textDecoration: 'none',
+        minHeight: 0,
     }}>
         {children}
     </Link>;

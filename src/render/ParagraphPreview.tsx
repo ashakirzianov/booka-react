@@ -1,23 +1,22 @@
 import React from 'react';
 import { BookPath } from 'booka-common';
 import {
-    usePreview,
+    usePreview, Themed, lorem,
 } from '../application';
-import { BookPathLink } from './Navigation';
+import { PreviewText, ActivityIndicator } from '../controls';
 
-export function ParagraphPreview({ bookId, path }: {
+export function ParagraphPreview({ bookId, path, theme }: Themed & {
     bookId: string,
     path: BookPath,
 }) {
     const { previewState } = usePreview(bookId, path);
-    return <BookPathLink
-        bookId={bookId}
-        path={path}
-    >
-        {
-            previewState.loading
-                ? <span>...loading</span>
-                : <span>{previewState.preview ?? 'preview is not available'}</span>
-        }
-    </BookPathLink>;
+    if (previewState.loading) {
+        return <ActivityIndicator theme={theme} />;
+    } else {
+        return <PreviewText
+            theme={theme}
+            lines={6}
+            text={previewState.preview || 'preview is not available'}
+        />;
+    }
 }

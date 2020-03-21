@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
+import { View } from 'react-native';
 import { CurrentPosition } from 'booka-common';
 import {
     usePositions, useTheme, Themed,
 } from '../application';
-import {
-    Column, Panel,
-} from '../controls';
+import { Panel } from '../controls';
 import { ParagraphPreview } from './ParagraphPreview';
 import { BookIdTile } from './LibraryCardTile';
 
@@ -32,11 +31,35 @@ export function CurrentBook() {
 function CurrentBookContent({ position, theme }: Themed & {
     position: CurrentPosition,
 }) {
-    return <Column>
-        <BookIdTile bookId={position.bookId} />
-        <ParagraphPreview
+    return <Layout
+        Tile={<BookIdTile bookId={position.bookId} />}
+        Preview={<ParagraphPreview
+            theme={theme}
             bookId={position.bookId}
             path={position.path}
-        />
-    </Column>;
+        />}
+    />;
+}
+
+function Layout({ Tile, Preview }: {
+    Tile: ReactNode,
+    Preview: ReactNode,
+}) {
+    return <View style={{
+        flexDirection: 'row',
+        minHeight: 0,
+        width: '100%',
+        height: 240,
+    }}>
+        {Tile}
+        <View style={{
+            flexDirection: 'column',
+            flexShrink: 1,
+            maxHeight: '100%',
+            width: '100%',
+            minHeight: 0,
+        }}>
+            {Preview}
+        </View>
+    </View>;
 }

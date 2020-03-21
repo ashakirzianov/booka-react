@@ -19,6 +19,7 @@ export function BookTile({
         display: 'flex',
         flex: 1,
         flexDirection: 'column',
+        flexGrow: 0,
         width: 200,
         height: 240,
         margin: 2,

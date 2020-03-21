@@ -14,8 +14,8 @@ export function FeedScreen({ show, query }: {
     return <Column>
         <LibraryCardModal bookId={show} />
         <TopBar query={query} />
-        <Collections />
         <CurrentBook />
         <RecentBooks />
+        <Collections />
     </Column>;
 }
