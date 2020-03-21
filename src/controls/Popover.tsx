@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { PopperProps, Manager, Reference, Popper } from 'react-popper';
 
-import { Theme, platformValue } from '../application';
+import { platformValue, Themed } from '../application';
+import { OverlayPanel } from './Panel';
 import { FadeIn } from './Animations';
 
-type PopoverBodyParams = {
+export type PopoverBodyParams = {
     scheduleUpdate: () => void,
 };
 export function WithPopover({
     body, popoverPlacement, theme, children, open,
-}: {
-    theme: Theme,
+}: Themed & {
     children: React.ReactNode,
     body: React.ReactNode | ((params: PopoverBodyParams) => React.ReactNode),
     popoverPlacement: PopperProps['placement'],
@@ -47,7 +47,7 @@ export function WithPopover({
                 placement={popoverPlacement}
                 positionFixed={platformValue({
                     firefox: true,
-                    default: false,
+                    default: true,
                 })}
             >
                 {
@@ -64,11 +64,14 @@ export function WithPopover({
                                 setIsOpen(false);
                             }}
                         >
-                            {
-                                typeof body === 'function'
-                                    ? body({ scheduleUpdate })
-                                    : body
-                            }
+                            {/* TODO: add arrows */}
+                            <OverlayPanel theme={theme}>
+                                {
+                                    typeof body === 'function'
+                                        ? body({ scheduleUpdate })
+                                        : body
+                                }
+                            </OverlayPanel>
                         </div>
                 }
             </Popper>

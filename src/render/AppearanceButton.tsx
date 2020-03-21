@@ -3,7 +3,7 @@ import React from 'react';
 import { useTheme, PaletteName, Themed } from '../application';
 import {
     WithPopover, Column, Row, IconButton, PaletteButton,
-    TextButton, Separator, point, Panel,
+    TextButton, Separator, point,
 } from '../controls';
 
 export function AppearanceButton() {
@@ -11,13 +11,11 @@ export function AppearanceButton() {
     return <WithPopover
         theme={theme}
         popoverPlacement='bottom'
-        body={
-            <ThemePicker
-                theme={theme}
-                setPalette={setPalette}
-                incrementScale={incrementScale}
-            />
-        }
+        body={<ThemePicker
+            theme={theme}
+            setPalette={setPalette}
+            incrementScale={incrementScale}
+        />}
     >
         <IconButton theme={theme} icon='letter' />
     </WithPopover>;
@@ -27,13 +25,11 @@ function ThemePicker({ theme, setPalette, incrementScale }: Themed & {
     setPalette: (name: PaletteName) => void,
     incrementScale: (inc: number) => void,
 }) {
-    return <Panel theme={theme}>
-        <Column width={point(14)}>
-            <FontScale theme={theme} incrementScale={incrementScale} />
-            <Separator />
-            <PalettePicker theme={theme} setPalette={setPalette} />
-        </Column>
-    </Panel>;
+    return <Column width={point(14)}>
+        <FontScale theme={theme} incrementScale={incrementScale} />
+        <Separator />
+        <PalettePicker theme={theme} setPalette={setPalette} />
+    </Column>;
 }
 
 function FontScale({ theme, incrementScale }: Themed & {

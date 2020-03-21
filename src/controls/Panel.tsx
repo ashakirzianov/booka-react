@@ -1,8 +1,10 @@
 import React from 'react';
-import { View } from 'react-native';
-import { HasChildren, percent, point, boxShadow, userAreaWidth } from './common';
+import {
+    HasChildren, percent, point, boxShadow, userAreaWidth,
+} from './common';
 import { Themed, colors, getFontFamily, getFontSize } from '../application';
 import { defaultAnimationDuration } from './Animations';
+import { View } from 'react-native';
 
 export function Panel({ theme, title, children }: HasChildren & Themed & {
     title?: string,
@@ -43,31 +45,31 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
     </div>;
 }
 
-export function OverlayPanel({ children, theme, animation }: HasChildren & Themed & {
+export function OverlayPanel({
+    theme, animation, children,
+}: HasChildren & Themed & {
     animation?: {
         entered: boolean,
     },
 }) {
-    return <View
-        style={{
-            alignSelf: 'center',
-            overflow: 'scroll',
-            backgroundColor: colors(theme).secondary,
-            width: percent(100),
-            maxWidth: point(50),
-            maxHeight: percent(100),
-            margin: '0 auto',
-            borderRadius: theme.radius,
-            padding: point(1),
-            ...({
-                boxShadow: `0px 0px 10px ${colors(theme).shadow}`,
-                zIndex: 10,
-            } as {}),
-            ...(animation && {
-                transitionDuration: `${defaultAnimationDuration}ms`,
-                transform: animation.entered ? [] : [{ translateY: '100%' as any }],
-            }),
-        }}
+    return <View style={{
+        overflow: 'scroll',
+        backgroundColor: colors(theme).primary,
+        width: percent(100),
+        maxWidth: point(50),
+        maxHeight: percent(100),
+        margin: '0 auto',
+        padding: point(1),
+        boxShadow: `0px 0px 2px ${colors(theme).shadow}`,
+        zIndex: 10,
+        // TODO: rethink this
+        ...(animation && {
+            transitionDuration: `${defaultAnimationDuration}ms`,
+            transform: animation.entered
+                ? []
+                : [{ translateY: '100%' }],
+        } as any),
+    }}
     >
         <div onClick={e => e.stopPropagation()} style={{
             display: 'flex',
