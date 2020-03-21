@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    HasChildren, percent, point, boxShadow, userAreaWidth,
+    HasChildren, percent, point, panelShadow, userAreaWidth,
 } from './common';
 import { Themed, colors, getFontFamily, getFontSize } from '../application';
 import { defaultAnimationDuration } from './Animations';
@@ -38,7 +38,7 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
             flex: 1,
             flexGrow: 1,
             alignSelf: 'stretch',
-            boxShadow: boxShadow(colors(theme).shadow),
+            boxShadow: panelShadow(colors(theme).shadow),
         }}>
             {children}
         </div>
@@ -60,7 +60,7 @@ export function OverlayPanel({
         maxHeight: percent(100),
         margin: '0 auto',
         padding: point(1),
-        boxShadow: `0px 0px 2px ${colors(theme).shadow}`,
+        boxShadow: panelShadow(colors(theme).shadow),
         zIndex: 10,
         // TODO: rethink this
         ...(animation && {

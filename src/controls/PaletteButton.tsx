@@ -1,6 +1,8 @@
-import React from 'react';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 import { Themed, PaletteName, getFontSize } from '../application';
 import { View } from 'react-native';
+import { roundShadow } from './common';
 
 // TODO: rethink location ?
 export function PaletteButton(props: Themed & {
@@ -33,9 +35,10 @@ export function PaletteButton(props: Themed & {
             borderWidth: 3,
             borderColor: selected ? cols.highlight : 'rgba(0,0,0,0)',
             borderStyle: 'solid',
-            boxShadow: `0px 0px 5px 0px ${cols.shadow}`,
+            boxShadow: roundShadow(cols.shadow),
             '&:hover': {
                 borderColor: cols.highlight,
+                boxShadow: roundShadow(cols.highlight),
             },
         }}>
             <View

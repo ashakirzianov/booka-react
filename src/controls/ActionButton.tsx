@@ -1,8 +1,7 @@
-import React from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Themed, colors, getFontSize, getFontFamily } from '../application';
-import { boxShadow } from './common';
+import { actionShadow } from './common';
 
 export function ActionButton({
     text, onClick, theme,
@@ -23,11 +22,11 @@ export function ActionButton({
             fontFamily: getFontFamily(theme, 'menu'),
             color: colors(theme).accent,
             padding: 10,
-            boxShadow: boxShadow(colors(theme).shadow),
+            boxShadow: actionShadow(colors(theme).shadow),
             '&:hover': {
                 borderColor: colors(theme).highlight,
                 color: colors(theme).highlight,
-                boxShadow: boxShadow(colors(theme).highlight),
+                boxShadow: actionShadow(colors(theme).highlight),
             },
         }}
     />;

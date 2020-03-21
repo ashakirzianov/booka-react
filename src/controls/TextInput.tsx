@@ -3,7 +3,7 @@ import React from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Themed, getFontSize, colors } from '../application';
-import { boxShadow } from './common';
+import { actionShadow } from './common';
 
 export function TextInput({
     theme, initial, onChange, placeholder,
@@ -18,7 +18,7 @@ export function TextInput({
             borderWidth: 0,
             color: colors(theme).text,
             fontSize: getFontSize(theme, 'largest'),
-            boxShadow: boxShadow(colors(theme).shadow),
+            boxShadow: actionShadow(colors(theme).shadow),
             '&::placeholder': {
                 color: colors(theme).accent,
                 fontSize: getFontSize(theme, 'normal'),
@@ -28,7 +28,7 @@ export function TextInput({
             '&:focus': {
                 outline: 'none',
                 color: colors(theme).highlight,
-                boxShadow: boxShadow(colors(theme).highlight),
+                boxShadow: actionShadow(colors(theme).highlight),
             },
         }}
         placeholder={placeholder}

@@ -1,4 +1,5 @@
-import React from 'react';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 import {
     Themed, FontSizes, FontFamilies, getFontSize, colors, getFontFamily,
 } from '../application';

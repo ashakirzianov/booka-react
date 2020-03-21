@@ -1,7 +1,7 @@
 import React from 'react';
 import { BookPath } from 'booka-common';
 import {
-    usePreview, Themed, lorem,
+    usePreview, Themed,
 } from '../application';
 import { PreviewText, ActivityIndicator } from '../controls';
 

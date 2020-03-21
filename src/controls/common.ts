@@ -14,7 +14,19 @@ export function point(size: number) {
     return `${size}em`;
 }
 
-export function boxShadow(color: Color) {
+export function actionShadow(color: Color) {
+    return `2px 2px 2px ${color}`;
+}
+
+export function panelShadow(color: Color) {
+    return `0px 0px 2px ${color}`;
+}
+
+// export function roundShadow(color: Color) {
+//     return `0px 0px 5px 0px ${color}`;
+// }
+
+export function roundShadow(color: Color) {
     return `2px 2px 2px ${color}`;
 }
 
