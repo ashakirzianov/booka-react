@@ -9,7 +9,7 @@ export function Label({
     return <span style={{
         fontSize: getFontSize(theme, 'small'),
         fontFamily: theme.fontFamilies.menu,
-        color: colors(theme).primary,
+        color: colors(theme).text,
     }}>
         {text}
     </span>;
