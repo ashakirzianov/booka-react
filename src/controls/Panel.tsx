@@ -1,30 +1,45 @@
 import React from 'react';
 import { View } from 'react-native';
 import { HasChildren, percent, point, boxShadow, userAreaWidth } from './common';
-import { Themed, colors } from '../application';
+import { Themed, colors, getFontFamily, getFontSize } from '../application';
 import { defaultAnimationDuration } from './Animations';
-import { Column } from '../atoms';
 
-export function TitledPanel({ children, theme }: HasChildren & Themed & {
-    title: string,
+export function Panel({ theme, title, children }: HasChildren & Themed & {
+    title?: string,
 }) {
-    return <Panel theme={theme}>
-        {children}
-    </Panel>;
-}
-
-export function Panel({ theme, children }: HasChildren & Themed) {
     return <div style={{
         display: 'flex',
         flex: 1,
-        flexShrink: 1,
-        boxShadow: boxShadow(colors(theme).shadow),
+        flexDirection: 'column',
         margin: point(1),
         width: userAreaWidth,
-        flexWrap: 'wrap',
+        alignItems: 'center',
+        // TODO: extract
         alignSelf: 'center',
     }}>
-        {children}
+        {
+            title ?
+                <span style={{
+                    display: 'flex',
+                    alignSelf: 'flex-start',
+                    fontSize: getFontSize(theme, 'small'),
+                    fontFamily: getFontFamily(theme, 'menu'),
+                    margin: point(1),
+                    color: colors(theme).text,
+                }}>
+                    {title}
+                </span>
+                : null
+        }
+        <div style={{
+            display: 'flex',
+            flex: 1,
+            flexGrow: 1,
+            alignSelf: 'stretch',
+            boxShadow: boxShadow(colors(theme).shadow),
+        }}>
+            {children}
+        </div>
     </div>;
 }
 

@@ -3,7 +3,7 @@ import {
     distinct,
 } from 'booka-common';
 import { usePositions, useTheme } from '../application';
-import { GridList, TitledPanel } from '../controls';
+import { GridList, Panel } from '../controls';
 import { BookIdTile } from './LibraryCardTile';
 
 export function RecentBooks() {
@@ -15,7 +15,7 @@ export function RecentBooks() {
     const sorted = positions.sort((l, r) => l.created > r.created ? -1 : 1);
     const unique = distinct(sorted, (l, r) => l.bookId === r.bookId);
 
-    return <TitledPanel
+    return <Panel
         theme={theme}
         title='Recent'
     >
@@ -30,5 +30,5 @@ export function RecentBooks() {
                 )
             }
         </GridList>
-    </TitledPanel>;
+    </Panel>;
 }

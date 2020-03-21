@@ -4,7 +4,7 @@ import {
     usePositions, useTheme, Themed,
 } from '../application';
 import {
-    Column, TitledPanel,
+    Column, Panel,
 } from '../controls';
 import { ParagraphPreview } from './ParagraphPreview';
 import { BookIdTile } from './LibraryCardTile';
@@ -21,12 +21,12 @@ export function CurrentBook() {
             ? curr : most,
     );
 
-    return <TitledPanel theme={theme} title='Current'>
+    return <Panel theme={theme} title='Current'>
         <CurrentBookContent
             theme={theme}
             position={mostRecent}
         />
-    </TitledPanel>;
+    </Panel>;
 }
 
 function CurrentBookContent({ position, theme }: Themed & {

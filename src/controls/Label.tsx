@@ -6,13 +6,11 @@ export function Label({
 }: Themed & {
     text: string,
 }) {
-    return <span
-        css={{
-            fontSize: getFontSize(theme, 'small'),
-            fontFamily: theme.fontFamilies.menu,
-            color: colors(theme).primary,
-        }}
-    >
+    return <span style={{
+        fontSize: getFontSize(theme, 'small'),
+        fontFamily: theme.fontFamilies.menu,
+        color: colors(theme).primary,
+    }}>
         {text}
     </span>;
 }

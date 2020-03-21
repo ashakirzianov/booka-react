@@ -1,7 +1,7 @@
 import React from 'react';
 import { LibraryCard } from 'booka-common';
 
-import { Column, TitledPanel } from '../controls';
+import { Column, Panel } from '../controls';
 import { useTheme, useCollections, Themed } from '../application';
 import { BookList } from './BookList';
 
@@ -28,10 +28,10 @@ function CardCollection({ theme, cards, displayName }: Themed & {
         return null;
     }
 
-    return <TitledPanel
+    return <Panel
         theme={theme}
         title={displayName}
     >
         <BookList theme={theme} books={cards} />
-    </TitledPanel>;
+    </Panel>;
 }
