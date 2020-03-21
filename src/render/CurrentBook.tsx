@@ -4,9 +4,10 @@ import { CurrentPosition } from 'booka-common';
 import {
     usePositions, useTheme, Themed,
 } from '../application';
-import { Panel } from '../controls';
+import { Panel, ActionButton } from '../controls';
 import { ParagraphPreview } from './ParagraphPreview';
 import { BookIdTile } from './LibraryCardTile';
+import { BookPathLink } from './Navigation';
 
 export function CurrentBook() {
     const { theme } = useTheme();
@@ -38,12 +39,24 @@ function CurrentBookContent({ position, theme }: Themed & {
             bookId={position.bookId}
             path={position.path}
         />}
+        Continue={
+            <BookPathLink
+                bookId={position.bookId}
+                path={position.path}
+            >
+                <ActionButton
+                    theme={theme}
+                    text='Continue'
+                />
+            </BookPathLink>
+        }
     />;
 }
 
-function Layout({ Tile, Preview }: {
+function Layout({ Tile, Preview, Continue }: {
     Tile: ReactNode,
     Preview: ReactNode,
+    Continue: ReactNode,
 }) {
     return <View style={{
         flexDirection: 'row',
@@ -60,6 +73,12 @@ function Layout({ Tile, Preview }: {
             minHeight: 0,
         }}>
             {Preview}
+            <View style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+            }}>
+                {Continue}
+            </View>
         </View>
     </View>;
 }
