@@ -24,7 +24,7 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
                     alignSelf: 'flex-start',
                     fontSize: getFontSize(theme, 'small'),
                     fontFamily: getFontFamily(theme, 'menu'),
-                    margin: point(1),
+                    margin: point(0.25),
                     color: colors(theme).text,
                 }}>
                     {title}
