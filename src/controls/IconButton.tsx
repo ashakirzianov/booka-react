@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { View } from 'react-native';
+/**@jsx jsx */
+import { jsx } from '@emotion/core';
 
 import { Themed, colors } from '../application';
 import { IconName, Icon } from './Icon';
@@ -14,10 +15,13 @@ export function IconButton({
     onHoverIn?: () => void,
     onHoverOut?: () => void,
 }) {
-    return <div style={{
+    return <div css={{
         margin: point(0.5),
         padding: point(0.7),
         boxShadow: actionShadow(colors(theme).shadow),
+        '&:hover': {
+            boxShadow: actionShadow(colors(theme).highlight),
+        },
     }}>
         <Icon
             theme={theme}
