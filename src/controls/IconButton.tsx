@@ -1,7 +1,9 @@
 import * as React from 'react';
+import { View } from 'react-native';
 
-import { Themed } from '../application';
+import { Themed, colors } from '../application';
 import { IconName, Icon } from './Icon';
+import { point, actionShadow } from './common';
 
 export function IconButton({
     icon, theme,
@@ -12,14 +14,20 @@ export function IconButton({
     onHoverIn?: () => void,
     onHoverOut?: () => void,
 }) {
-    return <Icon
-        theme={theme}
-        name={icon}
-        size={24}
-        color='accent'
-        hoverColor='highlight'
-        onClick={onClick}
-        onHoverIn={onHoverIn}
-        onHoverOut={onHoverOut}
-    />;
+    return <div style={{
+        margin: point(0.5),
+        padding: point(0.7),
+        boxShadow: actionShadow(colors(theme).shadow),
+    }}>
+        <Icon
+            theme={theme}
+            name={icon}
+            size={24}
+            color='accent'
+            hoverColor='highlight'
+            onClick={onClick}
+            onHoverIn={onHoverIn}
+            onHoverOut={onHoverOut}
+        />
+    </div>;
 }
