@@ -1,5 +1,5 @@
 import * as React from 'react';
-/**@jsx jsx */
+/** @jsx jsx */
 import { jsx } from '@emotion/core';
 
 import { Themed, colors } from '../application';

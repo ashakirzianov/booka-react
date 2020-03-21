@@ -1,8 +1,7 @@
-// eslint-disable-next-line
-import React from 'react';
-import { Themed, colors } from '../application';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
+import { Themed, colors } from '../application';
+import { buttonHeight, actionShadow, buttonMargin } from './common';
 
 export function PictureButton({
     onClick, pictureUrl, theme,
@@ -19,16 +18,14 @@ export function PictureButton({
             css={{
                 display: 'flex',
                 justifyContent: 'center',
-                borderRadius: '50%',
                 alignItems: 'center',
-                borderColor: colors(theme).accent,
-                borderWidth: 2,
-                borderStyle: 'solid',
-                ...({
-                    ':hover': {
-                        borderColor: colors(theme).highlight,
-                    },
-                }),
+                height: buttonHeight,
+                width: buttonHeight,
+                margin: buttonMargin,
+                boxShadow: actionShadow(colors(theme).shadow),
+                '&:hover': {
+                    boxShadow: actionShadow(colors(theme).highlight),
+                },
             }}
         />
     </div>;
