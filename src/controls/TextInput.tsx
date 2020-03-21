@@ -3,7 +3,7 @@ import React from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Themed, getFontSize, colors } from '../application';
-import { actionShadow } from './common';
+import { actionShadow, buttonHeight } from './common';
 
 export function TextInput({
     theme, initial, onChange, placeholder,
@@ -16,6 +16,8 @@ export function TextInput({
         css={{
             flex: 1,
             borderWidth: 0,
+            padding: 0,
+            height: buttonHeight,
             color: colors(theme).text,
             fontSize: getFontSize(theme, 'largest'),
             boxShadow: actionShadow(colors(theme).shadow),
@@ -24,6 +26,9 @@ export function TextInput({
                 fontSize: getFontSize(theme, 'normal'),
                 fontStyle: 'italic',
                 fontWeight: 100,
+            },
+            '&:focus::placeholder': {
+                color: colors(theme).highlight,
             },
             '&:focus': {
                 outline: 'none',
