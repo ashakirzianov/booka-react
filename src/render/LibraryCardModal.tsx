@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 
 import { LibraryCard } from 'booka-common';
-import { Column, Modal } from '../atoms';
 import {
     useTheme, useLibraryCard,
     useCollections, usePositions, mostRecentPosition,
 } from '../application';
+import { Modal, Column } from '../controls';
 import { LibraryCardTile } from './LibraryCardTile';
 import { BookPathLink } from './Navigation';
 

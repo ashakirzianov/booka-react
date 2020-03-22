@@ -30,6 +30,7 @@ export function roundShadow(color: Color) {
     return `2px 2px 2px ${color}`;
 }
 
+export const semiTransparent = 'rgba(0, 0, 0, 0.3)';
 export const userAreaWidth = point(50);
 export const buttonHeight = 50;
 export const buttonMargin = point(0.5);

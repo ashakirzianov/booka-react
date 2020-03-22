@@ -8,6 +8,7 @@ export * from './IconButton';
 export * from './Label';
 export * from './Layout';
 export * from './Misc';
+export * from './Modal';
 export * from './PaletteButton';
 export * from './Panel';
 export * from './PictureButton';
