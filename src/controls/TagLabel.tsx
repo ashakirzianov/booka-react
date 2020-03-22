@@ -2,28 +2,28 @@
 import { jsx } from '@emotion/core';
 import {
     Themed, colors, getFontSize, getFontFamily, PaletteColor,
-} from '../theme';
+} from './theme';
 
-export function TagButton({
+export function TagLabel({
     text, onClick, theme, color,
 }: Themed & {
     text: string,
     color?: PaletteColor,
     onClick?: () => void,
 }) {
-    return <input
-        type='button'
-        value={text}
+    const actualColor = colors(theme)[color ?? 'accent'];
+    return <div
         onClick={onClick}
         css={{
-            cursor: 'pointer',
             borderStyle: 'solid',
-            borderColor: colors(theme)[color ?? 'accent'],
             borderWidth: 2,
             borderRadius: '50%',
             fontSize: getFontSize(theme, 'smallest'),
             fontFamily: getFontFamily(theme, 'menu'),
-            color: colors(theme).accent,
+            borderColor: actualColor,
+            color: actualColor,
         }}
-    />;
+    >
+        {text}
+    </div>;
 }
