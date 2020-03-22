@@ -63,7 +63,6 @@ function Layout({ Input, Buttons, Results }: {
 }) {
     return <View>
         <View style={{
-            minWidth: 0,
             flexDirection: 'row',
             justifyContent: 'space-between',
         }}>

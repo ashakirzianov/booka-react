@@ -68,8 +68,10 @@ function ModalTitle({ theme, title, close }: Themed & {
         justifyContent: 'space-between',
     }}>
         <View style={{
-            flexGrow: 0,
-            flexShrink: 0,
+            minWidth: 'auto',
+            flexBasis: 1,
+            flexGrow: 1,
+            flexShrink: 1,
         }}>
             <IconButton
                 theme={theme}
@@ -78,8 +80,9 @@ function ModalTitle({ theme, title, close }: Themed & {
             />
         </View>
         <View style={{
-            flexShrink: 1,
+            flexBasis: 'auto',
             flexGrow: 1,
+            flexShrink: 1,
         }}>
             <span title={title} style={{
                 textAlign: 'center',
@@ -94,10 +97,9 @@ function ModalTitle({ theme, title, close }: Themed & {
             </span>
         </View>
         <View style={{
-            // TODO: rethink this hack
-            flexGrow: 0,
-            flexShrink: 10,
-            width: buttonHeight,
+            flexBasis: 1,
+            flexGrow: 1,
+            flexShrink: 1,
         }} />
     </View>;
 }
