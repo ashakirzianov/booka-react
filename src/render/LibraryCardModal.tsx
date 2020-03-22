@@ -48,6 +48,7 @@ function LibraryCardModalImpl({ bookId }: {
     const continueReadPosition = mostRecentPosition(currentPositions);
     return <Modal
         theme={theme}
+        title={card.loading ? undefined : card.title}
         close={closeCard}
         open={true}
     >

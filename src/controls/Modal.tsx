@@ -2,21 +2,21 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { Transition } from 'react-transition-group';
 
-import { Themed } from '../application';
-import { Triad, Row } from './Layout';
-import { HasChildren, semiTransparent } from './common';
+import { Themed, getFontFamily, getFontSize, colors } from '../application';
+import { HasChildren, semiTransparent, buttonHeight } from './common';
 import { defaultAnimationDuration } from './Animations';
 import { OverlayPanel } from './Panel';
-import { Label } from './Label';
 import { IconButton } from './IconButton';
 
 export type ModalProps = Parameters<typeof Modal>[0];
-export function Modal(props: HasChildren & Themed & {
+export function Modal({
+    title, close, open, theme, children,
+}: HasChildren & Themed & {
     open: boolean,
     title?: string,
     close: () => void,
 }) {
-    return <Transition in={props.open} timeout={300}>
+    return <Transition in={open} timeout={300}>
         {state => state === 'exited' ? null :
             <div style={{
                 display: 'flex',
@@ -30,38 +30,74 @@ export function Modal(props: HasChildren & Themed & {
                 transition: `${defaultAnimationDuration}ms ease-in-out`,
                 opacity: state === 'entered' ? 1 : 0.01,
             }}
-                onClick={props.close}
+                onClick={close}
             >
                 <OverlayPanel
                     animation={{
                         entered: state === 'entered',
                     }}
-                    theme={props.theme}>
+                    theme={theme}>
                     <View style={{ flex: 1 }}>
-                        <Row>
-                            <Triad
-                                center={<Label
-                                    theme={props.theme}
-                                    text={props.title ?? ''}
-                                />}
-                                left={<IconButton
-                                    theme={props.theme}
-                                    onClick={props.close}
-                                    icon='close'
-                                />}
-                            />
-                        </Row>
+                        <ModalTitle
+                            theme={theme}
+                            title={title}
+                            close={close}
+                        />
                         <View style={{
                             flex: 1,
                             alignItems: 'stretch',
                             overflow: 'scroll',
                         }}
                         >
-                            {props.children}
+                            {children}
                         </View>
                     </View>
                 </OverlayPanel>
             </div>
         }
     </Transition>;
+}
+
+function ModalTitle({ theme, title, close }: Themed & {
+    title: string | undefined,
+    close: () => void,
+}) {
+    return <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    }}>
+        <View style={{
+            flexGrow: 0,
+            flexShrink: 0,
+        }}>
+            <IconButton
+                theme={theme}
+                onClick={close}
+                icon='close'
+            />
+        </View>
+        <View style={{
+            flexShrink: 1,
+            flexGrow: 1,
+        }}>
+            <span title={title} style={{
+                textAlign: 'center',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                fontFamily: getFontFamily(theme, 'menu'),
+                fontSize: getFontSize(theme, 'normal'),
+                color: colors(theme).text,
+            }}>
+                {title}
+            </span>
+        </View>
+        <View style={{
+            // TODO: rethink this hack
+            flexGrow: 0,
+            flexShrink: 10,
+            width: buttonHeight,
+        }} />
+    </View>;
 }
