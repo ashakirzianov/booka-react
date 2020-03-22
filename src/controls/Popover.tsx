@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PopperProps, Manager, Reference, Popper } from 'react-popper';
 
-import { platformValue, Themed } from '../application';
+import { Themed } from '../application';
 import { OverlayPanel } from './Panel';
 import { FadeIn } from './Animations';
 
@@ -45,15 +45,13 @@ export function WithPopover({
         <FadeIn visible={isOpen}>
             <Popper
                 placement={popoverPlacement}
-                positionFixed={platformValue({
-                    firefox: true,
-                    default: true,
-                })}
+                positionFixed={true}
             >
                 {
                     ({ ref, style, placement, scheduleUpdate }) =>
                         <div ref={ref} style={{
                             ...style,
+                            zIndex: 100,
                         }}
                             data-placement={placement}
                             onMouseOver={() => {

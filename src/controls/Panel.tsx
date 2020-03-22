@@ -10,6 +10,7 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
     title?: string,
 }) {
     return <div style={{
+        zIndex: -10,
         display: 'flex',
         flex: 1,
         flexDirection: 'column',
