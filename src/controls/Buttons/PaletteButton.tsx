@@ -1,8 +1,8 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { Themed, PaletteName, getFontSize } from '../application';
 import { View } from 'react-native';
-import { roundShadow } from './common';
+import { roundShadow } from '../common';
+import { Themed, PaletteName, getFontSize } from '../theme';
 
 // TODO: rethink location ?
 export function PaletteButton(props: Themed & {

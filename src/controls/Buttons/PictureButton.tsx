@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { Themed, colors } from '../application';
-import { buttonHeight, actionShadow, buttonMargin } from './common';
+import { Themed, colors } from '../theme';
+import { buttonHeight, actionShadow, buttonMargin } from '../common';
 
 export function PictureButton({
     onClick, pictureUrl, theme,

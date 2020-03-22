@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { Themed, colors, getFontSize, getFontFamily } from '../application';
-import { actionShadow } from './common';
+import { Themed, colors, getFontSize, getFontFamily } from '../theme';
+import { actionShadow } from '../common';
 
 export function ActionButton({
     text, onClick, theme,

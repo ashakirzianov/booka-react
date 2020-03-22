@@ -6,7 +6,7 @@ import { Themed, getFontFamily, getFontSize, colors } from '../application';
 import { HasChildren, semiTransparent } from './common';
 import { defaultAnimationDuration } from './Animations';
 import { OverlayPanel } from './Panel';
-import { IconButton } from './IconButton';
+import { IconButton } from './Buttons';
 
 export type ModalProps = Parameters<typeof Modal>[0];
 export function Modal({

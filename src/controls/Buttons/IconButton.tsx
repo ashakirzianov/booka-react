@@ -1,9 +1,9 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 
-import { Themed, colors } from '../application';
-import { IconName, Icon } from './Icon';
-import { actionShadow, buttonMargin, buttonHeight } from './common';
+import { Themed, colors } from '../theme';
+import { IconName, Icon } from '../Icon';
+import { actionShadow, buttonMargin, buttonHeight } from '../common';
 
 export function IconButton({
     icon, theme,

@@ -2,7 +2,7 @@
 import { jsx } from '@emotion/core';
 import {
     Themed, FontSizes, FontFamilies, getFontSize, colors, getFontFamily,
-} from '../application';
+} from '../theme';
 
 export function TextButton({
     onClick, theme, text,

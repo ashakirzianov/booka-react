@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
-import { Color } from '../application';
 import { Interpolation } from '@emotion/core';
+import { Color } from './theme';
 
 export type HasChildren = PropsWithChildren<{}>;
 export type Style = Interpolation;
