@@ -1,14 +1,15 @@
 import React, { useCallback, ReactNode } from 'react';
 import { View } from 'react-native';
 
-import { LibraryCard, BookPath } from 'booka-common';
+import { LibraryCard, BookPath, firstPath } from 'booka-common';
 import {
     useTheme, useLibraryCard,
     useCollections, usePositions, mostRecentPosition, Themed,
 } from '../application';
-import { Modal, ActivityIndicator } from '../controls';
+import { Modal, ActivityIndicator, ActionButton } from '../controls';
 import { LibraryCardTile } from './LibraryCardTile';
 import { BookPathLink } from './Navigation';
+import { ParagraphPreview } from './ParagraphPreview';
 
 export function LibraryCardModal({ bookId }: {
     bookId: string | undefined,
@@ -25,28 +26,7 @@ function LibraryCardModalImpl({ bookId }: {
 }) {
     const { theme } = useTheme();
     const { card, closeCard } = useLibraryCard(bookId);
-    const { positions } = usePositions();
 
-    const {
-        collectionsState: { collections },
-        addToCollection,
-        removeFromCollection,
-    } = useCollections();
-    const readingListCards = collections['reading-list'] ?? [];
-    const addToReadingList = useCallback(
-        () => !card.loading && addToCollection(card, 'reading-list'),
-        [addToCollection, card],
-    );
-    const removeFromReadingList = useCallback(
-        () => !card.loading && removeFromCollection(card.id, 'reading-list'),
-        [removeFromCollection, card],
-    );
-
-    const currentPositions = positions.filter(
-        p => p.bookId === bookId
-    );
-    const isInReadingList = readingListCards.find(c => c.id === bookId) !== undefined;
-    const continueReadPosition = mostRecentPosition(currentPositions);
     return <Modal
         theme={theme}
         title={card.loading ? undefined : card.title}
@@ -56,70 +36,121 @@ function LibraryCardModalImpl({ bookId }: {
         {
             card.loading
                 ? <ActivityIndicator theme={theme} />
-                : <LibraryCardView
-                    theme={theme}
-                    card={card}
-                    continuePath={continueReadPosition?.path}
-                    isInReadingList={isInReadingList}
-                    addToReadingList={addToReadingList}
-                    removeFromReadingList={removeFromReadingList}
+                : <Layout
+                    Cover={<LibraryCardTile theme={theme} card={card} />}
+                    Author={null}
+                    Read={<ReadSection card={card} />}
+                    Tags={null}
                 />
         }
     </Modal>;
 }
 
-function LibraryCardView({
-    theme, card, continuePath,
-    isInReadingList, addToReadingList, removeFromReadingList,
-}: Themed & {
+function ReadSection({ card }: {
     card: LibraryCard,
-    continuePath: BookPath | undefined,
-    isInReadingList: boolean,
-    addToReadingList: () => void,
-    removeFromReadingList: () => void,
 }) {
-    return <Layout
-        Cover={<LibraryCardTile theme={theme} card={card} />}
-        Author={null}
-        ReadSection={<>
-            <BookPathLink bookId={card.id}>Read from start</BookPathLink>
-            {
-                continuePath
-                    ? <BookPathLink
-                        bookId={card.id}
-                        path={continuePath}
-                    >
-                        Continue reading
-        </BookPathLink>
-                    : null
-            }
-            {
-                isInReadingList
-                    ? <span
-                        onClick={addToReadingList}>
-                        Add to reading list
-        </span>
-                    : <span
-                        onClick={removeFromReadingList}
-                    >
-                        Remove from reading list
-        </span>
-            }
-        </>}
-        Tags={null}
-    />;
+    const { theme } = useTheme();
+    const { positions } = usePositions();
+
+    const currentPositions = positions.filter(
+        p => p.bookId === card.id
+    );
+    const continueReadPosition = mostRecentPosition(currentPositions);
+    const continuePath = continueReadPosition?.path;
+    return <View>
+        <ParagraphPreview
+            theme={theme}
+            bookId={card.id}
+            path={continuePath ?? firstPath()}
+        />
+        <View style={{
+            flexDirection: 'row',
+            flexGrow: 1,
+            flexShrink: 1,
+            justifyContent: 'space-between',
+        }}>
+            <ReadingListButton card={card} />
+            <View style={{
+                flexDirection: 'row',
+            }}>
+                <BookPathButton
+                    theme={theme}
+                    bookId={card.id}
+                    text='Start'
+                />
+                {
+                    continuePath
+                        ? <BookPathButton
+                            theme={theme}
+                            bookId={card.id}
+                            path={continuePath}
+                            text='Continue'
+                        />
+                        : null
+                }
+            </View>
+        </View>
+    </View>;
+}
+
+function ReadingListButton({ card }: {
+    card: LibraryCard,
+}) {
+    const { theme } = useTheme();
+    const {
+        collectionsState: { collections },
+        addToCollection,
+        removeFromCollection,
+    } = useCollections();
+    const readingListCards = collections['reading-list'] ?? [];
+    const addToReadingList = useCallback(
+        () => addToCollection(card, 'reading-list'),
+        [addToCollection, card],
+    );
+    const removeFromReadingList = useCallback(
+        () => removeFromCollection(card.id, 'reading-list'),
+        [removeFromCollection, card],
+    );
+    const isInReadingList = readingListCards.find(c => c.id === card.id) !== undefined;
+    if (isInReadingList) {
+        return <ActionButton
+            theme={theme}
+            text='Not To Read'
+            onClick={removeFromReadingList}
+        />;
+    } else {
+        return <ActionButton
+            theme={theme}
+            text='To Read'
+            onClick={addToReadingList}
+        />;
+    }
+}
+
+function BookPathButton({ text, theme, bookId, path }: Themed & {
+    text: string,
+    bookId: string,
+    path?: BookPath,
+}) {
+    return <BookPathLink bookId={bookId} path={path}>
+        <ActionButton
+            theme={theme}
+            text={text}
+        />
+    </BookPathLink>;
 }
 
 function Layout({
-    Cover, Author, ReadSection, Tags,
+    Cover, Author, Read, Tags,
 }: {
     Cover: ReactNode,
     Author: ReactNode,
-    ReadSection: ReactNode,
+    Read: ReactNode,
     Tags: ReactNode,
 }) {
     return <View style={{
         flexDirection: 'row',
+        width: '100%',
     }}>
         <View style={{
             flexGrow: 0,
@@ -127,9 +158,12 @@ function Layout({
         }}>
             {Cover}
         </View>
-        <View>
+        <View style={{
+            flexGrow: 1,
+            flexShrink: 1,
+        }}>
             {Author}
-            {ReadSection}
+            {Read}
             {Tags}
         </View>
     </View>;
