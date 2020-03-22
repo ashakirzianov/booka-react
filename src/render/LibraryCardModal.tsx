@@ -1,11 +1,12 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, ReactNode } from 'react';
+import { View } from 'react-native';
 
-import { LibraryCard } from 'booka-common';
+import { LibraryCard, BookPath } from 'booka-common';
 import {
     useTheme, useLibraryCard,
-    useCollections, usePositions, mostRecentPosition,
+    useCollections, usePositions, mostRecentPosition, Themed,
 } from '../application';
-import { Modal, Column } from '../controls';
+import { Modal, ActivityIndicator } from '../controls';
 import { LibraryCardTile } from './LibraryCardTile';
 import { BookPathLink } from './Navigation';
 
@@ -33,12 +34,12 @@ function LibraryCardModalImpl({ bookId }: {
     } = useCollections();
     const readingListCards = collections['reading-list'] ?? [];
     const addToReadingList = useCallback(
-        (c: LibraryCard) => addToCollection(c, 'reading-list'),
-        [addToCollection],
+        () => !card.loading && addToCollection(card, 'reading-list'),
+        [addToCollection, card],
     );
-    const removeFromReadingList = useCallback((c: LibraryCard) =>
-        removeFromCollection(c.id, 'reading-list'),
-        [removeFromCollection],
+    const removeFromReadingList = useCallback(
+        () => !card.loading && removeFromCollection(card.id, 'reading-list'),
+        [removeFromCollection, card],
     );
 
     const currentPositions = positions.filter(
@@ -52,37 +53,84 @@ function LibraryCardModalImpl({ bookId }: {
         close={closeCard}
         open={true}
     >
-        <Column>
-            <LibraryCardTile theme={theme} card={card} />
-            <BookPathLink bookId={bookId}>Read from start</BookPathLink>
+        {
+            card.loading
+                ? <ActivityIndicator theme={theme} />
+                : <LibraryCardView
+                    theme={theme}
+                    card={card}
+                    continuePath={continueReadPosition?.path}
+                    isInReadingList={isInReadingList}
+                    addToReadingList={addToReadingList}
+                    removeFromReadingList={removeFromReadingList}
+                />
+        }
+    </Modal>;
+}
+
+function LibraryCardView({
+    theme, card, continuePath,
+    isInReadingList, addToReadingList, removeFromReadingList,
+}: Themed & {
+    card: LibraryCard,
+    continuePath: BookPath | undefined,
+    isInReadingList: boolean,
+    addToReadingList: () => void,
+    removeFromReadingList: () => void,
+}) {
+    return <Layout
+        Cover={<LibraryCardTile theme={theme} card={card} />}
+        Author={null}
+        ReadSection={<>
+            <BookPathLink bookId={card.id}>Read from start</BookPathLink>
             {
-                continueReadPosition
+                continuePath
                     ? <BookPathLink
-                        bookId={bookId}
-                        path={continueReadPosition.path}
+                        bookId={card.id}
+                        path={continuePath}
                     >
                         Continue reading
-                </BookPathLink>
+        </BookPathLink>
                     : null
             }
             {
-                // TODO: extract ?
-                card.loading ? null
-                    : !isInReadingList
-                        ? <span
-                            onClick={
-                                () => addToReadingList(card)
-                            }>
-                            Add to reading list
-                </span>
-                        : <span
-                            onClick={
-                                () => removeFromReadingList(card)
-                            }
-                        >
-                            Remove from reading list
-                </span>
+                isInReadingList
+                    ? <span
+                        onClick={addToReadingList}>
+                        Add to reading list
+        </span>
+                    : <span
+                        onClick={removeFromReadingList}
+                    >
+                        Remove from reading list
+        </span>
             }
-        </Column>
-    </Modal>;
+        </>}
+        Tags={null}
+    />;
+}
+
+function Layout({
+    Cover, Author, ReadSection, Tags,
+}: {
+    Cover: ReactNode,
+    Author: ReactNode,
+    ReadSection: ReactNode,
+    Tags: ReactNode,
+}) {
+    return <View style={{
+        flexDirection: 'row',
+    }}>
+        <View style={{
+            flexGrow: 0,
+            minWidth: 'auto',
+        }}>
+            {Cover}
+        </View>
+        <View>
+            {Author}
+            {ReadSection}
+            {Tags}
+        </View>
+    </View>;
 }
