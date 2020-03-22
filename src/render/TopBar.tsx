@@ -6,7 +6,7 @@ import {
     useLibrarySearch, SearchState, Themed, useTheme,
 } from '../application';
 import {
-    TextInput, Column, ActivityIndicator, Panel, userAreaWidth,
+    TextInput, ActivityIndicator, Panel, userAreaWidth,
 } from '../controls';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
@@ -61,22 +61,34 @@ function Layout({ Input, Buttons, Results }: {
     Buttons: ReactNode,
     Results: ReactNode,
 }) {
-    return <Column>
+    return <View>
         <View style={{
+            minWidth: 0,
             flexDirection: 'row',
             justifyContent: 'space-between',
         }}>
-            <View />
             <View style={{
+                flexBasis: 1,
                 flexGrow: 1,
+                flexShrink: 1,
+            }} />
+            <View style={{
+                width: userAreaWidth,
+                maxWidth: userAreaWidth,
+                flexBasis: 'auto',
+                flexGrow: 1,
+                flexShrink: 1,
                 flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
-                maxWidth: userAreaWidth,
             }}>
                 {Input}
             </View>
             <View style={{
+                minWidth: 'auto',
+                flexBasis: 1,
+                flexGrow: 1,
+                flexShrink: 1,
                 flexDirection: 'row',
                 justifyContent: 'flex-end',
                 alignItems: 'center',
@@ -85,5 +97,5 @@ function Layout({ Input, Buttons, Results }: {
             </View>
         </View>
         {Results}
-    </Column>;
+    </View>;
 }
