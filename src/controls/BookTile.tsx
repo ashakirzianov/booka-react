@@ -6,14 +6,15 @@ import { jsx } from '@emotion/core';
 import {
     Themed, colors, getFontFamily, getFontSize, Color,
 } from '../application';
-import { Style } from './common';
+import { Style, actionShadow } from './common';
 
 export function BookTile({
-    title, author, coverUrl, theme,
+    title, author, coverUrl, showTitle, theme,
 }: Themed & {
     coverUrl: string | undefined,
     title: string,
     author: string | undefined,
+    showTitle?: boolean,
 }) {
     return <div css={{
         display: 'flex',
@@ -36,11 +37,14 @@ export function BookTile({
             author={author}
             coverUrl={coverUrl}
         />
-        <BookTitle
-            theme={theme}
-            title={title}
-            author={author}
-        />
+        {
+            !showTitle ? null :
+                <BookTitle
+                    theme={theme}
+                    title={title}
+                    author={author}
+                />
+        }
     </div>;
 }
 
@@ -53,6 +57,7 @@ function BookCover({
 }) {
     if (coverUrl) {
         return <BookImageCover
+            theme={theme}
             imageUrl={coverUrl}
             title={title}
         />;
@@ -64,7 +69,7 @@ function BookCover({
     }
 }
 
-function BookImageCover({ imageUrl, title }: {
+function BookImageCover({ theme, imageUrl, title }: Themed & {
     imageUrl: string | undefined,
     title: string,
 }) {
@@ -75,9 +80,13 @@ function BookImageCover({ imageUrl, title }: {
         <img
             src={imageUrl}
             alt={title}
-            style={{
+            css={{
                 maxHeight: '100%',
                 maxWidth: '100%',
+                boxShadow: actionShadow(colors(theme).shadow),
+                '&:hover': {
+                    boxShadow: actionShadow(colors(theme).highlight),
+                },
             }}
         />
     </div>;
@@ -100,6 +109,10 @@ function BookEmptyCover({ title, theme }: Themed & {
         fontFamily: getFontFamily(theme, 'menu'),
         background: back,
         color: text,
+        boxShadow: actionShadow(colors(theme).shadow),
+        '&:hover': {
+            boxShadow: actionShadow(colors(theme).highlight),
+        },
     }}>
         {title}
     </div>;
