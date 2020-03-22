@@ -5,15 +5,24 @@ import { FeedScreen } from './FeedScreenComp';
 import { BookScreenComp } from './BookScreenComp';
 import { parse } from 'query-string';
 import { pathFromString, rangeFromString } from 'booka-common';
+import { useTheme, colors } from '../application';
+import { View } from 'react-native';
 
 export function Routes() {
-    return <BrowserRouter>
-        <Switch>
-            <Redirect exact from='/' to='/feed' />
-            <Route exact path='/feed' children={<FeedRoute />} />
-            <Route path='/book/:bookId' children={<BookRoute />} />
-        </Switch>
-    </BrowserRouter>;
+    const { theme } = useTheme();
+    return <View style={{
+        backgroundColor: colors(theme).primary,
+        // TODO: check mobile compatibility
+        minHeight: '100vh',
+    }}>
+        <BrowserRouter>
+            <Switch>
+                <Redirect exact from='/' to='/feed' />
+                <Route exact path='/feed' children={<FeedRoute />} />
+                <Route path='/book/:bookId' children={<BookRoute />} />
+            </Switch>
+        </BrowserRouter>
+    </View>;
 }
 
 function FeedRoute() {

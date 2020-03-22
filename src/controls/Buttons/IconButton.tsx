@@ -20,6 +20,7 @@ export function IconButton({
         margin: buttonMargin,
         height: buttonHeight,
         width: buttonHeight,
+        backgroundColor: colors(theme).primary,
         color: colors(theme).accent,
         boxShadow: actionShadow(colors(theme).shadow),
         '&:hover': {
