@@ -12,13 +12,14 @@ export function TagLabel({
     onClick?: () => void,
 }) {
     const actualColor = colors(theme)[color ?? 'accent'];
+    const fontSize = getFontSize(theme, 'smallest');
     return <div
         onClick={onClick}
         css={{
             borderStyle: 'solid',
             borderWidth: 2,
-            borderRadius: '50%',
-            fontSize: getFontSize(theme, 'smallest'),
+            borderRadius: fontSize,
+            fontSize,
             fontFamily: getFontFamily(theme, 'menu'),
             borderColor: actualColor,
             color: actualColor,

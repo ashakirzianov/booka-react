@@ -1,12 +1,13 @@
 import React, { useCallback, ReactNode } from 'react';
 import { View } from 'react-native';
 
-import { LibraryCard, BookPath, firstPath } from 'booka-common';
+import { LibraryCard, BookPath, firstPath, filterUndefined } from 'booka-common';
 import {
     useTheme, useLibraryCard,
-    useCollections, usePositions, mostRecentPosition, Themed,
+    useCollections, usePositions, mostRecentPosition,
+    Themed, PaletteColor,
 } from '../application';
-import { Modal, ActivityIndicator, ActionButton } from '../controls';
+import { Modal, ActivityIndicator, ActionButton, TagLabel } from '../controls';
 import { LibraryCardTile } from './LibraryCardTile';
 import { BookPathLink } from './Navigation';
 import { ParagraphPreview } from './ParagraphPreview';
@@ -40,10 +41,47 @@ function LibraryCardModalImpl({ bookId }: {
                     Cover={<LibraryCardTile theme={theme} card={card} />}
                     Author={null}
                     Read={<ReadSection card={card} />}
-                    Tags={null}
+                    Tags={<TagList theme={theme} card={card} />}
                 />
         }
     </Modal>;
+}
+
+function TagList({ card, theme }: Themed & {
+    card: LibraryCard,
+}) {
+    const data = getTagDescs(card);
+    return <View style={{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+    }}>
+        {
+            data.map(({ color, text }, idx) => {
+                return <TagLabel
+                    key={idx}
+                    theme={theme}
+                    color={color}
+                    text={text}
+                />;
+            })
+        }
+    </View>;
+}
+
+type TagDesc = { color: PaletteColor, text: string };
+function getTagDescs(card: LibraryCard): TagDesc[] {
+    return filterUndefined(card.tags.map((tag): TagDesc | undefined => {
+        switch (tag.tag) {
+            case 'subject':
+                return { color: 'text', text: tag.value };
+            case 'language':
+                return { color: 'text', text: `Ln: ${tag.value}` };
+            case 'pg-index':
+                return { color: 'text', text: 'Project Gutenberg' };
+            default:
+                return undefined;
+        }
+    }));
 }
 
 function ReadSection({ card }: {
