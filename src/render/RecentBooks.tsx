@@ -13,7 +13,8 @@ export function RecentBooks() {
         return null;
     }
     const sorted = positions.sort((l, r) => l.created > r.created ? -1 : 1);
-    const unique = distinct(sorted, (l, r) => l.bookId === r.bookId);
+    const skipHead = sorted.slice(1);
+    const unique = distinct(skipHead, (l, r) => l.bookId === r.bookId);
 
     return <Panel
         theme={theme}
