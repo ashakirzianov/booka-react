@@ -7,7 +7,7 @@ import { LibraryCardTile } from './LibraryCardTile';
 export function BookList({ books, theme }: Themed & {
     books: LibraryCard[],
 }) {
-    return <GridList>
+    return <GridList theme={theme}>
         {
             books.map((card, idx) =>
                 <LibraryCardTile

@@ -20,7 +20,7 @@ export function RecentBooks() {
         theme={theme}
         title='Recent'
     >
-        <GridList>
+        <GridList theme={theme}>
             {
                 unique.map(
                     (pos, idx) =>
