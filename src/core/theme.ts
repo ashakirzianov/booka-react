@@ -18,6 +18,12 @@ export type Palette = {
         positive: Color,
         negative: Color,
         warning: Color,
+        red: Color,
+        green: Color,
+        blue: Color,
+        yellow: Color,
+        pink: Color,
+        violet: Color,
     },
     highlights: {
         quote: Color,
@@ -84,10 +90,16 @@ const defaultColors: Palette['colors'] = {
     highlight: '#aaf',
     shadow: '#000',
     semiTransparent: 'rgba(0, 0, 0, 0.3)',
-    neutral: 'royalblue',
-    positive: 'seagreen',
-    negative: 'darkred',
+    neutral: 'navy',
+    positive: 'green',
+    negative: 'crimson',
     warning: 'gold',
+    red: 'darkred',
+    green: 'seagreen',
+    blue: 'royalblue',
+    pink: 'hotpink',
+    violet: 'indigo',
+    yellow: 'fbe381',
 };
 export const defaultTheme: Theme = {
     palettes: {

@@ -77,11 +77,11 @@ function getTagDescs(card: LibraryCard): TagDesc[] {
     return filterUndefined(card.tags.map((tag): TagDesc | undefined => {
         switch (tag.tag) {
             case 'subject':
-                return { color: 'neutral', text: tag.value };
+                return { color: 'blue', text: tag.value };
             case 'language':
-                return { color: 'positive', text: `Language: ${tag.value.toUpperCase()}` };
+                return { color: 'green', text: `Language: ${tag.value.toUpperCase()}` };
             case 'pg-index':
-                return { color: 'negative', text: 'Project Gutenberg' };
+                return { color: 'red', text: 'Project Gutenberg' };
             default:
                 return undefined;
         }
