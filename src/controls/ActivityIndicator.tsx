@@ -4,9 +4,12 @@ import {
 } from 'react-native';
 import { Themed, colors } from './theme';
 
-export function ActivityIndicator({ theme }: Themed) {
+export function ActivityIndicator({ size, theme }: Themed & {
+    size?: 'small' | 'large',
+}) {
     return <NativeActivityIndicator
         color={colors(theme).highlight}
+        size={size ?? 'large'}
     />;
 }
 

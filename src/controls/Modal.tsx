@@ -50,6 +50,8 @@ export function Modal({
                             alignItems: 'stretch',
                             overflow: 'scroll',
                             padding: normalPadding,
+                            alignContent: 'center',
+                            justifyContent: 'center',
                         }}
                         >
                             {children}
@@ -58,7 +60,7 @@ export function Modal({
                 </OverlayPanel>
             </div>
         }
-    </Transition>;
+    </Transition >;
 }
 
 function ModalTitle({ theme, title, close }: Themed & {

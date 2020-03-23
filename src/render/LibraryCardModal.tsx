@@ -1,15 +1,16 @@
 import React, { useCallback, ReactNode } from 'react';
 import { View } from 'react-native';
 
-import { LibraryCard, BookPath, firstPath, filterUndefined } from 'booka-common';
+import {
+    LibraryCard, BookPath, firstPath, filterUndefined,
+} from 'booka-common';
 import {
     useTheme, useLibraryCard,
     useCollections, usePositions, mostRecentPosition,
 } from '../application';
 import {
     Modal, ActivityIndicator, ActionButton, TagLabel,
-    normalMargin,
-    Label,
+    normalMargin, Label,
 } from '../controls';
 import { Themed, PaletteColor } from '../core';
 import { LibraryCardTile } from './LibraryCardTile';

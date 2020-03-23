@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     HasChildren, percent, point, panelShadow, userAreaWidth,
-    normalMargin, halfMargin, panelHeight,
+    normalMargin, panelHeight,
 } from './common';
 import { Themed, colors, getFontFamily, getFontSize } from './theme';
 import { defaultAnimationDuration } from './Animations';
@@ -63,6 +63,7 @@ export function OverlayPanel({
         width: percent(100),
         maxWidth: point(50),
         maxHeight: percent(100),
+        minHeight: panelHeight,
         boxShadow: panelShadow(colors(theme).shadow),
         zIndex: 10,
         // TODO: rethink this
