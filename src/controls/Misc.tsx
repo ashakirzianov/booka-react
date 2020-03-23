@@ -1,6 +1,6 @@
 import React from 'react';
 import { View as NativeView } from 'react-native';
-import { percent, doubleMargin } from './common';
+import { percent, HasChildren } from './common';
 
 export const View = NativeView;
 
@@ -10,8 +10,10 @@ export function Separator() {
     }} />;
 }
 
-export function ButtonSeparator() {
+export function Screen({ children }: HasChildren) {
     return <View style={{
-        width: doubleMargin,
-    }} />;
+        minHeight: '100vh',
+    }}>
+        {children}
+    </View>;
 }

@@ -64,9 +64,17 @@ function Layout({ Input, Buttons, Results }: {
     Buttons: ReactNode,
     Results: ReactNode,
 }) {
-    return <View>
+    return <View style={{
+        flexDirection: 'column',
+        flexBasis: 'auto',
+        height: 'auto',
+        justifyContent: 'flex-start',
+    }}>
         <View style={{
             flexDirection: 'row',
+            flexBasis: 'auto',
+            flexGrow: 1,
+            flexShrink: 1,
             justifyContent: 'space-between',
         }}>
             <View style={{

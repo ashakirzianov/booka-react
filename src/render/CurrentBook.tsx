@@ -50,7 +50,7 @@ function Layout({ Tile, Preview }: {
         flexDirection: 'row',
         minHeight: 0,
         width: '100%',
-        height: 240,
+        height: 260,
         alignItems: 'center',
         justifyContent: 'space-between',
     }}>

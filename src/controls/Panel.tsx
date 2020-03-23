@@ -13,7 +13,7 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
     return <div style={{
         zIndex: -10,
         display: 'flex',
-        flexBasis: 1,
+        flexBasis: 'auto',
         flexShrink: 1,
         flexGrow: 1,
         flexDirection: 'column',
@@ -25,25 +25,28 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
     }}>
         {
             title ?
-                <span style={{
+                <div style={{
                     display: 'flex',
                     alignSelf: 'flex-start',
                     marginLeft: normalMargin, marginRight: normalMargin,
-                    fontSize: getFontSize(theme, 'small'),
-                    fontFamily: getFontFamily(theme, 'menu'),
-                    color: colors(theme).text,
                 }}>
-                    {title}
-                </span>
+                    <span style={{
+                        fontSize: getFontSize(theme, 'small'),
+                        fontFamily: getFontFamily(theme, 'menu'),
+                        color: colors(theme).text,
+                    }}>
+                        {title}
+                    </span>
+                </div>
                 : null
         }
         <div style={{
             display: 'flex',
             alignSelf: 'stretch',
             alignItems: 'center',
+            justifyContent: 'center',
             minHeight: panelHeight,
             marginLeft: normalMargin, marginRight: normalMargin,
-            justifyContent: 'center',
         }}>
             {children}
         </div>
