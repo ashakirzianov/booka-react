@@ -9,6 +9,7 @@ import {
 import {
     Modal, ActivityIndicator, ActionButton, TagLabel,
     normalMargin,
+    Label,
 } from '../controls';
 import { Themed, PaletteColor } from '../core';
 import { LibraryCardTile } from './LibraryCardTile';
@@ -42,7 +43,12 @@ function LibraryCardModalImpl({ bookId }: {
                 ? <ActivityIndicator theme={theme} />
                 : <Layout
                     Cover={<LibraryCardTile theme={theme} card={card} />}
-                    Author={null}
+                    Author={<Label
+                        theme={theme}
+                        text={`by ${card.author ?? 'unknown'}`}
+                        italic={true}
+                        color='accent'
+                    />}
                     Read={<ReadSection card={card} />}
                     Tags={<TagList theme={theme} card={card} />}
                 />
