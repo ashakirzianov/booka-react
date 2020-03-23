@@ -104,7 +104,7 @@ export type PaletteButtonProps = ButtonProps & {
 };
 export function PaletteButton(props: PaletteButtonProps) {
     const theme = props.theme;
-    const cols = theme.palettes[props.palette].colors;
+    const cols = theme.palettes[props.palette];
     const selected = props.palette === theme.currentPalette;
     return <div
         onClick={props.onClick}

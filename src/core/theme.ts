@@ -6,31 +6,25 @@ export type FontSize = number;
 export type Color = string;
 
 export type Palette = {
-    colors: {
-        text: Color,
-        accent: Color,
-        highlight: Color,
-        primary: Color,
-        secondary: Color,
-        shadow: Color,
-        semiTransparent: Color,
-        neutral: Color,
-        positive: Color,
-        negative: Color,
-        warning: Color,
-        red: Color,
-        green: Color,
-        blue: Color,
-        yellow: Color,
-        pink: Color,
-        violet: Color,
-    },
-    highlights: {
-        quote: Color,
-    },
+    text: Color,
+    accent: Color,
+    highlight: Color,
+    primary: Color,
+    secondary: Color,
+    shadow: Color,
+    semiTransparent: Color,
+    neutral: Color,
+    positive: Color,
+    negative: Color,
+    warning: Color,
+    red: Color,
+    green: Color,
+    blue: Color,
+    yellow: Color,
+    pink: Color,
+    violet: Color,
 };
-export type PaletteColor = keyof Palette['colors'];
-export type HighlightsColor = keyof Palette['highlights'];
+export type PaletteColor = keyof Palette;
 export type FontSizes = {
     smallest: FontSize,
     small: FontSize,
@@ -64,12 +58,8 @@ export type Themed = {
     theme: Theme,
 };
 
-export function colors(theme: Theme): Palette['colors'] {
-    return theme.palettes[theme.currentPalette].colors;
-}
-
-export function getHighlights(theme: Theme): Palette['highlights'] {
-    return theme.palettes[theme.currentPalette].highlights;
+export function colors(theme: Theme): Palette {
+    return theme.palettes[theme.currentPalette];
 }
 
 export function getFontSize(theme: Theme, size?: keyof FontSizes): number {
@@ -82,7 +72,7 @@ export function getFontFamily(theme: Theme, key: keyof FontFamilies): string {
     return theme.fontFamilies[key];
 }
 
-const defaultColors: Palette['colors'] = {
+const defaultColors: Palette = {
     text: '#000',
     primary: '#fff',
     secondary: '#eee',
@@ -99,44 +89,29 @@ const defaultColors: Palette['colors'] = {
     blue: 'royalblue',
     pink: 'hotpink',
     violet: 'indigo',
-    yellow: 'fbe381',
+    yellow: '#fbe381',
 };
 export const defaultTheme: Theme = {
     palettes: {
         light: {
-            colors: {
-                ...defaultColors,
-            },
-            highlights: {
-                quote: '#fbe381',
-            },
+            ...defaultColors,
         },
         sepia: {
-            colors: {
-                ...defaultColors,
-                text: '#5f3e24',
-                primary: '#f9f3e9',
-                secondary: '#e6e0d6',
-                accent: '#987',
-                highlight: '#000',
-            },
-            highlights: {
-                quote: '#fbe381',
-            },
+            ...defaultColors,
+            text: '#5f3e24',
+            primary: '#f9f3e9',
+            secondary: '#e6e0d6',
+            accent: '#987',
+            highlight: '#000',
         },
         dark: {
-            colors: {
-                ...defaultColors,
-                text: '#999',
-                primary: '#000',
-                secondary: '#222',
-                accent: '#ddd',
-                highlight: '#fff',
-                shadow: '#333',
-            },
-            highlights: {
-                quote: '#c8b050',
-            },
+            ...defaultColors,
+            text: '#999',
+            primary: '#000',
+            secondary: '#222',
+            accent: '#ddd',
+            highlight: '#fff',
+            shadow: '#333',
         },
     },
     currentPalette: 'light',

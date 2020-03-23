@@ -11,7 +11,7 @@ export function PaletteButton(props: Themed & {
     onClick: () => void,
 }) {
     const theme = props.theme;
-    const cols = theme.palettes[props.palette].colors;
+    const cols = theme.palettes[props.palette];
     const selected = props.palette === theme.currentPalette;
     return <div
         onClick={props.onClick}

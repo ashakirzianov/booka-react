@@ -85,7 +85,7 @@ export function BorderButton(props: TextButtonProps) {
 
 export function PaletteButton(props: PaletteButtonProps) {
     const theme = props.theme;
-    const cols = theme.palettes[theme.currentPalette].colors;
+    const cols = theme.palettes[theme.currentPalette];
     return <Button onClick={props.onClick}>
         <View
             style={{
