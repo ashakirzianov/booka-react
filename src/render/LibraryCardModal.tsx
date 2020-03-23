@@ -7,7 +7,7 @@ import {
     useCollections, usePositions, mostRecentPosition,
     Themed, PaletteColor,
 } from '../application';
-import { Modal, ActivityIndicator, ActionButton, TagLabel, margin } from '../controls';
+import { Modal, ActivityIndicator, ActionButton, TagLabel, margin, padding } from '../controls';
 import { LibraryCardTile } from './LibraryCardTile';
 import { BookPathLink } from './Navigation';
 import { ParagraphPreview } from './ParagraphPreview';
@@ -96,41 +96,31 @@ function ReadSection({ card }: {
     );
     const continueReadPosition = mostRecentPosition(currentPositions);
     const continuePath = continueReadPosition?.path;
-    return <View>
-        <ParagraphPreview
-            theme={theme}
-            bookId={card.id}
-            path={continuePath ?? firstPath()}
-        />
+    return <View style={{
+        padding,
+    }}>
         <View style={{
             flexDirection: 'row',
             flexGrow: 1,
             flexShrink: 1,
             marginTop: margin, marginBottom: margin,
-            justifyContent: 'space-between',
+            justifyContent: 'flex-start',
         }}>
             <ReadingListButton card={card} />
-            <View style={{
-                flexDirection: 'row',
-                flexShrink: 1,
-            }}>
-                <BookPathButton
+            <BookPathButton
+                theme={theme}
+                bookId={card.id}
+                text='From Start'
+            />
+        </View>
+        {
+            !continuePath ? null :
+                <ParagraphPreview
                     theme={theme}
                     bookId={card.id}
-                    text='Start'
+                    path={continuePath ?? firstPath()}
                 />
-                {
-                    continuePath
-                        ? <BookPathButton
-                            theme={theme}
-                            bookId={card.id}
-                            path={continuePath}
-                            text='Continue'
-                        />
-                        : null
-                }
-            </View>
-        </View>
+        }
     </View>;
 }
 
@@ -207,8 +197,8 @@ function Layout({
             flexShrink: 1,
         }}>
             {Author}
-            {Read}
             {Tags}
+            {Read}
         </View>
     </View>;
 }

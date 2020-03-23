@@ -4,6 +4,7 @@ import {
     usePreview, Themed,
 } from '../application';
 import { PreviewText, ActivityIndicator } from '../controls';
+import { BookPathLink } from './Navigation';
 
 export function ParagraphPreview({ bookId, path, theme }: Themed & {
     bookId: string,
@@ -13,10 +14,15 @@ export function ParagraphPreview({ bookId, path, theme }: Themed & {
     if (previewState.loading) {
         return <ActivityIndicator theme={theme} />;
     } else {
-        return <PreviewText
-            theme={theme}
-            lines={6}
-            text={previewState.preview || 'preview is not available'}
-        />;
+        return <BookPathLink
+            bookId={bookId}
+            path={path}
+        >
+            <PreviewText
+                theme={theme}
+                lines={8}
+                text={previewState.preview || 'preview is not available'}
+            />
+        </BookPathLink>;
     }
 }

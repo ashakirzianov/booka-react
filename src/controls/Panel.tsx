@@ -58,7 +58,7 @@ export function OverlayPanel({
 }) {
     return <View style={{
         overflow: 'scroll',
-        backgroundColor: colors(theme).primary,
+        backgroundColor: colors(theme).secondary,
         width: percent(100),
         maxWidth: point(50),
         maxHeight: percent(100),

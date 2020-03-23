@@ -1,7 +1,6 @@
 import React from 'react';
 import { HasChildren } from './common';
 import { Themed } from './theme';
-import { colors } from '../application';
 
 export function GridList({ theme, children }: Themed & HasChildren) {
     return <div style={{
