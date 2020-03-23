@@ -3,7 +3,7 @@ import { jsx } from '@emotion/core';
 
 import { Themed, colors } from '../theme';
 import { IconName, Icon } from '../Icon';
-import { actionShadow, buttonMargin, buttonHeight } from '../common';
+import { actionShadow, buttonMargin, buttonHeight, actionBack } from '../common';
 
 export function IconButton({
     icon, theme,
@@ -20,7 +20,7 @@ export function IconButton({
         margin: buttonMargin,
         height: buttonHeight,
         width: buttonHeight,
-        backgroundColor: colors(theme).primary,
+        backgroundColor: actionBack(theme),
         color: colors(theme).accent,
         boxShadow: actionShadow(colors(theme).shadow),
         '&:hover': {

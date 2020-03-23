@@ -1,6 +1,7 @@
 import { PropsWithChildren } from 'react';
 import { Interpolation } from '@emotion/core';
 import { Color } from './theme';
+import { colors, Theme } from '../application';
 
 export type HasChildren = PropsWithChildren<{}>;
 export type Style = Interpolation;
@@ -12,6 +13,10 @@ export function percent(size: number) {
 
 export function point(size: number) {
     return `${size}em`;
+}
+
+export function actionBack(theme: Theme) {
+    return colors(theme).primary;
 }
 
 export function actionShadow(color: Color) {

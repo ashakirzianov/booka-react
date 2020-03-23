@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Themed, colors, getFontSize, getFontFamily, PaletteColor } from '../theme';
-import { actionShadow, point } from '../common';
+import { actionShadow, point, actionBack } from '../common';
 
 export function ActionButton({
     text, onClick, color, theme,
@@ -12,7 +12,7 @@ export function ActionButton({
 }) {
     const textColor = colors(theme)[color ?? 'accent'];
     const fore = colors(theme)[color ?? 'accent'];
-    const back = colors(theme).primary;
+    const back = colors(theme).secondary;
     return <input
         type='button'
         value={text}
@@ -28,7 +28,7 @@ export function ActionButton({
             color: textColor,
             borderColor: fore,
             boxShadow: actionShadow(fore),
-            backgroundColor: back,
+            backgroundColor: actionBack(theme),
             '&:hover': {
                 borderColor: colors(theme).highlight,
                 color: colors(theme).highlight,

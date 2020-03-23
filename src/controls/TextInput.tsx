@@ -4,7 +4,7 @@ import { View } from 'react-native';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Themed, getFontSize, colors } from '../application';
-import { actionShadow, buttonHeight } from './common';
+import { actionShadow, buttonHeight, actionBack } from './common';
 
 export function TextInput({
     theme, initial, onChange, placeholder,
@@ -25,6 +25,7 @@ export function TextInput({
                 color: colors(theme).text,
                 fontSize: getFontSize(theme, 'largest'),
                 boxShadow: actionShadow(colors(theme).shadow),
+                backgroundColor: actionBack(theme),
                 '&::placeholder': {
                     color: colors(theme).accent,
                     fontSize: getFontSize(theme, 'normal'),
