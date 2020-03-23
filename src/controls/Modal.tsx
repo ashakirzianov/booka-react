@@ -65,6 +65,9 @@ function ModalTitle({ theme, title, close }: Themed & {
     title: string | undefined,
     close: () => void,
 }) {
+    if (title === undefined) {
+        return null;
+    }
     return <View style={{
         flexDirection: 'row',
         alignItems: 'center',
