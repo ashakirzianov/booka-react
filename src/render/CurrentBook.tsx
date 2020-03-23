@@ -4,11 +4,10 @@ import { CurrentPosition } from 'booka-common';
 import {
     usePositions, useTheme,
 } from '../application';
-import { Panel, ActionButton } from '../controls';
+import { Panel } from '../controls';
 import { Themed } from '../core';
 import { ParagraphPreview } from './ParagraphPreview';
 import { BookIdTile } from './LibraryCardTile';
-import { BookPathLink } from './Navigation';
 
 export function CurrentBook() {
     const { theme } = useTheme();
@@ -40,25 +39,12 @@ function CurrentBookContent({ position, theme }: Themed & {
             bookId={position.bookId}
             path={position.path}
         />}
-        Continue={
-            <BookPathLink
-                bookId={position.bookId}
-                path={position.path}
-            >
-                <ActionButton
-                    theme={theme}
-                    text='Continue'
-                    color='neutral'
-                />
-            </BookPathLink>
-        }
     />;
 }
 
-function Layout({ Tile, Preview, Continue }: {
+function Layout({ Tile, Preview }: {
     Tile: ReactNode,
     Preview: ReactNode,
-    Continue: ReactNode,
 }) {
     return <View style={{
         flexDirection: 'row',
@@ -75,16 +61,8 @@ function Layout({ Tile, Preview, Continue }: {
             maxHeight: '100%',
             width: '100%',
             minHeight: 0,
-            // margin,
         }}>
             {Preview}
-            {/* <View style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-end',
-                marginTop: margin, marginBottom: margin,
-            }}>
-                {Continue}
-            </View> */}
         </View>
     </View>;
 }

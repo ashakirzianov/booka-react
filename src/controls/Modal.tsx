@@ -4,7 +4,7 @@ import { Transition } from 'react-transition-group';
 
 import { Themed, getFontFamily, getFontSize, colors } from './theme';
 import {
-    HasChildren, semiTransparent, doubleMargin, normalPadding,
+    HasChildren, doubleMargin, normalPadding,
 } from './common';
 import { defaultAnimationDuration } from './Animations';
 import { OverlayPanel } from './Panel';
@@ -27,7 +27,7 @@ export function Modal({
                 flexDirection: 'column',
                 position: 'fixed',
                 top: 0, bottom: 0, left: 0, right: 0,
-                backgroundColor: semiTransparent,
+                backgroundColor: colors(theme).semiTransparent,
                 zIndex: 10,
                 transition: `${defaultAnimationDuration}ms ease-in-out`,
                 opacity: state === 'entered' ? 1 : 0.01,

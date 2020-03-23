@@ -41,18 +41,15 @@ export function panelShadow(color: Color) {
     return `0px 0px 2px ${color}`;
 }
 
-// export function roundShadow(color: Color) {
-//     return `0px 0px 5px 0px ${color}`;
-// }
-
 export function roundShadow(color: Color) {
     return `2px 2px 2px ${color}`;
 }
 
-export const semiTransparent = 'rgba(0, 0, 0, 0.3)';
 export const userAreaWidth = point(50);
+export const panelHeight = point(15);
 export const buttonHeight = 50;
 export const buttonWidth = 150;
+
 export const normalMargin = point(0.5);
 export const halfMargin = point(0.5);
 export const nanoMargin = point(0.1);

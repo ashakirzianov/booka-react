@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     HasChildren, percent, point, panelShadow, userAreaWidth,
-    normalMargin, halfMargin,
+    normalMargin, halfMargin, panelHeight,
 } from './common';
 import { Themed, colors, getFontFamily, getFontSize } from './theme';
 import { defaultAnimationDuration } from './Animations';
@@ -19,8 +19,8 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
         flexDirection: 'column',
         margin: normalMargin,
         maxWidth: userAreaWidth,
+        justifyContent: 'flex-start',
         width: '100%',
-        alignItems: 'center',
         alignSelf: 'center',
     }}>
         {
@@ -28,9 +28,9 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
                 <span style={{
                     display: 'flex',
                     alignSelf: 'flex-start',
+                    marginLeft: normalMargin, marginRight: normalMargin,
                     fontSize: getFontSize(theme, 'small'),
                     fontFamily: getFontFamily(theme, 'menu'),
-                    margin: halfMargin,
                     color: colors(theme).text,
                 }}>
                     {title}
@@ -41,8 +41,9 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
             display: 'flex',
             alignSelf: 'stretch',
             alignItems: 'center',
+            minHeight: panelHeight,
+            marginLeft: normalMargin, marginRight: normalMargin,
             justifyContent: 'center',
-            margin: normalMargin,
         }}>
             {children}
         </div>
