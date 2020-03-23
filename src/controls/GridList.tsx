@@ -9,7 +9,7 @@ export function GridList({ theme, children }: Themed & HasChildren) {
         flexShrink: 1,
         flexFlow: 'row nowrap',
         overflow: 'scroll',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
     }}>
         {children}
     </div>;
