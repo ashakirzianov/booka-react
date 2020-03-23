@@ -1,6 +1,6 @@
 import React from 'react';
 import { View as NativeView } from 'react-native';
-import { percent, halfMargin } from './common';
+import { percent, doubleMargin } from './common';
 
 export const View = NativeView;
 
@@ -12,6 +12,6 @@ export function Separator() {
 
 export function ButtonSeparator() {
     return <View style={{
-        width: halfMargin,
+        width: doubleMargin,
     }} />;
 }

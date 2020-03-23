@@ -17,7 +17,7 @@ export function IconButton({
     return <div css={{
         display: 'flex',
         borderWidth: 0,
-        margin: margin,
+        margin,
         height: buttonHeight,
         width: buttonHeight,
         backgroundColor: actionBack(theme),
