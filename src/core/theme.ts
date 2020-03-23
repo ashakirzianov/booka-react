@@ -75,3 +75,71 @@ export function getFontSize(theme: Theme, size?: keyof FontSizes): number {
 export function getFontFamily(theme: Theme, key: keyof FontFamilies): string {
     return theme.fontFamilies[key];
 }
+
+const defaultColors: Palette['colors'] = {
+    text: '#000',
+    primary: '#fff',
+    secondary: '#eee',
+    accent: '#777',
+    highlight: '#aaf',
+    shadow: '#000',
+    semiTransparent: 'rgba(0, 0, 0, 0.3)',
+    neutral: 'royalblue',
+    positive: 'seagreen',
+    negative: 'darkred',
+    warning: 'gold',
+};
+export const defaultTheme: Theme = {
+    palettes: {
+        light: {
+            colors: {
+                ...defaultColors,
+            },
+            highlights: {
+                quote: '#fbe381',
+            },
+        },
+        sepia: {
+            colors: {
+                ...defaultColors,
+                text: '#5f3e24',
+                primary: '#f9f3e9',
+                secondary: '#e6e0d6',
+                accent: '#987',
+                highlight: '#000',
+            },
+            highlights: {
+                quote: '#fbe381',
+            },
+        },
+        dark: {
+            colors: {
+                ...defaultColors,
+                text: '#999',
+                primary: '#000',
+                secondary: '#222',
+                accent: '#ddd',
+                highlight: '#fff',
+                shadow: '#333',
+            },
+            highlights: {
+                quote: '#c8b050',
+            },
+        },
+    },
+    currentPalette: 'light',
+    fontFamilies: {
+        book: 'Georgia',
+        menu: 'Open Sans',
+    },
+    fontSizes: {
+        smallest: 14,
+        small: 22,
+        normal: 26,
+        large: 30,
+        largest: 36,
+        text: 26,
+    },
+    fontScale: 1,
+    radius: 5,
+};

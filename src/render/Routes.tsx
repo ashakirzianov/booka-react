@@ -5,8 +5,9 @@ import { FeedScreen } from './FeedScreenComp';
 import { BookScreenComp } from './BookScreenComp';
 import { parse } from 'query-string';
 import { pathFromString, rangeFromString } from 'booka-common';
-import { useTheme, colors } from '../application';
-import { View } from 'react-native';
+import { useTheme } from '../application';
+import { colors } from '../core';
+import { View } from '../controls';
 
 export function Routes() {
     const { theme } = useTheme();

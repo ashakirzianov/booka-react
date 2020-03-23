@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-import { colors, Theme } from '../application/theme';
+import { colors, Theme } from '../core';
 import { WithChildren, percent, point, defaults } from './common';
 
 export type OverlayBoxProps = WithChildren<{

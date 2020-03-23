@@ -2,8 +2,9 @@ import * as React from 'react';
 import { View } from 'react-native';
 
 import {
-    Themed, FbLoginState, fbState, doFbLogin,
+    FbLoginState, fbState, doFbLogin,
 } from '../application';
+import { Themed } from './theme';
 import { Icon } from './Icon';
 import { point } from './common';
 
@@ -16,7 +17,7 @@ export function FacebookLogin({ theme, onStatusChange }: FacebookLoginProps) {
     const [loginState, setLoginState] = React.useState<FbLoginState>({ state: 'checking' });
     React.useEffect(() => {
         const sub = fbState().subscribe(setLoginState);
-        return () => sub.unsubscribe();;
+        return () => sub.unsubscribe();
     }, [setLoginState]);
     React.useEffect(() => {
         if (onStatusChange) {

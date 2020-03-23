@@ -2,7 +2,8 @@ import React from 'react';
 import { LibraryCard } from 'booka-common';
 
 import { Panel } from '../controls';
-import { useTheme, useCollections, Themed } from '../application';
+import { useTheme, useCollections } from '../application';
+import { Themed } from '../core';
 import { BookList } from './BookList';
 
 export function Collections() {

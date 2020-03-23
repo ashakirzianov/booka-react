@@ -9,9 +9,8 @@ import {
     point, BorderLink,
 } from '../atoms';
 import { BookFragmentComp, BookSelection, ColorizedRange } from '../reader';
-import {
-    useCopy, Themed, colors, getFontSize, getHighlights, Theme,
-} from '../application';
+import { useCopy } from '../application';
+import { Themed, colors, getFontSize, getHighlights, Theme } from '../core';
 import { config } from '../config';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
 

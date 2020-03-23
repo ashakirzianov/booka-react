@@ -1,5 +1,5 @@
 import React from 'react';
-import { Themed, getFontSize, colors } from '../application';
+import { Themed, getFontSize, colors } from './theme';
 
 export function Label({
     text, theme,

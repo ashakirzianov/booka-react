@@ -1,7 +1,8 @@
 import React from 'react';
 import { BookPath, findBookmark } from 'booka-common';
 
-import { useTheme, useBookmarks, Themed } from '../application';
+import { useTheme, useBookmarks } from '../application';
+import { Themed } from '../core';
 import { TextButton, TagButton, IconLink } from '../atoms';
 import { ShowTocLink } from './Navigation';
 

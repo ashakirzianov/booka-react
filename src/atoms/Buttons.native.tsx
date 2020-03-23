@@ -8,7 +8,7 @@ import {
     TextButtonProps, IconButtonProps, TagButtonProps,
     PaletteButtonProps,
 } from './Buttons';
-import { colors, getFontSize } from '../application/theme';
+import { colors, getFontSize } from '../core';
 
 export function TextButton(props: TextButtonProps) {
     return <Link onClick={props.onClick}>

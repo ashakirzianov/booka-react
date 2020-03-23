@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { jsx } from '@emotion/core';
 import {
     Themed, colors, getFontFamily, getFontSize, Color,
-} from '../application';
+} from './theme';
 import { Style, actionShadow, normalMargin } from './common';
 
 export function BookTile({

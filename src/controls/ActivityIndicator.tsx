@@ -2,7 +2,7 @@ import React from 'react';
 import {
     ActivityIndicator as NativeActivityIndicator, View,
 } from 'react-native';
-import { Themed, colors } from '../application';
+import { Themed, colors } from './theme';
 
 export function ActivityIndicator({ theme }: Themed) {
     return <NativeActivityIndicator

@@ -2,9 +2,10 @@ import React, { ReactNode } from 'react';
 import { View } from 'react-native';
 import { CurrentPosition } from 'booka-common';
 import {
-    usePositions, useTheme, Themed,
+    usePositions, useTheme,
 } from '../application';
 import { Panel, ActionButton } from '../controls';
+import { Themed } from '../core';
 import { ParagraphPreview } from './ParagraphPreview';
 import { BookIdTile } from './LibraryCardTile';
 import { BookPathLink } from './Navigation';

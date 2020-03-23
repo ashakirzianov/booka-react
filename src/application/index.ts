@@ -3,7 +3,6 @@ export * from './facebookSdk';
 export * from './lorem';
 export * from './platform';
 export { RootProvider } from './provider';
-export * from './theme';
 export * from './urlHooks';
 export * from './utilityHooks';
 export * from './utils';

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-import { colors, Theme } from '../application/theme';
+import { colors, Theme } from '../core';
 import { WithChildren, point, defaults, Size } from './common';
 import { FadeIn } from './Animations';
 

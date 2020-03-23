@@ -2,7 +2,7 @@
 import React from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { Themed, getFontFamily, getFontSize, colors } from '../application';
+import { Themed, getFontFamily, getFontSize, colors } from './theme';
 import { actionShadow, doublePadding } from './common';
 
 export function PreviewText({ text, lines, theme }: Themed & {

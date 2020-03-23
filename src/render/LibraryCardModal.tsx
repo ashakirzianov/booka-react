@@ -5,12 +5,12 @@ import { LibraryCard, BookPath, firstPath, filterUndefined } from 'booka-common'
 import {
     useTheme, useLibraryCard,
     useCollections, usePositions, mostRecentPosition,
-    Themed, PaletteColor,
 } from '../application';
 import {
     Modal, ActivityIndicator, ActionButton, TagLabel,
     normalMargin, normalPadding, doubleMargin,
 } from '../controls';
+import { Themed, PaletteColor } from '../core';
 import { LibraryCardTile } from './LibraryCardTile';
 import { BookPathLink } from './Navigation';
 import { ParagraphPreview } from './ParagraphPreview';

@@ -3,7 +3,7 @@ import React from 'react';
 import { View } from 'react-native';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { Themed, getFontSize, colors } from '../application';
+import { Themed, getFontSize, colors } from './theme';
 import {
     actionShadow, buttonHeight, actionBack, normalPadding, normalMargin,
 } from './common';

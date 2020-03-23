@@ -3,7 +3,7 @@ import {
     HasChildren, percent, point, panelShadow, userAreaWidth,
     normalMargin, halfMargin, halfPadding, normalPadding,
 } from './common';
-import { Themed, colors, getFontFamily, getFontSize } from '../application';
+import { Themed, colors, getFontFamily, getFontSize } from './theme';
 import { defaultAnimationDuration } from './Animations';
 import { View } from 'react-native';
 

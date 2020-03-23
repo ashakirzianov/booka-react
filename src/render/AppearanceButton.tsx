@@ -1,10 +1,11 @@
 import React from 'react';
 
-import { useTheme, PaletteName, Themed } from '../application';
+import { useTheme } from '../application';
 import {
     WithPopover, View, IconButton, PaletteButton,
     TextButton, Separator, point, doubleMargin, doublePadding,
 } from '../controls';
+import { PaletteName, Themed } from '../core';
 
 export function AppearanceButton() {
     const { theme, incrementScale, setPalette } = useTheme();

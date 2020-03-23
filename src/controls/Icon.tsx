@@ -8,7 +8,7 @@ import {
     FaCircle, FaSignInAlt, FaFacebookSquare, FaCloudUploadAlt,
     FaQuestion,
 } from 'react-icons/fa';
-import { PaletteColor, Themed, colors } from '../application';
+import { PaletteColor, Themed, colors } from './theme';
 import { Size } from './common';
 
 export type IconName =

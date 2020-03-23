@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 import { FbLoginState, fbState, doFbLogin } from '../application';
+import { Themed } from '../core';
 import { Column, Row } from './Layout';
 import { Icon } from './Icons';
 import { point } from './common';
-import { Themed } from '../application/theme';
 
 type SocialButtonProps = Themed & {
     onStatusChange?: () => void,

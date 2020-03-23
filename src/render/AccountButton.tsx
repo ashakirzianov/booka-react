@@ -2,11 +2,12 @@ import * as React from 'react';
 import { AccountInfo } from 'booka-common';
 
 import { AccountState } from '../ducks';
-import { useTheme, useAccount, Themed } from '../application';
+import { useTheme, useAccount } from '../application';
 import {
     WithPopover, FacebookLogin, View,
     PictureButton, IconButton, Label, ActionButton, point, doubleMargin,
 } from '../controls';
+import { Themed } from '../core';
 
 export function AccountButton() {
     const { theme } = useTheme();

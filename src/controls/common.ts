@@ -1,7 +1,6 @@
 import { PropsWithChildren } from 'react';
 import { Interpolation } from '@emotion/core';
-import { Color } from './theme';
-import { colors, Theme } from '../application';
+import { Color, colors, Theme } from './theme';
 
 export type HasChildren = PropsWithChildren<{}>;
 export type Marginable = {

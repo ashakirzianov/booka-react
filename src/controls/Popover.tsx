@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PopperProps, Manager, Reference, Popper } from 'react-popper';
 
-import { Themed } from '../application';
+import { Themed } from './theme';
 import { OverlayPanel } from './Panel';
 import { FadeIn } from './Animations';
 

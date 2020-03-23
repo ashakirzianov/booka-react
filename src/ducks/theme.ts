@@ -1,5 +1,5 @@
 import { AppAction } from './app';
-import { Theme, PaletteName, Palette } from '../application';
+import { Theme, PaletteName, defaultTheme } from '../core';
 
 export type ThemeState = Theme;
 
@@ -14,6 +14,7 @@ export type ThemeIncrementScaleAction = {
 export type ThemeAction =
     | ThemeSetPaletteAction | ThemeIncrementScaleAction;
 
+const init: ThemeState = defaultTheme;
 export function themeReducer(state: ThemeState = init, action: AppAction) {
     switch (action.type) {
         case 'theme-set-palette':
@@ -30,71 +31,3 @@ export function themeReducer(state: ThemeState = init, action: AppAction) {
             return state;
     }
 }
-
-const defaultColors: Palette['colors'] = {
-    text: '#000',
-    primary: '#fff',
-    secondary: '#eee',
-    accent: '#777',
-    highlight: '#aaf',
-    shadow: '#000',
-    semiTransparent: 'rgba(0, 0, 0, 0.3)',
-    neutral: 'royalblue',
-    positive: 'seagreen',
-    negative: 'salmon',
-    warning: 'gold',
-};
-const init: Theme = {
-    palettes: {
-        light: {
-            colors: {
-                ...defaultColors,
-            },
-            highlights: {
-                quote: '#fbe381',
-            },
-        },
-        sepia: {
-            colors: {
-                ...defaultColors,
-                text: '#5f3e24',
-                primary: '#f9f3e9',
-                secondary: '#e6e0d6',
-                accent: '#987',
-                highlight: '#000',
-            },
-            highlights: {
-                quote: '#fbe381',
-            },
-        },
-        dark: {
-            colors: {
-                ...defaultColors,
-                text: '#999',
-                primary: '#000',
-                secondary: '#222',
-                accent: '#ddd',
-                highlight: '#fff',
-                shadow: '#333',
-            },
-            highlights: {
-                quote: '#c8b050',
-            },
-        },
-    },
-    currentPalette: 'light',
-    fontFamilies: {
-        book: 'Georgia',
-        menu: 'Open Sans',
-    },
-    fontSizes: {
-        smallest: 14,
-        small: 22,
-        normal: 26,
-        large: 30,
-        largest: 36,
-        text: 26,
-    },
-    fontScale: 1,
-    radius: 5,
-};

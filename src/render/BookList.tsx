@@ -1,6 +1,6 @@
 import React from 'react';
 import { LibraryCard } from 'booka-common';
-import { Themed } from '../application';
+import { Themed } from '../core';
 import { GridList } from '../controls';
 import { LibraryCardTile } from './LibraryCardTile';
 
@@ -14,7 +14,7 @@ export function BookList({ books, theme }: Themed & {
                     key={idx}
                     theme={theme}
                     card={card}
-                />
+                />,
             )
         }
     </GridList>;

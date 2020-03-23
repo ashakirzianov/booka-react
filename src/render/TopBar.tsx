@@ -3,11 +3,12 @@ import { View } from 'react-native';
 import { throttle } from 'lodash';
 
 import {
-    useLibrarySearch, SearchState, Themed, useTheme,
+    useLibrarySearch, SearchState, useTheme,
 } from '../application';
 import {
     TextInput, ActivityIndicator, Panel, userAreaWidth, normalMargin,
 } from '../controls';
+import { Themed } from '../core';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
 import { BookList } from './BookList';

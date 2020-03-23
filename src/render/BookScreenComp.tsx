@@ -7,13 +7,13 @@ import {
 
 import {
     useTheme, useBook, useHighlights, useUrlActions, usePositions,
-    Themed, colors,
 } from '../application';
 import {
     Column, point, Row, Triad, Header, EmptyLine,
     Clickable, TextLine, Footer,
     FullScreenActivityIndicator,
 } from '../atoms';
+import { Themed, colors } from '../core';
 import { BookViewComp } from './BookViewComp';
 import { TableOfContentsComp, pageForPosition } from './TableOfContentsComp';
 import { AccountButton } from './AccountButton';

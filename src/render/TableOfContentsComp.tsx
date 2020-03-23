@@ -8,7 +8,7 @@ import {
     Row, Tab, Column, point,
     StretchTextLink, TextLine, Modal,
 } from '../atoms';
-import { Themed } from '../application';
+import { Themed } from '../core';
 
 export function TableOfContentsComp({
     theme, toc, id, closeToc,

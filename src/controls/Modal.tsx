@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { Transition } from 'react-transition-group';
 
-import { Themed, getFontFamily, getFontSize, colors } from '../application';
+import { Themed, getFontFamily, getFontSize, colors } from './theme';
 import { HasChildren, semiTransparent, normalMargin, doubleMargin, normalPadding } from './common';
 import { defaultAnimationDuration } from './Animations';
 import { OverlayPanel } from './Panel';

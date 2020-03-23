@@ -5,11 +5,11 @@ import {
     AuthToken, Bookmark, Highlight, BookFragment, LibraryCard,
     SearchResult, CardCollections, BookPath, firstPath, CurrentPosition,
 } from 'booka-common';
+import { PaletteName } from '../core';
 import { useUrlActions } from './urlHooks';
 import { useAppSelector, useAppDispatch } from './reduxHooks';
 import { doFbLogout } from './facebookSdk';
 import { useDataProvider } from './dataProviderHooks';
-import { PaletteName } from './theme';
 import { Loadable } from './utils';
 
 export function useTheme() {
@@ -122,7 +122,7 @@ export function useLibrarySearch(query: string | undefined) {
         const sub = data.querySearch(query).pipe(
             map((results): SearchState => ({
                 results,
-            }))
+            })),
         ).subscribe(setSearchState);
         return () => sub.unsubscribe();
     }, [data, query]);
@@ -153,7 +153,7 @@ export function useCollections() {
         const sub = collections().pipe(
             map((c): CollectionsState => ({
                 collections: c,
-            }))
+            })),
         ).subscribe(setCollectionsState);
         return () => sub.unsubscribe();
     }, [collections]);
@@ -176,7 +176,7 @@ export function usePreview(bookId: string, path: BookPath) {
         const sub = data.textPreview(bookId, path).pipe(
             map((preview): TextPreviewState => ({
                 preview,
-            }))
+            })),
         ).subscribe(setPreviewState);
         return () => sub.unsubscribe();
     }, [data, bookId, path]);
