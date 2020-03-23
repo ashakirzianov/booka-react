@@ -11,7 +11,7 @@ import { View } from 'react-native';
 export function Routes() {
     const { theme } = useTheme();
     return <View style={{
-        backgroundColor: colors(theme).primary,
+        backgroundColor: colors(theme).secondary,
         // TODO: check mobile compatibility
         minHeight: '100vh',
     }}>
