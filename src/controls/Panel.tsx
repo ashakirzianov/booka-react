@@ -17,7 +17,7 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
         flexShrink: 1,
         flexGrow: 1,
         flexDirection: 'column',
-        marginTop: normalMargin, marginBottom: normalMargin,
+        margin: normalMargin,
         maxWidth: userAreaWidth,
         width: '100%',
         alignItems: 'center',
@@ -42,6 +42,7 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
             alignSelf: 'stretch',
             alignItems: 'center',
             justifyContent: 'center',
+            margin: normalMargin,
         }}>
             {children}
         </div>

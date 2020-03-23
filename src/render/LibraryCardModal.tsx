@@ -57,6 +57,7 @@ function TagList({ card, theme }: Themed & {
     return <View style={{
         flexDirection: 'row',
         flexWrap: 'wrap',
+        margin: normalMargin,
     }}>
         {
             data.map(({ color, text }, idx) => {
@@ -94,7 +95,7 @@ function ReadSection({ card }: {
     const { positions } = usePositions();
 
     const currentPositions = positions.filter(
-        p => p.bookId === card.id
+        p => p.bookId === card.id,
     );
     const continueReadPosition = mostRecentPosition(currentPositions);
     const continuePath = continueReadPosition?.path;
@@ -104,32 +105,27 @@ function ReadSection({ card }: {
             flexGrow: 1,
             flexShrink: 1,
             flexWrap: 'wrap',
-            marginBottom: doubleMargin,
+            marginBottom: normalMargin,
             justifyContent: 'flex-start',
         }}>
-            <View style={{
-                marginTop: normalMargin,
-                marginRight: normalMargin,
-            }}>
-                <ReadingListButton card={card} />
-            </View>
-            <View style={{
-                marginTop: normalMargin,
-            }}>
-                <BookPathButton
-                    theme={theme}
-                    bookId={card.id}
-                    text='From Start'
-                />
-            </View>
+            <ReadingListButton card={card} />
+            <BookPathButton
+                theme={theme}
+                bookId={card.id}
+                text='From Start'
+            />
         </View>
         {
             !continuePath ? null :
-                <ParagraphPreview
-                    theme={theme}
-                    bookId={card.id}
-                    path={continuePath ?? firstPath()}
-                />
+                <View style={{
+                    padding: normalMargin,
+                }}>
+                    <ParagraphPreview
+                        theme={theme}
+                        bookId={card.id}
+                        path={continuePath ?? firstPath()}
+                    />
+                </View>
         }
     </View>;
 }
@@ -195,7 +191,6 @@ function Layout({
     return <View style={{
         flexDirection: 'row',
         width: '100%',
-        padding: normalPadding,
     }}>
         <View style={{
             flexGrow: 0,

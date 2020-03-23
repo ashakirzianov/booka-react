@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { jsx } from '@emotion/core';
 import { Themed, getFontSize, colors } from '../application';
 import {
-    actionShadow, buttonHeight, actionBack, normalPadding,
+    actionShadow, buttonHeight, actionBack, normalPadding, normalMargin,
 } from './common';
 
 export function TextInput({
@@ -18,10 +18,10 @@ export function TextInput({
     return <View style={{
         flexBasis: 1,
         flexGrow: 1,
+        margin: normalMargin,
     }}>
         <input
             css={{
-                // margin,
                 paddingTop: 0, paddingBottom: 0,
                 paddingLeft: normalPadding, paddingRight: normalPadding,
                 borderWidth: 0,

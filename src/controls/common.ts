@@ -4,6 +4,21 @@ import { Color } from './theme';
 import { colors, Theme } from '../application';
 
 export type HasChildren = PropsWithChildren<{}>;
+export type Marginable = {
+    margin?: Size,
+    marginLeft?: Size,
+    marginRight?: Size,
+    marginTop?: Size,
+    marginBottom?: Size,
+};
+export function margins({ margin, marginLeft, marginRight, marginTop, marginBottom }: Marginable, def?: Size) {
+    return {
+        marginLeft: marginLeft ?? margin ?? def,
+        marginRight: marginRight ?? margin ?? def,
+        marginTop: marginTop ?? margin ?? def,
+        marginBottom: marginBottom ?? margin ?? def,
+    };
+}
 export type Style = Interpolation;
 
 export type Size = string | number;

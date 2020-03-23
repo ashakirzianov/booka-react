@@ -3,7 +3,7 @@ import { jsx } from '@emotion/core';
 
 import { Themed, colors } from '../theme';
 import { IconName, Icon } from '../Icon';
-import { actionShadow, buttonHeight, actionBack } from '../common';
+import { actionShadow, buttonHeight, actionBack, normalMargin } from '../common';
 
 export function IconButton({
     icon, theme,
@@ -16,6 +16,7 @@ export function IconButton({
 }) {
     return <div css={{
         display: 'flex',
+        margin: normalMargin,
         borderWidth: 0,
         height: buttonHeight,
         width: buttonHeight,

@@ -6,15 +6,12 @@ import { LibraryCardModal } from './LibraryCardModal';
 import { TopBar } from './TopBar';
 import { CurrentBook } from './CurrentBook';
 import { RecentBooks } from './RecentBooks';
-import { normalPadding } from '../controls';
 
 export function FeedScreen({ show, query }: {
     query: string | undefined,
     show: string | undefined,
 }) {
-    return <View style={{
-        padding: normalPadding,
-    }}>
+    return <View>
         <LibraryCardModal bookId={show} />
         <TopBar query={query} />
         <CurrentBook />

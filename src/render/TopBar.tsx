@@ -28,18 +28,8 @@ export function TopBar({ query }: {
             onChange={querySearch}
         />}
         Buttons={<>
-            <View style={{
-                margin: normalMargin,
-                marginRight: 0,
-            }}>
-                <AppearanceButton />
-            </View>
-            <View style={{
-                margin: normalMargin,
-                marginRight: 0,
-            }}>
-                <AccountButton />
-            </View>
+            <AppearanceButton />
+            <AccountButton />
         </>}
         Results={<SearchResults
             theme={theme}
