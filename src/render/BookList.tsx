@@ -2,7 +2,7 @@ import React from 'react';
 import { LibraryCard } from 'booka-common';
 import { Themed } from '../core';
 import { GridList } from '../controls';
-import { LibraryCardTile } from './LibraryCardTile';
+import { LibraryCardLink } from './LibraryCardTile';
 
 export function BookList({ books, theme }: Themed & {
     books: LibraryCard[],
@@ -10,7 +10,7 @@ export function BookList({ books, theme }: Themed & {
     return <GridList theme={theme}>
         {
             books.map((card, idx) =>
-                <LibraryCardTile
+                <LibraryCardLink
                     key={idx}
                     theme={theme}
                     card={card}

@@ -9,12 +9,13 @@ import {
 import { Style, actionShadow, normalMargin } from './common';
 
 export function BookTile({
-    title, author, coverUrl, showTitle, theme,
+    title, author, coverUrl, showTitle, hideShadow, theme,
 }: Themed & {
     coverUrl: string | undefined,
     title: string,
     author: string | undefined,
     showTitle?: boolean,
+    hideShadow?: boolean,
 }) {
     return <div css={{
         display: 'flex',
@@ -35,6 +36,7 @@ export function BookTile({
             title={title}
             author={author}
             coverUrl={coverUrl}
+            showShadow={hideShadow ? false : true}
         />
         {
             !showTitle ? null :
@@ -48,29 +50,33 @@ export function BookTile({
 }
 
 function BookCover({
-    title, coverUrl, theme,
+    title, coverUrl, showShadow, theme,
 }: Themed & {
     coverUrl: string | undefined,
     title: string,
     author: string | undefined,
+    showShadow: boolean,
 }) {
     if (coverUrl) {
         return <BookImageCover
             theme={theme}
             imageUrl={coverUrl}
             title={title}
+            showShadow={showShadow}
         />;
     } else {
         return <BookEmptyCover
             theme={theme}
             title={title}
+            showShadow={showShadow}
         />;
     }
 }
 
-function BookImageCover({ theme, imageUrl, title }: Themed & {
+function BookImageCover({ theme, imageUrl, title, showShadow }: Themed & {
     imageUrl: string | undefined,
     title: string,
+    showShadow: boolean,
 }) {
     return <div style={{
         height: 180,
@@ -82,17 +88,22 @@ function BookImageCover({ theme, imageUrl, title }: Themed & {
             css={{
                 maxHeight: '100%',
                 maxWidth: '100%',
-                boxShadow: actionShadow(colors(theme).shadow),
+                boxShadow: showShadow
+                    ? actionShadow(colors(theme).shadow)
+                    : undefined,
                 '&:hover': {
-                    boxShadow: actionShadow(colors(theme).highlight),
+                    boxShadow: showShadow
+                        ? actionShadow(colors(theme).highlight)
+                        : undefined,
                 },
             }}
         />
     </div>;
 }
 
-function BookEmptyCover({ title, theme }: Themed & {
+function BookEmptyCover({ title, showShadow, theme }: Themed & {
     title: string,
+    showShadow: boolean,
 }) {
     const { back, text } = colorForString(title);
     return <div css={{
@@ -108,9 +119,13 @@ function BookEmptyCover({ title, theme }: Themed & {
         fontFamily: getFontFamily(theme, 'menu'),
         background: back,
         color: text,
-        boxShadow: actionShadow(colors(theme).shadow),
+        boxShadow: showShadow
+            ? actionShadow(colors(theme).shadow)
+            : undefined,
         '&:hover': {
-            boxShadow: actionShadow(colors(theme).highlight),
+            boxShadow: showShadow
+                ? actionShadow(colors(theme).highlight)
+                : undefined,
         },
     }}>
         {title}

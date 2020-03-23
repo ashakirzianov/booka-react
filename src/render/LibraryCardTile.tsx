@@ -10,13 +10,13 @@ export function BookIdTile({ bookId }: {
 }) {
     const { theme } = useTheme();
     const { card } = useLibraryCard(bookId);
-    return <LibraryCardTile
+    return <LibraryCardLink
         theme={theme}
         card={card}
     />;
 }
 
-export function LibraryCardTile({ card, theme }: Themed & {
+export function LibraryCardLink({ card, theme }: Themed & {
     card: Loadable<LibraryCard>,
 }) {
     if (card.loading) {
@@ -31,4 +31,16 @@ export function LibraryCardTile({ card, theme }: Themed & {
             />
         </ShowCardLink>;
     }
+}
+
+export function LibraryCardTile({ card, theme }: Themed & {
+    card: LibraryCard,
+}) {
+    return <BookTile
+        theme={theme}
+        title={card.title}
+        author={card.author}
+        coverUrl={card.coverUrl}
+        hideShadow={true}
+    />;
 }
