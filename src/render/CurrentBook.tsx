@@ -65,6 +65,7 @@ function Layout({ Tile, Preview, Continue }: {
         width: '100%',
         height: 240,
         alignItems: 'center',
+        justifyContent: 'space-between',
     }}>
         {Tile}
         <View style={{
@@ -73,7 +74,7 @@ function Layout({ Tile, Preview, Continue }: {
             maxHeight: '100%',
             width: '100%',
             minHeight: 0,
-            margin,
+            // margin,
         }}>
             {Preview}
             {/* <View style={{

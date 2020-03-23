@@ -21,7 +21,7 @@ export function TextInput({
     }}>
         <input
             css={{
-                margin,
+                // margin,
                 paddingTop: 0, paddingBottom: 0,
                 paddingLeft: padding, paddingRight: padding,
                 borderWidth: 0,

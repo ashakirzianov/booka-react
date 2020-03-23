@@ -12,10 +12,13 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
     return <div style={{
         zIndex: -10,
         display: 'flex',
-        flex: 1,
+        flexBasis: 1,
+        flexShrink: 1,
+        flexGrow: 1,
         flexDirection: 'column',
-        margin,
-        width: userAreaWidth,
+        // margin,
+        maxWidth: userAreaWidth,
+        width: '100%',
         alignItems: 'center',
         alignSelf: 'center',
     }}>
@@ -35,10 +38,11 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
         }
         <div style={{
             display: 'flex',
+            flexShrink: 1,
             alignSelf: 'stretch',
             alignItems: 'center',
             justifyContent: 'center',
-            padding,
+            // padding,
             margin,
             // borderRadius: 3,
             // backgroundColor: colors(theme).primary,
