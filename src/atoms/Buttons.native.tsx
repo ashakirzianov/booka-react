@@ -8,7 +8,7 @@ import {
     TextButtonProps, IconButtonProps, TagButtonProps,
     PaletteButtonProps,
 } from './Buttons';
-import { colors, getFontSize } from './theme';
+import { colors, getFontSize } from '../core';
 
 export function TextButton(props: TextButtonProps) {
     return <Link onClick={props.onClick}>
@@ -57,7 +57,7 @@ export function TagButton(props: TagButtonProps) {
                 <TextLine
                     theme={props.theme}
                     text={props.text}
-                    fontSize='smallest'
+                    fontSize='nano'
                     color='accent'
                 />
             </View>
@@ -85,7 +85,7 @@ export function BorderButton(props: TextButtonProps) {
 
 export function PaletteButton(props: PaletteButtonProps) {
     const theme = props.theme;
-    const cols = theme.palettes[theme.currentPalette].colors;
+    const cols = theme.palettes[theme.currentPalette];
     return <Button onClick={props.onClick}>
         <View
             style={{

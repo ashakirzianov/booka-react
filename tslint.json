@@ -13,19 +13,6 @@
       "single",
       "avoid-escape"
     ],
-    "semicolon": true,
-    "trailing-comma": [
-      true,
-      {
-        "multiline": {
-          "arrays": "always",
-          "objects": "always",
-          "imports": "always",
-          "exports": "always",
-          "typeLiterals": "always",
-          "functions": "ignore"
-        }
-      }
-    ]
+    "semicolon": true
   }
 }

@@ -1,38 +1,21 @@
-import * as React from 'react';
+import React from 'react';
 
-import {
-    Themed, TopBar, point, Triad, EmptyLine,
-} from '../atoms';
-import { useTheme } from '../application';
-import { AccountButton } from './AccountButton';
-import { LibrarySearchComp } from './LibrarySearchComp';
-import { CollectionsComp } from './CollectionsComp';
-import { RecentBooksComp } from './RecentBooksComp';
-import { LibraryCardComp } from './LibraryCardComp';
+import { Screen } from '../controls';
+import { ReadingList } from './Collections';
+import { LibraryCardModal } from './LibraryCardModal';
+import { TopBar } from './TopBar';
+import { CurrentBook } from './CurrentBook';
+import { RecentBooks } from './RecentBooks';
 
 export function FeedScreen({ show, query }: {
     query: string | undefined,
     show: string | undefined,
 }) {
-    const { theme } = useTheme();
-    return <>
-        {show ? <LibraryCardComp bookId={show} /> : null}
-        <FeedScreenHeader theme={theme} />
-        <EmptyLine />
-        <LibrarySearchComp query={query} />
-        <CollectionsComp />
-        <RecentBooksComp />
-    </>;
-}
-
-function FeedScreenHeader({ theme }: Themed) {
-    return <TopBar
-        theme={theme}
-        open={true}
-        paddingHorizontal={point(1)}
-    >
-        <Triad
-            right={<AccountButton />}
-        />
-    </TopBar>;
+    return <Screen>
+        <LibraryCardModal bookId={show} />
+        <TopBar query={query} />
+        <CurrentBook />
+        <RecentBooks />
+        <ReadingList />
+    </Screen>;
 }

@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { Callback, AccountInfo } from 'booka-common';
+import { AccountInfo } from 'booka-common';
 
-import {
-    Column, FacebookLogin, PictureButton, Row, point,
-    WithPopover, TextLine, IconButton, TagButton, Themed,
-} from '../atoms';
 import { AccountState } from '../ducks';
 import { useTheme, useAccount } from '../application';
+import {
+    WithPopover, FacebookLogin, View,
+    PictureButton, IconButton, Label, ActionButton, point, doubleMargin,
+} from '../controls';
+import { Themed } from '../core';
 
 export function AccountButton() {
     const { theme } = useTheme();
@@ -23,7 +24,7 @@ function AccountButtonDumb({
     account, theme, logout,
 }: Themed & {
     account: AccountState,
-    logout: Callback,
+    logout: () => void,
 }) {
     return <WithPopover
         theme={theme}
@@ -51,7 +52,7 @@ function AccountButtonDumb({
 
 function ActualButton({ theme, account, onClick }: Themed & {
     account: AccountState,
-    onClick?: Callback,
+    onClick?: () => void,
 }) {
     if (account.state === 'signed') {
         return <PictureButton
@@ -70,33 +71,31 @@ function ActualButton({ theme, account, onClick }: Themed & {
 
 function AccountPanel({ account, theme, logout }: Themed & {
     account: AccountInfo,
-    logout: Callback,
+    logout: () => void,
 }) {
-    return <Column>
-        <Row margin={point(1)} centered>
-            <TextLine
-                theme={theme}
-                text={account.name}
-                fontSize='small'
-            />
-        </Row>
-        <Row margin={point(1)} centered>
-            <TagButton
-                theme={theme}
-                text='Logout'
-                onClick={logout}
-            />
-        </Row>
-    </Column>;
+    return <View style={{
+        height: point(10),
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        margin: doubleMargin,
+    }}>
+        <Label
+            theme={theme}
+            text={account.name}
+        />
+        <ActionButton
+            theme={theme}
+            text='Logout'
+            onClick={logout}
+        />
+    </View>;
 }
 
 function SignInPanel({ theme, onStatusChanged }: Themed & {
-    onStatusChanged?: Callback,
+    onStatusChanged?: () => void,
 }) {
-    return <Column>
-        <FacebookLogin
-            theme={theme}
-            onStatusChange={onStatusChanged}
-        />
-    </Column>;
+    return <FacebookLogin
+        theme={theme}
+        onStatusChange={onStatusChanged}
+    />;
 }

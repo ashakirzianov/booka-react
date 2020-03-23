@@ -2,22 +2,21 @@ import React from 'react';
 
 import { useTheme } from '../application';
 import {
-    Column, point, Row, Themed, IconButton,
-    PaletteName, PaletteButton, TextButton, Separator, WithPopover,
-} from '../atoms';
+    WithPopover, View, IconButton, PaletteButton,
+    TextButton, Separator, point, doubleMargin,
+} from '../controls';
+import { PaletteName, Themed } from '../core';
 
 export function AppearanceButton() {
     const { theme, incrementScale, setPalette } = useTheme();
     return <WithPopover
         theme={theme}
         popoverPlacement='bottom'
-        body={
-            <ThemePicker
-                theme={theme}
-                setPalette={setPalette}
-                incrementScale={incrementScale}
-            />
-        }
+        body={<ThemePicker
+            theme={theme}
+            setPalette={setPalette}
+            incrementScale={incrementScale}
+        />}
     >
         <IconButton theme={theme} icon='letter' />
     </WithPopover>;
@@ -27,32 +26,40 @@ function ThemePicker({ theme, setPalette, incrementScale }: Themed & {
     setPalette: (name: PaletteName) => void,
     incrementScale: (inc: number) => void,
 }) {
-    return <Column width={point(14)}>
+    return <View style={{
+        width: point(14),
+        margin: doubleMargin,
+    }}>
         <FontScale theme={theme} incrementScale={incrementScale} />
         <Separator />
         <PalettePicker theme={theme} setPalette={setPalette} />
-    </Column>;
+    </View>;
 }
 
 function FontScale({ theme, incrementScale }: Themed & {
     incrementScale: (inc: number) => void,
 }) {
-    return <Row centered justified height={point(5)}>
+    return <View style={{
+        height: point(6),
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+    }}>
         <FontScaleButton
-            theme={theme} increment={-0.1} size='smallest' incrementScale={incrementScale} />
+            theme={theme} increment={-0.1} size='micro' incrementScale={incrementScale} />
         <FontScaleButton
-            theme={theme} increment={0.1} size='largest' incrementScale={incrementScale} />
-    </Row>;
+            theme={theme} increment={0.1} size='macro' incrementScale={incrementScale} />
+    </View>;
 }
 
 function FontScaleButton({
     theme, size, increment, incrementScale,
 }: Themed & {
-    size: 'largest' | 'smallest',
+    size: 'macro' | 'micro',
     increment: number,
     incrementScale: (inc: number) => void,
 }) {
-    return <Column centered>
+    return <View>
         <TextButton
             theme={theme}
             fontFamily='book'
@@ -60,20 +67,25 @@ function FontScaleButton({
             fontSize={size}
             onClick={() => incrementScale(increment)}
         />
-    </Column>;
+    </View>;
 }
 
 function PalettePicker({ theme, setPalette }: Themed & {
     setPalette: (name: PaletteName) => void,
 }) {
-    return <Row centered justified height={point(5)}>
+    return <View style={{
+        height: point(6),
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+    }}>
         <SelectPaletteButton
             theme={theme} name='light' text='L' setPalette={setPalette} />
         <SelectPaletteButton
             theme={theme} name='sepia' text='S' setPalette={setPalette} />
         <SelectPaletteButton
             theme={theme} name='dark' text='D' setPalette={setPalette} />
-    </Row>;
+    </View>;
 }
 
 function SelectPaletteButton({ theme, text, name, setPalette }: Themed & {

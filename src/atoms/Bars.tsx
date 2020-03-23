@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-import { colors, Theme } from './theme';
+import { colors, Theme } from '../core';
 import { WithChildren, point, defaults, Size } from './common';
 import { FadeIn } from './Animations';
 
@@ -40,5 +40,5 @@ function bar(top: boolean) {
     };
 }
 
-export const TopBar = bar(true);
-export const BottomBar = bar(false);
+export const Header = bar(true);
+export const Footer = bar(false);

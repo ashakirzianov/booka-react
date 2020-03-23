@@ -1,8 +1,9 @@
 import React from 'react';
-
 import { BookPath, findBookmark } from 'booka-common';
+
 import { useTheme, useBookmarks } from '../application';
-import { TextButton, Themed, TagButton, IconLink } from '../atoms';
+import { Themed } from '../core';
+import { TextButton, TagButton, IconLink } from '../atoms';
 import { ShowTocLink } from './Navigation';
 
 export function AddBookmarkButton({ bookId, path }: {

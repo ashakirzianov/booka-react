@@ -7,7 +7,7 @@ import { jsx } from '@emotion/core';
 
 import {
     Themed, colors, getFontSize, getFontFamily, FontFamilies,
-} from './theme';
+} from '../core';
 import { point, WithChildren } from './common';
 import { IconName, Icon } from './Icons';
 

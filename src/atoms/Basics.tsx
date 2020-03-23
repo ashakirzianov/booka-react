@@ -2,7 +2,7 @@
 import { jsx } from '@emotion/core';
 import { ActivityIndicator as NativeActivityIndicator, View } from 'react-native';
 
-import { Theme, PaletteColor, colors, getFontSize } from './theme';
+import { Theme, PaletteColor, colors, getFontSize } from '../core';
 import { percent, point, Size, WithChildren, defaults } from './common';
 
 export type TextProps = {

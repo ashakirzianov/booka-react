@@ -5,11 +5,12 @@ import {
 } from 'booka-common';
 
 import {
-    Themed, colors, getFontSize, Row,
-    point, getHighlights, BorderLink, Theme,
+    Row,
+    point, BorderLink,
 } from '../atoms';
 import { BookFragmentComp, BookSelection, ColorizedRange } from '../reader';
 import { useCopy } from '../application';
+import { Themed, colors, getFontSize, Theme } from '../core';
 import { config } from '../config';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
 
@@ -109,7 +110,7 @@ function AnchorLink({ theme, text, anchor, bookId }: Themed & {
 function quoteColorization(quote: BookRange | undefined, theme: Theme): ColorizedRange[] {
     return quote
         ? [{
-            color: getHighlights(theme).quote,
+            color: colors(theme).yellow,
             range: quote,
         }]
         : [];

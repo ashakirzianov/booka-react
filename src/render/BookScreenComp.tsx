@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 
 import {
-    assertNever, positionForPath, BookPath,
+    positionForPath, BookPath,
     BookFragment, BookRange, TableOfContents,
 } from 'booka-common';
 
@@ -9,10 +9,11 @@ import {
     useTheme, useBook, useHighlights, useUrlActions, usePositions,
 } from '../application';
 import {
-    Column, point, Row, Themed, Triad, TopBar, EmptyLine,
-    Clickable, colors, TextLine, BottomBar,
-    TextLink, FullScreenActivityIndicator,
+    Column, point, Row, Triad, Header, EmptyLine,
+    Clickable, TextLine, Footer,
+    FullScreenActivityIndicator,
 } from '../atoms';
+import { Themed, colors } from '../core';
 import { BookViewComp } from './BookViewComp';
 import { TableOfContentsComp, pageForPosition } from './TableOfContentsComp';
 import { AccountButton } from './AccountButton';
@@ -29,41 +30,22 @@ export function BookScreenComp({ bookId, showToc, path, quote }: {
     const { bookState } = useBook({
         bookId, path,
     });
-
-    switch (bookState.state) {
-        case 'loading':
-            return <FullScreenActivityIndicator
-                theme={theme}
-            />;
-        case 'ready': {
-            const { fragment } = bookState;
-            const { toc } = fragment;
-            return <BookReadyComp
-                theme={theme}
-                bookId={bookId}
-                path={path}
-                fragment={fragment}
-                toc={toc}
-                showToc={showToc}
-                quote={quote}
-            />;
-        }
-
-        case 'error':
-            return <Column>
-                <TextLine
-                    theme={theme}
-                    text={`Error opening ${bookId}`}
-                />
-                <TextLink
-                    theme={theme}
-                    text='Back'
-                    to='/'
-                />
-            </Column>;
-        default:
-            assertNever(bookState);
-            return <span>Should not happen</span>;
+    if (bookState.loading) {
+        return <FullScreenActivityIndicator
+            theme={theme}
+        />;
+    } else {
+        const { fragment } = bookState;
+        const { toc } = fragment;
+        return <BookReadyComp
+            theme={theme}
+            bookId={bookId}
+            path={path}
+            fragment={fragment}
+            toc={toc}
+            showToc={showToc}
+            quote={quote}
+        />;
     }
 }
 
@@ -157,7 +139,7 @@ function BookScreenHeader({
     path: BookPath | undefined,
     visible: boolean,
 }) {
-    return <TopBar
+    return <Header
         theme={theme}
         open={visible}
         paddingHorizontal={point(1)}
@@ -171,7 +153,7 @@ function BookScreenHeader({
                     <AccountButton />
                 </>}
         />
-    </TopBar>;
+    </Header>;
 }
 
 function BookScreenFooter({
@@ -188,7 +170,7 @@ function BookScreenFooter({
     const nextChapterPage = fragment.next
         ? pageForPosition(fragment.next.position)
         : total;
-    return <BottomBar theme={theme} open={visible}>
+    return <Footer theme={theme} open={visible}>
         <Triad
             center={
                 <TocButton
@@ -204,9 +186,9 @@ function BookScreenFooter({
                         ? `${nextChapterPage - currentPage} pages left`
                         : ''
                 }
-                fontSize='smallest'
+                fontSize='nano'
                 color='accent'
             />}
         />
-    </BottomBar>;
+    </Footer>;
 }

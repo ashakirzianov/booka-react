@@ -4,7 +4,7 @@ import {
     View, SafeAreaView,
 } from 'react-native';
 
-import { colors, getFontSize } from './theme';
+import { colors, getFontSize } from '../core';
 import { point, defaults } from './common';
 import {
     TextLineProps, ClickableProps, FullScreenActivityIndicatorProps,

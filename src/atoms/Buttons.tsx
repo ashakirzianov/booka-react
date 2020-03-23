@@ -7,7 +7,7 @@ import { jsx } from '@emotion/core';
 import {
     colors, getFontSize, Themed, FontSizes, PaletteName,
     FontFamilies, getFontFamily,
-} from './theme';
+} from '../core';
 import { TextLine } from './Basics';
 import { point } from './common';
 import { Icon, IconName } from './Icons';
@@ -90,7 +90,7 @@ export function TagButton(props: TagButtonProps) {
                 <TextLine
                     theme={props.theme}
                     text={props.text}
-                    fontSize='smallest'
+                    fontSize='nano'
                     color='secondary'
                 />
             </View>
@@ -104,7 +104,7 @@ export type PaletteButtonProps = ButtonProps & {
 };
 export function PaletteButton(props: PaletteButtonProps) {
     const theme = props.theme;
-    const cols = theme.palettes[props.palette].colors;
+    const cols = theme.palettes[props.palette];
     const selected = props.palette === theme.currentPalette;
     return <div
         onClick={props.onClick}

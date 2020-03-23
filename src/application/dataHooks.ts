@@ -5,17 +5,12 @@ import {
     AuthToken, Bookmark, Highlight, BookFragment, LibraryCard,
     SearchResult, CardCollections, BookPath, firstPath, CurrentPosition,
 } from 'booka-common';
-import { PaletteName } from '../atoms';
+import { PaletteName } from '../core';
 import { useUrlActions } from './urlHooks';
 import { useAppSelector, useAppDispatch } from './reduxHooks';
 import { doFbLogout } from './facebookSdk';
 import { useDataProvider } from './dataProviderHooks';
-
-type Loadable<T> =
-    | { state: 'loading' }
-    | { state: 'error', err?: any }
-    | { state: 'ready' } & T
-    ;
+import { Loadable } from './utils';
 
 export function useTheme() {
     const theme = useAppSelector(s => s.theme);
@@ -79,7 +74,7 @@ export function useBook({ bookId, path, refId }: {
     refId?: string,
 }) {
     const data = useDataProvider();
-    const [bookState, setBookState] = useState<BookState>({ state: 'loading' });
+    const [bookState, setBookState] = useState<BookState>({ loading: true });
     useEffect(() => {
         const observable = refId
             ? data.fragmentForRef(bookId, refId)
@@ -87,7 +82,6 @@ export function useBook({ bookId, path, refId }: {
         const sub = observable
             .pipe(
                 map((fragment): BookState => ({
-                    state: 'ready',
                     fragment,
                 })),
             )
@@ -98,17 +92,12 @@ export function useBook({ bookId, path, refId }: {
     return { bookState };
 }
 
-export type LibraryCardState = Loadable<{
-    card: LibraryCard,
-}>;
+export type LibraryCardState = Loadable<LibraryCard>;
 export function useLibraryCard(bookId: string) {
     const data = useDataProvider();
-    const [cardState, setCardState] = useState<LibraryCardState>({ state: 'loading' });
+    const [card, setCardState] = useState<LibraryCardState>({ loading: true });
     useEffect(() => {
         const sub = data.cardForId(bookId).pipe(
-            map((card): LibraryCardState => ({
-                state: 'ready', card,
-            }))
         ).subscribe(setCardState);
         return () => sub.unsubscribe();
     }, [data, bookId]);
@@ -119,7 +108,7 @@ export function useLibraryCard(bookId: string) {
         [updateShowCard],
     );
 
-    return { cardState, closeCard };
+    return { card, closeCard };
 }
 
 export type SearchState = Loadable<{
@@ -127,13 +116,13 @@ export type SearchState = Loadable<{
 }>;
 export function useLibrarySearch(query: string | undefined) {
     const data = useDataProvider();
-    const [searchState, setSearchState] = useState<SearchState>({ state: 'loading' });
+    const [searchState, setSearchState] = useState<SearchState>({ loading: true });
     useEffect(() => {
-        setSearchState({ state: 'loading' });
+        setSearchState({ loading: true });
         const sub = data.querySearch(query).pipe(
             map((results): SearchState => ({
-                state: 'ready', results,
-            }))
+                results,
+            })),
         ).subscribe(setSearchState);
         return () => sub.unsubscribe();
     }, [data, query]);
@@ -164,7 +153,7 @@ export function useCollections() {
         const sub = collections().pipe(
             map((c): CollectionsState => ({
                 collections: c,
-            }))
+            })),
         ).subscribe(setCollectionsState);
         return () => sub.unsubscribe();
     }, [collections]);
@@ -181,13 +170,13 @@ export type TextPreviewState = Loadable<{
 }>;
 export function usePreview(bookId: string, path: BookPath) {
     const data = useDataProvider();
-    const [previewState, setPreviewState] = useState<TextPreviewState>({ state: 'loading' });
+    const [previewState, setPreviewState] = useState<TextPreviewState>({ loading: true });
 
     useEffect(() => {
         const sub = data.textPreview(bookId, path).pipe(
             map((preview): TextPreviewState => ({
-                state: 'ready', preview,
-            }))
+                preview,
+            })),
         ).subscribe(setPreviewState);
         return () => sub.unsubscribe();
     }, [data, bookId, path]);

@@ -5,14 +5,18 @@ import { BookPath, pathToString } from 'booka-common';
 import { WithChildren } from '../atoms';
 import { updateSearch } from '../application';
 
-export function LinkToPath({ bookId, path, children }: WithChildren & {
+export function BookPathLink({ bookId, path, children }: WithChildren & {
     bookId: string,
     path?: BookPath,
 }) {
     const to = path
         ? `/book/${bookId}?p=${pathToString(path)}`
         : `/book/${bookId}`;
-    return <Link to={to}>
+    return <Link to={to} style={{
+        textDecoration: 'none',
+        minHeight: 0,
+        margin: 0,
+    }}>
         {children}
     </Link>;
 }
@@ -39,7 +43,9 @@ function UpdateQueryLink({ queryKey, value, children }: WithChildren & {
 }) {
     const location = useLocation();
     const search = updateSearch(location.search, queryKey, value);
-    return <Link to={search}>
+    return <Link to={search} style={{
+        textDecoration: 'none',
+    }}>
         {children}
     </Link>;
 }

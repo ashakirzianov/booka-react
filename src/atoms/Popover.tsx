@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { PopperProps, Manager, Reference, Popper } from 'react-popper';
 
+import { Theme } from '../core';
 import { platformValue } from './platform';
 import { OverlayBox } from './OverlayBox';
 import { FadeIn } from './Animations';
-import { Theme } from './theme';
 
 export type PopoverBodyParams = {
     scheduleUpdate: () => void,
