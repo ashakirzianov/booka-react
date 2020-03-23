@@ -3,7 +3,7 @@ import { jsx } from '@emotion/core';
 import {
     Themed, colors, getFontSize, getFontFamily, PaletteColor,
 } from './theme';
-import { padding, nanoMargin } from './common';
+import { normalPadding, nanoMargin } from './common';
 
 export function TagLabel({
     text, onClick, theme, color,
@@ -18,7 +18,7 @@ export function TagLabel({
         onClick={onClick}
         css={{
             margin: nanoMargin,
-            paddingLeft: padding, paddingRight: padding,
+            paddingLeft: normalPadding, paddingRight: normalPadding,
             borderStyle: 'solid',
             borderWidth: 2,
             borderRadius: fontSize,

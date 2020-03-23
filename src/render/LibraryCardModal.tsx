@@ -9,7 +9,7 @@ import {
 } from '../application';
 import {
     Modal, ActivityIndicator, ActionButton, TagLabel,
-    margin, padding, doubleMargin,
+    normalMargin, normalPadding, doubleMargin,
 } from '../controls';
 import { LibraryCardTile } from './LibraryCardTile';
 import { BookPathLink } from './Navigation';
@@ -108,13 +108,13 @@ function ReadSection({ card }: {
             justifyContent: 'flex-start',
         }}>
             <View style={{
-                marginTop: margin,
-                marginRight: margin,
+                marginTop: normalMargin,
+                marginRight: normalMargin,
             }}>
                 <ReadingListButton card={card} />
             </View>
             <View style={{
-                marginTop: margin,
+                marginTop: normalMargin,
             }}>
                 <BookPathButton
                     theme={theme}
@@ -195,7 +195,7 @@ function Layout({
     return <View style={{
         flexDirection: 'row',
         width: '100%',
-        padding,
+        padding: normalPadding,
     }}>
         <View style={{
             flexGrow: 0,

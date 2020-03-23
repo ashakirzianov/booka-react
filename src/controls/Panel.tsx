@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     HasChildren, percent, point, panelShadow, userAreaWidth,
-    margin, halfMargin,
+    normalMargin, halfMargin,
 } from './common';
 import { Themed, colors, getFontFamily, getFontSize } from '../application';
 import { defaultAnimationDuration } from './Animations';
@@ -17,7 +17,7 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
         flexShrink: 1,
         flexGrow: 1,
         flexDirection: 'column',
-        marginTop: margin, marginBottom: margin,
+        marginTop: normalMargin, marginBottom: normalMargin,
         maxWidth: userAreaWidth,
         width: '100%',
         alignItems: 'center',

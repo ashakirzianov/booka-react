@@ -6,7 +6,7 @@ import {
     useLibrarySearch, SearchState, Themed, useTheme,
 } from '../application';
 import {
-    TextInput, ActivityIndicator, Panel, userAreaWidth, margin,
+    TextInput, ActivityIndicator, Panel, userAreaWidth, normalMargin,
 } from '../controls';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
@@ -29,13 +29,13 @@ export function TopBar({ query }: {
         />}
         Buttons={<>
             <View style={{
-                margin,
+                margin: normalMargin,
                 marginRight: 0,
             }}>
                 <AppearanceButton />
             </View>
             <View style={{
-                margin,
+                margin: normalMargin,
                 marginRight: 0,
             }}>
                 <AccountButton />

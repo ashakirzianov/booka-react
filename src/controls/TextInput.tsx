@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { jsx } from '@emotion/core';
 import { Themed, getFontSize, colors } from '../application';
 import {
-    actionShadow, buttonHeight, actionBack, padding,
+    actionShadow, buttonHeight, actionBack, normalPadding,
 } from './common';
 
 export function TextInput({
@@ -23,7 +23,7 @@ export function TextInput({
             css={{
                 // margin,
                 paddingTop: 0, paddingBottom: 0,
-                paddingLeft: padding, paddingRight: padding,
+                paddingLeft: normalPadding, paddingRight: normalPadding,
                 borderWidth: 0,
                 height: buttonHeight,
                 color: colors(theme).text,
