@@ -1,25 +1,35 @@
 import React from 'react';
-import { LibraryCard } from 'booka-common';
+import { LibraryCard, CardCollectionName } from 'booka-common';
 
 import { Panel } from '../controls';
 import { useTheme, useCollections } from '../application';
 import { Themed } from '../core';
 import { BookList } from './BookList';
 
-export function Collections() {
+export function ReadingList() {
+    return <CardCollection
+        collection='reading-list'
+        title='Reading List'
+    />;
+}
+
+function CardCollection({ collection, title }: {
+    collection: CardCollectionName,
+    title: string,
+}) {
     const { theme } = useTheme();
 
     const { collectionsState } = useCollections();
-    const readingList = collectionsState.collections['reading-list'];
+    const readingList = collectionsState.collections[collection];
 
-    return <CardCollection
+    return <CardCollectionView
         theme={theme}
-        displayName='Reading List'
+        displayName={title}
         cards={readingList}
     />;
 }
 
-function CardCollection({ theme, cards, displayName }: Themed & {
+function CardCollectionView({ theme, cards, displayName }: Themed & {
     cards: LibraryCard[] | undefined,
     displayName: string,
 }) {
