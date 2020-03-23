@@ -3,7 +3,9 @@ import { View } from 'react-native';
 import { Transition } from 'react-transition-group';
 
 import { Themed, getFontFamily, getFontSize, colors } from './theme';
-import { HasChildren, semiTransparent, normalMargin, doubleMargin, normalPadding } from './common';
+import {
+    HasChildren, semiTransparent, doubleMargin, normalPadding,
+} from './common';
 import { defaultAnimationDuration } from './Animations';
 import { OverlayPanel } from './Panel';
 import { IconButton } from './Buttons';

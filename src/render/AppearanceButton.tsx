@@ -3,7 +3,7 @@ import React from 'react';
 import { useTheme } from '../application';
 import {
     WithPopover, View, IconButton, PaletteButton,
-    TextButton, Separator, point, doubleMargin, doublePadding,
+    TextButton, Separator, point, doubleMargin,
 } from '../controls';
 import { PaletteName, Themed } from '../core';
 

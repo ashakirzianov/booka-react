@@ -8,7 +8,7 @@ import {
 } from '../application';
 import {
     Modal, ActivityIndicator, ActionButton, TagLabel,
-    normalMargin, normalPadding, doubleMargin,
+    normalMargin,
 } from '../controls';
 import { Themed, PaletteColor } from '../core';
 import { LibraryCardTile } from './LibraryCardTile';

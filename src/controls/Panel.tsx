@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     HasChildren, percent, point, panelShadow, userAreaWidth,
-    normalMargin, halfMargin, halfPadding, normalPadding,
+    normalMargin, halfMargin,
 } from './common';
 import { Themed, colors, getFontFamily, getFontSize } from './theme';
 import { defaultAnimationDuration } from './Animations';
