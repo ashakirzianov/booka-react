@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Themed, colors, getFontSize, getFontFamily } from '../theme';
-import { actionShadow } from '../common';
+import { actionShadow, point } from '../common';
 
 export function ActionButton({
     text, onClick, theme,
@@ -14,6 +14,8 @@ export function ActionButton({
         value={text}
         onClick={onClick}
         css={{
+            width: point(8),
+            padding: 10,
             cursor: 'pointer',
             borderStyle: 'solid',
             borderColor: colors(theme).accent,
@@ -21,7 +23,6 @@ export function ActionButton({
             fontSize: getFontSize(theme, 'small'),
             fontFamily: getFontFamily(theme, 'menu'),
             color: colors(theme).accent,
-            padding: 10,
             boxShadow: actionShadow(colors(theme).shadow),
             '&:hover': {
                 borderColor: colors(theme).highlight,

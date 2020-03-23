@@ -110,6 +110,7 @@ function ReadSection({ card }: {
             <ReadingListButton card={card} />
             <View style={{
                 flexDirection: 'row',
+                flexShrink: 1,
             }}>
                 <BookPathButton
                     theme={theme}
