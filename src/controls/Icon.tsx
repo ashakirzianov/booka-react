@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import React from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
@@ -5,8 +6,9 @@ import { assertNever } from 'booka-common';
 
 import {
     FaTimes, FaAngleLeft, FaBars, FaFont,
-    FaCircle, FaSignInAlt, FaFacebookSquare, FaCloudUploadAlt,
-    FaQuestion,
+    FaCircle, FaSignInAlt, FaFacebookSquare,
+    FaQuestion, FaBookmark, FaRegBookmark, FaHighlighter, FaUnderline,
+    FaRegTrashAlt, FaPlus,
 } from 'react-icons/fa';
 import { PaletteColor, Themed, colors } from './theme';
 import { Size } from './common';
@@ -15,6 +17,9 @@ export type IconName =
     | 'close' | 'left' | 'items' | 'letter'
     | 'circle' | 'sign-in' | 'facebook'
     | 'upload'
+    | 'bookmark-empty' | 'bookmark-solid'
+    | 'highlight' | 'underline'
+    | 'remove'
     ;
 
 export type IconProps = Themed & {
@@ -32,6 +37,7 @@ export function Icon({
     theme, name, size, margin, color, hoverColor,
     onClick, onHoverIn, onHoverOut,
 }: IconProps) {
+    const IconClass = iconClassForName(name);
     return <div
         css={{
             display: 'flex',
@@ -51,13 +57,13 @@ export function Icon({
         onMouseEnter={onHoverIn}
         onMouseLeave={onHoverOut}
     >
-        {React.createElement(iconForName(name), {
-            size: size || '1em',
-        })}
+        <IconClass
+            size={size || '1em'}
+        />
     </div>;
 }
 
-function iconForName(name: IconName) {
+function iconClassForName(name: IconName) {
     switch (name) {
         case 'close':
             return FaTimes;
@@ -74,7 +80,17 @@ function iconForName(name: IconName) {
         case 'facebook':
             return FaFacebookSquare;
         case 'upload':
-            return FaCloudUploadAlt;
+            return FaPlus;
+        case 'bookmark-empty':
+            return FaRegBookmark;
+        case 'bookmark-solid':
+            return FaBookmark;
+        case 'highlight':
+            return FaHighlighter;
+        case 'underline':
+            return FaUnderline;
+        case 'remove':
+            return FaRegTrashAlt;
         default:
             assertNever(name);
             return FaQuestion;
