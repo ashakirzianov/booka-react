@@ -9,7 +9,7 @@ import { BookIdTile } from './LibraryCardTile';
 export function RecentBooks() {
     const { theme } = useTheme();
     const { positions } = usePositions();
-    if (positions.length === 0) {
+    if (positions.length < 2) {
         return null;
     }
     const sorted = positions.sort((l, r) => l.created > r.created ? -1 : 1);
