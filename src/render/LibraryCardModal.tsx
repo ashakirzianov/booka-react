@@ -103,6 +103,7 @@ function ReadSection({ card }: {
             flexDirection: 'row',
             flexGrow: 1,
             flexShrink: 1,
+            flexWrap: 'wrap',
             marginTop: margin, marginBottom: margin,
             justifyContent: 'flex-start',
         }}>
