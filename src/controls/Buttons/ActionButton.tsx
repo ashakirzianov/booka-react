@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Themed, colors, getFontSize, getFontFamily, PaletteColor } from '../theme';
-import { actionShadow, buttonHeight, buttonWidth, halfMargin } from '../common';
+import { actionShadow, buttonHeight, buttonWidth } from '../common';
 
 export function ActionButton({
     text, onClick, color, theme,
@@ -19,7 +19,6 @@ export function ActionButton({
         value={text}
         onClick={onClick}
         css={{
-            margin: halfMargin,
             width: buttonWidth,
             height: buttonHeight,
             cursor: 'pointer',

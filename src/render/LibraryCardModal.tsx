@@ -7,7 +7,7 @@ import {
     useCollections, usePositions, mostRecentPosition,
     Themed, PaletteColor,
 } from '../application';
-import { Modal, ActivityIndicator, ActionButton, TagLabel, margin, padding } from '../controls';
+import { Modal, ActivityIndicator, ActionButton, TagLabel, margin, padding, ButtonSeparator } from '../controls';
 import { LibraryCardTile } from './LibraryCardTile';
 import { BookPathLink } from './Navigation';
 import { ParagraphPreview } from './ParagraphPreview';
@@ -107,6 +107,7 @@ function ReadSection({ card }: {
             justifyContent: 'flex-start',
         }}>
             <ReadingListButton card={card} />
+            <ButtonSeparator />
             <BookPathButton
                 theme={theme}
                 bookId={card.id}
