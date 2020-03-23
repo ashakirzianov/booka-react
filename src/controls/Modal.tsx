@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { Transition } from 'react-transition-group';
 
 import { Themed, getFontFamily, getFontSize, colors } from '../application';
-import { HasChildren, semiTransparent, normalMargin, doubleMargin } from './common';
+import { HasChildren, semiTransparent, normalMargin, doubleMargin, normalPadding } from './common';
 import { defaultAnimationDuration } from './Animations';
 import { OverlayPanel } from './Panel';
 import { IconButton } from './Buttons';
@@ -47,6 +47,7 @@ export function Modal({
                             flex: 1,
                             alignItems: 'stretch',
                             overflow: 'scroll',
+                            padding: normalPadding,
                         }}
                         >
                             {children}

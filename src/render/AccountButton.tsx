@@ -5,7 +5,7 @@ import { AccountState } from '../ducks';
 import { useTheme, useAccount, Themed } from '../application';
 import {
     WithPopover, FacebookLogin, View,
-    PictureButton, IconButton, Label, ActionButton, point,
+    PictureButton, IconButton, Label, ActionButton, point, doubleMargin,
 } from '../controls';
 
 export function AccountButton() {
@@ -76,6 +76,7 @@ function AccountPanel({ account, theme, logout }: Themed & {
         height: point(10),
         alignItems: 'center',
         justifyContent: 'space-around',
+        margin: doubleMargin,
     }}>
         <Label
             theme={theme}
