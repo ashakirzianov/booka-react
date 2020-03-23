@@ -7,7 +7,7 @@ import {
     useCollections, usePositions, mostRecentPosition,
     Themed, PaletteColor,
 } from '../application';
-import { Modal, ActivityIndicator, ActionButton, TagLabel } from '../controls';
+import { Modal, ActivityIndicator, ActionButton, TagLabel, margin } from '../controls';
 import { LibraryCardTile } from './LibraryCardTile';
 import { BookPathLink } from './Navigation';
 import { ParagraphPreview } from './ParagraphPreview';
@@ -54,6 +54,7 @@ function TagList({ card, theme }: Themed & {
     return <View style={{
         flexDirection: 'row',
         flexWrap: 'wrap',
+        margin,
     }}>
         {
             data.map(({ color, text }, idx) => {
@@ -105,6 +106,7 @@ function ReadSection({ card }: {
             flexDirection: 'row',
             flexGrow: 1,
             flexShrink: 1,
+            marginTop: margin, marginBottom: margin,
             justifyContent: 'space-between',
         }}>
             <ReadingListButton card={card} />

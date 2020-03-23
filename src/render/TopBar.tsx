@@ -46,7 +46,7 @@ function SearchResults({ query, state, theme }: Themed & {
     if (!query) {
         return null;
     }
-    return <Panel theme={theme} title='Results'>
+    return <Panel theme={theme}>
         {
             state.loading
                 ? <ActivityIndicator theme={theme} />

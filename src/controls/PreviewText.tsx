@@ -13,11 +13,11 @@ export function PreviewText({ text, lines, theme }: Themed & {
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'break-spaces',
-
-        // textAlign: 'center',
+        textAlign: 'justify',
         minHeight: 0,
         maxHeight: '100%',
         color: colors(theme).text,
+        backgroundColor: colors(theme).primary,
         fontSize: getFontSize(theme, 'small'),
         fontFamily: getFontFamily(theme, 'book'),
         margin: 0,

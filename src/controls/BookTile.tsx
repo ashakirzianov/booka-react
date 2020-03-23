@@ -6,7 +6,7 @@ import { jsx } from '@emotion/core';
 import {
     Themed, colors, getFontFamily, getFontSize, Color,
 } from '../application';
-import { Style, actionShadow } from './common';
+import { Style, actionShadow, margin } from './common';
 
 export function BookTile({
     title, author, coverUrl, showTitle, theme,
@@ -21,8 +21,8 @@ export function BookTile({
         flex: 1,
         flexDirection: 'column',
         flexGrow: 0,
-        width: 200,
-        margin: 2,
+        width: 160,
+        margin: margin,
         alignItems: 'center',
         color: colors(theme).text,
         fontFamily: getFontFamily(theme, 'menu'),

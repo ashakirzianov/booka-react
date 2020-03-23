@@ -4,7 +4,7 @@ import { CurrentPosition } from 'booka-common';
 import {
     usePositions, useTheme, Themed,
 } from '../application';
-import { Panel, ActionButton } from '../controls';
+import { Panel, ActionButton, padding, margin } from '../controls';
 import { ParagraphPreview } from './ParagraphPreview';
 import { BookIdTile } from './LibraryCardTile';
 import { BookPathLink } from './Navigation';
@@ -72,11 +72,13 @@ function Layout({ Tile, Preview, Continue }: {
             maxHeight: '100%',
             width: '100%',
             minHeight: 0,
+            margin,
         }}>
             {Preview}
             <View style={{
                 flexDirection: 'row',
                 justifyContent: 'flex-end',
+                margin,
             }}>
                 {Continue}
             </View>

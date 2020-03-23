@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    HasChildren, percent, point, panelShadow, userAreaWidth,
+    HasChildren, percent, point, panelShadow, userAreaWidth, padding, margin, halfMargin,
 } from './common';
 import { Themed, colors, getFontFamily, getFontSize } from '../application';
 import { defaultAnimationDuration } from './Animations';
@@ -14,7 +14,7 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
         display: 'flex',
         flex: 1,
         flexDirection: 'column',
-        margin: point(1),
+        margin,
         width: userAreaWidth,
         alignItems: 'center',
         alignSelf: 'center',
@@ -26,7 +26,7 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
                     alignSelf: 'flex-start',
                     fontSize: getFontSize(theme, 'small'),
                     fontFamily: getFontFamily(theme, 'menu'),
-                    margin: point(0.25),
+                    margin: halfMargin,
                     color: colors(theme).text,
                 }}>
                     {title}
@@ -36,6 +36,10 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
         <div style={{
             display: 'flex',
             alignSelf: 'stretch',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding,
+            margin,
         }}>
             {children}
         </div>
@@ -51,7 +55,7 @@ export function OverlayPanel({
 }) {
     return <View style={{
         overflow: 'scroll',
-        backgroundColor: colors(theme).primary,
+        backgroundColor: colors(theme).secondary,
         width: percent(100),
         maxWidth: point(50),
         maxHeight: percent(100),
