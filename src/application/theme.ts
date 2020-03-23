@@ -8,12 +8,16 @@ export type Color = string;
 export type Palette = {
     colors: {
         text: Color,
-        primary: Color,
-        secondary: Color,
         accent: Color,
         highlight: Color,
+        primary: Color,
+        secondary: Color,
         shadow: Color,
         semiTransparent: Color,
+        neutral: Color,
+        positive: Color,
+        negative: Color,
+        warning: Color,
     },
     highlights: {
         quote: Color,

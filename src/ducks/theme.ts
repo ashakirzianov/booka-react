@@ -42,6 +42,10 @@ const init: Theme = {
                 highlight: '#aaf',
                 shadow: '#000',
                 semiTransparent: 'rgba(0, 0, 0, 0.3)',
+                neutral: 'blue',
+                positive: 'seagrean',
+                negative: 'salmon',
+                warning: 'gold',
             },
             highlights: {
                 quote: '#fbe381',
@@ -56,6 +60,10 @@ const init: Theme = {
                 highlight: '#000',
                 shadow: '#000',
                 semiTransparent: 'rgba(0, 0, 0, 0.3)',
+                neutral: 'blue',
+                positive: 'seagrean',
+                negative: 'salmon',
+                warning: 'gold',
             },
             highlights: {
                 quote: '#fbe381',
@@ -70,6 +78,10 @@ const init: Theme = {
                 highlight: '#fff',
                 shadow: '#000',
                 semiTransparent: 'rgba(0, 0, 0, 0.3)',
+                neutral: 'blue',
+                positive: 'seagrean',
+                negative: 'salmon',
+                warning: 'gold',
             },
             highlights: {
                 quote: '#c8b050',
