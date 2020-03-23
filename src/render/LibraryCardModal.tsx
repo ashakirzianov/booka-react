@@ -34,7 +34,7 @@ function LibraryCardModalImpl({ bookId }: {
 
     return <Modal
         theme={theme}
-        title={card.loading ? undefined : card.title}
+        title=''
         close={closeCard}
         open={true}
     >
@@ -43,13 +43,20 @@ function LibraryCardModalImpl({ bookId }: {
                 ? <ActivityIndicator theme={theme} />
                 : <Layout
                     Cover={<LibraryCardTile theme={theme} card={card} />}
+                    Title={<Label
+                        theme={theme}
+                        text={card.title}
+                        color='text'
+                    />}
                     Author={<Label
                         theme={theme}
                         text={`by ${card.author ?? 'unknown'}`}
                         italic={true}
                         color='accent'
+                        size='micro'
                     />}
-                    Read={<ReadSection card={card} />}
+                    Read={<ReadButtons card={card} />}
+                    Continue={<ContinueRead card={card} />}
                     Tags={<TagList theme={theme} card={card} />}
                 />
         }
@@ -94,7 +101,26 @@ function getTagDescs(card: LibraryCard): TagDesc[] {
     }));
 }
 
-function ReadSection({ card }: {
+function ReadButtons({ card }: {
+    card: LibraryCard,
+}) {
+    return <View style={{
+        flexDirection: 'row',
+        flexGrow: 1,
+        flexShrink: 1,
+        flexWrap: 'wrap',
+        marginBottom: normalMargin,
+        justifyContent: 'flex-start',
+    }}>
+        <ReadingListButton card={card} />
+        <BookPathButton
+            bookId={card.id}
+            text='From Start'
+        />
+    </View>;
+}
+
+function ContinueRead({ card }: {
     card: LibraryCard,
 }) {
     const { theme } = useTheme();
@@ -105,34 +131,24 @@ function ReadSection({ card }: {
     );
     const continueReadPosition = mostRecentPosition(currentPositions);
     const continuePath = continueReadPosition?.path;
-    return <View>
-        <View style={{
-            flexDirection: 'row',
-            flexGrow: 1,
-            flexShrink: 1,
-            flexWrap: 'wrap',
-            marginBottom: normalMargin,
-            justifyContent: 'flex-start',
-        }}>
-            <ReadingListButton card={card} />
-            <BookPathButton
-                theme={theme}
-                bookId={card.id}
-                text='From Start'
-            />
-        </View>
-        {
-            !continuePath ? null :
-                <View style={{
-                    padding: normalMargin,
-                }}>
-                    <ParagraphPreview
-                        theme={theme}
-                        bookId={card.id}
-                        path={continuePath ?? firstPath()}
-                    />
-                </View>
-        }
+    if (!continuePath) {
+        return null;
+    }
+    return <View style={{
+        padding: normalMargin,
+    }}>
+        <Label
+            theme={theme}
+            text='You are here'
+            size='nano'
+            color='accent'
+            italic={true}
+        />
+        <ParagraphPreview
+            theme={theme}
+            bookId={card.id}
+            path={continuePath ?? firstPath()}
+        />
     </View>;
 }
 
@@ -172,11 +188,12 @@ function ReadingListButton({ card }: {
     }
 }
 
-function BookPathButton({ text, theme, bookId, path }: Themed & {
+function BookPathButton({ text, bookId, path }: {
     text: string,
     bookId: string,
     path?: BookPath,
 }) {
+    const { theme } = useTheme();
     return <BookPathLink bookId={bookId} path={path}>
         <ActionButton
             theme={theme}
@@ -187,11 +204,13 @@ function BookPathButton({ text, theme, bookId, path }: Themed & {
 }
 
 function Layout({
-    Cover, Author, Read, Tags,
+    Cover, Title, Author, Read, Tags, Continue,
 }: {
     Cover: ReactNode,
+    Title: ReactNode,
     Author: ReactNode,
     Read: ReactNode,
+    Continue: ReactNode,
     Tags: ReactNode,
 }) {
     return <View style={{
@@ -208,9 +227,15 @@ function Layout({
             flexGrow: 1,
             flexShrink: 1,
         }}>
-            {Author}
+            <View style={{
+                margin: normalMargin,
+            }}>
+                {Title}
+                {Author}
+            </View>
             {Tags}
             {Read}
+            {Continue}
         </View>
     </View>;
 }
