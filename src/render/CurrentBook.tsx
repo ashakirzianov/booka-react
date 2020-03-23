@@ -47,6 +47,7 @@ function CurrentBookContent({ position, theme }: Themed & {
                 <ActionButton
                     theme={theme}
                     text='Continue'
+                    color='neutral'
                 />
             </BookPathLink>
         }

@@ -155,12 +155,14 @@ function ReadingListButton({ card }: {
         return <ActionButton
             theme={theme}
             text='Not To Read'
+            color='negative'
             onClick={removeFromReadingList}
         />;
     } else {
         return <ActionButton
             theme={theme}
             text='To Read'
+            color='positive'
             onClick={addToReadingList}
         />;
     }
@@ -175,6 +177,7 @@ function BookPathButton({ text, theme, bookId, path }: Themed & {
         <ActionButton
             theme={theme}
             text={text}
+            color='neutral'
         />
     </BookPathLink>;
 }

@@ -1,5 +1,5 @@
 import { AppAction } from './app';
-import { Theme, PaletteName } from '../application';
+import { Theme, PaletteName, Palette } from '../application';
 
 export type ThemeState = Theme;
 
@@ -31,21 +31,24 @@ export function themeReducer(state: ThemeState = init, action: AppAction) {
     }
 }
 
+const defaultColors: Palette['colors'] = {
+    text: '#000',
+    primary: '#fff',
+    secondary: '#eee',
+    accent: '#777',
+    highlight: '#aaf',
+    shadow: '#000',
+    semiTransparent: 'rgba(0, 0, 0, 0.3)',
+    neutral: 'royalblue',
+    positive: 'seagreen',
+    negative: 'salmon',
+    warning: 'gold',
+};
 const init: Theme = {
     palettes: {
         light: {
             colors: {
-                text: '#000',
-                primary: '#fff',
-                secondary: '#eee',
-                accent: '#777',
-                highlight: '#aaf',
-                shadow: '#000',
-                semiTransparent: 'rgba(0, 0, 0, 0.3)',
-                neutral: 'blue',
-                positive: 'seagrean',
-                negative: 'salmon',
-                warning: 'gold',
+                ...defaultColors,
             },
             highlights: {
                 quote: '#fbe381',
@@ -53,17 +56,12 @@ const init: Theme = {
         },
         sepia: {
             colors: {
+                ...defaultColors,
                 text: '#5f3e24',
                 primary: '#f9f3e9',
                 secondary: '#e6e0d6',
                 accent: '#987',
                 highlight: '#000',
-                shadow: '#000',
-                semiTransparent: 'rgba(0, 0, 0, 0.3)',
-                neutral: 'blue',
-                positive: 'seagrean',
-                negative: 'salmon',
-                warning: 'gold',
             },
             highlights: {
                 quote: '#fbe381',
@@ -71,17 +69,13 @@ const init: Theme = {
         },
         dark: {
             colors: {
+                ...defaultColors,
                 text: '#999',
                 primary: '#000',
                 secondary: '#222',
                 accent: '#ddd',
                 highlight: '#fff',
-                shadow: '#000',
-                semiTransparent: 'rgba(0, 0, 0, 0.3)',
-                neutral: 'blue',
-                positive: 'seagrean',
-                negative: 'salmon',
-                warning: 'gold',
+                shadow: '#333',
             },
             highlights: {
                 quote: '#c8b050',
