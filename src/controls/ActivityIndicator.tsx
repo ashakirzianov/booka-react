@@ -6,7 +6,7 @@ import { Themed, colors } from '../application';
 
 export function ActivityIndicator({ theme }: Themed) {
     return <NativeActivityIndicator
-        color={colors(theme).text}
+        color={colors(theme).highlight}
     />;
 }
 

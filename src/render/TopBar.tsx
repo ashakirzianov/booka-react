@@ -47,7 +47,12 @@ function SearchResults({ state, theme }: Themed & {
     state: SearchState,
 }) {
     if (state.loading) {
-        return <ActivityIndicator theme={theme} />;
+        return <View style={{
+            width: '100%',
+            justifyContent: 'center',
+        }}>
+            <ActivityIndicator theme={theme} />
+        </View>;
     } else {
         return <BookList
             theme={theme}
