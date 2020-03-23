@@ -4,7 +4,7 @@ import { CurrentPosition } from 'booka-common';
 import {
     usePositions, useTheme, Themed,
 } from '../application';
-import { Panel, ActionButton, margin } from '../controls';
+import { Panel, ActionButton } from '../controls';
 import { ParagraphPreview } from './ParagraphPreview';
 import { BookIdTile } from './LibraryCardTile';
 import { BookPathLink } from './Navigation';

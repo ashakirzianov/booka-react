@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { jsx } from '@emotion/core';
 import { Themed, getFontSize, colors } from '../application';
 import {
-    actionShadow, buttonHeight, actionBack, margin, padding,
+    actionShadow, buttonHeight, actionBack, padding,
 } from './common';
 
 export function TextInput({

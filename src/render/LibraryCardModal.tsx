@@ -7,7 +7,10 @@ import {
     useCollections, usePositions, mostRecentPosition,
     Themed, PaletteColor,
 } from '../application';
-import { Modal, ActivityIndicator, ActionButton, TagLabel, margin, padding, ButtonSeparator, doubleMargin } from '../controls';
+import {
+    Modal, ActivityIndicator, ActionButton, TagLabel,
+    margin, padding, doubleMargin,
+} from '../controls';
 import { LibraryCardTile } from './LibraryCardTile';
 import { BookPathLink } from './Navigation';
 import { ParagraphPreview } from './ParagraphPreview';
@@ -75,7 +78,7 @@ function getTagDescs(card: LibraryCard): TagDesc[] {
             case 'subject':
                 return { color: 'neutral', text: tag.value };
             case 'language':
-                return { color: 'positive', text: `Ln: ${tag.value}` };
+                return { color: 'positive', text: `Language: ${tag.value.toUpperCase()}` };
             case 'pg-index':
                 return { color: 'negative', text: 'Project Gutenberg' };
             default:
@@ -95,9 +98,7 @@ function ReadSection({ card }: {
     );
     const continueReadPosition = mostRecentPosition(currentPositions);
     const continuePath = continueReadPosition?.path;
-    return <View style={{
-        padding,
-    }}>
+    return <View>
         <View style={{
             flexDirection: 'row',
             flexGrow: 1,
@@ -194,6 +195,7 @@ function Layout({
     return <View style={{
         flexDirection: 'row',
         width: '100%',
+        padding,
     }}>
         <View style={{
             flexGrow: 0,

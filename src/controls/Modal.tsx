@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { Transition } from 'react-transition-group';
 
 import { Themed, getFontFamily, getFontSize, colors } from '../application';
-import { HasChildren, semiTransparent, halfMargin } from './common';
+import { HasChildren, semiTransparent, margin, doubleMargin } from './common';
 import { defaultAnimationDuration } from './Animations';
 import { OverlayPanel } from './Panel';
 import { IconButton } from './Buttons';
@@ -83,7 +83,7 @@ function ModalTitle({ theme, title, close }: Themed & {
             flexBasis: 'auto',
             flexGrow: 1,
             flexShrink: 1,
-            margin: halfMargin,
+            marginLeft: doubleMargin,
         }}>
             <span title={title} style={{
                 textAlign: 'center',

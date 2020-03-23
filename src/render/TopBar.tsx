@@ -6,7 +6,7 @@ import {
     useLibrarySearch, SearchState, Themed, useTheme,
 } from '../application';
 import {
-    TextInput, ActivityIndicator, Panel, userAreaWidth, ButtonSeparator, margin,
+    TextInput, ActivityIndicator, Panel, userAreaWidth, margin,
 } from '../controls';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
