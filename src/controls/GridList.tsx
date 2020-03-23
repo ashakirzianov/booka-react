@@ -5,8 +5,10 @@ export function GridList({ children }: HasChildren) {
     return <div style={{
         display: 'flex',
         flexGrow: 1,
-        flexFlow: 'row wrap',
-        justifyContent: 'space-around',
+        flexShrink: 1,
+        flexFlow: 'row nowrap',
+        overflow: 'scroll',
+        justifyContent: 'space-between',
     }}>
         {children}
     </div>;

@@ -17,7 +17,6 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
         margin: point(1),
         width: userAreaWidth,
         alignItems: 'center',
-        // TODO: extract
         alignSelf: 'center',
     }}>
         {
@@ -36,10 +35,7 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
         }
         <div style={{
             display: 'flex',
-            flex: 1,
-            flexGrow: 1,
             alignSelf: 'stretch',
-            // boxShadow: panelShadow(colors(theme).shadow),
         }}>
             {children}
         </div>

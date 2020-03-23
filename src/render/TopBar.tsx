@@ -31,34 +31,31 @@ export function TopBar({ query }: {
             <AppearanceButton />
             <AccountButton />
         </>}
-        Results={query
-            ? <Panel theme={theme}>
-                <SearchResults
-                    theme={theme}
-                    state={searchState}
-                />
-            </Panel>
-            : null
-        }
+        Results={<SearchResults
+            theme={theme}
+            state={searchState}
+            query={query}
+        />}
     />;
 }
 
-function SearchResults({ state, theme }: Themed & {
+function SearchResults({ query, state, theme }: Themed & {
+    query: string | undefined,
     state: SearchState,
 }) {
-    if (state.loading) {
-        return <View style={{
-            width: '100%',
-            justifyContent: 'center',
-        }}>
-            <ActivityIndicator theme={theme} />
-        </View>;
-    } else {
-        return <BookList
-            theme={theme}
-            books={state.results.map(r => r.desc)}
-        />;
+    if (!query) {
+        return null;
     }
+    return <Panel theme={theme} title='Results'>
+        {
+            state.loading
+                ? <ActivityIndicator theme={theme} />
+                : <BookList
+                    theme={theme}
+                    books={state.results.map(r => r.desc)}
+                />
+        }
+    </Panel>;
 }
 
 function Layout({ Input, Buttons, Results }: {
