@@ -7,7 +7,7 @@ import {
     useCollections, usePositions, mostRecentPosition,
     Themed, PaletteColor,
 } from '../application';
-import { Modal, ActivityIndicator, ActionButton, TagLabel, margin, padding, ButtonSeparator } from '../controls';
+import { Modal, ActivityIndicator, ActionButton, TagLabel, margin, padding, ButtonSeparator, doubleMargin } from '../controls';
 import { LibraryCardTile } from './LibraryCardTile';
 import { BookPathLink } from './Navigation';
 import { ParagraphPreview } from './ParagraphPreview';
@@ -54,7 +54,6 @@ function TagList({ card, theme }: Themed & {
     return <View style={{
         flexDirection: 'row',
         flexWrap: 'wrap',
-        margin,
     }}>
         {
             data.map(({ color, text }, idx) => {
@@ -104,16 +103,24 @@ function ReadSection({ card }: {
             flexGrow: 1,
             flexShrink: 1,
             flexWrap: 'wrap',
-            marginTop: margin, marginBottom: margin,
+            marginBottom: doubleMargin,
             justifyContent: 'flex-start',
         }}>
-            <ReadingListButton card={card} />
-            <ButtonSeparator />
-            <BookPathButton
-                theme={theme}
-                bookId={card.id}
-                text='From Start'
-            />
+            <View style={{
+                marginTop: margin,
+                marginRight: margin,
+            }}>
+                <ReadingListButton card={card} />
+            </View>
+            <View style={{
+                marginTop: margin,
+            }}>
+                <BookPathButton
+                    theme={theme}
+                    bookId={card.id}
+                    text='From Start'
+                />
+            </View>
         </View>
         {
             !continuePath ? null :
