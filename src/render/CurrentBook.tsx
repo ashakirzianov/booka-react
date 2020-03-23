@@ -78,7 +78,7 @@ function Layout({ Tile, Preview, Continue }: {
             <View style={{
                 flexDirection: 'row',
                 justifyContent: 'flex-end',
-                margin,
+                marginTop: margin, marginBottom: margin,
             }}>
                 {Continue}
             </View>

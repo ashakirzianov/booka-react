@@ -40,6 +40,9 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
             justifyContent: 'center',
             padding,
             margin,
+            // borderRadius: 3,
+            // backgroundColor: colors(theme).primary,
+            // boxShadow: panelShadow(colors(theme).shadow),
         }}>
             {children}
         </div>
@@ -55,7 +58,7 @@ export function OverlayPanel({
 }) {
     return <View style={{
         overflow: 'scroll',
-        backgroundColor: colors(theme).secondary,
+        backgroundColor: colors(theme).primary,
         width: percent(100),
         maxWidth: point(50),
         maxHeight: percent(100),
