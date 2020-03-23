@@ -1,7 +1,7 @@
 import React from 'react';
 import { LibraryCard } from 'booka-common';
 
-import { Column, Panel } from '../controls';
+import { Panel } from '../controls';
 import { useTheme, useCollections, Themed } from '../application';
 import { BookList } from './BookList';
 
@@ -11,13 +11,11 @@ export function Collections() {
     const { collectionsState } = useCollections();
     const readingList = collectionsState.collections['reading-list'];
 
-    return <Column>
-        <CardCollection
-            theme={theme}
-            displayName='Reading List'
-            cards={readingList}
-        />
-    </Column>;
+    return <CardCollection
+        theme={theme}
+        displayName='Reading List'
+        cards={readingList}
+    />;
 }
 
 function CardCollection({ theme, cards, displayName }: Themed & {

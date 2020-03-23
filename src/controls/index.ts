@@ -5,7 +5,6 @@ export * from './BookTile';
 export * from './FacebookLogin';
 export * from './GridList';
 export * from './Label';
-export * from './Layout';
 export * from './Misc';
 export * from './Modal';
 export * from './Panel';

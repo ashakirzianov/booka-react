@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useTheme, PaletteName, Themed } from '../application';
 import {
-    WithPopover, Column, Row, IconButton, PaletteButton,
+    WithPopover, View, IconButton, PaletteButton,
     TextButton, Separator, point,
 } from '../controls';
 
@@ -25,22 +25,29 @@ function ThemePicker({ theme, setPalette, incrementScale }: Themed & {
     setPalette: (name: PaletteName) => void,
     incrementScale: (inc: number) => void,
 }) {
-    return <Column width={point(14)}>
+    return <View style={{
+        width: point(14),
+    }}>
         <FontScale theme={theme} incrementScale={incrementScale} />
         <Separator />
         <PalettePicker theme={theme} setPalette={setPalette} />
-    </Column>;
+    </View>;
 }
 
 function FontScale({ theme, incrementScale }: Themed & {
     incrementScale: (inc: number) => void,
 }) {
-    return <Row centered justified height={point(5)}>
+    return <View style={{
+        height: point(6),
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+    }}>
         <FontScaleButton
             theme={theme} increment={-0.1} size='smallest' incrementScale={incrementScale} />
         <FontScaleButton
             theme={theme} increment={0.1} size='largest' incrementScale={incrementScale} />
-    </Row>;
+    </View>;
 }
 
 function FontScaleButton({
@@ -50,7 +57,7 @@ function FontScaleButton({
     increment: number,
     incrementScale: (inc: number) => void,
 }) {
-    return <Column centered>
+    return <View>
         <TextButton
             theme={theme}
             fontFamily='book'
@@ -58,20 +65,25 @@ function FontScaleButton({
             fontSize={size}
             onClick={() => incrementScale(increment)}
         />
-    </Column>;
+    </View>;
 }
 
 function PalettePicker({ theme, setPalette }: Themed & {
     setPalette: (name: PaletteName) => void,
 }) {
-    return <Row centered justified height={point(5)}>
+    return <View style={{
+        height: point(6),
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+    }}>
         <SelectPaletteButton
             theme={theme} name='light' text='L' setPalette={setPalette} />
         <SelectPaletteButton
             theme={theme} name='sepia' text='S' setPalette={setPalette} />
         <SelectPaletteButton
             theme={theme} name='dark' text='D' setPalette={setPalette} />
-    </Row>;
+    </View>;
 }
 
 function SelectPaletteButton({ theme, text, name, setPalette }: Themed & {

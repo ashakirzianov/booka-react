@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { View } from 'react-native';
 
 import {
     Themed, FbLoginState, fbState, doFbLogin,
 } from '../application';
-import { Column, Row } from './Layout';
 import { Icon } from './Icon';
 import { point } from './common';
 
@@ -26,7 +26,7 @@ export function FacebookLogin({ theme, onStatusChange }: FacebookLoginProps) {
         }
     }, [loginState, onStatusChange]);
 
-    return <Column>
+    return <View>
         <ActualButton
             theme={theme}
             onClick={() => {
@@ -40,7 +40,7 @@ export function FacebookLogin({ theme, onStatusChange }: FacebookLoginProps) {
                     : undefined
             }
         />
-    </Column>;
+    </View>;
 }
 
 type ActualButtonProps = Themed & {
@@ -65,7 +65,10 @@ function ActualButton({ onClick, user, theme }: ActualButtonProps) {
             padding: 0,
         }}
     >
-        <Row centered justified>
+        <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+        }}>
             <div style={{ marginLeft: point(0.5) }}>
                 <Icon
                     theme={theme}
@@ -89,6 +92,6 @@ function ActualButton({ onClick, user, theme }: ActualButtonProps) {
                     />
                     : null
             }
-        </Row>
+        </View>
     </button>;
 }
