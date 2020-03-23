@@ -22,7 +22,6 @@ export function BookTile({
         flexDirection: 'column',
         flexGrow: 0,
         width: 200,
-        height: 240,
         margin: 2,
         alignItems: 'center',
         color: colors(theme).text,
