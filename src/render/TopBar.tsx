@@ -6,7 +6,7 @@ import {
     useLibrarySearch, SearchState, Themed, useTheme,
 } from '../application';
 import {
-    TextInput, ActivityIndicator, Panel, userAreaWidth,
+    TextInput, ActivityIndicator, Panel, userAreaWidth, ButtonSeparator,
 } from '../controls';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
@@ -28,7 +28,9 @@ export function TopBar({ query }: {
             onChange={querySearch}
         />}
         Buttons={<>
+            <ButtonSeparator />
             <AppearanceButton />
+            <ButtonSeparator />
             <AccountButton />
         </>}
         Results={<SearchResults

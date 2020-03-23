@@ -16,7 +16,7 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
         flexShrink: 1,
         flexGrow: 1,
         flexDirection: 'column',
-        // margin,
+        marginTop: margin, marginBottom: margin,
         maxWidth: userAreaWidth,
         width: '100%',
         alignItems: 'center',
@@ -38,15 +38,9 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
         }
         <div style={{
             display: 'flex',
-            flexShrink: 1,
             alignSelf: 'stretch',
             alignItems: 'center',
             justifyContent: 'center',
-            // padding,
-            margin,
-            // borderRadius: 3,
-            // backgroundColor: colors(theme).primary,
-            // boxShadow: panelShadow(colors(theme).shadow),
         }}>
             {children}
         </div>
