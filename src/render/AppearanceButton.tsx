@@ -46,16 +46,16 @@ function FontScale({ theme, incrementScale }: Themed & {
         alignItems: 'center',
     }}>
         <FontScaleButton
-            theme={theme} increment={-0.1} size='smallest' incrementScale={incrementScale} />
+            theme={theme} increment={-0.1} size='micro' incrementScale={incrementScale} />
         <FontScaleButton
-            theme={theme} increment={0.1} size='largest' incrementScale={incrementScale} />
+            theme={theme} increment={0.1} size='macro' incrementScale={incrementScale} />
     </View>;
 }
 
 function FontScaleButton({
     theme, size, increment, incrementScale,
 }: Themed & {
-    size: 'largest' | 'smallest',
+    size: 'macro' | 'micro',
     increment: number,
     incrementScale: (inc: number) => void,
 }) {

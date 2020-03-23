@@ -186,7 +186,7 @@ function BookScreenFooter({
                         ? `${nextChapterPage - currentPage} pages left`
                         : ''
                 }
-                fontSize='smallest'
+                fontSize='nano'
                 color='accent'
             />}
         />

@@ -90,7 +90,7 @@ export function TagButton(props: TagButtonProps) {
                 <TextLine
                     theme={props.theme}
                     text={props.text}
-                    fontSize='smallest'
+                    fontSize='nano'
                     color='secondary'
                 />
             </View>

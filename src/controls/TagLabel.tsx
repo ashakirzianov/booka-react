@@ -13,7 +13,7 @@ export function TagLabel({
     onClick?: () => void,
 }) {
     const actualColor = colors(theme)[color ?? 'accent'];
-    const fontSize = getFontSize(theme, 'smallest');
+    const fontSize = getFontSize(theme, 'nano');
     return <div
         onClick={onClick}
         css={{

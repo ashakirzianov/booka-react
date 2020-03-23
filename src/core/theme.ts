@@ -26,11 +26,12 @@ export type Palette = {
 };
 export type PaletteColor = keyof Palette;
 export type FontSizes = {
-    smallest: FontSize,
+    nano: FontSize,
+    micro: FontSize,
     small: FontSize,
     normal: FontSize,
     large: FontSize,
-    largest: FontSize,
+    macro: FontSize,
     text: FontSize,
 };
 export type FontFamilies = {
@@ -120,11 +121,12 @@ export const defaultTheme: Theme = {
         menu: 'Open Sans',
     },
     fontSizes: {
-        smallest: 14,
+        nano: 14,
+        micro: 18,
         small: 22,
         normal: 26,
         large: 30,
-        largest: 36,
+        macro: 36,
         text: 26,
     },
     fontScale: 1,
