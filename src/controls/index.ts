@@ -2,6 +2,7 @@ export * from './common';
 export * from './Buttons';
 export * from './ActivityIndicator';
 export * from './BookTile';
+export * from './ContextMenu';
 export * from './FacebookLogin';
 export * from './FixedPanel';
 export * from './GridList';
