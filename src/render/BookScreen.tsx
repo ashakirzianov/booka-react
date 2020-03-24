@@ -9,8 +9,8 @@ import {
     useTheme, useBook, useHighlights, useUrlActions, usePositions,
 } from '../application';
 import {
-    Column, point, Row, Triad, EmptyLine,
-    Clickable, TextLine,
+    Column, point, Row, EmptyLine,
+    Clickable,
     FullScreenActivityIndicator,
 } from '../atoms';
 import { Themed, colors } from '../core';
@@ -19,8 +19,10 @@ import { TableOfContentsComp, pageForPosition } from './TableOfContentsComp';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
 import { BookmarkButton } from './BookmarkButton';
-import { FixedPanel, View, IconButton, Label, halfPadding, normalPadding, panelShadow } from '../controls';
-import { ShowTocLink } from './Navigation';
+import {
+    FixedPanel, View, IconButton, Label, normalPadding,
+} from '../controls';
+import { ShowTocLink, FeedLink } from './Navigation';
 
 export function BookScreen({ bookId, showToc, path, quote }: {
     bookId: string,
@@ -157,7 +159,7 @@ function Header({
             <View style={{
                 flexDirection: 'row',
             }}>
-                <BackButton />
+                <FeedButton />
                 <TocButton />
             </View>
             <View style={{
@@ -239,14 +241,14 @@ function Footer({
     </FixedPanel>;
 }
 
-function BackButton() {
+function FeedButton() {
     const { theme } = useTheme();
-    const { back } = useUrlActions();
-    return <IconButton
-        theme={theme}
-        icon='left'
-        onClick={back}
-    />;
+    return <FeedLink>
+        <IconButton
+            theme={theme}
+            icon='left'
+        />
+    </FeedLink>;
 }
 
 function TocButton() {

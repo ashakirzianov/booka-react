@@ -2,10 +2,10 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import { BookPath, pathToString } from 'booka-common';
-import { WithChildren } from '../atoms';
 import { updateSearch } from '../application';
+import { HasChildren } from '../controls';
 
-export function BookPathLink({ bookId, path, children }: WithChildren & {
+export function BookPathLink({ bookId, path, children }: HasChildren & {
     bookId: string,
     path?: BookPath,
 }) {
@@ -21,7 +21,17 @@ export function BookPathLink({ bookId, path, children }: WithChildren & {
     </Link>;
 }
 
-export function ShowCardLink({ bookId, children }: WithChildren & {
+export function FeedLink({ children }: HasChildren) {
+    return <Link to='/feed' style={{
+        textDecoration: 'none',
+        minHeight: 0,
+        margin: 0,
+    }}>
+        {children}
+    </Link>;
+}
+
+export function ShowCardLink({ bookId, children }: HasChildren & {
     bookId: string | undefined,
 }) {
     return <UpdateQueryLink queryKey='show' value={bookId}>
@@ -29,7 +39,7 @@ export function ShowCardLink({ bookId, children }: WithChildren & {
     </UpdateQueryLink>;
 }
 
-export function ShowTocLink({ toShow, children }: WithChildren & {
+export function ShowTocLink({ toShow, children }: HasChildren & {
     toShow: boolean,
 }) {
     return <UpdateQueryLink queryKey='toc' value={toShow ? null : undefined}>
@@ -37,7 +47,7 @@ export function ShowTocLink({ toShow, children }: WithChildren & {
     </UpdateQueryLink>;
 }
 
-function UpdateQueryLink({ queryKey, value, children }: WithChildren & {
+function UpdateQueryLink({ queryKey, value, children }: HasChildren & {
     queryKey: string,
     value: string | undefined | null,
 }) {
