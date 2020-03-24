@@ -18,9 +18,9 @@ import { BookViewComp } from './BookViewComp';
 import { TableOfContentsComp, pageForPosition } from './TableOfContentsComp';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
-import { BackButton, TocButton } from './PanelButtons';
 import { BookmarkButton } from './BookmarkButton';
-import { FixedPanel, View } from '../controls';
+import { FixedPanel, View, IconButton } from '../controls';
+import { ShowTocLink } from './Navigation';
 
 export function BookScreenComp({ bookId, showToc, path, quote }: {
     bookId: string,
@@ -152,8 +152,8 @@ function Header({
             <View style={{
                 flexDirection: 'row',
             }}>
-                <BackButton theme={theme} />
-                <TocButton theme={theme} />
+                <BackButton />
+                <TocButton />
             </View>
             <View style={{
                 flexDirection: 'row',
@@ -194,4 +194,24 @@ function BookScreenFooter({
             />}
         />
     </Footer>;
+}
+
+function BackButton() {
+    const { theme } = useTheme();
+    const { back } = useUrlActions();
+    return <IconButton
+        theme={theme}
+        icon='left'
+        onClick={back}
+    />;
+}
+
+function TocButton() {
+    const { theme } = useTheme();
+    return <ShowTocLink toShow={true}>
+        <IconButton
+            theme={theme}
+            icon='items'
+        />
+    </ShowTocLink>;
 }
