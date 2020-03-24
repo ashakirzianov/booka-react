@@ -86,6 +86,10 @@ function BookReady({
         () => updateToc(false),
         [updateToc],
     );
+    const onNavigation = useCallback(
+        () => setNeedToScroll(true),
+        [setNeedToScroll],
+    );
 
     return <>
         {
@@ -126,6 +130,7 @@ function BookReady({
                         quoteRange={quote}
                         setQuoteRange={updateQuoteRange}
                         openRef={() => undefined}
+                        onNavigation={onNavigation}
                     />
                     <EmptyLine />
                 </Column>

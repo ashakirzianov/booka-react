@@ -16,7 +16,7 @@ import { BookPathLink } from './Navigation';
 
 export function BookViewComp({
     bookId, fragment, theme, pathToScroll, updateBookPosition,
-    highlights, quoteRange, setQuoteRange, openRef,
+    highlights, quoteRange, setQuoteRange, openRef, onNavigation,
 }: Themed & {
     bookId: string,
     fragment: BookFragment,
@@ -26,6 +26,7 @@ export function BookViewComp({
     highlights: Highlight[],
     setQuoteRange: (range: BookRange | undefined) => void,
     openRef: (refId: string) => void,
+    onNavigation?: () => void,
 }) {
     const selection = useRef<BookSelection | undefined>(undefined);
     const selectionHandler = useCallback((sel: BookSelection | undefined) => {
@@ -61,11 +62,12 @@ export function BookViewComp({
         bookId={bookId}
         target={menuTarget}
     >
-        <AnchorLink
+        <AnchorButton
             theme={theme}
             defaultTitle='Previous'
             anchor={fragment.previous}
             bookId={bookId}
+            onClick={onNavigation}
         />
         <BookFragmentComp
             fragment={fragment}
@@ -80,21 +82,23 @@ export function BookViewComp({
             onSelectionChange={selectionHandler}
             onRefClick={openRef}
         />
-        <AnchorLink
+        <AnchorButton
             theme={theme}
             defaultTitle='Next'
             anchor={fragment.next}
             bookId={bookId}
+            onClick={onNavigation}
         />
     </BookContextMenu>;
 }
 
-function AnchorLink({
-    theme, defaultTitle, anchor, bookId,
+function AnchorButton({
+    theme, defaultTitle, anchor, bookId, onClick,
 }: Themed & {
     bookId: string,
     anchor: BookAnchor | undefined,
     defaultTitle: string,
+    onClick?: () => void,
 }) {
     if (!anchor) {
         return null;
@@ -108,6 +112,7 @@ function AnchorLink({
                 <BorderButton
                     theme={theme}
                     text={anchor.title || defaultTitle}
+                    onClick={onClick}
                 />;
             </BookPathLink>
         </View>;
