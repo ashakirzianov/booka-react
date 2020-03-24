@@ -3,6 +3,7 @@ export * from './Buttons';
 export * from './ActivityIndicator';
 export * from './BookTile';
 export * from './FacebookLogin';
+export * from './FixedPanel';
 export * from './GridList';
 export * from './Label';
 export * from './Misc';
