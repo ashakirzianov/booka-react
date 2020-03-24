@@ -14,7 +14,7 @@ import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
 import { View, BorderButton, normalMargin } from '../controls';
 import { BookPathLink } from './Navigation';
 
-export function BookViewComp({
+export function BookView({
     bookId, fragment, theme, pathToScroll, updateBookPosition,
     highlights, quoteRange, setQuoteRange, openRef, onNavigation,
 }: Themed & {
@@ -113,7 +113,7 @@ function AnchorButton({
                     theme={theme}
                     text={anchor.title || defaultTitle}
                     onClick={onClick}
-                />;
+                />
             </BookPathLink>
         </View>;
     }

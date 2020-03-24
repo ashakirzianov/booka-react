@@ -14,7 +14,7 @@ import {
     FullScreenActivityIndicator,
 } from '../atoms';
 import { Themed, colors } from '../core';
-import { BookViewComp } from './BookViewComp';
+import { BookView } from './BookView';
 import { TableOfContentsComp, pageForPosition } from './TableOfContentsComp';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
@@ -120,7 +120,7 @@ function BookReady({
             <Clickable onClick={toggleControls}>
                 <Column maxWidth={point(50)} fullWidth padding={point(1)} centered>
                     <EmptyLine />
-                    <BookViewComp
+                    <BookView
                         bookId={bookId}
                         theme={theme}
                         fragment={fragment}
