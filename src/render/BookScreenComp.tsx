@@ -18,7 +18,8 @@ import { BookViewComp } from './BookViewComp';
 import { TableOfContentsComp, pageForPosition } from './TableOfContentsComp';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
-import { LibButton, AddBookmarkButton, TocButton } from './PanelButtons';
+import { LibButton, TocButton } from './PanelButtons';
+import { BookmarkButton } from './BookmarkButton';
 
 export function BookScreenComp({ bookId, showToc, path, quote }: {
     bookId: string,
@@ -148,7 +149,7 @@ function BookScreenHeader({
             left={<LibButton theme={theme} />}
             right={
                 <>
-                    <AddBookmarkButton bookId={bookId} path={path} />
+                    <BookmarkButton bookId={bookId} path={path} />
                     <AppearanceButton />
                     <AccountButton />
                 </>}

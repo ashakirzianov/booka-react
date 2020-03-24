@@ -1,40 +1,8 @@
 import React from 'react';
-import { BookPath, findBookmark } from 'booka-common';
 
-import { useTheme, useBookmarks } from '../application';
 import { Themed } from '../core';
-import { TextButton, TagButton, IconLink } from '../atoms';
+import { TagButton, IconLink } from '../atoms';
 import { ShowTocLink } from './Navigation';
-
-export function AddBookmarkButton({ bookId, path }: {
-    bookId: string,
-    path: BookPath | undefined,
-}) {
-    const { theme } = useTheme();
-    const { bookmarks, addBookmark, removeBookmark } = useBookmarks(bookId);
-
-    const currentBookmark = path
-        ? findBookmark(bookmarks, bookId, path) : undefined;
-    if (!path) {
-        return null;
-    } else if (currentBookmark) {
-        return <TextButton
-            theme={theme}
-            text='Remove Bookmark'
-            fontSize='small'
-            fontFamily='menu'
-            onClick={() => removeBookmark(currentBookmark.uuid)}
-        />;
-    } else {
-        return <TextButton
-            theme={theme}
-            text='Add Bookmark'
-            fontSize='small'
-            fontFamily='menu'
-            onClick={() => addBookmark(bookId, path)}
-        />;
-    }
-}
 
 export function LibButton({ theme }: Themed) {
     return <IconLink
