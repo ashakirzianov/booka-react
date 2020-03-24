@@ -22,7 +22,7 @@ import { BookmarkButton } from './BookmarkButton';
 import { FixedPanel, View, IconButton } from '../controls';
 import { ShowTocLink } from './Navigation';
 
-export function BookScreenComp({ bookId, showToc, path, quote }: {
+export function BookScreen({ bookId, showToc, path, quote }: {
     bookId: string,
     showToc: boolean,
     path?: BookPath,
@@ -39,7 +39,7 @@ export function BookScreenComp({ bookId, showToc, path, quote }: {
     } else {
         const { fragment } = bookState;
         const { toc } = fragment;
-        return <BookReadyComp
+        return <BookReady
             theme={theme}
             bookId={bookId}
             path={path}
@@ -51,7 +51,7 @@ export function BookScreenComp({ bookId, showToc, path, quote }: {
     }
 }
 
-function BookReadyComp({
+function BookReady({
     theme, fragment, toc, showToc, bookId, path, quote,
 }: Themed & {
     bookId: string,

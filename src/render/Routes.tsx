@@ -6,8 +6,8 @@ import { pathFromString, rangeFromString } from 'booka-common';
 import { useTheme } from '../application';
 import { colors } from '../core';
 import { View } from '../controls';
-import { FeedScreen } from './FeedScreenComp';
-import { BookScreenComp } from './BookScreenComp';
+import { FeedScreen } from './FeedScreen';
+import { BookScreen } from './BookScreen';
 
 export function Routes() {
     const { theme } = useTheme();
@@ -45,7 +45,7 @@ function BookRoute() {
     );
     const quote = typeof q === 'string' ? rangeFromString(q) : undefined;
 
-    return <BookScreenComp
+    return <BookScreen
         bookId={bookId}
         showToc={toc !== undefined}
         path={quote?.start ?? path}
