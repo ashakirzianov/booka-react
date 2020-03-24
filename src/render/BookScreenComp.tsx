@@ -18,7 +18,7 @@ import { BookViewComp } from './BookViewComp';
 import { TableOfContentsComp, pageForPosition } from './TableOfContentsComp';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
-import { LibButton, TocButton } from './PanelButtons';
+import { BackButton, TocButton } from './PanelButtons';
 import { BookmarkButton } from './BookmarkButton';
 import { FixedPanel, View } from '../controls';
 
@@ -152,7 +152,7 @@ function Header({
             <View style={{
                 flexDirection: 'row',
             }}>
-                <LibButton theme={theme} />
+                <BackButton theme={theme} />
             </View>
             <View style={{
                 flexDirection: 'row',
