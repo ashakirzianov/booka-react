@@ -1,18 +1,18 @@
 import React, { useRef, useCallback } from 'react';
 import {
     BookFragment, BookPath, BookRange,
-    Highlight, BookAnchor, doesRangeOverlap, rangeToString, pathToString,
+    Highlight, BookAnchor, doesRangeOverlap, rangeToString,
 } from 'booka-common';
 
 import {
-    Row,
-    point, BorderLink,
-} from '../atoms';
-import { BookFragmentComp, BookSelection, ColorizedRange } from '../reader';
+    BookFragmentComp, BookSelection, ColorizedRange,
+} from '../reader';
 import { useCopy } from '../application';
 import { Themed, colors, getFontSize, Theme } from '../core';
 import { config } from '../config';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
+import { View, BorderButton, normalMargin } from '../controls';
+import { BookPathLink } from './Navigation';
 
 export function BookViewComp({
     bookId, fragment, theme, pathToScroll, updateBookPosition,
@@ -63,7 +63,7 @@ export function BookViewComp({
     >
         <AnchorLink
             theme={theme}
-            text='Previous'
+            defaultTitle='Previous'
             anchor={fragment.previous}
             bookId={bookId}
         />
@@ -82,29 +82,36 @@ export function BookViewComp({
         />
         <AnchorLink
             theme={theme}
-            text='Next'
+            defaultTitle='Next'
             anchor={fragment.next}
             bookId={bookId}
         />
     </BookContextMenu>;
 }
 
-function AnchorLink({ theme, text, anchor, bookId }: Themed & {
+function AnchorLink({
+    theme, defaultTitle, anchor, bookId,
+}: Themed & {
     bookId: string,
     anchor: BookAnchor | undefined,
-    text: string,
+    defaultTitle: string,
 }) {
     if (!anchor) {
         return null;
+    } else {
+        return <View style={{
+            flexDirection: 'row',
+            margin: normalMargin,
+            justifyContent: 'center',
+        }}>
+            <BookPathLink bookId={bookId} path={anchor.path}>
+                <BorderButton
+                    theme={theme}
+                    text={anchor.title || defaultTitle}
+                />;
+            </BookPathLink>
+        </View>;
     }
-    return <Row centered margin={point(1)}>
-        <BorderLink
-            theme={theme}
-            text={anchor.title || text}
-            to={`/book/${bookId}?p=${pathToString(anchor.path)}`}
-            fontFamily='book'
-        />
-    </Row>;
 }
 
 function quoteColorization(quote: BookRange | undefined, theme: Theme): ColorizedRange[] {
