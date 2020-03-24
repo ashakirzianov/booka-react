@@ -8,25 +8,27 @@ import { HasChildren } from './common';
 import { OverlayPanel } from './Panel';
 
 export function ContextMenu({
-    id, menu, children, theme,
+    id, trigger, children, theme,
 }: HasChildren & Themed & {
     id: string,
-    menu: ReactNode,
+    trigger: ReactNode,
 }) {
     return <>
         <ContextMenuTrigger id={id}>
-            {children}
+            {trigger}
         </ContextMenuTrigger>
         <ReactContextMenu id={id}>
             <OverlayPanel theme={theme}>
-                {menu}
+                {children}
             </OverlayPanel>
         </ReactContextMenu>
     </>;
 }
 
-export function ContextMenuItem({ children }: HasChildren) {
-    return <MenuItem>
+export function ContextMenuItem({ onClick, children }: HasChildren & {
+    onClick?: () => void,
+}) {
+    return <MenuItem onClick={onClick}>
         {children}
     </MenuItem>;
 }
