@@ -10,7 +10,7 @@ import {
 } from '../application';
 import {
     Column, point, Row, Triad, EmptyLine,
-    Clickable, TextLine, Footer,
+    Clickable, TextLine,
     FullScreenActivityIndicator,
 } from '../atoms';
 import { Themed, colors } from '../core';
@@ -19,7 +19,7 @@ import { TableOfContentsComp, pageForPosition } from './TableOfContentsComp';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
 import { BookmarkButton } from './BookmarkButton';
-import { FixedPanel, View, IconButton } from '../controls';
+import { FixedPanel, View, IconButton, Label, halfPadding, normalPadding, panelShadow } from '../controls';
 import { ShowTocLink } from './Navigation';
 
 export function BookScreen({ bookId, showToc, path, quote }: {
@@ -108,7 +108,7 @@ function BookReady({
             theme={theme}
             visible={controlsVisible}
         />
-        <BookScreenFooter
+        <Footer
             theme={theme}
             fragment={fragment}
             visible={controlsVisible}
@@ -171,7 +171,7 @@ function Header({
     </FixedPanel>;
 }
 
-function BookScreenFooter({
+function Footer({
     fragment, path, theme, visible,
 }: Themed & {
     fragment: BookFragment,
@@ -185,20 +185,58 @@ function BookScreenFooter({
     const nextChapterPage = fragment.next
         ? pageForPosition(fragment.next.position)
         : total;
-    return <Footer theme={theme} open={visible}>
-        <Triad
-            right={<TextLine
-                theme={theme}
-                text={
-                    nextChapterPage !== undefined
-                        ? `${nextChapterPage - currentPage} pages left`
-                        : ''
-                }
-                fontSize='nano'
-                color='accent'
-            />}
-        />
-    </Footer>;
+    const currentPageString = total !== undefined
+        ? `${currentPage} of ${total}`
+        : `${currentPage}`;
+    const pagesLeftString = nextChapterPage !== undefined
+        ? `${nextChapterPage - currentPage} pages left`
+        : '';
+    return <FixedPanel placement='bottom' open={visible}>
+        <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            backgroundColor: colors(theme).primary,
+            padding: normalPadding,
+            shadowColor: colors(theme).primary,
+            shadowRadius: 10,
+        }}>
+            <View style={{
+                flexBasis: 1,
+                flexGrow: 1,
+                flexShrink: 1,
+            }} />
+            <View style={{
+                flexDirection: 'row',
+                flexBasis: 'auto',
+                flexGrow: 1,
+                flexShrink: 1,
+                justifyContent: 'center',
+            }}>
+                <Label
+                    theme={theme}
+                    text={currentPageString}
+                    size='nano'
+                    bold
+                />
+            </View>
+            <View style={{
+                flexDirection: 'row',
+                minWidth: 'auto',
+                flexBasis: 1,
+                flexGrow: 1,
+                flexShrink: 1,
+                justifyContent: 'flex-end',
+            }}>
+                <Label
+                    theme={theme}
+                    text={pagesLeftString}
+                    size='nano'
+                    color='accent'
+                />
+            </View>
+        </View>
+    </FixedPanel>;
 }
 
 function BackButton() {
