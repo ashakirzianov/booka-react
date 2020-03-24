@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import {
-    Size, HasChildren, headerHeight,
+    Size, HasChildren,
 } from './common';
 import { FadeIn } from './Animations';
 
@@ -15,16 +15,16 @@ export function FixedPanel({
     return <FadeIn visible={open}>
         <div style={{
             display: 'flex',
+            margin: 0,
+            padding: 0,
             flexDirection: 'column',
             justifyContent: 'center',
             width: '100%',
-            height: headerHeight,
             position: 'fixed',
             top: placement === 'top' ? 0 : undefined,
             bottom: placement === 'bottom' ? 0 : undefined,
             left: 0,
             zIndex: 5,
-
         }}>
             {children}
         </div>

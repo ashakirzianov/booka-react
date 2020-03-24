@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react';
 import { BrowserRouter, Route, Switch, useParams, useLocation, Redirect } from 'react-router-dom';
-
-import { FeedScreen } from './FeedScreenComp';
-import { BookScreenComp } from './BookScreenComp';
 import { parse } from 'query-string';
 import { pathFromString, rangeFromString } from 'booka-common';
+
 import { useTheme } from '../application';
 import { colors } from '../core';
 import { View } from '../controls';
+import { FeedScreen } from './FeedScreenComp';
+import { BookScreenComp } from './BookScreenComp';
 
 export function Routes() {
     const { theme } = useTheme();

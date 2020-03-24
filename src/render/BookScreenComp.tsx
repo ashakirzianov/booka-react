@@ -9,7 +9,7 @@ import {
     useTheme, useBook, useHighlights, useUrlActions, usePositions,
 } from '../application';
 import {
-    Column, point, Row, Triad, Header, EmptyLine,
+    Column, point, Row, Triad, EmptyLine,
     Clickable, TextLine, Footer,
     FullScreenActivityIndicator,
 } from '../atoms';
@@ -20,6 +20,7 @@ import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
 import { LibButton, TocButton } from './PanelButtons';
 import { BookmarkButton } from './BookmarkButton';
+import { FixedPanel, View } from '../controls';
 
 export function BookScreenComp({ bookId, showToc, path, quote }: {
     bookId: string,
@@ -97,7 +98,7 @@ function BookReadyComp({
                 />
                 : null
         }
-        <BookScreenHeader
+        <Header
             bookId={bookId}
             path={path}
             theme={theme}
@@ -133,28 +134,35 @@ function BookReadyComp({
     </>;
 }
 
-function BookScreenHeader({
+function Header({
     theme, visible, bookId, path,
 }: Themed & {
     bookId: string,
     path: BookPath | undefined,
     visible: boolean,
 }) {
-    return <Header
-        theme={theme}
+    return <FixedPanel
+        placement='top'
         open={visible}
-        paddingHorizontal={point(1)}
     >
-        <Triad
-            left={<LibButton theme={theme} />}
-            right={
-                <>
-                    <BookmarkButton bookId={bookId} path={path} />
-                    <AppearanceButton />
-                    <AccountButton />
-                </>}
-        />
-    </Header>;
+        <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+        }}>
+            <View style={{
+                flexDirection: 'row',
+            }}>
+                <LibButton theme={theme} />
+            </View>
+            <View style={{
+                flexDirection: 'row',
+            }}>
+                <BookmarkButton bookId={bookId} path={path} />
+                <AppearanceButton />
+                <AccountButton />
+            </View>
+        </View>
+    </FixedPanel>;
 }
 
 function BookScreenFooter({

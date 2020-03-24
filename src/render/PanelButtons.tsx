@@ -1,14 +1,14 @@
 import React from 'react';
 
 import { Themed } from '../core';
-import { TagButton, IconLink } from '../atoms';
+import { TagButton } from '../atoms';
+import { IconButton } from '../controls';
 import { ShowTocLink } from './Navigation';
 
 export function LibButton({ theme }: Themed) {
-    return <IconLink
+    return <IconButton
         theme={theme}
         icon='left'
-        to='/'
     />;
 }
 

@@ -49,7 +49,6 @@ export const userAreaWidth = point(50);
 export const panelHeight = point(15);
 export const buttonHeight = 50;
 export const buttonWidth = 150;
-export const headerHeight = point(5);
 
 export const normalMargin = point(0.5);
 export const halfMargin = point(0.5);
