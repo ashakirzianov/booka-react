@@ -153,6 +153,7 @@ function Header({
                 flexDirection: 'row',
             }}>
                 <BackButton theme={theme} />
+                <TocButton theme={theme} />
             </View>
             <View style={{
                 flexDirection: 'row',
@@ -181,13 +182,6 @@ function BookScreenFooter({
         : total;
     return <Footer theme={theme} open={visible}>
         <Triad
-            center={
-                <TocButton
-                    theme={theme}
-                    current={currentPage}
-                    total={total}
-                />
-            }
             right={<TextLine
                 theme={theme}
                 text={
