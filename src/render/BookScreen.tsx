@@ -9,7 +9,7 @@ import {
     useTheme, useBook, useHighlights, useUrlActions, usePositions,
 } from '../application';
 import {
-    Column, point, Row, EmptyLine,
+    Column, point, Row,
     Clickable,
     FullScreenActivityIndicator,
 } from '../atoms';
@@ -121,7 +121,6 @@ function BookReady({
         >
             <Clickable onClick={toggleControls}>
                 <Column maxWidth={point(50)} fullWidth padding={point(1)} centered>
-                    <EmptyLine />
                     <BookView
                         bookId={bookId}
                         theme={theme}
@@ -134,7 +133,6 @@ function BookReady({
                         openRef={() => undefined}
                         onNavigation={onNavigation}
                     />
-                    <EmptyLine />
                 </Column>
             </Clickable>
         </Row>
