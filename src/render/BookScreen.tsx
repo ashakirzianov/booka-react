@@ -19,7 +19,7 @@ import { AppearanceButton } from './AppearanceButton';
 import { BookmarkButton } from './BookmarkButton';
 import {
     FixedPanel, View, IconButton, Label, normalPadding, userAreaWidth,
-    FullScreenActivityIndicator, Screen,
+    FullScreenActivityIndicator, Screen, megaPadding,
 } from '../controls';
 import { ShowTocLink, FeedLink } from './Navigation';
 
@@ -120,6 +120,7 @@ function BookReady({
                 <View style={{
                     maxWidth: userAreaWidth,
                     padding: normalPadding,
+                    paddingBottom: megaPadding,
                 }}>
                     <BookView
                         bookId={bookId}
