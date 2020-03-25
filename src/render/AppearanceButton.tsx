@@ -94,11 +94,16 @@ function SelectPaletteButton({ theme, text, name, setPalette }: Themed & {
     setPalette: (name: PaletteName) => void,
 }) {
     const themeToUse = { ...theme, currentPalette: name };
+    const selected = name === theme.currentPalette;
     return <CircleButton
         theme={themeToUse}
         text={text}
+        color='text'
         background='primary'
-        selected={name === theme.currentPalette}
+        highlight='highlight'
+        shadow='shadow'
+        border={selected ? 'highlight' : undefined}
+        fontSize='normal'
         onClick={() => setPalette(name)}
     />;
 }

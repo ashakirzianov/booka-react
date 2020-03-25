@@ -122,11 +122,15 @@ function SetHighlightGroupButton({
     group: HighlightGroup,
     setHighlightGroup: (id: string, group: string) => void,
 }) {
+    const selected = target.highlight.group === group;
     return <CircleButton
         theme={theme}
-        text='A'
+        text={selected ? 'A' : undefined}
+        color='white'
         background={colorForHighlightGroup(group)}
-        selected={target.highlight.group === group}
+        highlight='white'
+        border={selected ? 'white' : undefined}
+        fontSize='small'
         onClick={() => setHighlightGroup(target.highlight.uuid, group)}
     />;
 }

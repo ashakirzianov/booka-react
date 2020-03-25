@@ -2,24 +2,30 @@
 import { jsx } from '@emotion/core';
 import { View } from 'react-native';
 import { roundShadow } from '../common';
-import { colors, getFontSize, PaletteColor, Themed } from '../theme';
+import { colors, getFontSize, PaletteColor, Themed, FontSizes } from '../theme';
 
 export function CircleButton({
-    theme, onClick, selected, text, background,
+    theme, onClick, text,
+    color, background, highlight, border, shadow,
+    fontSize,
 }: Themed & {
     text?: string,
+    color: PaletteColor,
     background: PaletteColor,
-    selected: boolean,
+    highlight: PaletteColor,
+    border?: PaletteColor,
+    shadow?: PaletteColor,
+    fontSize: keyof FontSizes,
     onClick: () => void,
 }) {
     return <div
         onClick={onClick}
         css={{
             display: 'flex',
-            color: colors(theme).text,
-            fontSize: getFontSize(theme, 'normal'),
+            color: colors(theme)[color],
+            fontSize: getFontSize(theme, fontSize),
             '&:hover': {
-                color: colors(theme).highlight,
+                color: colors(theme)[highlight],
             },
         }}
     >
@@ -32,12 +38,18 @@ export function CircleButton({
             backgroundColor: colors(theme)[background],
             borderRadius: 50,
             borderWidth: 3,
-            borderColor: selected ? colors(theme).highlight : 'rgba(0,0,0,0)',
+            borderColor: border
+                ? colors(theme)[border]
+                : 'rgba(0,0,0,0)',
             borderStyle: 'solid',
-            boxShadow: roundShadow(colors(theme).shadow),
+            boxShadow: shadow
+                ? roundShadow(colors(theme)[shadow])
+                : undefined,
             '&:hover': {
-                borderColor: colors(theme).highlight,
-                boxShadow: roundShadow(colors(theme).highlight),
+                borderColor: colors(theme)[highlight],
+                boxShadow: shadow
+                    ? roundShadow(colors(theme)[highlight])
+                    : undefined,
             },
         }}>
             <View
