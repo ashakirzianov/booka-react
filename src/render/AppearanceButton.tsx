@@ -104,6 +104,7 @@ function SelectPaletteButton({ theme, text, name, setPalette }: Themed & {
         shadow='shadow'
         border={selected ? 'highlight' : undefined}
         fontSize='normal'
+        size={50}
         onClick={() => setPalette(name)}
     />;
 }

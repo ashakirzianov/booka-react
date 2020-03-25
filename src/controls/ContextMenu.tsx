@@ -39,11 +39,6 @@ export function ContextMenuItem({ onClick, theme, children }: HasChildren & Them
             flexDirection: 'row',
             alignItems: 'center',
             width: '100%',
-            color: colors(theme).text,
-            '&:hover': {
-                backgroundColor: colors(theme).highlight,
-                color: colors(theme).primary,
-            },
         }}>
             {children}
         </div>
@@ -57,24 +52,33 @@ export function TextContextMenuItem({
     icon?: IconName,
     onClick?: () => void,
 }) {
-    return <ContextMenuItem
-        theme={theme}
-        onClick={onClick}
-    >
-        {
-            !icon ? null :
-                <Icon
-                    theme={theme}
-                    name={icon}
-                    margin={halfMargin}
-                />
-        }
-        <span css={{
-            margin: halfMargin,
-            fontSize: getFontSize(theme, 'nano'),
-            fontFamily: theme.fontFamilies.menu,
+    return <MenuItem onClick={onClick}>
+        <div css={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            width: '100%',
+            color: colors(theme).text,
+            '&:hover': {
+                backgroundColor: colors(theme).highlight,
+                color: colors(theme).primary,
+            },
         }}>
-            {text}
-        </span>
-    </ContextMenuItem>;
+            {
+                !icon ? null :
+                    <Icon
+                        theme={theme}
+                        name={icon}
+                        margin={halfMargin}
+                    />
+            }
+            <span css={{
+                margin: halfMargin,
+                fontSize: getFontSize(theme, 'nano'),
+                fontFamily: theme.fontFamilies.menu,
+            }}>
+                {text}
+            </span>
+        </div>
+    </MenuItem>;
 }

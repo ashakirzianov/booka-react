@@ -1,13 +1,13 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { View } from 'react-native';
-import { roundShadow } from '../common';
+import { roundShadow, normalMargin } from '../common';
 import { colors, getFontSize, PaletteColor, Themed, FontSizes } from '../theme';
 
 export function CircleButton({
     theme, onClick, text,
     color, background, highlight, border, shadow,
-    fontSize,
+    fontSize, size,
 }: Themed & {
     text?: string,
     color: PaletteColor,
@@ -16,12 +16,14 @@ export function CircleButton({
     border?: PaletteColor,
     shadow?: PaletteColor,
     fontSize: keyof FontSizes,
+    size: number,
     onClick: () => void,
 }) {
     return <div
         onClick={onClick}
         css={{
             display: 'flex',
+            margin: normalMargin,
             color: colors(theme)[color],
             fontSize: getFontSize(theme, fontSize),
             '&:hover': {
@@ -32,11 +34,11 @@ export function CircleButton({
         <div css={{
             display: 'flex',
             flexDirection: 'column',
-            width: 50,
-            height: 50,
+            width: size,
+            height: size,
             justifyContent: 'center',
             backgroundColor: colors(theme)[background],
-            borderRadius: 50,
+            borderRadius: size,
             borderWidth: 3,
             borderColor: border
                 ? colors(theme)[border]

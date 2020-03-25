@@ -3,7 +3,7 @@ import React from 'react';
 import { Highlight, BookRange, HighlightGroup } from 'booka-common';
 import { BookSelection } from '../reader';
 import { useHighlights, useTheme } from '../application';
-import { ContextMenu, ContextMenuItem, HasChildren, TextContextMenuItem, View, CircleButton, colorForHighlightGroup } from '../controls';
+import { ContextMenu, ContextMenuItem, HasChildren, TextContextMenuItem, View, CircleButton, colorForHighlightGroup, normalMargin } from '../controls';
 import { Themed } from '../core';
 
 type HighlightTarget = {
@@ -92,6 +92,7 @@ function ManageHighlightItem({
     >
         <View style={{
             flexDirection: 'row',
+            margin: normalMargin,
         }}>
             <SetHighlightGroupButton
                 theme={theme}
@@ -130,7 +131,8 @@ function SetHighlightGroupButton({
         background={colorForHighlightGroup(group)}
         highlight='white'
         border={selected ? 'white' : undefined}
-        fontSize='small'
+        fontSize='micro'
+        size={30}
         onClick={() => setHighlightGroup(target.highlight.uuid, group)}
     />;
 }
