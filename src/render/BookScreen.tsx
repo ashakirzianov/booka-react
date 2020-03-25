@@ -15,7 +15,7 @@ import {
 } from '../atoms';
 import { Themed, colors } from '../core';
 import { BookView } from './BookView';
-import { TableOfContentsComp, pageForPosition } from './TableOfContentsComp';
+import { TableOfContentsModal, pageForPosition } from './TableOfContentsModal';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
 import { BookmarkButton } from './BookmarkButton';
@@ -96,7 +96,7 @@ function BookReady({
     return <>
         {
             toc && showToc
-                ? <TableOfContentsComp
+                ? <TableOfContentsModal
                     theme={theme}
                     toc={toc}
                     id={bookId}

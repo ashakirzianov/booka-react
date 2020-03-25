@@ -10,7 +10,7 @@ import {
 } from '../atoms';
 import { Themed } from '../core';
 
-export function TableOfContentsComp({
+export function TableOfContentsModal({
     theme, toc, id, closeToc,
 }: Themed & {
     toc: TableOfContents,
@@ -33,7 +33,7 @@ export function TableOfContentsComp({
                     tabs={maxLevel - item.level}
                     item={item}
                     page={pageForPosition(item.position)}
-                />
+                />,
             )}
         </Column>
     </Modal>;
