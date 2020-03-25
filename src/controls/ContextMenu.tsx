@@ -32,10 +32,10 @@ export function ContextMenu({
     </React.Fragment>;
 }
 
-export function ContextMenuItem({ onClick, theme, children }: HasChildren & Themed & {
-    onClick?: () => void,
+export function ContextMenuItem({ callback, theme, children }: HasChildren & Themed & {
+    callback?: () => void,
 }) {
-    return <MenuItem onClick={onClick}>
+    return <MenuItem onClick={callback}>
         <div css={{
             display: 'flex',
             flexBasis: 1,
@@ -50,13 +50,13 @@ export function ContextMenuItem({ onClick, theme, children }: HasChildren & Them
 }
 
 export function TextContextMenuItem({
-    theme, onClick, icon, text,
+    theme, callback, icon, text,
 }: Themed & {
     text: string,
     icon?: IconName,
-    onClick?: () => void,
+    callback?: () => void,
 }) {
-    return <MenuItem onClick={onClick}>
+    return <MenuItem onClick={callback}>
         <div css={{
             display: 'flex',
             flexDirection: 'row',

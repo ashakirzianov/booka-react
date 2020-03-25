@@ -4,14 +4,14 @@ import { Themed, colors } from '../theme';
 import { buttonHeight, actionShadow, normalMargin, buttonStyle } from '../common';
 
 export function PictureButton({
-    onClick, pictureUrl, theme,
+    callback, pictureUrl, theme,
 }: Themed & {
     pictureUrl?: string,
-    onClick?: () => void,
+    callback?: () => void,
 }) {
     return <button
         style={buttonStyle}
-        onClick={onClick}
+        onClick={callback}
     >
         <img
             src={pictureUrl}

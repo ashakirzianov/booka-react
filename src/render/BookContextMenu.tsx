@@ -76,7 +76,7 @@ function AddHighlightItem({
         theme={theme}
         text='Add Highlight'
         icon='highlight'
-        onClick={() => addHighlight(bookId, target.selection.range, 'first')}
+        callback={() => addHighlight(bookId, target.selection.range, 'first')}
     />;
 }
 
@@ -136,14 +136,14 @@ function SetHighlightGroupButton({
         border={selected ? 'white' : undefined}
         fontSize='micro'
         size={30}
-        onClick={() => setHighlightGroup(target.highlight.uuid, group)}
+        callback={() => setHighlightGroup(target.highlight.uuid, group)}
     />;
 }
 
 function RemoveHighlightButton({ theme, removeHighlight }: Themed & {
     removeHighlight: () => void,
 }) {
-    return <SimpleButton onClick={removeHighlight}>
+    return <SimpleButton callback={removeHighlight}>
         <Icon
             theme={theme}
             size={30}

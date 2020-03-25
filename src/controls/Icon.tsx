@@ -28,14 +28,10 @@ export type IconProps = Themed & {
     margin?: Size,
     color?: PaletteColor,
     hoverColor?: PaletteColor,
-    onClick?: () => void,
-    onHoverIn?: () => void,
-    onHoverOut?: () => void,
 };
 
 export function Icon({
     theme, name, size, margin, color, hoverColor,
-    onClick, onHoverIn, onHoverOut,
 }: IconProps) {
     const IconClass = iconClassForName(name);
     return <div
@@ -53,9 +49,6 @@ export function Icon({
                     : undefined,
             },
         }}
-        onClick={onClick}
-        onMouseEnter={onHoverIn}
-        onMouseLeave={onHoverOut}
     >
         <IconClass
             size={size || '1em'}

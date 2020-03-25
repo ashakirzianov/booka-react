@@ -83,7 +83,7 @@ function ModalTitle({ theme, title, close }: Themed & {
         }}>
             <IconButton
                 theme={theme}
-                onClick={close}
+                callback={close}
                 icon='close'
             />
         </View>

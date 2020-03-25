@@ -7,15 +7,15 @@ import { actionShadow, buttonHeight, actionBack, normalMargin, buttonStyle } fro
 
 export function IconButton({
     icon, theme,
-    onClick, onHoverIn, onHoverOut,
+    callback, onHoverIn, onHoverOut,
 }: Themed & {
     icon: IconName,
-    onClick?: () => void,
+    callback?: () => void,
     onHoverIn?: () => void,
     onHoverOut?: () => void,
 }) {
     return <button style={buttonStyle}
-        onClick={onClick}
+        onClick={callback}
         onMouseEnter={onHoverIn}
         onMouseLeave={onHoverOut}
     >

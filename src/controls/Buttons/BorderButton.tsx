@@ -6,10 +6,10 @@ import { Themed, colors, getFontFamily, getFontSize } from '../theme';
 import { halfPadding, buttonHeight, buttonStyle } from '../common';
 
 export function BorderButton({
-    text, theme, onClick,
+    text, theme, callback,
 }: Themed & {
     text: string,
-    onClick?: () => void,
+    callback?: () => void,
 }) {
     return <button
         css={{
@@ -28,7 +28,7 @@ export function BorderButton({
                 color: colors(theme).highlight,
             },
         }}
-        onClick={onClick}
+        onClick={callback}
     >
         {text}
     </button>;

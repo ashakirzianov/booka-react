@@ -6,13 +6,13 @@ import {
 import { buttonStyle } from '../common';
 
 export function TextButton({
-    onClick, theme, text,
+    callback, theme, text,
     fontSize, fontFamily,
 }: Themed & {
     text: string,
     fontSize: keyof FontSizes,
     fontFamily: keyof FontFamilies,
-    onClick: () => void,
+    callback: () => void,
 }) {
     return <button
         css={{
@@ -24,7 +24,7 @@ export function TextButton({
                 color: colors(theme).highlight,
             },
         }}
-        onClick={onClick}
+        onClick={callback}
     >
         {text}
     </button>;

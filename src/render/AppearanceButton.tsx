@@ -65,7 +65,7 @@ function FontScaleButton({
             fontFamily='book'
             text='Abc'
             fontSize={size}
-            onClick={() => incrementScale(increment)}
+            callback={() => incrementScale(increment)}
         />
     </View>;
 }
@@ -105,6 +105,6 @@ function SelectPaletteButton({ theme, text, name, setPalette }: Themed & {
         border={selected ? 'highlight' : undefined}
         fontSize='normal'
         size={50}
-        onClick={() => setPalette(name)}
+        callback={() => setPalette(name)}
     />;
 }

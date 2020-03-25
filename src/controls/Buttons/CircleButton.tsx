@@ -6,7 +6,7 @@ import { colors, getFontSize, PaletteColor, Themed, FontSizes } from '../theme';
 import { getFontFamily } from '../../core';
 
 export function CircleButton({
-    theme, onClick, text,
+    theme, callback, text,
     color, background, highlight, border, shadow,
     fontSize, size,
 }: Themed & {
@@ -18,11 +18,11 @@ export function CircleButton({
     shadow?: PaletteColor,
     fontSize: keyof FontSizes,
     size: number,
-    onClick: () => void,
+    callback: () => void,
 }) {
     return <button
         style={buttonStyle}
-        onClick={onClick}
+        onClick={callback}
     >
         <div css={{
             display: 'flex',

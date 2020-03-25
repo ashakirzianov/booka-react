@@ -77,7 +77,7 @@ export function RichText({
                         refMap.current.set(path, ref);
                     }}
                     onRefClick={onRefClick}
-                />
+                />,
         )}
     </span>;
 }

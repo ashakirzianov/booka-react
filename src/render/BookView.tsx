@@ -67,7 +67,7 @@ export function BookView({
             defaultTitle='Previous'
             anchor={fragment.previous}
             bookId={bookId}
-            onClick={onNavigation}
+            callback={onNavigation}
         />
         <BookFragmentComp
             fragment={fragment}
@@ -87,18 +87,18 @@ export function BookView({
             defaultTitle='Next'
             anchor={fragment.next}
             bookId={bookId}
-            onClick={onNavigation}
+            callback={onNavigation}
         />
     </BookContextMenu>;
 }
 
 function AnchorButton({
-    theme, defaultTitle, anchor, bookId, onClick,
+    theme, defaultTitle, anchor, bookId, callback,
 }: Themed & {
     bookId: string,
     anchor: BookAnchor | undefined,
     defaultTitle: string,
-    onClick?: () => void,
+    callback?: () => void,
 }) {
     if (!anchor) {
         return null;
@@ -112,7 +112,7 @@ function AnchorButton({
                 <BorderButton
                     theme={theme}
                     text={anchor.title || defaultTitle}
-                    onClick={onClick}
+                    callback={callback}
                 />
             </BookPathLink>
         </View>;

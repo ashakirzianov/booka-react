@@ -5,11 +5,11 @@ import { actionShadow, buttonHeight, buttonWidth, normalMargin, buttonStyle } fr
 import { View } from 'react-native';
 
 export function ActionButton({
-    text, onClick, color, theme,
+    text, callback, color, theme,
 }: Themed & {
     text: string,
     color?: PaletteColor,
-    onClick?: () => void,
+    callback?: () => void,
 }) {
     const textColor = colors(theme)[color ?? 'accent'];
     const fore = colors(theme)[color ?? 'accent'];
@@ -19,7 +19,7 @@ export function ActionButton({
         margin: normalMargin,
     }}>
         <button
-            onClick={onClick}
+            onClick={callback}
             css={{
                 ...buttonStyle,
                 width: buttonWidth,
