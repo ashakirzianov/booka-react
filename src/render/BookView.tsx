@@ -11,7 +11,7 @@ import { useCopy } from '../application';
 import { Themed, colors, getFontSize, Theme } from '../core';
 import { config } from '../config';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
-import { View, BorderButton, normalMargin } from '../controls';
+import { View, BorderButton, normalMargin, colorForHighlightGroup } from '../controls';
 import { BookPathLink } from './Navigation';
 
 export function BookView({
@@ -130,13 +130,9 @@ function quoteColorization(quote: BookRange | undefined, theme: Theme): Colorize
 
 function highlightsColorization(highlights: Highlight[], theme: Theme): ColorizedRange[] {
     return highlights.map(h => ({
-        color: colorForGroup(h.group),
+        color: colors(theme)[colorForHighlightGroup(h.group)],
         range: h.range,
     }));
-}
-
-function colorForGroup(group: string) {
-    return group;
 }
 
 function generateQuoteLink(id: string, quote: BookRange) {

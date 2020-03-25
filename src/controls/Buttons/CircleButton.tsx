@@ -7,7 +7,7 @@ import { colors, getFontSize, PaletteColor, Themed } from '../theme';
 export function CircleButton({
     theme, onClick, selected, text, background,
 }: Themed & {
-    text: string,
+    text?: string,
     background: PaletteColor,
     selected: boolean,
     onClick: () => void,

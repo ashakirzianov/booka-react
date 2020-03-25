@@ -1,6 +1,25 @@
 import { PropsWithChildren } from 'react';
 import { Interpolation } from '@emotion/core';
 import { Color, colors, Theme } from './theme';
+import { HighlightGroup } from 'booka-common';
+import { PaletteColor } from '../core';
+
+export function colorForHighlightGroup(group: HighlightGroup): PaletteColor {
+    switch (group) {
+        case 'first':
+            return 'red';
+        case 'second':
+            return 'green';
+        case 'third':
+            return 'blue';
+        case 'forth':
+            return 'violet';
+        case 'fifth':
+            return 'pink';
+        default:
+            return 'neutral';
+    }
+}
 
 export type HasChildren = PropsWithChildren<{}>;
 export type Marginable = {
