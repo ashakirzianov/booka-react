@@ -1,6 +1,25 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, CSSProperties } from 'react';
 import { Interpolation } from '@emotion/core';
 import { Color, colors, Theme } from './theme';
+import { HighlightGroup } from 'booka-common';
+import { PaletteColor } from '../core';
+
+export function colorForHighlightGroup(group: HighlightGroup): PaletteColor {
+    switch (group) {
+        case 'first':
+            return 'yellow';
+        case 'second':
+            return 'violet';
+        case 'third':
+            return 'green';
+        case 'forth':
+            return 'red';
+        case 'fifth':
+            return 'blue';
+        default:
+            return 'neutral';
+    }
+}
 
 export type HasChildren = PropsWithChildren<{}>;
 export type Marginable = {
@@ -26,7 +45,7 @@ export function percent(size: number) {
 }
 
 export function point(size: number) {
-    return `${size}em`;
+    return `${size}rem`;
 }
 
 export function actionBack(theme: Theme) {
@@ -49,6 +68,7 @@ export const userAreaWidth = point(50);
 export const panelHeight = point(15);
 export const buttonHeight = 50;
 export const buttonWidth = 150;
+export const menuWidth = point(15);
 
 export const normalMargin = point(0.5);
 export const halfMargin = point(0.5);
@@ -56,4 +76,13 @@ export const nanoMargin = point(0.1);
 export const doubleMargin = point(1);
 export const normalPadding = point(0.5);
 export const doublePadding = point(1);
+export const megaPadding = point(4);
 export const halfPadding = point(0.25);
+
+export const buttonStyle: CSSProperties = {
+    cursor: 'pointer',
+    border: 'none',
+    backgroundColor: '#00000000',
+    margin: 0,
+    padding: 0,
+};

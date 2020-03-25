@@ -21,12 +21,13 @@ export function Modal({
     return <Transition in={open} timeout={300}>
         {state => state === 'exited' ? null :
             <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexDirection: 'column',
                 position: 'fixed',
                 top: 0, bottom: 0, left: 0, right: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100vh',
+                justifyContent: 'center',
+                alignItems: 'center',
                 backgroundColor: colors(theme).semiTransparent,
                 zIndex: 10,
                 transition: `${defaultAnimationDuration}ms ease-in-out`,
@@ -39,23 +40,20 @@ export function Modal({
                         entered: state === 'entered',
                     }}
                     theme={theme}>
-                    <View style={{ flex: 1 }}>
-                        <ModalTitle
-                            theme={theme}
-                            title={title}
-                            close={close}
-                        />
-                        <View style={{
-                            flex: 1,
-                            alignItems: 'stretch',
-                            overflow: 'scroll',
-                            padding: normalPadding,
-                            alignContent: 'center',
-                            justifyContent: 'center',
-                        }}
-                        >
-                            {children}
-                        </View>
+                    <ModalTitle
+                        theme={theme}
+                        title={title}
+                        close={close}
+                    />
+                    <View style={{
+                        flexGrow: 1,
+                        flexShrink: 1,
+                        overflow: 'scroll',
+                        padding: normalPadding,
+                        justifyContent: 'flex-start',
+                    }}
+                    >
+                        {children}
                     </View>
                 </OverlayPanel>
             </div>
@@ -83,7 +81,7 @@ function ModalTitle({ theme, title, close }: Themed & {
         }}>
             <IconButton
                 theme={theme}
-                onClick={close}
+                callback={close}
                 icon='close'
             />
         </View>

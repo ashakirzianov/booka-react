@@ -50,21 +50,21 @@ function AccountButtonDumb({
     </WithPopover>;
 }
 
-function ActualButton({ theme, account, onClick }: Themed & {
+function ActualButton({ theme, account, callback }: Themed & {
     account: AccountState,
-    onClick?: () => void,
+    callback?: () => void,
 }) {
     if (account.state === 'signed') {
         return <PictureButton
             theme={theme}
             pictureUrl={account.account.pictureUrl}
-            onClick={onClick}
+            callback={callback}
         />;
     } else {
         return <IconButton
             theme={theme}
             icon='sign-in'
-            onClick={onClick}
+            callback={callback}
         />;
     }
 }
@@ -86,7 +86,7 @@ function AccountPanel({ account, theme, logout }: Themed & {
         <ActionButton
             theme={theme}
             text='Logout'
-            onClick={logout}
+            callback={logout}
         />
     </View>;
 }

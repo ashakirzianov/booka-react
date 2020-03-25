@@ -6,7 +6,7 @@ import {
 } from '../application';
 import { Themed } from './theme';
 import { Icon } from './Icon';
-import { point } from './common';
+import { point, buttonStyle } from './common';
 
 type SocialButtonProps = Themed & {
     onStatusChange?: () => void,
@@ -30,7 +30,7 @@ export function FacebookLogin({ theme, onStatusChange }: FacebookLoginProps) {
     return <View>
         <ActualButton
             theme={theme}
-            onClick={() => {
+            callback={() => {
                 if (loginState.state !== 'logged' || !loginState.token) {
                     doFbLogin();
                 }
@@ -45,19 +45,20 @@ export function FacebookLogin({ theme, onStatusChange }: FacebookLoginProps) {
 }
 
 type ActualButtonProps = Themed & {
-    onClick: () => void,
+    callback: () => void,
     user?: {
         name: string,
         pictureUrl?: string,
     },
 };
-function ActualButton({ onClick, user, theme }: ActualButtonProps) {
+function ActualButton({ callback, user, theme }: ActualButtonProps) {
     const text = user
         ? `Continue as ${user.name}`
         : 'Continue with facebook';
     return <button
-        onClick={onClick}
+        onClick={callback}
         style={{
+            ...buttonStyle,
             color: 'white',
             background: '#4469b0',
             borderStyle: 'none',

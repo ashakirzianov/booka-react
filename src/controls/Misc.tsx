@@ -1,8 +1,19 @@
 import React from 'react';
-import { View as NativeView } from 'react-native';
+import {
+    View as NativeView,
+} from 'react-native';
+import { Themed } from './theme';
 import { percent, HasChildren } from './common';
+import { colors } from '../core';
 
 export const View = NativeView;
+export function Clickable({ callback, children }: HasChildren & {
+    callback?: () => void,
+}) {
+    return <div onClick={callback}>
+        {children}
+    </div>;
+}
 
 export function Separator() {
     return <hr style={{
@@ -10,8 +21,9 @@ export function Separator() {
     }} />;
 }
 
-export function Screen({ children }: HasChildren) {
+export function Screen({ children, theme }: HasChildren & Themed) {
     return <View style={{
+        backgroundColor: colors(theme).secondary,
         minHeight: '100vh',
     }}>
         {children}

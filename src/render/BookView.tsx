@@ -1,22 +1,22 @@
 import React, { useRef, useCallback } from 'react';
 import {
     BookFragment, BookPath, BookRange,
-    Highlight, BookAnchor, doesRangeOverlap, rangeToString, pathToString,
+    Highlight, BookAnchor, doesRangeOverlap, rangeToString,
 } from 'booka-common';
 
 import {
-    Row,
-    point, BorderLink,
-} from '../atoms';
-import { BookFragmentComp, BookSelection, ColorizedRange } from '../reader';
+    BookFragmentComp, BookSelection, ColorizedRange,
+} from '../reader';
 import { useCopy } from '../application';
 import { Themed, colors, getFontSize, Theme } from '../core';
 import { config } from '../config';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
+import { View, BorderButton, normalMargin, colorForHighlightGroup } from '../controls';
+import { BookPathLink } from './Navigation';
 
-export function BookViewComp({
+export function BookView({
     bookId, fragment, theme, pathToScroll, updateBookPosition,
-    highlights, quoteRange, setQuoteRange, openRef,
+    highlights, quoteRange, setQuoteRange, openRef, onNavigation,
 }: Themed & {
     bookId: string,
     fragment: BookFragment,
@@ -26,6 +26,7 @@ export function BookViewComp({
     highlights: Highlight[],
     setQuoteRange: (range: BookRange | undefined) => void,
     openRef: (refId: string) => void,
+    onNavigation?: () => void,
 }) {
     const selection = useRef<BookSelection | undefined>(undefined);
     const selectionHandler = useCallback((sel: BookSelection | undefined) => {
@@ -61,11 +62,12 @@ export function BookViewComp({
         bookId={bookId}
         target={menuTarget}
     >
-        <AnchorLink
+        <AnchorButton
             theme={theme}
-            text='Previous'
+            defaultTitle='Previous'
             anchor={fragment.previous}
             bookId={bookId}
+            callback={onNavigation}
         />
         <BookFragmentComp
             fragment={fragment}
@@ -80,37 +82,47 @@ export function BookViewComp({
             onSelectionChange={selectionHandler}
             onRefClick={openRef}
         />
-        <AnchorLink
+        <AnchorButton
             theme={theme}
-            text='Next'
+            defaultTitle='Next'
             anchor={fragment.next}
             bookId={bookId}
+            callback={onNavigation}
         />
     </BookContextMenu>;
 }
 
-function AnchorLink({ theme, text, anchor, bookId }: Themed & {
+function AnchorButton({
+    theme, defaultTitle, anchor, bookId, callback,
+}: Themed & {
     bookId: string,
     anchor: BookAnchor | undefined,
-    text: string,
+    defaultTitle: string,
+    callback?: () => void,
 }) {
     if (!anchor) {
         return null;
+    } else {
+        return <View style={{
+            flexDirection: 'row',
+            margin: normalMargin,
+            justifyContent: 'center',
+        }}>
+            <BookPathLink bookId={bookId} path={anchor.path}>
+                <BorderButton
+                    theme={theme}
+                    text={anchor.title || defaultTitle}
+                    callback={callback}
+                />
+            </BookPathLink>
+        </View>;
     }
-    return <Row centered margin={point(1)}>
-        <BorderLink
-            theme={theme}
-            text={anchor.title || text}
-            to={`/book/${bookId}?p=${pathToString(anchor.path)}`}
-            fontFamily='book'
-        />
-    </Row>;
 }
 
 function quoteColorization(quote: BookRange | undefined, theme: Theme): ColorizedRange[] {
     return quote
         ? [{
-            color: colors(theme).yellow,
+            color: colors(theme).pink,
             range: quote,
         }]
         : [];
@@ -118,13 +130,9 @@ function quoteColorization(quote: BookRange | undefined, theme: Theme): Colorize
 
 function highlightsColorization(highlights: Highlight[], theme: Theme): ColorizedRange[] {
     return highlights.map(h => ({
-        color: colorForGroup(h.group),
+        color: colors(theme)[colorForHighlightGroup(h.group)],
         range: h.range,
     }));
-}
-
-function colorForGroup(group: string) {
-    return group;
 }
 
 function generateQuoteLink(id: string, quote: BookRange) {

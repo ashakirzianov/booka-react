@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-    HasChildren, percent, point, panelShadow, userAreaWidth,
-    normalMargin, panelHeight,
+    HasChildren, percent, panelShadow, userAreaWidth,
+    normalMargin, panelHeight, Size,
 } from './common';
 import { Themed, colors, getFontFamily, getFontSize } from './theme';
 import { defaultAnimationDuration } from './Animations';
@@ -54,21 +54,22 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
 }
 
 export function OverlayPanel({
-    theme, animation, children,
+    theme, width, animation, children,
 }: HasChildren & Themed & {
+    width?: Size,
     animation?: {
         entered: boolean,
     },
 }) {
     return <View style={{
+        flexShrink: 1,
+        width: width ?? percent(100),
+        maxWidth: userAreaWidth,
+        maxHeight: '100%',
         overflow: 'scroll',
-        backgroundColor: colors(theme).secondary,
-        width: percent(100),
-        maxWidth: point(50),
-        maxHeight: percent(100),
-        minHeight: panelHeight,
-        boxShadow: panelShadow(colors(theme).shadow),
         zIndex: 10,
+        backgroundColor: colors(theme).secondary,
+        boxShadow: panelShadow(colors(theme).shadow),
         // TODO: rethink this
         ...(animation && {
             transitionDuration: `${defaultAnimationDuration}ms`,
@@ -78,12 +79,6 @@ export function OverlayPanel({
         } as any),
     }}
     >
-        <div onClick={e => e.stopPropagation()} style={{
-            display: 'flex',
-            flex: 1,
-            flexDirection: 'column',
-        }}>
-            {children}
-        </div>
+        {children}
     </View>;
 }

@@ -1,22 +1,24 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Themed, colors } from '../theme';
-import { buttonHeight, actionShadow, normalMargin } from '../common';
+import { buttonHeight, actionShadow, normalMargin, buttonStyle } from '../common';
 
 export function PictureButton({
-    onClick, pictureUrl, theme,
+    callback, pictureUrl, theme,
 }: Themed & {
     pictureUrl?: string,
-    onClick?: () => void,
+    callback?: () => void,
 }) {
-    return <div
-        onClick={onClick}
+    return <button
+        style={buttonStyle}
+        onClick={callback}
     >
         <img
             src={pictureUrl}
             alt='account'
             css={{
                 display: 'flex',
+                pointerEvents: 'auto',
                 margin: normalMargin,
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -28,5 +30,5 @@ export function PictureButton({
                 },
             }}
         />
-    </div>;
+    </button>;
 }

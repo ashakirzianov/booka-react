@@ -1,18 +1,14 @@
 import React, { useMemo } from 'react';
 import { BrowserRouter, Route, Switch, useParams, useLocation, Redirect } from 'react-router-dom';
-
-import { FeedScreen } from './FeedScreenComp';
-import { BookScreenComp } from './BookScreenComp';
 import { parse } from 'query-string';
 import { pathFromString, rangeFromString } from 'booka-common';
-import { useTheme } from '../application';
-import { colors } from '../core';
+
 import { View } from '../controls';
+import { FeedScreen } from './FeedScreen';
+import { BookScreen } from './BookScreen';
 
 export function Routes() {
-    const { theme } = useTheme();
     return <View style={{
-        backgroundColor: colors(theme).secondary,
         // TODO: check mobile compatibility
         minHeight: '100vh',
     }}>
@@ -45,7 +41,7 @@ function BookRoute() {
     );
     const quote = typeof q === 'string' ? rangeFromString(q) : undefined;
 
-    return <BookScreenComp
+    return <BookScreen
         bookId={bookId}
         showToc={toc !== undefined}
         path={quote?.start ?? path}

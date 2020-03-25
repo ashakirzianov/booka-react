@@ -1,10 +1,14 @@
 import React from 'react';
-import { ContextMenuTrigger, ContextMenu, MenuItem } from 'react-contextmenu';
 
 import { Highlight, BookRange, HighlightGroup } from 'booka-common';
-import { WithChildren } from '../atoms';
 import { BookSelection } from '../reader';
-import { useHighlights } from '../application';
+import { useHighlights, useTheme } from '../application';
+import {
+    ContextMenu, ContextMenuItem, HasChildren, TextContextMenuItem,
+    CircleButton, colorForHighlightGroup, SimpleButton,
+    Icon,
+} from '../controls';
+import { Themed } from '../core';
 
 type HighlightTarget = {
     target: 'highlight',
@@ -25,10 +29,11 @@ export type ContextMenuTarget =
 
 export function BookContextMenu({
     children, target, bookId,
-}: WithChildren & {
+}: HasChildren & {
     bookId: string
     target: ContextMenuTarget,
 }) {
+    const { theme } = useTheme();
     const {
         addHighlight, removeHighlight, updateHighlightGroup,
     } = useHighlights(bookId);
@@ -36,37 +41,29 @@ export function BookContextMenu({
     if (target.target === 'empty') {
         return <>{children}</>;
     }
-    return <>
-        <ContextMenuTrigger id='book-menu'>
-            {children}
-        </ContextMenuTrigger>
-        <ContextMenu id='book-menu'>
-            <div style={{
-                background: 'white',
-            }}>
-                <AddHighlightItem
-                    target={target}
-                    bookId={bookId}
-                    addHighlight={addHighlight}
-                />
-                <RemoveHighlightItem
-                    target={target}
-                    removeHighlight={removeHighlight}
-                />
-                <SetHighlightGroupItem target={target} group='green'
-                    setHighlightGroup={updateHighlightGroup} />
-                <SetHighlightGroupItem target={target} group='red'
-                    setHighlightGroup={updateHighlightGroup} />
-                <SetHighlightGroupItem target={target} group='yellow'
-                    setHighlightGroup={updateHighlightGroup} />
-            </div>
-        </ContextMenu>
-    </>;
+    return <ContextMenu
+        theme={theme}
+        id='book-menu'
+        trigger={children}
+    >
+        <AddHighlightItem
+            theme={theme}
+            target={target}
+            bookId={bookId}
+            addHighlight={addHighlight}
+        />
+        <ManageHighlightItem
+            theme={theme}
+            target={target}
+            setHighlightGroup={updateHighlightGroup}
+            removeHighlight={removeHighlight}
+        />
+    </ContextMenu>;
 }
 
 function AddHighlightItem({
-    target, bookId, addHighlight,
-}: {
+    target, bookId, addHighlight, theme,
+}: Themed & {
     target: ContextMenuTarget,
     bookId: string,
     addHighlight: (bookId: string, range: BookRange, group: HighlightGroup) => void,
@@ -75,44 +72,84 @@ function AddHighlightItem({
         return null;
     }
 
-    return <MenuItem
-        onClick={() => addHighlight(bookId, target.selection.range, 'green')}
-    >
-        Add highlight
-    </MenuItem>;
+    return <TextContextMenuItem
+        theme={theme}
+        text='Add Highlight'
+        icon='highlight'
+        callback={() => addHighlight(bookId, target.selection.range, 'first')}
+    />;
 }
 
-function RemoveHighlightItem({
-    target, removeHighlight,
-}: {
+function ManageHighlightItem({
+    theme, target, setHighlightGroup, removeHighlight,
+}: Themed & {
     target: ContextMenuTarget,
+    setHighlightGroup: (id: string, group: string) => void,
     removeHighlight: (highlightId: string) => void,
 }) {
     if (target.target !== 'highlight') {
         return null;
     }
 
-    return <MenuItem
-        onClick={() => removeHighlight(target.highlight.uuid)}
+    return <ContextMenuItem
+        theme={theme}
     >
-        Remove highlight
-    </MenuItem>;
+        <SetHighlightGroupButton
+            theme={theme}
+            target={target}
+            group='first'
+            setHighlightGroup={setHighlightGroup}
+        />
+        <SetHighlightGroupButton
+            theme={theme}
+            target={target}
+            group='second'
+            setHighlightGroup={setHighlightGroup}
+        />
+        <SetHighlightGroupButton
+            theme={theme}
+            target={target}
+            group='third'
+            setHighlightGroup={setHighlightGroup}
+        />
+        <RemoveHighlightButton
+            theme={theme}
+            removeHighlight={() => removeHighlight(target.highlight.uuid)}
+        />
+    </ContextMenuItem>;
 }
 
-function SetHighlightGroupItem({
-    target, group, setHighlightGroup,
-}: {
-    target: ContextMenuTarget,
-    group: string,
+function SetHighlightGroupButton({
+    theme, target, group, setHighlightGroup,
+}: Themed & {
+    target: HighlightTarget,
+    group: HighlightGroup,
     setHighlightGroup: (id: string, group: string) => void,
 }) {
-    if (target.target !== 'highlight' || target.highlight.group === group) {
-        return null;
-    }
+    const selected = target.highlight.group === group;
+    return <CircleButton
+        theme={theme}
+        // text={selected ? 'A' : undefined}
+        color='white'
+        background={colorForHighlightGroup(group)}
+        highlight='white'
+        border={selected ? 'white' : undefined}
+        fontSize='micro'
+        size={30}
+        callback={() => setHighlightGroup(target.highlight.uuid, group)}
+    />;
+}
 
-    return <MenuItem
-        onClick={() => setHighlightGroup(target.highlight.uuid, group)}
-    >
-        Make highlight {group}
-    </MenuItem>;
+function RemoveHighlightButton({ theme, removeHighlight }: Themed & {
+    removeHighlight: () => void,
+}) {
+    return <SimpleButton callback={removeHighlight}>
+        <Icon
+            theme={theme}
+            size={30}
+            name='remove'
+            color='text'
+            hoverColor='highlight'
+        />
+    </SimpleButton>;
 }

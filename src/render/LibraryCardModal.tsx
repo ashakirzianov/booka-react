@@ -177,14 +177,14 @@ function ReadingListButton({ card }: {
             theme={theme}
             text='Not To Read'
             color='negative'
-            onClick={removeFromReadingList}
+            callback={removeFromReadingList}
         />;
     } else {
         return <ActionButton
             theme={theme}
             text='To Read'
             color='positive'
-            onClick={addToReadingList}
+            callback={addToReadingList}
         />;
     }
 }

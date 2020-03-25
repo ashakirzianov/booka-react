@@ -2,8 +2,8 @@ import React from 'react';
 
 import { useTheme } from '../application';
 import {
-    WithPopover, View, IconButton, PaletteButton,
-    TextButton, Separator, point, doubleMargin,
+    WithPopover, View, IconButton,
+    TextButton, Separator, point, doubleMargin, CircleButton,
 } from '../controls';
 import { PaletteName, Themed } from '../core';
 
@@ -65,7 +65,7 @@ function FontScaleButton({
             fontFamily='book'
             text='Abc'
             fontSize={size}
-            onClick={() => incrementScale(increment)}
+            callback={() => incrementScale(increment)}
         />
     </View>;
 }
@@ -93,10 +93,18 @@ function SelectPaletteButton({ theme, text, name, setPalette }: Themed & {
     name: PaletteName,
     setPalette: (name: PaletteName) => void,
 }) {
-    return <PaletteButton
-        theme={theme}
+    const themeToUse = { ...theme, currentPalette: name };
+    const selected = name === theme.currentPalette;
+    return <CircleButton
+        theme={themeToUse}
         text={text}
-        palette={name}
-        onClick={() => setPalette(name)}
+        color='text'
+        background='primary'
+        highlight='highlight'
+        shadow='shadow'
+        border={selected ? 'highlight' : undefined}
+        fontSize='normal'
+        size={50}
+        callback={() => setPalette(name)}
     />;
 }

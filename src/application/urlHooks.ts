@@ -26,6 +26,9 @@ export function useUrlActions() {
         updateSearchQuery(query: string | undefined) {
             replaceHistorySearch(history, 'q', query);
         },
+        back() {
+            history.goBack();
+        },
     }), [history]);
 }
 
