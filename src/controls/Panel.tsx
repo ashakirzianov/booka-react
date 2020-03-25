@@ -66,7 +66,6 @@ export function OverlayPanel({
         width: percent(100),
         maxWidth: point(50),
         maxHeight: percent(100),
-        minHeight: panelHeight,
         boxShadow: panelShadow(colors(theme).shadow),
         zIndex: 10,
         // TODO: rethink this

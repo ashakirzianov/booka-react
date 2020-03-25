@@ -6,9 +6,11 @@ import {
     ContextMenuTrigger, ContextMenu as ReactContextMenu, MenuItem,
 } from 'react-contextmenu';
 
-import { Themed, colors } from '../core';
-import { HasChildren } from './common';
+import { Themed, colors, getFontSize } from '../core';
+import { HasChildren, normalPadding, normalMargin, halfMargin } from './common';
 import { OverlayPanel } from './Panel';
+import { IconName, Icon } from './Icon';
+import { Label } from './Label';
 
 export function ContextMenu({
     id, trigger, children, theme,
@@ -33,12 +35,46 @@ export function ContextMenuItem({ onClick, theme, children }: HasChildren & Them
 }) {
     return <MenuItem onClick={onClick}>
         <div css={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
             width: '100%',
+            color: colors(theme).text,
             '&:hover': {
                 backgroundColor: colors(theme).highlight,
+                color: colors(theme).primary,
             },
         }}>
             {children}
         </div>
     </MenuItem>;
+}
+
+export function TextContextMenuItem({
+    theme, onClick, icon, text,
+}: Themed & {
+    text: string,
+    icon?: IconName,
+    onClick?: () => void,
+}) {
+    return <ContextMenuItem
+        theme={theme}
+        onClick={onClick}
+    >
+        {
+            !icon ? null :
+                <Icon
+                    theme={theme}
+                    name={icon}
+                    margin={halfMargin}
+                />
+        }
+        <span css={{
+            margin: halfMargin,
+            fontSize: getFontSize(theme, 'nano'),
+            fontFamily: theme.fontFamilies.menu,
+        }}>
+            {text}
+        </span>
+    </ContextMenuItem>;
 }

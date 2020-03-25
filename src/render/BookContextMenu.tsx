@@ -3,7 +3,7 @@ import React from 'react';
 import { Highlight, BookRange, HighlightGroup } from 'booka-common';
 import { BookSelection } from '../reader';
 import { useHighlights, useTheme } from '../application';
-import { ContextMenu, ContextMenuItem, HasChildren } from '../controls';
+import { ContextMenu, ContextMenuItem, HasChildren, TextContextMenuItem } from '../controls';
 import { Themed } from '../core';
 
 type HighlightTarget = {
@@ -85,12 +85,12 @@ function AddHighlightItem({
         return null;
     }
 
-    return <ContextMenuItem
+    return <TextContextMenuItem
         theme={theme}
+        text='Add Highlight'
+        icon='highlight'
         onClick={() => addHighlight(bookId, target.selection.range, 'green')}
-    >
-        Add highlight
-    </ContextMenuItem>;
+    />;
 }
 
 function RemoveHighlightItem({
