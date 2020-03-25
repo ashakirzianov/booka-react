@@ -2,25 +2,24 @@
 import { jsx } from '@emotion/core';
 import { View } from 'react-native';
 import { roundShadow } from '../common';
-import { Themed, PaletteName, getFontSize } from '../theme';
+import { colors, getFontSize, PaletteColor, Themed } from '../theme';
 
-// TODO: rethink location ?
-export function PaletteButton(props: Themed & {
+export function CircleButton({
+    theme, onClick, selected, text, background,
+}: Themed & {
     text: string,
-    palette: PaletteName,
+    background: PaletteColor,
+    selected: boolean,
     onClick: () => void,
 }) {
-    const theme = props.theme;
-    const cols = theme.palettes[props.palette];
-    const selected = props.palette === theme.currentPalette;
     return <div
-        onClick={props.onClick}
+        onClick={onClick}
         css={{
             display: 'flex',
-            color: cols.text,
-            fontSize: getFontSize(props.theme, 'normal'),
+            color: colors(theme).text,
+            fontSize: getFontSize(theme, 'normal'),
             '&:hover': {
-                color: cols.highlight,
+                color: colors(theme).highlight,
             },
         }}
     >
@@ -30,15 +29,15 @@ export function PaletteButton(props: Themed & {
             width: 50,
             height: 50,
             justifyContent: 'center',
-            backgroundColor: cols.primary,
+            backgroundColor: colors(theme)[background],
             borderRadius: 50,
             borderWidth: 3,
-            borderColor: selected ? cols.highlight : 'rgba(0,0,0,0)',
+            borderColor: selected ? colors(theme).highlight : 'rgba(0,0,0,0)',
             borderStyle: 'solid',
-            boxShadow: roundShadow(cols.shadow),
+            boxShadow: roundShadow(colors(theme).shadow),
             '&:hover': {
-                borderColor: cols.highlight,
-                boxShadow: roundShadow(cols.highlight),
+                borderColor: colors(theme).highlight,
+                boxShadow: roundShadow(colors(theme).highlight),
             },
         }}>
             <View
@@ -47,7 +46,7 @@ export function PaletteButton(props: Themed & {
                     justifyContent: 'center',
                 }}
             >
-                <span>{props.text}</span>
+                <span>{text}</span>
             </View>
         </div>
     </div>;
