@@ -62,13 +62,14 @@ export function OverlayPanel({
     },
 }) {
     return <View style={{
-        overflow: 'scroll',
-        backgroundColor: colors(theme).secondary,
+        flexShrink: 1,
         width: width ?? percent(100),
-        maxWidth: point(50),
-        maxHeight: percent(100),
-        boxShadow: panelShadow(colors(theme).shadow),
+        maxWidth: userAreaWidth,
+        maxHeight: '100%',
+        overflow: 'scroll',
         zIndex: 10,
+        backgroundColor: colors(theme).secondary,
+        boxShadow: panelShadow(colors(theme).shadow),
         // TODO: rethink this
         ...(animation && {
             transitionDuration: `${defaultAnimationDuration}ms`,
@@ -78,12 +79,6 @@ export function OverlayPanel({
         } as any),
     }}
     >
-        <div onClick={e => e.stopPropagation()} style={{
-            display: 'flex',
-            flex: 1,
-            flexDirection: 'column',
-        }}>
-            {children}
-        </div>
+        {children}
     </View>;
 }

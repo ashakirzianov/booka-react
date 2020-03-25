@@ -23,6 +23,7 @@ export function MenuList({ theme, children }: Themed & HasChildren) {
     return <div style={{
         display: 'flex',
         flexDirection: 'column',
+        flexShrink: 0,
     }}>
         {children}
     </div>;

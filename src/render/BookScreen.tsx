@@ -92,13 +92,6 @@ function BookReady({
     );
 
     return <Screen theme={theme}>
-        <TableOfContentsModal
-            theme={theme}
-            toc={toc}
-            id={bookId}
-            closeToc={closeToc}
-            open={showToc}
-        />
         <Header
             bookId={bookId}
             path={path}
@@ -110,6 +103,13 @@ function BookReady({
             fragment={fragment}
             visible={controlsVisible}
             path={fragment.current.path}
+        />
+        <TableOfContentsModal
+            theme={theme}
+            toc={toc}
+            id={bookId}
+            closeToc={closeToc}
+            open={showToc}
         />
         <View style={{
             width: '100%',
