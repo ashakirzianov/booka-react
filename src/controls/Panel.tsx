@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    HasChildren, percent, point, panelShadow, userAreaWidth,
+    HasChildren, percent, panelShadow, userAreaWidth,
     normalMargin, panelHeight, Size,
 } from './common';
 import { Themed, colors, getFontFamily, getFontSize } from './theme';

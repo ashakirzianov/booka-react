@@ -21,7 +21,7 @@ export function IconButton({
     >
         <div css={{
             display: 'flex',
-            pointerEvents: 'all',
+            pointerEvents: 'auto',
             margin: normalMargin,
             borderWidth: 0,
             height: buttonHeight,
