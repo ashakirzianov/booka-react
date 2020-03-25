@@ -7,7 +7,7 @@ import {
 } from 'react-contextmenu';
 
 import { Themed, colors, getFontSize } from '../core';
-import { HasChildren, halfMargin } from './common';
+import { HasChildren, menuWidth, normalPadding, normalMargin } from './common';
 import { OverlayPanel } from './Panel';
 import { IconName, Icon } from './Icon';
 
@@ -22,7 +22,10 @@ export function ContextMenu({
             {trigger}
         </ContextMenuTrigger>
         <ReactContextMenu id={id}>
-            <OverlayPanel theme={theme}>
+            <OverlayPanel
+                theme={theme}
+                width={menuWidth}
+            >
                 {children}
             </OverlayPanel>
         </ReactContextMenu>
@@ -35,9 +38,11 @@ export function ContextMenuItem({ onClick, theme, children }: HasChildren & Them
     return <MenuItem onClick={onClick}>
         <div css={{
             display: 'flex',
+            flexBasis: 1,
             flexDirection: 'row',
+            justifyContent: 'space-between',
             alignItems: 'center',
-            width: '100%',
+            padding: normalPadding,
         }}>
             {children}
         </div>
@@ -62,18 +67,19 @@ export function TextContextMenuItem({
                 backgroundColor: colors(theme).highlight,
                 color: colors(theme).primary,
             },
+            padding: normalPadding,
         }}>
             {
                 !icon ? null :
                     <Icon
                         theme={theme}
                         name={icon}
-                        margin={halfMargin}
+                        margin={normalMargin}
                     />
             }
             <span css={{
-                margin: halfMargin,
-                fontSize: getFontSize(theme, 'nano'),
+                margin: normalMargin,
+                fontSize: getFontSize(theme, 'micro'),
                 fontFamily: theme.fontFamilies.menu,
             }}>
                 {text}

@@ -5,7 +5,7 @@ import { BookSelection } from '../reader';
 import { useHighlights, useTheme } from '../application';
 import {
     ContextMenu, ContextMenuItem, HasChildren, TextContextMenuItem,
-    View, CircleButton, colorForHighlightGroup, normalMargin, SimpleButton,
+    CircleButton, colorForHighlightGroup, SimpleButton,
     Icon,
 } from '../controls';
 import { Themed } from '../core';
@@ -94,34 +94,28 @@ function ManageHighlightItem({
     return <ContextMenuItem
         theme={theme}
     >
-        <View style={{
-            flexDirection: 'row',
-            margin: normalMargin,
-            justifyContent: 'space-between',
-        }}>
-            <SetHighlightGroupButton
-                theme={theme}
-                target={target}
-                group='first'
-                setHighlightGroup={setHighlightGroup}
-            />
-            <SetHighlightGroupButton
-                theme={theme}
-                target={target}
-                group='second'
-                setHighlightGroup={setHighlightGroup}
-            />
-            <SetHighlightGroupButton
-                theme={theme}
-                target={target}
-                group='third'
-                setHighlightGroup={setHighlightGroup}
-            />
-            <RemoveHighlightButton
-                theme={theme}
-                removeHighlight={() => removeHighlight(target.highlight.uuid)}
-            />
-        </View>
+        <SetHighlightGroupButton
+            theme={theme}
+            target={target}
+            group='first'
+            setHighlightGroup={setHighlightGroup}
+        />
+        <SetHighlightGroupButton
+            theme={theme}
+            target={target}
+            group='second'
+            setHighlightGroup={setHighlightGroup}
+        />
+        <SetHighlightGroupButton
+            theme={theme}
+            target={target}
+            group='third'
+            setHighlightGroup={setHighlightGroup}
+        />
+        <RemoveHighlightButton
+            theme={theme}
+            removeHighlight={() => removeHighlight(target.highlight.uuid)}
+        />
     </ContextMenuItem>;
 }
 

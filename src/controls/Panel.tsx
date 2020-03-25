@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     HasChildren, percent, point, panelShadow, userAreaWidth,
-    normalMargin, panelHeight,
+    normalMargin, panelHeight, Size,
 } from './common';
 import { Themed, colors, getFontFamily, getFontSize } from './theme';
 import { defaultAnimationDuration } from './Animations';
@@ -54,8 +54,9 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
 }
 
 export function OverlayPanel({
-    theme, animation, children,
+    theme, width, animation, children,
 }: HasChildren & Themed & {
+    width?: Size,
     animation?: {
         entered: boolean,
     },
@@ -63,7 +64,7 @@ export function OverlayPanel({
     return <View style={{
         overflow: 'scroll',
         backgroundColor: colors(theme).secondary,
-        width: percent(100),
+        width: width ?? percent(100),
         maxWidth: point(50),
         maxHeight: percent(100),
         boxShadow: panelShadow(colors(theme).shadow),
