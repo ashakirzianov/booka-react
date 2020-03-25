@@ -8,9 +8,7 @@ import {
 import {
     useTheme, useBook, useHighlights, useUrlActions, usePositions,
 } from '../application';
-import {
-    Clickable,
-} from '../atoms';
+
 import { Themed, colors } from '../core';
 import { BookView } from './BookView';
 import { TableOfContentsModal, pageForPosition } from './TableOfContentsModal';
@@ -20,6 +18,7 @@ import { BookmarkButton } from './BookmarkButton';
 import {
     FixedPanel, View, IconButton, Label, normalPadding, userAreaWidth,
     FullScreenActivityIndicator, Screen, megaPadding, doublePadding,
+    TouchableWithoutFeedback,
 } from '../controls';
 import { ShowTocLink, FeedLink } from './Navigation';
 
@@ -115,8 +114,9 @@ function BookReady({
         <View style={{
             width: '100%',
             alignItems: 'center',
-        }}>
-            <Clickable onClick={toggleControls}>
+        }}
+        >
+            <TouchableWithoutFeedback onPress={toggleControls}>
                 <View style={{
                     maxWidth: userAreaWidth,
                     paddingTop: megaPadding, paddingBottom: megaPadding,
@@ -135,7 +135,7 @@ function BookReady({
                         onNavigation={onNavigation}
                     />
                 </View>
-            </Clickable>
+            </TouchableWithoutFeedback>
         </View>
     </Screen>;
 }
