@@ -5,7 +5,8 @@ import { BookSelection } from '../reader';
 import { useHighlights, useTheme } from '../application';
 import {
     ContextMenu, ContextMenuItem, HasChildren, TextContextMenuItem,
-    View, CircleButton, colorForHighlightGroup, normalMargin,
+    View, CircleButton, colorForHighlightGroup, normalMargin, SimpleButton,
+    Icon,
 } from '../controls';
 import { Themed } from '../core';
 
@@ -96,6 +97,7 @@ function ManageHighlightItem({
         <View style={{
             flexDirection: 'row',
             margin: normalMargin,
+            justifyContent: 'space-between',
         }}>
             <SetHighlightGroupButton
                 theme={theme}
@@ -114,6 +116,10 @@ function ManageHighlightItem({
                 target={target}
                 group='third'
                 setHighlightGroup={setHighlightGroup}
+            />
+            <RemoveHighlightButton
+                theme={theme}
+                removeHighlight={() => removeHighlight(target.highlight.uuid)}
             />
         </View>
     </ContextMenuItem>;
@@ -138,4 +144,18 @@ function SetHighlightGroupButton({
         size={30}
         onClick={() => setHighlightGroup(target.highlight.uuid, group)}
     />;
+}
+
+function RemoveHighlightButton({ theme, removeHighlight }: Themed & {
+    removeHighlight: () => void,
+}) {
+    return <SimpleButton onClick={removeHighlight}>
+        <Icon
+            theme={theme}
+            size={30}
+            name='remove'
+            color='text'
+            hoverColor='highlight'
+        />
+    </SimpleButton>;
 }

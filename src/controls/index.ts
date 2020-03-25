@@ -6,6 +6,7 @@ export * from './ContextMenu';
 export * from './FacebookLogin';
 export * from './FixedPanel';
 export * from './GridList';
+export * from './Icon';
 export * from './Label';
 export * from './Misc';
 export * from './Modal';
