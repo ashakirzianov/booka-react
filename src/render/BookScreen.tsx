@@ -93,16 +93,13 @@ function BookReady({
     );
 
     return <>
-        {
-            toc && showToc
-                ? <TableOfContentsModal
-                    theme={theme}
-                    toc={toc}
-                    id={bookId}
-                    closeToc={closeToc}
-                />
-                : null
-        }
+        <TableOfContentsModal
+            theme={theme}
+            toc={toc}
+            id={bookId}
+            closeToc={closeToc}
+            open={showToc}
+        />
         <Header
             bookId={bookId}
             path={path}
