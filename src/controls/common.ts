@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, CSSProperties } from 'react';
 import { Interpolation } from '@emotion/core';
 import { Color, colors, Theme } from './theme';
 import { HighlightGroup } from 'booka-common';
@@ -45,7 +45,7 @@ export function percent(size: number) {
 }
 
 export function point(size: number) {
-    return `${size}em`;
+    return `${size}rem`;
 }
 
 export function actionBack(theme: Theme) {
@@ -78,3 +78,11 @@ export const normalPadding = point(0.5);
 export const doublePadding = point(1);
 export const megaPadding = point(4);
 export const halfPadding = point(0.25);
+
+export const buttonStyle: CSSProperties = {
+    cursor: 'pointer',
+    border: 'none',
+    backgroundColor: '#00000000',
+    margin: 0,
+    padding: 0,
+};

@@ -3,7 +3,7 @@ import React from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Themed, colors, getFontFamily, getFontSize } from '../theme';
-import { halfPadding, buttonHeight } from '../common';
+import { halfPadding, buttonHeight, buttonStyle } from '../common';
 
 export function BorderButton({
     text, theme, onClick,
@@ -11,8 +11,9 @@ export function BorderButton({
     text: string,
     onClick?: () => void,
 }) {
-    return <div
+    return <button
         css={{
+            ...buttonStyle,
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -20,8 +21,7 @@ export function BorderButton({
             color: colors(theme).accent,
             fontFamily: getFontFamily(theme, 'menu'),
             fontSize: getFontSize(theme, 'normal'),
-            borderStyle: 'solid',
-            // borderRadius: 10,
+            border: `3px solid ${colors(theme).accent}`,
             height: buttonHeight,
             paddingLeft: halfPadding, paddingRight: halfPadding,
             '&:hover': {
@@ -31,5 +31,5 @@ export function BorderButton({
         onClick={onClick}
     >
         {text}
-    </div>;
+    </button>;
 }

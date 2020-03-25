@@ -3,6 +3,7 @@ import { jsx } from '@emotion/core';
 import {
     Themed, FontSizes, FontFamilies, getFontSize, colors, getFontFamily,
 } from '../theme';
+import { buttonStyle } from '../common';
 
 export function TextButton({
     onClick, theme, text,
@@ -13,9 +14,9 @@ export function TextButton({
     fontFamily: keyof FontFamilies,
     onClick: () => void,
 }) {
-    return <div
+    return <button
         css={{
-            cursor: 'default',
+            ...buttonStyle,
             fontSize: getFontSize(theme, fontSize),
             fontFamily: getFontFamily(theme, fontFamily),
             color: colors(theme).accent,
@@ -26,5 +27,5 @@ export function TextButton({
         onClick={onClick}
     >
         {text}
-    </div>;
+    </button>;
 }

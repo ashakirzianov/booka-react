@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Themed, colors, getFontSize, getFontFamily, PaletteColor } from '../theme';
-import { actionShadow, buttonHeight, buttonWidth, normalMargin } from '../common';
+import { actionShadow, buttonHeight, buttonWidth, normalMargin, buttonStyle } from '../common';
 import { View } from 'react-native';
 
 export function ActionButton({
@@ -18,11 +18,10 @@ export function ActionButton({
     return <View style={{
         margin: normalMargin,
     }}>
-        <input
-            type='button'
-            value={text}
+        <button
             onClick={onClick}
             css={{
+                ...buttonStyle,
                 width: buttonWidth,
                 height: buttonHeight,
                 cursor: 'pointer',
@@ -40,6 +39,8 @@ export function ActionButton({
                     boxShadow: actionShadow(highlight),
                 },
             }}
-        />
+        >
+            {text}
+        </button>
     </View>;
 }

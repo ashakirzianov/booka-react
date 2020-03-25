@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Themed, colors } from '../theme';
-import { buttonHeight, actionShadow, normalMargin } from '../common';
+import { buttonHeight, actionShadow, normalMargin, buttonStyle } from '../common';
 
 export function PictureButton({
     onClick, pictureUrl, theme,
@@ -9,7 +9,8 @@ export function PictureButton({
     pictureUrl?: string,
     onClick?: () => void,
 }) {
-    return <div
+    return <button
+        style={buttonStyle}
         onClick={onClick}
     >
         <img
@@ -29,5 +30,5 @@ export function PictureButton({
                 },
             }}
         />
-    </div>;
+    </button>;
 }
