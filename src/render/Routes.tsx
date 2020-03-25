@@ -3,16 +3,12 @@ import { BrowserRouter, Route, Switch, useParams, useLocation, Redirect } from '
 import { parse } from 'query-string';
 import { pathFromString, rangeFromString } from 'booka-common';
 
-import { useTheme } from '../application';
-import { colors } from '../core';
 import { View } from '../controls';
 import { FeedScreen } from './FeedScreen';
 import { BookScreen } from './BookScreen';
 
 export function Routes() {
-    const { theme } = useTheme();
     return <View style={{
-        backgroundColor: colors(theme).secondary,
         // TODO: check mobile compatibility
         minHeight: '100vh',
     }}>

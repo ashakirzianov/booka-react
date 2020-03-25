@@ -19,7 +19,7 @@ import { AppearanceButton } from './AppearanceButton';
 import { BookmarkButton } from './BookmarkButton';
 import {
     FixedPanel, View, IconButton, Label, normalPadding, userAreaWidth,
-    FullScreenActivityIndicator,
+    FullScreenActivityIndicator, Screen,
 } from '../controls';
 import { ShowTocLink, FeedLink } from './Navigation';
 
@@ -92,7 +92,7 @@ function BookReady({
         [setNeedToScroll],
     );
 
-    return <>
+    return <Screen theme={theme}>
         <TableOfContentsModal
             theme={theme}
             toc={toc}
@@ -136,7 +136,7 @@ function BookReady({
                 </View>
             </Clickable>
         </View>
-    </>;
+    </Screen>;
 }
 
 function Header({
@@ -196,9 +196,9 @@ function Footer({
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            backgroundColor: colors(theme).primary,
+            backgroundColor: colors(theme).secondary,
             padding: normalPadding,
-            shadowColor: colors(theme).primary,
+            shadowColor: colors(theme).secondary,
             shadowRadius: 10,
         }}>
             <View style={{
