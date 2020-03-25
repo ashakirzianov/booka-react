@@ -16,6 +16,7 @@ export function IconButton({
 }) {
     return <div css={{
         display: 'flex',
+        pointerEvents: 'all',
         margin: normalMargin,
         borderWidth: 0,
         height: buttonHeight,

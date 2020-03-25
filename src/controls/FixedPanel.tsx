@@ -14,6 +14,7 @@ export function FixedPanel({
 }) {
     return <FadeIn visible={open}>
         <div style={{
+            pointerEvents: 'none',
             display: 'flex',
             margin: 0,
             padding: 0,

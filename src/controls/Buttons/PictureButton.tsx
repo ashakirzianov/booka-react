@@ -17,6 +17,7 @@ export function PictureButton({
             alt='account'
             css={{
                 display: 'flex',
+                pointerEvents: 'all',
                 margin: normalMargin,
                 justifyContent: 'center',
                 alignItems: 'center',
