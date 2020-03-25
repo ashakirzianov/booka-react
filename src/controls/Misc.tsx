@@ -1,14 +1,19 @@
 import React from 'react';
 import {
     View as NativeView,
-    TouchableWithoutFeedback as NativeTouchableWithoutFeedback,
 } from 'react-native';
 import { Themed } from './theme';
 import { percent, HasChildren } from './common';
 import { colors } from '../core';
 
 export const View = NativeView;
-export const TouchableWithoutFeedback = NativeTouchableWithoutFeedback;
+export function Clickable({ callback, children }: HasChildren & {
+    callback?: () => void,
+}) {
+    return <div onClick={callback}>
+        {children}
+    </div>;
+}
 
 export function Separator() {
     return <hr style={{

@@ -18,7 +18,7 @@ import { BookmarkButton } from './BookmarkButton';
 import {
     FixedPanel, View, IconButton, Label, normalPadding, userAreaWidth,
     FullScreenActivityIndicator, Screen, megaPadding, doublePadding,
-    TouchableWithoutFeedback,
+    Clickable,
 } from '../controls';
 import { ShowTocLink, FeedLink } from './Navigation';
 
@@ -116,7 +116,7 @@ function BookReady({
             alignItems: 'center',
         }}
         >
-            <TouchableWithoutFeedback onPress={toggleControls}>
+            <Clickable callback={toggleControls}>
                 <View style={{
                     maxWidth: userAreaWidth,
                     paddingTop: megaPadding, paddingBottom: megaPadding,
@@ -135,7 +135,7 @@ function BookReady({
                         onNavigation={onNavigation}
                     />
                 </View>
-            </TouchableWithoutFeedback>
+            </Clickable>
         </View>
     </Screen>;
 }
