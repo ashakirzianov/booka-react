@@ -1,10 +1,10 @@
 import React from 'react';
 
 import { Highlight, BookRange, HighlightGroup } from 'booka-common';
-import { WithChildren } from '../atoms';
 import { BookSelection } from '../reader';
 import { useHighlights, useTheme } from '../application';
-import { ContextMenu, ContextMenuItem } from '../controls';
+import { ContextMenu, ContextMenuItem, HasChildren } from '../controls';
+import { Themed } from '../core';
 
 type HighlightTarget = {
     target: 'highlight',
@@ -25,7 +25,7 @@ export type ContextMenuTarget =
 
 export function BookContextMenu({
     children, target, bookId,
-}: WithChildren & {
+}: HasChildren & {
     bookId: string
     target: ContextMenuTarget,
 }) {
@@ -43,26 +43,40 @@ export function BookContextMenu({
         trigger={children}
     >
         <AddHighlightItem
+            theme={theme}
             target={target}
             bookId={bookId}
             addHighlight={addHighlight}
         />
         <RemoveHighlightItem
+            theme={theme}
             target={target}
             removeHighlight={removeHighlight}
         />
-        <SetHighlightGroupItem target={target} group='green'
-            setHighlightGroup={updateHighlightGroup} />
-        <SetHighlightGroupItem target={target} group='red'
-            setHighlightGroup={updateHighlightGroup} />
-        <SetHighlightGroupItem target={target} group='yellow'
-            setHighlightGroup={updateHighlightGroup} />
+        <SetHighlightGroupItem
+            theme={theme}
+            target={target}
+            group='green'
+            setHighlightGroup={updateHighlightGroup}
+        />
+        <SetHighlightGroupItem
+            theme={theme}
+            target={target}
+            group='red'
+            setHighlightGroup={updateHighlightGroup}
+        />
+        <SetHighlightGroupItem
+            theme={theme}
+            target={target}
+            group='yellow'
+            setHighlightGroup={updateHighlightGroup}
+        />
     </ContextMenu>;
 }
 
 function AddHighlightItem({
-    target, bookId, addHighlight,
-}: {
+    target, bookId, addHighlight, theme,
+}: Themed & {
     target: ContextMenuTarget,
     bookId: string,
     addHighlight: (bookId: string, range: BookRange, group: HighlightGroup) => void,
@@ -72,6 +86,7 @@ function AddHighlightItem({
     }
 
     return <ContextMenuItem
+        theme={theme}
         onClick={() => addHighlight(bookId, target.selection.range, 'green')}
     >
         Add highlight
@@ -79,8 +94,8 @@ function AddHighlightItem({
 }
 
 function RemoveHighlightItem({
-    target, removeHighlight,
-}: {
+    target, removeHighlight, theme,
+}: Themed & {
     target: ContextMenuTarget,
     removeHighlight: (highlightId: string) => void,
 }) {
@@ -89,6 +104,7 @@ function RemoveHighlightItem({
     }
 
     return <ContextMenuItem
+        theme={theme}
         onClick={() => removeHighlight(target.highlight.uuid)}
     >
         Remove highlight
@@ -96,8 +112,8 @@ function RemoveHighlightItem({
 }
 
 function SetHighlightGroupItem({
-    target, group, setHighlightGroup,
-}: {
+    target, group, setHighlightGroup, theme,
+}: Themed & {
     target: ContextMenuTarget,
     group: string,
     setHighlightGroup: (id: string, group: string) => void,
@@ -107,6 +123,7 @@ function SetHighlightGroupItem({
     }
 
     return <ContextMenuItem
+        theme={theme}
         onClick={() => setHighlightGroup(target.highlight.uuid, group)}
     >
         Make highlight {group}

@@ -1,9 +1,12 @@
 import React, { ReactNode } from 'react';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
+
 import {
     ContextMenuTrigger, ContextMenu as ReactContextMenu, MenuItem,
 } from 'react-contextmenu';
 
-import { Themed } from '../core';
+import { Themed, colors } from '../core';
 import { HasChildren } from './common';
 import { OverlayPanel } from './Panel';
 
@@ -13,7 +16,7 @@ export function ContextMenu({
     id: string,
     trigger: ReactNode,
 }) {
-    return <>
+    return <React.Fragment>
         <ContextMenuTrigger id={id}>
             {trigger}
         </ContextMenuTrigger>
@@ -22,13 +25,20 @@ export function ContextMenu({
                 {children}
             </OverlayPanel>
         </ReactContextMenu>
-    </>;
+    </React.Fragment>;
 }
 
-export function ContextMenuItem({ onClick, children }: HasChildren & {
+export function ContextMenuItem({ onClick, theme, children }: HasChildren & Themed & {
     onClick?: () => void,
 }) {
     return <MenuItem onClick={onClick}>
-        {children}
+        <div css={{
+            width: '100%',
+            '&:hover': {
+                backgroundColor: colors(theme).highlight,
+            },
+        }}>
+            {children}
+        </div>
     </MenuItem>;
 }
