@@ -3,7 +3,10 @@ import React from 'react';
 import { Highlight, BookRange, HighlightGroup } from 'booka-common';
 import { BookSelection } from '../reader';
 import { useHighlights, useTheme } from '../application';
-import { ContextMenu, ContextMenuItem, HasChildren, TextContextMenuItem, View, CircleButton, colorForHighlightGroup, normalMargin } from '../controls';
+import {
+    ContextMenu, ContextMenuItem, HasChildren, TextContextMenuItem,
+    View, CircleButton, colorForHighlightGroup, normalMargin,
+} from '../controls';
 import { Themed } from '../core';
 
 type HighlightTarget = {
@@ -135,41 +138,4 @@ function SetHighlightGroupButton({
         size={30}
         onClick={() => setHighlightGroup(target.highlight.uuid, group)}
     />;
-}
-
-function RemoveHighlightItem({
-    target, removeHighlight, theme,
-}: Themed & {
-    target: ContextMenuTarget,
-    removeHighlight: (highlightId: string) => void,
-}) {
-    if (target.target !== 'highlight') {
-        return null;
-    }
-
-    return <ContextMenuItem
-        theme={theme}
-        onClick={() => removeHighlight(target.highlight.uuid)}
-    >
-        Remove highlight
-    </ContextMenuItem>;
-}
-
-function SetHighlightGroupItem({
-    target, group, setHighlightGroup, theme,
-}: Themed & {
-    target: ContextMenuTarget,
-    group: string,
-    setHighlightGroup: (id: string, group: string) => void,
-}) {
-    if (target.target !== 'highlight' || target.highlight.group === group) {
-        return null;
-    }
-
-    return <ContextMenuItem
-        theme={theme}
-        onClick={() => setHighlightGroup(target.highlight.uuid, group)}
-    >
-        Make highlight {group}
-    </ContextMenuItem>;
 }

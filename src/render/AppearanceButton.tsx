@@ -5,7 +5,7 @@ import {
     WithPopover, View, IconButton,
     TextButton, Separator, point, doubleMargin, CircleButton,
 } from '../controls';
-import { PaletteName, Themed, colors, getFontSize } from '../core';
+import { PaletteName, Themed } from '../core';
 
 export function AppearanceButton() {
     const { theme, incrementScale, setPalette } = useTheme();

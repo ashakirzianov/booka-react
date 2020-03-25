@@ -7,10 +7,9 @@ import {
 } from 'react-contextmenu';
 
 import { Themed, colors, getFontSize } from '../core';
-import { HasChildren, normalPadding, normalMargin, halfMargin } from './common';
+import { HasChildren, halfMargin } from './common';
 import { OverlayPanel } from './Panel';
 import { IconName, Icon } from './Icon';
-import { Label } from './Label';
 
 export function ContextMenu({
     id, trigger, children, theme,
