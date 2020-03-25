@@ -76,5 +76,5 @@ export const nanoMargin = point(0.1);
 export const doubleMargin = point(1);
 export const normalPadding = point(0.5);
 export const doublePadding = point(1);
-export const megaPadding = point(2);
+export const megaPadding = point(4);
 export const halfPadding = point(0.25);

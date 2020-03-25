@@ -19,7 +19,7 @@ import { AppearanceButton } from './AppearanceButton';
 import { BookmarkButton } from './BookmarkButton';
 import {
     FixedPanel, View, IconButton, Label, normalPadding, userAreaWidth,
-    FullScreenActivityIndicator, Screen, megaPadding,
+    FullScreenActivityIndicator, Screen, megaPadding, doublePadding,
 } from '../controls';
 import { ShowTocLink, FeedLink } from './Navigation';
 
@@ -119,8 +119,8 @@ function BookReady({
             <Clickable onClick={toggleControls}>
                 <View style={{
                     maxWidth: userAreaWidth,
-                    padding: normalPadding,
-                    paddingBottom: megaPadding,
+                    paddingTop: megaPadding, paddingBottom: megaPadding,
+                    paddingLeft: doublePadding, paddingRight: doublePadding,
                 }}>
                     <BookView
                         bookId={bookId}
