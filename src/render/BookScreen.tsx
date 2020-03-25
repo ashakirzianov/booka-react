@@ -9,9 +9,7 @@ import {
     useTheme, useBook, useHighlights, useUrlActions, usePositions,
 } from '../application';
 import {
-    Column, point, Row,
     Clickable,
-    FullScreenActivityIndicator,
 } from '../atoms';
 import { Themed, colors } from '../core';
 import { BookView } from './BookView';
@@ -20,7 +18,8 @@ import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
 import { BookmarkButton } from './BookmarkButton';
 import {
-    FixedPanel, View, IconButton, Label, normalPadding,
+    FixedPanel, View, IconButton, Label, normalPadding, userAreaWidth,
+    FullScreenActivityIndicator,
 } from '../controls';
 import { ShowTocLink, FeedLink } from './Navigation';
 
@@ -116,11 +115,15 @@ function BookReady({
             visible={controlsVisible}
             path={fragment.current.path}
         />
-        <Row fullWidth centered
-            backgroundColor={colors(theme).primary}
-        >
+        <View style={{
+            width: '100%',
+            alignItems: 'center',
+        }}>
             <Clickable onClick={toggleControls}>
-                <Column maxWidth={point(50)} fullWidth padding={point(1)} centered>
+                <View style={{
+                    maxWidth: userAreaWidth,
+                    padding: normalPadding,
+                }}>
                     <BookView
                         bookId={bookId}
                         theme={theme}
@@ -133,9 +136,9 @@ function BookReady({
                         openRef={() => undefined}
                         onNavigation={onNavigation}
                     />
-                </Column>
+                </View>
             </Clickable>
-        </Row>
+        </View>
     </>;
 }
 
