@@ -3,7 +3,7 @@ import React from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 
-import { HasChildren } from './common';
+import { HasChildren, point } from './common';
 import { Themed, colors, getFontSize } from './theme';
 
 export function GridList({ theme, children }: Themed & HasChildren) {
@@ -28,7 +28,8 @@ export function MenuList({ theme, children }: Themed & HasChildren) {
     </div>;
 }
 
-export function MenuListItem({ theme, left, right }: Themed & {
+export function MenuListItem({ theme, left, right, ident }: Themed & {
+    ident?: number,
     left?: string,
     right?: string,
 }) {
@@ -44,7 +45,11 @@ export function MenuListItem({ theme, left, right }: Themed & {
             background: colors(theme).highlight,
         },
     }}>
-        <span>
+        <span style={{
+            textIndent: ident
+                ? point(ident)
+                : undefined,
+        }}>
             {left}
         </span>
         <span>

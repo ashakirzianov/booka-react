@@ -1,14 +1,11 @@
 import * as React from 'react';
-import { range } from 'lodash';
 import {
-    TableOfContents, TableOfContentsItem, pathToString,
+    TableOfContents, pathToString,
 } from 'booka-common';
 
-import {
-    Row, Tab, Column, point,
-    StretchTextLink, TextLine, Modal,
-} from '../atoms';
 import { Themed } from '../core';
+import { Modal, MenuList, MenuListItem } from '../controls';
+import { BookPathLink } from './Navigation';
 
 export function TableOfContentsModal({
     theme, toc, id, closeToc,
@@ -24,47 +21,24 @@ export function TableOfContentsModal({
         close={closeToc}
         open={true}
     >
-        <Column margin={point(1)}>
-            {toc.items.map(item =>
-                <TocItemComp
-                    theme={theme}
+        <MenuList theme={theme}>
+            {toc.items.map(item => {
+                return <BookPathLink
                     key={pathToString(item.path)}
-                    id={id}
-                    tabs={maxLevel - item.level}
-                    item={item}
-                    page={pageForPosition(item.position)}
-                />,
+                    bookId={id}
+                    path={item.path}
+                >
+                    <MenuListItem
+                        theme={theme}
+                        left={item.title}
+                        right={`${pageForPosition(item.position)}`}
+                        ident={maxLevel - item.level}
+                    />
+                </BookPathLink>;
+            },
             )}
-        </Column>
+        </MenuList>
     </Modal>;
-}
-
-function TocItemComp({
-    id, item, tabs, page, theme,
-}: Themed & {
-    tabs: number,
-    id: string,
-    item: TableOfContentsItem,
-    page: number,
-}) {
-    return <Row>
-        {range(0, tabs).map(i => <Tab key={i.toString()} />)}
-        <StretchTextLink
-            theme={theme}
-            to={`/book/${id}?p=${item.path}`}
-        >
-            <TextLine
-                key='title'
-                theme={theme}
-                text={item.title}
-            />
-            <TextLine
-                key='pn'
-                theme={theme}
-                text={page.toString()}
-            />
-        </StretchTextLink>
-    </Row>;
 }
 
 export function pageForPosition(position: number): number {
