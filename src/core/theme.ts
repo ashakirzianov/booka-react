@@ -87,11 +87,11 @@ const defaultColors: Palette = {
     negative: 'crimson',
     warning: 'gold',
     white: 'white',
-    red: 'darkred',
-    green: 'seagreen',
-    blue: 'royalblue',
-    pink: 'hotpink',
-    violet: 'indigo',
+    red: '#F44336',
+    green: '#4CAF50',
+    blue: '#2196F3',
+    pink: '#EC407A',
+    violet: '#673AB7',
     yellow: '#fbe381',
 };
 export const defaultTheme: Theme = {
