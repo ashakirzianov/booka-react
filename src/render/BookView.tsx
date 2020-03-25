@@ -122,7 +122,7 @@ function AnchorButton({
 function quoteColorization(quote: BookRange | undefined, theme: Theme): ColorizedRange[] {
     return quote
         ? [{
-            color: colors(theme).yellow,
+            color: colors(theme).pink,
             range: quote,
         }]
         : [];

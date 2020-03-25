@@ -7,15 +7,15 @@ import { PaletteColor } from '../core';
 export function colorForHighlightGroup(group: HighlightGroup): PaletteColor {
     switch (group) {
         case 'first':
-            return 'red';
+            return 'yellow';
         case 'second':
-            return 'green';
-        case 'third':
-            return 'blue';
-        case 'forth':
             return 'violet';
+        case 'third':
+            return 'green';
+        case 'forth':
+            return 'red';
         case 'fifth':
-            return 'pink';
+            return 'blue';
         default:
             return 'neutral';
     }
