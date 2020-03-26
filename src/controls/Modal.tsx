@@ -2,9 +2,9 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { Transition } from 'react-transition-group';
 
-import { Themed, getFontFamily, getFontSize, colors } from './theme';
+import { Themed, colors } from './theme';
 import {
-    HasChildren, normalMargin, normalPadding,
+    HasChildren, normalMargin, normalPadding, fontCss,
 } from './common';
 import { defaultAnimationDuration } from './Animations';
 import { OverlayPanel } from './Panel';
@@ -84,8 +84,7 @@ function ModalTitle({ theme, title, close }: Themed & {
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
-                fontFamily: getFontFamily(theme, 'menu'),
-                fontSize: getFontSize(theme, 'large'),
+                ...fontCss({ theme, fontSize: 'large' }),
                 color: colors(theme).accent,
             }}>
                 {title}

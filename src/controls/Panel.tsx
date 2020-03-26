@@ -1,9 +1,9 @@
 import React from 'react';
 import {
     HasChildren, percent, panelShadow, userAreaWidth,
-    normalMargin, panelHeight, Size, radius,
+    normalMargin, panelHeight, Size, radius, fontCss,
 } from './common';
-import { Themed, colors, getFontFamily, getFontSize } from './theme';
+import { Themed, colors } from './theme';
 import { defaultAnimationDuration } from './Animations';
 import { View } from 'react-native';
 
@@ -31,8 +31,7 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
                     margin: normalMargin,
                 }}>
                     <span style={{
-                        fontSize: getFontSize(theme, 'small'),
-                        fontFamily: getFontFamily(theme, 'menu'),
+                        ...fontCss({ theme, fontSize: 'small' }),
                         color: colors(theme).accent,
                     }}>
                         {title}

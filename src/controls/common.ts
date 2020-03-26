@@ -2,7 +2,7 @@ import { PropsWithChildren, CSSProperties } from 'react';
 import { Interpolation } from '@emotion/core';
 import { Color, colors, Theme } from './theme';
 import { HighlightGroup } from 'booka-common';
-import { PaletteColor } from '../core';
+import { PaletteColor, FontSizes, FontFamilies } from '../core';
 
 export function colorForHighlightGroup(group: HighlightGroup): PaletteColor {
     switch (group) {
@@ -82,9 +82,6 @@ export const doublePadding = point(1);
 export const megaPadding = point(4);
 export const halfPadding = point(0.25);
 
-export const regularFontWeight = 300;
-export const boldFontWeight = 900;
-
 export const buttonStyle: CSSProperties = {
     cursor: 'pointer',
     border: 'none',
@@ -92,3 +89,22 @@ export const buttonStyle: CSSProperties = {
     margin: 0,
     padding: 0,
 };
+
+export function fontCss({
+    theme, fontSize, fontFamily, bold, italic,
+}: {
+    theme: Theme,
+    fontSize?: keyof FontSizes,
+    fontFamily?: keyof FontFamilies,
+    bold?: boolean,
+    italic?: boolean,
+}) {
+    return {
+        fontSize: theme.fontSizes[fontSize ?? 'normal'],
+        fontFamily: theme.fontFamilies[fontFamily ?? 'menu'],
+        fontWeight: bold ? 900 : 300,
+        fontStyle: italic
+            ? 'italic' as 'italic'
+            : undefined,
+    };
+}

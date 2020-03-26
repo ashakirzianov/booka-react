@@ -4,7 +4,7 @@ import { View } from 'react-native';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import {
-    Themed, colors, getFontFamily, getFontSize, Color,
+    Themed, colors, Color,
 } from './theme';
 import { Style, actionShadow, normalMargin } from './common';
 
@@ -26,7 +26,7 @@ export function BookTile({
         margin: normalMargin,
         alignItems: 'center',
         color: colors(theme).text,
-        fontFamily: getFontFamily(theme, 'menu'),
+        fontFamily: theme.fontFamilies.book,
         '&:hover': {
             color: colors(theme).highlight,
         },
@@ -116,7 +116,7 @@ function BookEmptyCover({ title, showShadow, theme }: Themed & {
         paddingLeft: 5,
         paddingRight: 5,
         fontSize: calcFontSize(title),
-        fontFamily: getFontFamily(theme, 'menu'),
+        fontFamily: theme.fontFamilies.menu,
         background: back,
         color: text,
         boxShadow: showShadow
@@ -161,7 +161,7 @@ function BookTitle({ title, author, theme }: Themed & {
         <span css={[
             overflowLine,
             {
-                fontSize: getFontSize(theme, 'xxsmall'),
+                fontSize: theme.fontSizes.xsmall,
                 fontStyle: 'italic',
                 fontWeight: 100,
             },
@@ -171,7 +171,7 @@ function BookTitle({ title, author, theme }: Themed & {
         <span css={[
             overflowLine,
             {
-                fontSize: getFontSize(theme, 'xxsmall'),
+                fontSize: theme.fontSizes.xsmall,
                 fontWeight: 900,
             },
         ]}>

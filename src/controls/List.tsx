@@ -3,8 +3,10 @@ import React from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 
-import { HasChildren, point, normalPadding, doublePadding } from './common';
-import { Themed, colors, getFontSize } from './theme';
+import {
+    HasChildren, point, normalPadding, doublePadding, fontCss,
+} from './common';
+import { Themed, colors } from './theme';
 
 export function GridList({ theme, children }: Themed & HasChildren) {
     return <div style={{
@@ -45,7 +47,7 @@ export function MenuListItem({ theme, left, right, ident }: Themed & {
             paddingTop: normalPadding, paddingBottom: normalPadding,
             paddingLeft: doublePadding, paddingRight: doublePadding,
             color: colors(theme).text,
-            fontSize: getFontSize(theme, 'xsmall'),
+            ...fontCss({ theme, fontSize: 'xsmall' }),
             fontFamily: theme.fontFamilies.menu,
             '&:hover': {
                 color: colors(theme).primary,

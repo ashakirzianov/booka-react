@@ -1,8 +1,9 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { Themed, colors, getFontSize, getFontFamily, PaletteColor } from '../theme';
+import { Themed, colors, PaletteColor } from '../theme';
 import {
     actionShadow, buttonHeight, buttonWidth, normalMargin, buttonStyle,
+    fontCss,
 } from '../common';
 import { View } from 'react-native';
 
@@ -26,9 +27,7 @@ export function ActionButton({
                 cursor: 'pointer',
                 borderStyle: 'solid',
                 borderWidth: 2,
-                // borderRadius: 3,
-                fontSize: getFontSize(theme, 'small'),
-                fontFamily: getFontFamily(theme, 'menu'),
+                ...fontCss({ theme, fontSize: 'small' }),
                 color: colors(theme).primary,
                 borderColor: colors(theme)[color],
                 boxShadow: actionShadow(colors(theme).shadow),

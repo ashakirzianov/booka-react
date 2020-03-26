@@ -1,9 +1,9 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import {
-    Themed, colors, getFontSize, getFontFamily, PaletteColor,
+    Themed, colors, PaletteColor,
 } from './theme';
-import { normalPadding, xxsmallMargin, regularFontWeight } from './common';
+import { normalPadding, xxsmallMargin, fontCss } from './common';
 
 export function TagLabel({
     text, theme, color,
@@ -17,10 +17,8 @@ export function TagLabel({
         paddingLeft: normalPadding, paddingRight: normalPadding,
         borderStyle: 'solid',
         borderWidth: 2,
-        borderRadius: getFontSize(theme, 'xsmall'),
-        fontSize: getFontSize(theme, 'xsmall'),
-        fontFamily: getFontFamily(theme, 'menu'),
-        fontWeight: regularFontWeight,
+        borderRadius: theme.fontSizes.xsmall,
+        ...fontCss({ theme, fontSize: 'xsmall' }),
         borderColor: actualColor,
         color: actualColor,
     }}

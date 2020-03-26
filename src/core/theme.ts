@@ -65,16 +65,6 @@ export function colors(theme: Theme): Palette {
     return theme.palettes[theme.currentPalette];
 }
 
-export function getFontSize(theme: Theme, size?: keyof FontSizes): number {
-    return size === 'text'
-        ? theme.fontSizes.text * theme.fontScale
-        : theme.fontSizes[size || 'normal'];
-}
-
-export function getFontFamily(theme: Theme, key: keyof FontFamilies): string {
-    return theme.fontFamilies[key];
-}
-
 const defaultColors: Palette = {
     text: '#000',
     primary: '#fff',
