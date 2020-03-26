@@ -2,7 +2,7 @@ import React from 'react';
 import {
     Themed, colors, PaletteColor, FontSizes,
 } from './theme';
-import { fontCss } from './common';
+import { fontCss, halfMargin } from './common';
 
 export function Label({
     text, color, fontSize, italic, bold, theme,
@@ -15,6 +15,7 @@ export function Label({
 }) {
     return <span style={{
         color: colors(theme)[color ?? 'text'],
+        margin: halfMargin,
         ...fontCss({
             theme, fontSize, italic, bold,
         }),

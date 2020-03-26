@@ -10,7 +10,7 @@ import {
 } from '../application';
 import {
     Modal, ActivityIndicator, ActionButton, TagLabel,
-    normalMargin, Label,
+    normalMargin, Label, normalPadding,
 } from '../controls';
 import { Themed, PaletteColor } from '../core';
 import { LibraryCardTile } from './LibraryCardTile';
@@ -111,7 +111,7 @@ function ReadButtons({ card }: {
         flexShrink: 1,
         flexWrap: 'wrap',
         marginBottom: normalMargin,
-        justifyContent: 'flex-start',
+        justifyContent: 'flex-end',
     }}>
         <ReadingListButton card={card} />
         <BookPathButton
@@ -136,7 +136,7 @@ function ContinueRead({ card }: {
         return null;
     }
     return <View style={{
-        padding: normalMargin,
+        padding: normalPadding,
     }}>
         <Label
             theme={theme}
@@ -214,27 +214,35 @@ function Layout({
     Tags: ReactNode,
 }) {
     return <View style={{
-        flexDirection: 'row',
-        width: '100%',
+        padding: normalPadding,
+        paddingTop: 0,
     }}>
         <View style={{
-            flexGrow: 0,
-            minWidth: 'auto',
-        }}>
-            {Cover}
-        </View>
-        <View style={{
-            flexGrow: 1,
-            flexShrink: 1,
+            flexDirection: 'row',
+            width: '100%',
+            alignItems: 'flex-start',
         }}>
             <View style={{
-                margin: normalMargin,
+                flexGrow: 0,
+                minWidth: 'auto',
             }}>
-                {Title}
-                {Author}
+                {Cover}
             </View>
-            {Tags}
-            {Read}
+            <View style={{
+                flexGrow: 1,
+                flexShrink: 1,
+            }}>
+                <View style={{
+                    margin: normalMargin,
+                }}>
+                    {Title}
+                    {Author}
+                </View>
+                {Tags}
+                {Read}
+            </View>
+        </View>
+        <View>
             {Continue}
         </View>
     </View>;
