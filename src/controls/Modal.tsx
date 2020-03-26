@@ -49,7 +49,6 @@ export function Modal({
                         flexGrow: 1,
                         flexShrink: 1,
                         overflow: 'scroll',
-                        padding: normalPadding,
                         justifyContent: 'flex-start',
                     }}
                     >
@@ -101,7 +100,7 @@ function ModalTitle({ theme, title, close }: Themed & {
                 textOverflow: 'ellipsis',
                 fontFamily: getFontFamily(theme, 'menu'),
                 fontSize: getFontSize(theme, 'normal'),
-                color: colors(theme).text,
+                color: colors(theme).accent,
             }}>
                 {title}
             </span>

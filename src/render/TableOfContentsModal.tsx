@@ -4,7 +4,7 @@ import {
 } from 'booka-common';
 
 import { Themed } from '../core';
-import { Modal, MenuList, MenuListItem } from '../controls';
+import { Modal, MenuList, MenuListItem, doubleMargin, View } from '../controls';
 import { BookPathLink } from './Navigation';
 
 export function TableOfContentsModal({
@@ -21,27 +21,31 @@ export function TableOfContentsModal({
     const maxLevel = toc.items.reduce((max, i) => Math.max(max, i.level), 0);
     return <Modal
         theme={theme}
-        title={toc.title}
+        title='Table of Contents'
         close={closeToc}
         open={open}
     >
-        <MenuList theme={theme}>
-            {toc.items.map(item => {
-                return <BookPathLink
-                    key={pathToString(item.path)}
-                    bookId={id}
-                    path={item.path}
-                >
-                    <MenuListItem
-                        theme={theme}
-                        left={item.title}
-                        right={`${pageForPosition(item.position)}`}
-                        ident={maxLevel - item.level}
-                    />
-                </BookPathLink>;
-            },
-            )}
-        </MenuList>
+        <View style={{
+            marginTop: doubleMargin,
+        }}>
+            <MenuList theme={theme}>
+                {toc.items.map(item => {
+                    return <BookPathLink
+                        key={pathToString(item.path)}
+                        bookId={id}
+                        path={item.path}
+                    >
+                        <MenuListItem
+                            theme={theme}
+                            left={item.title}
+                            right={`${pageForPosition(item.position)}`}
+                            ident={maxLevel - item.level}
+                        />
+                    </BookPathLink>;
+                },
+                )}
+            </MenuList>
+        </View>
     </Modal>;
 }
 

@@ -3,7 +3,7 @@ import React from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 
-import { HasChildren, point } from './common';
+import { HasChildren, point, normalPadding, doublePadding } from './common';
 import { Themed, colors, getFontSize } from './theme';
 
 export function GridList({ theme, children }: Themed & HasChildren) {
@@ -36,25 +36,37 @@ export function MenuListItem({ theme, left, right, ident }: Themed & {
 }) {
     return <div css={{
         display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        color: colors(theme).text,
-        fontSize: getFontSize(theme, 'small'),
-        fontFamily: theme.fontFamilies.menu,
-        '&:hover': {
-            color: colors(theme).primary,
-            background: colors(theme).highlight,
-        },
+        flexDirection: 'column',
     }}>
-        <span style={{
-            textIndent: ident
-                ? point(ident)
-                : undefined,
+        <div css={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingTop: normalPadding, paddingBottom: normalPadding,
+            paddingLeft: doublePadding, paddingRight: doublePadding,
+            color: colors(theme).text,
+            fontSize: getFontSize(theme, 'micro'),
+            fontFamily: theme.fontFamilies.menu,
+            '&:hover': {
+                color: colors(theme).primary,
+                background: colors(theme).highlight,
+            },
         }}>
-            {left}
-        </span>
-        <span>
-            {right}
-        </span>
+            <span style={{
+                textIndent: ident
+                    ? point(ident)
+                    : undefined,
+            }}>
+                {left}
+            </span>
+            <span>
+                {right}
+            </span>
+        </div>
+        <hr css={{
+            border: 'none',
+            borderTop: `1px solid ${colors(theme).dimmed}`,
+            width: '90%',
+        }} />
     </div>;
 }

@@ -8,6 +8,7 @@ export type Color = string;
 export type Palette = {
     text: Color,
     accent: Color,
+    dimmed: Color,
     highlight: Color,
     primary: Color,
     secondary: Color,
@@ -78,6 +79,7 @@ const defaultColors: Palette = {
     primary: '#fff',
     secondary: '#eee',
     accent: '#777',
+    dimmed: '#ddd',
     highlight: '#aaf',
     shadow: '#000',
     semiTransparent: 'rgba(0, 0, 0, 0.3)',
