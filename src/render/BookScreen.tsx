@@ -217,7 +217,7 @@ function Footer({
                 <Label
                     theme={theme}
                     text={currentPageString}
-                    fontSize='xxsmall'
+                    fontSize='xsmall'
                     bold
                 />
             </View>
@@ -232,7 +232,7 @@ function Footer({
                 <Label
                     theme={theme}
                     text={pagesLeftString}
-                    fontSize='xxsmall'
+                    fontSize='xsmall'
                     color='accent'
                 />
             </View>
