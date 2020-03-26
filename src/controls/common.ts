@@ -52,10 +52,6 @@ export function actionBack(theme: Theme) {
     return colors(theme).primary;
 }
 
-export function actionShadow(color: Color) {
-    return `2px 2px 2px ${color}`;
-}
-
 export function panelShadow(color: Color) {
     return `0px 0px 2px ${color}`;
 }
@@ -106,5 +102,23 @@ export function fontCss({
         fontStyle: italic
             ? 'italic' as 'italic'
             : undefined,
+    };
+}
+
+export function actionCss({ theme }: {
+    theme: Theme,
+}) {
+    return {
+        boxShadow: `2px 2px 2px ${colors(theme).shadow}`,
+    };
+}
+
+export function actionHoverCss({ theme, color }: {
+    theme: Theme,
+    color?: PaletteColor,
+}) {
+    return {
+        transform: 'translateY(-1px)',
+        boxShadow: `3px 3px 3px ${colors(theme)[color ?? 'shadow']}`,
     };
 }

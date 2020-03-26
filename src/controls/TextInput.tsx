@@ -5,8 +5,8 @@ import { View } from 'react-native';
 import { jsx } from '@emotion/core';
 import { Themed, colors } from './theme';
 import {
-    actionShadow, buttonHeight, actionBack, normalPadding, normalMargin,
-    fontCss,
+    buttonHeight, actionBack, normalPadding, normalMargin,
+    fontCss, actionCss, actionHoverCss,
 } from './common';
 
 export function TextInput({
@@ -29,8 +29,11 @@ export function TextInput({
                 height: buttonHeight,
                 color: colors(theme).text,
                 ...fontCss({ theme, fontSize: 'xlarge' }),
-                boxShadow: actionShadow(colors(theme).shadow),
+                ...actionCss({ theme }),
                 backgroundColor: actionBack(theme),
+                '&:hover': {
+                    ...actionHoverCss({ theme }),
+                },
                 '&::placeholder': {
                     color: colors(theme).accent,
                     ...fontCss({ theme, italic: true }),
@@ -42,7 +45,7 @@ export function TextInput({
                 '&:focus': {
                     outline: 'none',
                     color: colors(theme).highlight,
-                    boxShadow: actionShadow(colors(theme).highlight),
+                    ...actionHoverCss({ theme, color: 'highlight' }),
                 },
             }}
             placeholder={placeholder}

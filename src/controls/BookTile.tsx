@@ -6,7 +6,9 @@ import { jsx } from '@emotion/core';
 import {
     Themed, colors, Color,
 } from './theme';
-import { Style, actionShadow, normalMargin } from './common';
+import {
+    Style, actionCss, actionHoverCss, normalMargin,
+} from './common';
 
 export function BookTile({
     title, author, coverUrl, showTitle, hideShadow, theme,
@@ -88,13 +90,13 @@ function BookImageCover({ theme, imageUrl, title, showShadow }: Themed & {
             css={{
                 maxHeight: '100%',
                 maxWidth: '100%',
-                boxShadow: showShadow
-                    ? actionShadow(colors(theme).shadow)
-                    : undefined,
+                ...(showShadow
+                    ? actionCss({ theme })
+                    : {}),
                 '&:hover': {
-                    boxShadow: showShadow
-                        ? actionShadow(colors(theme).highlight)
-                        : undefined,
+                    ...(showShadow
+                        ? actionHoverCss({ theme })
+                        : {}),
                 },
             }}
         />
@@ -119,13 +121,13 @@ function BookEmptyCover({ title, showShadow, theme }: Themed & {
         fontFamily: theme.fontFamilies.menu,
         background: back,
         color: text,
-        boxShadow: showShadow
-            ? actionShadow(colors(theme).shadow)
-            : undefined,
+        ...(showShadow
+            ? actionCss({ theme })
+            : {}),
         '&:hover': {
-            boxShadow: showShadow
-                ? actionShadow(colors(theme).highlight)
-                : undefined,
+            ...(showShadow
+                ? actionHoverCss({ theme })
+                : {}),
         },
     }}>
         {title}

@@ -2,8 +2,8 @@
 import { jsx } from '@emotion/core';
 import { Themed, colors, PaletteColor } from '../theme';
 import {
-    actionShadow, buttonHeight, buttonWidth, normalMargin, buttonStyle,
-    fontCss,
+    buttonHeight, buttonWidth, normalMargin, buttonStyle,
+    fontCss, actionCss, actionHoverCss,
 } from '../common';
 import { View } from 'react-native';
 
@@ -30,12 +30,12 @@ export function ActionButton({
                 ...fontCss({ theme, fontSize: 'small' }),
                 color: colors(theme).primary,
                 borderColor: colors(theme)[color],
-                boxShadow: actionShadow(colors(theme).shadow),
+                ...actionCss({ theme }),
                 backgroundColor: colors(theme)[color],
                 '&:hover': {
                     borderColor: colors(theme).highlight,
                     background: colors(theme).highlight,
-                    boxShadow: actionShadow(colors(theme).highlight),
+                    ...actionHoverCss({ theme }),
                 },
             }}
         >

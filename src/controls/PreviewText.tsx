@@ -3,7 +3,9 @@ import React from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Themed, colors } from './theme';
-import { actionShadow, doublePadding, fontCss } from './common';
+import {
+    actionCss, actionHoverCss, doublePadding, fontCss,
+} from './common';
 
 export function PreviewText({ text, lines, theme }: Themed & {
     text: string,
@@ -11,7 +13,6 @@ export function PreviewText({ text, lines, theme }: Themed & {
 }) {
     return <div css={{
         padding: doublePadding,
-        boxShadow: actionShadow(colors(theme).shadow),
         color: colors(theme).text,
         backgroundColor: colors(theme).primary,
         margin: 0,
@@ -19,8 +20,9 @@ export function PreviewText({ text, lines, theme }: Themed & {
         maxHeight: '100%',
         textIndent: doublePadding,
         cursor: 'pointer',
+        ...actionCss({ theme }),
         '&:hover': {
-            boxShadow: actionShadow(colors(theme).highlight),
+            ...actionHoverCss({ theme }),
         },
     }}>
         <p css={{
