@@ -4,11 +4,11 @@ import { Transition } from 'react-transition-group';
 
 import { Themed, getFontFamily, getFontSize, colors } from './theme';
 import {
-    HasChildren, doubleMargin, normalPadding,
+    HasChildren, normalPadding, normalMargin,
 } from './common';
 import { defaultAnimationDuration } from './Animations';
 import { OverlayPanel } from './Panel';
-import { IconButton } from './Buttons';
+import { PlaneIconButton } from './Buttons';
 
 export type ModalProps = Parameters<typeof Modal>[0];
 export function Modal({
@@ -78,8 +78,10 @@ function ModalTitle({ theme, title, close }: Themed & {
             flexBasis: 1,
             flexGrow: 1,
             flexShrink: 1,
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
         }}>
-            <IconButton
+            <PlaneIconButton
                 theme={theme}
                 callback={close}
                 icon='close'
@@ -89,7 +91,8 @@ function ModalTitle({ theme, title, close }: Themed & {
             flexBasis: 'auto',
             flexGrow: 1,
             flexShrink: 1,
-            marginLeft: doubleMargin,
+            marginLeft: normalMargin, marginRight: normalMargin,
+            justifyContent: 'center',
         }}>
             <span title={title} style={{
                 textAlign: 'center',

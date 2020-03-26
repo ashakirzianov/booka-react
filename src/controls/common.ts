@@ -68,8 +68,9 @@ export const radius = 3;
 
 export const userAreaWidth = point(50);
 export const panelHeight = point(15);
-export const buttonHeight = 50;
+export const buttonHeight = 48;
 export const buttonWidth = 150;
+export const smallButtonHeight = 24;
 export const menuWidth = point(15);
 
 export const normalMargin = point(0.5);
