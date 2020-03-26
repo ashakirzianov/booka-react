@@ -4,7 +4,7 @@ import { Transition } from 'react-transition-group';
 
 import { Themed, getFontFamily, getFontSize, colors } from './theme';
 import {
-    HasChildren, normalMargin,
+    HasChildren, normalMargin, normalPadding,
 } from './common';
 import { defaultAnimationDuration } from './Animations';
 import { OverlayPanel } from './Panel';
@@ -73,20 +73,6 @@ function ModalTitle({ theme, title, close }: Themed & {
         justifyContent: 'space-between',
     }}>
         <View style={{
-            minWidth: 'auto',
-            flexBasis: 1,
-            flexGrow: 1,
-            flexShrink: 1,
-            justifyContent: 'flex-start',
-            alignItems: 'flex-start',
-        }}>
-            <PlaneIconButton
-                theme={theme}
-                callback={close}
-                icon='close'
-            />
-        </View>
-        <View style={{
             flexBasis: 'auto',
             flexGrow: 1,
             flexShrink: 1,
@@ -94,21 +80,28 @@ function ModalTitle({ theme, title, close }: Themed & {
             justifyContent: 'center',
         }}>
             <span title={title} style={{
-                textAlign: 'center',
+                padding: normalPadding,
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 fontFamily: getFontFamily(theme, 'menu'),
-                fontSize: getFontSize(theme, 'normal'),
+                fontSize: getFontSize(theme, 'large'),
                 color: colors(theme).accent,
             }}>
                 {title}
             </span>
         </View>
         <View style={{
+            minWidth: 'auto',
             flexBasis: 1,
-            flexGrow: 1,
-            flexShrink: 1,
-        }} />
+            flexGrow: 0,
+            flexShrink: 0,
+        }}>
+            <PlaneIconButton
+                theme={theme}
+                callback={close}
+                icon='close'
+            />
+        </View>
     </View>;
 }
