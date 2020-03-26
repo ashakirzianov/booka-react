@@ -6,7 +6,9 @@ import {
 } from '../application';
 import { Themed } from './theme';
 import { Icon } from './Icon';
-import { point, buttonStyle } from './common';
+import {
+    point, buttonStyle, fontCss, normalMargin, buttonHeight,
+} from './common';
 
 type SocialButtonProps = Themed & {
     onStatusChange?: () => void,
@@ -62,38 +64,54 @@ function ActualButton({ callback, user, theme }: ActualButtonProps) {
             color: 'white',
             background: '#4469b0',
             borderStyle: 'none',
-            borderRadius: 3,
             cursor: 'pointer',
             padding: 0,
         }}
     >
-        <View style={{
+        <div style={{
+            display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
+            width: point(15),
+            height: buttonHeight,
         }}>
-            <div style={{ marginLeft: point(0.5) }}>
+            <View style={{
+                marginLeft: normalMargin,
+                flexGrow: 0,
+                flexShrink: 0,
+            }}>
                 <Icon
                     theme={theme}
                     name='facebook'
                     size={point(2)}
                 />
-            </div>
-            <span style={{
-                fontSize: point(1.5),
-                fontFamily: 'Helvetica',
-                margin: point(0.5),
-                whiteSpace: 'pre',
+            </View>
+            <View style={{
+                flexGrow: 1,
+                flexShrink: 1,
             }}>
-                {text}
-            </span>
-            {
-                user && user.pictureUrl
-                    ? <img
-                        alt=''
-                        src={user.pictureUrl}
-                    />
-                    : null
-            }
-        </View>
-    </button>;
+                <span style={{
+                    ...fontCss({ theme, fontSize: 'xsmall' }),
+                    margin: normalMargin,
+                    textAlign: 'center',
+                    whiteSpace: 'pre',
+                }}>
+                    {text}
+                </span>
+            </View>
+            <View style={{
+                flexGrow: 0,
+                flexShrink: 0,
+            }}>
+                {
+                    user && user.pictureUrl
+                        ? <img
+                            alt=''
+                            src={user.pictureUrl}
+                        />
+                        : null
+                }
+            </View>
+        </div>
+    </button >;
 }
