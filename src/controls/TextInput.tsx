@@ -27,7 +27,7 @@ export function TextInput({
                 borderWidth: 0,
                 height: buttonHeight,
                 color: colors(theme).text,
-                fontSize: getFontSize(theme, 'macro'),
+                fontSize: getFontSize(theme, 'xlarge'),
                 boxShadow: actionShadow(colors(theme).shadow),
                 backgroundColor: actionBack(theme),
                 '&::placeholder': {

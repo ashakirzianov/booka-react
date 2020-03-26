@@ -79,7 +79,7 @@ export function TextContextMenuItem({
             }
             <span css={{
                 margin: normalMargin,
-                fontSize: getFontSize(theme, 'micro'),
+                fontSize: getFontSize(theme, 'xsmall'),
                 fontFamily: theme.fontFamilies.menu,
             }}>
                 {text}

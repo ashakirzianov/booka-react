@@ -4,7 +4,7 @@ import { Transition } from 'react-transition-group';
 
 import { Themed, getFontFamily, getFontSize, colors } from './theme';
 import {
-    HasChildren, normalPadding, normalMargin,
+    HasChildren, normalMargin,
 } from './common';
 import { defaultAnimationDuration } from './Animations';
 import { OverlayPanel } from './Panel';

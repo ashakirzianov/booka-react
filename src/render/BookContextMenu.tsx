@@ -134,7 +134,7 @@ function SetHighlightGroupButton({
         background={colorForHighlightGroup(group)}
         highlight='white'
         border={selected ? 'white' : undefined}
-        fontSize='micro'
+        fontSize='xsmall'
         size={30}
         callback={() => setHighlightGroup(target.highlight.uuid, group)}
     />;

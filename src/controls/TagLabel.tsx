@@ -3,7 +3,7 @@ import { jsx } from '@emotion/core';
 import {
     Themed, colors, getFontSize, getFontFamily, PaletteColor,
 } from './theme';
-import { normalPadding, nanoMargin } from './common';
+import { normalPadding, xxsmallMargin } from './common';
 
 export function TagLabel({
     text, theme, color,
@@ -12,9 +12,9 @@ export function TagLabel({
     color?: PaletteColor,
 }) {
     const actualColor = colors(theme)[color ?? 'accent'];
-    const fontSize = getFontSize(theme, 'nano');
+    const fontSize = getFontSize(theme, 'xxsmall');
     return <div css={{
-        margin: nanoMargin,
+        margin: xxsmallMargin,
         paddingLeft: normalPadding, paddingRight: normalPadding,
         borderStyle: 'solid',
         borderWidth: 2,

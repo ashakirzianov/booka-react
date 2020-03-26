@@ -45,7 +45,7 @@ export function MenuListItem({ theme, left, right, ident }: Themed & {
             paddingTop: normalPadding, paddingBottom: normalPadding,
             paddingLeft: doublePadding, paddingRight: doublePadding,
             color: colors(theme).text,
-            fontSize: getFontSize(theme, 'micro'),
+            fontSize: getFontSize(theme, 'xsmall'),
             fontFamily: theme.fontFamilies.menu,
             '&:hover': {
                 color: colors(theme).primary,

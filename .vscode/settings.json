@@ -41,7 +41,10 @@
         "unmount",
         "webfonts",
         "welldone",
-        "xfbml"
+        "xfbml",
+        "xlarge",
+        "xsmall",
+        "xxsmall"
     ],
     "editor.gotoLocation.multipleDeclarations": "goto",
     "editor.gotoLocation.multipleDefinitions": "goto",

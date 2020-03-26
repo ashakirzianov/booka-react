@@ -75,7 +75,7 @@ export const menuWidth = point(15);
 
 export const normalMargin = point(0.5);
 export const halfMargin = point(0.5);
-export const nanoMargin = point(0.1);
+export const xxsmallMargin = point(0.1);
 export const doubleMargin = point(1);
 export const normalPadding = point(0.5);
 export const doublePadding = point(1);

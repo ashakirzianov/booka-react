@@ -161,7 +161,7 @@ function BookTitle({ title, author, theme }: Themed & {
         <span css={[
             overflowLine,
             {
-                fontSize: getFontSize(theme, 'nano'),
+                fontSize: getFontSize(theme, 'xxsmall'),
                 fontStyle: 'italic',
                 fontWeight: 100,
             },
@@ -171,7 +171,7 @@ function BookTitle({ title, author, theme }: Themed & {
         <span css={[
             overflowLine,
             {
-                fontSize: getFontSize(theme, 'nano'),
+                fontSize: getFontSize(theme, 'xxsmall'),
                 fontWeight: 900,
             },
         ]}>

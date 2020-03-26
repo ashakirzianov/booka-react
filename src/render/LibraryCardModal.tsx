@@ -54,7 +54,7 @@ function LibraryCardModalImpl({ bookId }: {
                         text={`by ${card.author ?? 'unknown'}`}
                         italic
                         color='accent'
-                        size='micro'
+                        size='xsmall'
                     />}
                     Read={<ReadButtons card={card} />}
                     Continue={<ContinueRead card={card} />}
@@ -141,7 +141,7 @@ function ContinueRead({ card }: {
         <Label
             theme={theme}
             text='Continue reading'
-            size='nano'
+            size='xxsmall'
             color='accent'
         />
         <ParagraphPreview
