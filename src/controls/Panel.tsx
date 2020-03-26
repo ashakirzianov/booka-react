@@ -60,7 +60,9 @@ export function OverlayPanel({
         entered: boolean,
     },
 }) {
-    return <View style={{
+    return <div style={{
+        display: 'flex',
+        flexDirection: 'column',
         flexShrink: 1,
         width: width ?? percent(100),
         maxWidth: userAreaWidth,
@@ -70,6 +72,7 @@ export function OverlayPanel({
         backgroundColor: colors(theme).secondary,
         boxShadow: panelShadow(colors(theme).shadow),
         borderRadius: radius,
+        pointerEvents: 'auto',
         // TODO: rethink this
         ...(animation && {
             transitionDuration: `${defaultAnimationDuration}ms`,
@@ -80,5 +83,5 @@ export function OverlayPanel({
     }}
     >
         {children}
-    </View>;
+    </div>;
 }
