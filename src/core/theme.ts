@@ -1,6 +1,10 @@
 export type FontFamily =
-    | 'Georgia' | 'San Francisco' | 'Helvetica'
+    // Standard
+    | 'Georgia' | 'Helvetica'
+    // Sans-serif
     | 'Open Sans' | 'Roboto' | 'Quicksand' | 'Raleway' | 'Lato'
+    // Serif
+    | 'Lora' | 'Marcellus' | 'PT Serif' | 'Roboto Slab' | 'Antic Slab'
     ;
 export type FontSize = number;
 export type Color = string;
@@ -111,7 +115,7 @@ export const defaultTheme: Theme = {
     },
     currentPalette: 'light',
     fontFamilies: {
-        book: 'Georgia',
+        book: 'Lora',
         menu: 'Lato',
     },
     fontSizes: {
