@@ -21,7 +21,7 @@ export function ParagraphPreview({ bookId, path, theme }: Themed & {
         >
             <PreviewText
                 theme={theme}
-                lines={8}
+                lines={10}
                 text={previewState.preview || 'preview is not available'}
             />
         </BookPathLink>;

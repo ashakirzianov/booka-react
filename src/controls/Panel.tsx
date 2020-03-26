@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     HasChildren, percent, panelShadow, userAreaWidth,
-    normalMargin, panelHeight, Size, radius, fontCss,
+    normalMargin, panelHeight, Size, radius, fontCss, doubleMargin,
 } from './common';
 import { Themed, colors } from './theme';
 import { defaultAnimationDuration } from './Animations';
@@ -17,11 +17,11 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
         flexShrink: 1,
         flexGrow: 1,
         flexDirection: 'column',
-        margin: normalMargin,
         maxWidth: userAreaWidth,
         justifyContent: 'flex-start',
         width: '100%',
         alignSelf: 'center',
+        marginBottom: doubleMargin,
     }}>
         {
             title ?
@@ -31,7 +31,7 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
                     margin: normalMargin,
                 }}>
                     <span style={{
-                        ...fontCss({ theme, fontSize: 'small' }),
+                        ...fontCss({ theme }),
                         color: colors(theme).accent,
                     }}>
                         {title}
