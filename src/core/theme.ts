@@ -106,9 +106,10 @@ export const defaultTheme: Theme = {
         dark: {
             ...defaultColors,
             text: '#999',
-            primary: '#000',
-            secondary: '#222',
+            primary: '#222',
+            secondary: '#000',
             accent: '#ddd',
+            dimmed: '#333',
             highlight: '#fff',
             shadow: '#333',
         },

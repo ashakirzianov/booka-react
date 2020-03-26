@@ -79,7 +79,7 @@ export const xxsmallMargin = point(0.1);
 export const doubleMargin = point(1);
 export const normalPadding = point(0.5);
 export const doublePadding = point(1);
-export const megaPadding = point(4);
+export const megaPadding = point(3);
 export const halfPadding = point(0.25);
 
 export const buttonStyle: CSSProperties = {
