@@ -53,7 +53,6 @@ export type Theme = {
     fontScale: number,
     fontFamilies: FontFamilies,
     fontSizes: FontSizes,
-    radius: number,
 };
 
 export type Themed = {
@@ -132,5 +131,4 @@ export const defaultTheme: Theme = {
         text: 26,
     },
     fontScale: 1,
-    radius: 5,
 };

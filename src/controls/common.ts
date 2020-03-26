@@ -64,6 +64,8 @@ export function roundShadow(color: Color) {
     return `2px 2px 2px ${color}`;
 }
 
+export const radius = 3;
+
 export const userAreaWidth = point(50);
 export const panelHeight = point(15);
 export const buttonHeight = 50;

@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     HasChildren, percent, panelShadow, userAreaWidth,
-    normalMargin, panelHeight, Size,
+    normalMargin, panelHeight, Size, radius,
 } from './common';
 import { Themed, colors, getFontFamily, getFontSize } from './theme';
 import { defaultAnimationDuration } from './Animations';
@@ -28,12 +28,12 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
                 <div style={{
                     display: 'flex',
                     alignSelf: 'flex-start',
-                    marginLeft: normalMargin, marginRight: normalMargin,
+                    margin: normalMargin,
                 }}>
                     <span style={{
                         fontSize: getFontSize(theme, 'small'),
                         fontFamily: getFontFamily(theme, 'menu'),
-                        color: colors(theme).text,
+                        color: colors(theme).accent,
                     }}>
                         {title}
                     </span>
@@ -70,6 +70,7 @@ export function OverlayPanel({
         zIndex: 10,
         backgroundColor: colors(theme).secondary,
         boxShadow: panelShadow(colors(theme).shadow),
+        borderRadius: radius,
         // TODO: rethink this
         ...(animation && {
             transitionDuration: `${defaultAnimationDuration}ms`,

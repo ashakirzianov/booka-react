@@ -52,7 +52,7 @@ function LibraryCardModalImpl({ bookId }: {
                     Author={<Label
                         theme={theme}
                         text={`by ${card.author ?? 'unknown'}`}
-                        italic={true}
+                        italic
                         color='accent'
                         size='micro'
                     />}
@@ -140,10 +140,9 @@ function ContinueRead({ card }: {
     }}>
         <Label
             theme={theme}
-            text='You are here'
+            text='Continue reading'
             size='nano'
             color='accent'
-            italic={true}
         />
         <ParagraphPreview
             theme={theme}
