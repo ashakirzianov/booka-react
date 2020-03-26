@@ -1,6 +1,6 @@
 export type FontFamily =
     | 'Georgia' | 'San Francisco' | 'Helvetica'
-    | 'Open Sans'
+    | 'Open Sans' | 'Roboto' | 'Quicksand' | 'Raleway' | 'Lato'
     ;
 export type FontSize = number;
 export type Color = string;
@@ -122,7 +122,7 @@ export const defaultTheme: Theme = {
     currentPalette: 'light',
     fontFamilies: {
         book: 'Georgia',
-        menu: 'Open Sans',
+        menu: 'Lato',
     },
     fontSizes: {
         xxsmall: 10,
@@ -132,7 +132,7 @@ export const defaultTheme: Theme = {
         large: 24,
         xlarge: 30,
         xxlarge: 36,
-        text: 26,
+        text: 24,
     },
     fontScale: 1,
 };

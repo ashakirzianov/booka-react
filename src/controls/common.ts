@@ -82,6 +82,9 @@ export const doublePadding = point(1);
 export const megaPadding = point(4);
 export const halfPadding = point(0.25);
 
+export const regularFontWeight = 300;
+export const boldFontWeight = 900;
+
 export const buttonStyle: CSSProperties = {
     cursor: 'pointer',
     border: 'none',

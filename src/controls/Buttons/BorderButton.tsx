@@ -19,7 +19,7 @@ export function BorderButton({
             alignItems: 'center',
             textDecoration: 'none',
             color: colors(theme).accent,
-            fontFamily: getFontFamily(theme, 'menu'),
+            fontFamily: getFontFamily(theme, 'book'),
             fontSize: getFontSize(theme, 'normal'),
             border: `3px solid ${colors(theme).accent}`,
             height: buttonHeight,
