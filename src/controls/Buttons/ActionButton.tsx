@@ -33,8 +33,6 @@ export function ActionButton({
                 ...actionCss({ theme }),
                 backgroundColor: colors(theme)[color],
                 '&:hover': {
-                    borderColor: colors(theme).highlight,
-                    background: colors(theme).highlight,
                     ...actionHoverCss({ theme }),
                 },
             }}
