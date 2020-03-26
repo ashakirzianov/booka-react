@@ -1,9 +1,8 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { View } from 'react-native';
-import { roundShadow } from '../common';
-import { colors, getFontSize, PaletteColor, Themed, FontSizes } from '../theme';
-import { getFontFamily } from '../../core';
+import { roundShadow, fontCss } from '../common';
+import { colors, PaletteColor, Themed, FontSizes } from '../theme';
 
 export function CircleButton({
     theme, callback, text,
@@ -27,8 +26,7 @@ export function CircleButton({
         width: size,
         height: size,
         color: colors(theme)[color],
-        fontSize: getFontSize(theme, fontSize),
-        fontFamily: getFontFamily(theme, 'menu'),
+        ...fontCss({ theme, fontSize }),
         backgroundColor: colors(theme)[background],
         borderRadius: size,
         borderWidth: 3,

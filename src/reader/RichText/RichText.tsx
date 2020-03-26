@@ -189,7 +189,9 @@ function RichTextSimpleFragmentComp({
             fontSize: attrs.fontSize,
             fontFamily: attrs.fontFamily,
             fontStyle: attrs.italic ? 'italic' : undefined,
-            fontWeight: attrs.bold ? 'bold' : undefined,
+            fontWeight: attrs.bold ?
+                'bold'
+                : 300,
             letterSpacing: attrs.letterSpacing !== undefined
                 ? `${attrs.letterSpacing}em`
                 : undefined,

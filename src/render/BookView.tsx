@@ -8,7 +8,7 @@ import {
     BookFragmentComp, BookSelection, ColorizedRange,
 } from '../reader';
 import { useCopy } from '../application';
-import { Themed, colors, getFontSize, Theme } from '../core';
+import { Themed, colors, Theme } from '../core';
 import { config } from '../config';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
 import { View, BorderButton, normalMargin, colorForHighlightGroup } from '../controls';
@@ -74,7 +74,7 @@ export function BookView({
             color={colors(theme).text}
             refColor={colors(theme).accent}
             refHoverColor={colors(theme).highlight}
-            fontSize={getFontSize(theme, 'text')}
+            fontSize={theme.fontSizes.text}
             fontFamily={theme.fontFamilies.book}
             colorization={colorization}
             pathToScroll={pathToScroll}

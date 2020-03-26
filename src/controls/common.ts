@@ -2,7 +2,7 @@ import { PropsWithChildren, CSSProperties } from 'react';
 import { Interpolation } from '@emotion/core';
 import { Color, colors, Theme } from './theme';
 import { HighlightGroup } from 'booka-common';
-import { PaletteColor } from '../core';
+import { PaletteColor, FontSizes, FontFamilies } from '../core';
 
 export function colorForHighlightGroup(group: HighlightGroup): PaletteColor {
     switch (group) {
@@ -52,10 +52,6 @@ export function actionBack(theme: Theme) {
     return colors(theme).primary;
 }
 
-export function actionShadow(color: Color) {
-    return `2px 2px 2px ${color}`;
-}
-
 export function panelShadow(color: Color) {
     return `0px 0px 2px ${color}`;
 }
@@ -64,19 +60,22 @@ export function roundShadow(color: Color) {
     return `2px 2px 2px ${color}`;
 }
 
+export const radius = 3;
+
 export const userAreaWidth = point(50);
-export const panelHeight = point(15);
+export const panelHeight = point(14);
 export const buttonHeight = 50;
-export const buttonWidth = 150;
+export const buttonWidth = 120;
+export const smallButtonHeight = 24;
 export const menuWidth = point(15);
 
 export const normalMargin = point(0.5);
-export const halfMargin = point(0.5);
-export const nanoMargin = point(0.1);
+export const halfMargin = point(0.25);
+export const xxsmallMargin = point(0.1);
 export const doubleMargin = point(1);
 export const normalPadding = point(0.5);
 export const doublePadding = point(1);
-export const megaPadding = point(4);
+export const megaPadding = point(3);
 export const halfPadding = point(0.25);
 
 export const buttonStyle: CSSProperties = {
@@ -86,3 +85,40 @@ export const buttonStyle: CSSProperties = {
     margin: 0,
     padding: 0,
 };
+
+export function fontCss({
+    theme, fontSize, fontFamily, bold, italic,
+}: {
+    theme: Theme,
+    fontSize?: keyof FontSizes,
+    fontFamily?: keyof FontFamilies,
+    bold?: boolean,
+    italic?: boolean,
+}) {
+    return {
+        fontSize: theme.fontSizes[fontSize ?? 'normal'],
+        fontFamily: theme.fontFamilies[fontFamily ?? 'menu'],
+        fontWeight: bold ? 900 : 300,
+        fontStyle: italic
+            ? 'italic' as 'italic'
+            : undefined,
+    };
+}
+
+export function actionCss({ theme }: {
+    theme: Theme,
+}) {
+    return {
+        boxShadow: `2px 2px 2px ${colors(theme).shadow}`,
+    };
+}
+
+export function actionHoverCss({ theme, color }: {
+    theme: Theme,
+    color?: PaletteColor,
+}) {
+    return {
+        transform: 'translateY(-1px)',
+        boxShadow: `3px 3px 3px ${colors(theme)[color ?? 'shadow']}`,
+    };
+}

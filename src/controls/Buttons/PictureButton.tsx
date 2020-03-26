@@ -1,7 +1,9 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { Themed, colors } from '../theme';
-import { buttonHeight, actionShadow, normalMargin, buttonStyle } from '../common';
+import { Themed } from '../theme';
+import {
+    buttonHeight, actionCss, actionHoverCss, normalMargin, buttonStyle,
+} from '../common';
 
 export function PictureButton({
     callback, pictureUrl, theme,
@@ -24,9 +26,9 @@ export function PictureButton({
                 alignItems: 'center',
                 height: buttonHeight,
                 width: buttonHeight,
-                boxShadow: actionShadow(colors(theme).shadow),
+                ...actionCss({ theme }),
                 '&:hover': {
-                    boxShadow: actionShadow(colors(theme).highlight),
+                    ...actionHoverCss({ theme }),
                 },
             }}
         />

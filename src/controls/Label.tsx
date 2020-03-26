@@ -1,23 +1,24 @@
 import React from 'react';
 import {
-    Themed, getFontSize, colors, PaletteColor, FontSizes,
+    Themed, colors, PaletteColor, FontSizes,
 } from './theme';
+import { fontCss, halfMargin } from './common';
 
 export function Label({
-    text, color, size, italic, bold, theme,
+    text, color, fontSize, italic, bold, theme,
 }: Themed & {
     text: string,
     color?: PaletteColor,
-    size?: keyof FontSizes,
+    fontSize?: keyof FontSizes,
     italic?: boolean,
     bold?: boolean,
 }) {
     return <span style={{
         color: colors(theme)[color ?? 'text'],
-        fontSize: getFontSize(theme, size ?? 'small'),
-        fontFamily: theme.fontFamilies.menu,
-        fontStyle: italic ? 'italic' : undefined,
-        fontWeight: bold ? 900 : undefined,
+        margin: halfMargin,
+        ...fontCss({
+            theme, fontSize, italic, bold,
+        }),
     }}>
         {text}
     </span>;

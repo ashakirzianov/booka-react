@@ -1,9 +1,9 @@
 import React from 'react';
 import {
     HasChildren, percent, panelShadow, userAreaWidth,
-    normalMargin, panelHeight, Size,
+    normalMargin, panelHeight, Size, radius, fontCss, doubleMargin,
 } from './common';
-import { Themed, colors, getFontFamily, getFontSize } from './theme';
+import { Themed, colors } from './theme';
 import { defaultAnimationDuration } from './Animations';
 import { View } from 'react-native';
 
@@ -17,23 +17,22 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
         flexShrink: 1,
         flexGrow: 1,
         flexDirection: 'column',
-        margin: normalMargin,
         maxWidth: userAreaWidth,
         justifyContent: 'flex-start',
         width: '100%',
         alignSelf: 'center',
+        marginBottom: doubleMargin,
     }}>
         {
             title ?
                 <div style={{
                     display: 'flex',
                     alignSelf: 'flex-start',
-                    marginLeft: normalMargin, marginRight: normalMargin,
+                    margin: normalMargin,
                 }}>
                     <span style={{
-                        fontSize: getFontSize(theme, 'small'),
-                        fontFamily: getFontFamily(theme, 'menu'),
-                        color: colors(theme).text,
+                        ...fontCss({ theme }),
+                        color: colors(theme).accent,
                     }}>
                         {title}
                     </span>
@@ -61,7 +60,9 @@ export function OverlayPanel({
         entered: boolean,
     },
 }) {
-    return <View style={{
+    return <div style={{
+        display: 'flex',
+        flexDirection: 'column',
         flexShrink: 1,
         width: width ?? percent(100),
         maxWidth: userAreaWidth,
@@ -70,6 +71,8 @@ export function OverlayPanel({
         zIndex: 10,
         backgroundColor: colors(theme).secondary,
         boxShadow: panelShadow(colors(theme).shadow),
+        borderRadius: radius,
+        pointerEvents: 'auto',
         // TODO: rethink this
         ...(animation && {
             transitionDuration: `${defaultAnimationDuration}ms`,
@@ -80,5 +83,5 @@ export function OverlayPanel({
     }}
     >
         {children}
-    </View>;
+    </div>;
 }

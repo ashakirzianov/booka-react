@@ -2,8 +2,8 @@
 import React from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { Themed, colors, getFontFamily, getFontSize } from '../theme';
-import { halfPadding, buttonHeight, buttonStyle } from '../common';
+import { Themed, colors } from '../theme';
+import { halfPadding, buttonHeight, buttonStyle, fontCss } from '../common';
 
 export function BorderButton({
     text, theme, callback,
@@ -19,8 +19,7 @@ export function BorderButton({
             alignItems: 'center',
             textDecoration: 'none',
             color: colors(theme).accent,
-            fontFamily: getFontFamily(theme, 'menu'),
-            fontSize: getFontSize(theme, 'normal'),
+            ...fontCss({ theme, fontFamily: 'book' }),
             border: `3px solid ${colors(theme).accent}`,
             height: buttonHeight,
             paddingLeft: halfPadding, paddingRight: halfPadding,

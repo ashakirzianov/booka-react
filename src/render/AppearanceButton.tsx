@@ -5,7 +5,7 @@ import {
     WithPopover, View, IconButton,
     TextButton, Separator, point, doubleMargin, CircleButton,
 } from '../controls';
-import { PaletteName, Themed } from '../core';
+import { PaletteName, Themed, FontSizes } from '../core';
 
 export function AppearanceButton() {
     const { theme, incrementScale, setPalette } = useTheme();
@@ -46,16 +46,16 @@ function FontScale({ theme, incrementScale }: Themed & {
         alignItems: 'center',
     }}>
         <FontScaleButton
-            theme={theme} increment={-0.1} size='micro' incrementScale={incrementScale} />
+            theme={theme} increment={-0.1} size='small' incrementScale={incrementScale} />
         <FontScaleButton
-            theme={theme} increment={0.1} size='macro' incrementScale={incrementScale} />
+            theme={theme} increment={0.1} size='xlarge' incrementScale={incrementScale} />
     </View>;
 }
 
 function FontScaleButton({
     theme, size, increment, incrementScale,
 }: Themed & {
-    size: 'macro' | 'micro',
+    size: keyof FontSizes,
     increment: number,
     incrementScale: (inc: number) => void,
 }) {

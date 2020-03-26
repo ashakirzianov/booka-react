@@ -1,7 +1,10 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { Themed, colors, getFontSize, getFontFamily, PaletteColor } from '../theme';
-import { actionShadow, buttonHeight, buttonWidth, normalMargin, buttonStyle } from '../common';
+import { Themed, colors, PaletteColor } from '../theme';
+import {
+    buttonHeight, buttonWidth, normalMargin, buttonStyle,
+    fontCss, actionCss, actionHoverCss,
+} from '../common';
 import { View } from 'react-native';
 
 export function ActionButton({
@@ -11,10 +14,7 @@ export function ActionButton({
     color?: PaletteColor,
     callback?: () => void,
 }) {
-    const textColor = colors(theme)[color ?? 'accent'];
-    const fore = colors(theme)[color ?? 'accent'];
-    const back = colors(theme).primary;
-    const highlight = colors(theme).highlight;
+    color = color ?? 'accent';
     return <View style={{
         margin: normalMargin,
     }}>
@@ -27,16 +27,15 @@ export function ActionButton({
                 cursor: 'pointer',
                 borderStyle: 'solid',
                 borderWidth: 2,
-                fontSize: getFontSize(theme, 'small'),
-                fontFamily: getFontFamily(theme, 'menu'),
-                color: textColor,
-                borderColor: fore,
-                boxShadow: actionShadow(fore),
-                backgroundColor: back,
+                ...fontCss({ theme, fontSize: 'small' }),
+                color: colors(theme).primary,
+                borderColor: colors(theme)[color],
+                ...actionCss({ theme }),
+                backgroundColor: colors(theme)[color],
                 '&:hover': {
-                    borderColor: highlight,
-                    color: highlight,
-                    boxShadow: actionShadow(highlight),
+                    borderColor: colors(theme).highlight,
+                    background: colors(theme).highlight,
+                    ...actionHoverCss({ theme }),
                 },
             }}
         >

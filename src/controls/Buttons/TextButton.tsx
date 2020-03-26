@@ -1,9 +1,9 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import {
-    Themed, FontSizes, FontFamilies, getFontSize, colors, getFontFamily,
+    Themed, FontSizes, FontFamilies, colors,
 } from '../theme';
-import { buttonStyle } from '../common';
+import { buttonStyle, fontCss } from '../common';
 
 export function TextButton({
     callback, theme, text,
@@ -17,8 +17,7 @@ export function TextButton({
     return <button
         css={{
             ...buttonStyle,
-            fontSize: getFontSize(theme, fontSize),
-            fontFamily: getFontFamily(theme, fontFamily),
+            ...fontCss({ theme, fontSize, fontFamily }),
             color: colors(theme).accent,
             '&:hover': {
                 color: colors(theme).highlight,

@@ -3,7 +3,11 @@ import { jsx } from '@emotion/core';
 
 import { Themed, colors } from '../theme';
 import { IconName, Icon } from '../Icon';
-import { actionShadow, buttonHeight, actionBack, normalMargin, buttonStyle } from '../common';
+import {
+    buttonHeight, normalMargin,
+    buttonStyle, smallButtonHeight, normalPadding,
+    actionCss, actionHoverCss, actionBack,
+} from '../common';
 
 export function IconButton({
     icon, theme,
@@ -28,10 +32,10 @@ export function IconButton({
             width: buttonHeight,
             backgroundColor: actionBack(theme),
             color: colors(theme).accent,
-            boxShadow: actionShadow(colors(theme).shadow),
+            ...actionCss({ theme }),
             '&:hover': {
                 color: colors(theme).highlight,
-                boxShadow: actionShadow(colors(theme).highlight),
+                ...actionHoverCss({ theme }),
             },
             justifyContent: 'center',
             alignItems: 'center',
@@ -40,6 +44,39 @@ export function IconButton({
                 theme={theme}
                 name={icon}
                 size={24}
+            />
+        </div>
+    </button>;
+}
+
+export function PlaneIconButton({
+    icon, theme,
+    callback,
+}: Themed & {
+    icon: IconName,
+    callback?: () => void,
+}) {
+    return <button style={buttonStyle}
+        onClick={callback}
+    >
+        <div css={{
+            // border: '1px solid red',
+            display: 'flex',
+            pointerEvents: 'auto',
+            padding: normalPadding,
+            height: smallButtonHeight,
+            width: smallButtonHeight,
+            color: colors(theme).accent,
+            '&:hover': {
+                color: colors(theme).highlight,
+            },
+            justifyContent: 'center',
+            alignItems: 'center',
+        }}>
+            <Icon
+                theme={theme}
+                name={icon}
+                size={smallButtonHeight}
             />
         </div>
     </button>;

@@ -2,13 +2,13 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { Transition } from 'react-transition-group';
 
-import { Themed, getFontFamily, getFontSize, colors } from './theme';
+import { Themed, colors } from './theme';
 import {
-    HasChildren, doubleMargin, normalPadding,
+    HasChildren, normalMargin, normalPadding, fontCss,
 } from './common';
 import { defaultAnimationDuration } from './Animations';
 import { OverlayPanel } from './Panel';
-import { IconButton } from './Buttons';
+import { PlaneIconButton } from './Buttons';
 
 export type ModalProps = Parameters<typeof Modal>[0];
 export function Modal({
@@ -49,7 +49,6 @@ export function Modal({
                         flexGrow: 1,
                         flexShrink: 1,
                         overflow: 'scroll',
-                        padding: normalPadding,
                         justifyContent: 'flex-start',
                     }}
                     >
@@ -74,39 +73,34 @@ function ModalTitle({ theme, title, close }: Themed & {
         justifyContent: 'space-between',
     }}>
         <View style={{
-            minWidth: 'auto',
-            flexBasis: 1,
-            flexGrow: 1,
-            flexShrink: 1,
-        }}>
-            <IconButton
-                theme={theme}
-                callback={close}
-                icon='close'
-            />
-        </View>
-        <View style={{
             flexBasis: 'auto',
             flexGrow: 1,
             flexShrink: 1,
-            marginLeft: doubleMargin,
+            marginLeft: normalMargin, marginRight: normalMargin,
+            justifyContent: 'center',
         }}>
             <span title={title} style={{
-                textAlign: 'center',
+                padding: normalPadding,
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
-                fontFamily: getFontFamily(theme, 'menu'),
-                fontSize: getFontSize(theme, 'normal'),
-                color: colors(theme).text,
+                ...fontCss({ theme, fontSize: 'large' }),
+                color: colors(theme).accent,
             }}>
                 {title}
             </span>
         </View>
         <View style={{
+            minWidth: 'auto',
             flexBasis: 1,
-            flexGrow: 1,
-            flexShrink: 1,
-        }} />
+            flexGrow: 0,
+            flexShrink: 0,
+        }}>
+            <PlaneIconButton
+                theme={theme}
+                callback={close}
+                icon='close'
+            />
+        </View>
     </View>;
 }

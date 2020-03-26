@@ -1,6 +1,10 @@
 export type FontFamily =
-    | 'Georgia' | 'San Francisco' | 'Helvetica'
-    | 'Open Sans'
+    // Standard
+    | 'Georgia' | 'Helvetica'
+    // Sans-serif
+    | 'Open Sans' | 'Roboto' | 'Quicksand' | 'Raleway' | 'Lato'
+    // Serif
+    | 'Lora' | 'Marcellus' | 'PT Serif' | 'Roboto Slab' | 'Antic Slab'
     ;
 export type FontSize = number;
 export type Color = string;
@@ -8,6 +12,7 @@ export type Color = string;
 export type Palette = {
     text: Color,
     accent: Color,
+    dimmed: Color,
     highlight: Color,
     primary: Color,
     secondary: Color,
@@ -27,12 +32,13 @@ export type Palette = {
 };
 export type PaletteColor = keyof Palette;
 export type FontSizes = {
-    nano: FontSize,
-    micro: FontSize,
+    xxsmall: FontSize,
+    xsmall: FontSize,
     small: FontSize,
     normal: FontSize,
     large: FontSize,
-    macro: FontSize,
+    xlarge: FontSize,
+    xxlarge: FontSize,
     text: FontSize,
 };
 export type FontFamilies = {
@@ -53,7 +59,6 @@ export type Theme = {
     fontScale: number,
     fontFamilies: FontFamilies,
     fontSizes: FontSizes,
-    radius: number,
 };
 
 export type Themed = {
@@ -64,21 +69,12 @@ export function colors(theme: Theme): Palette {
     return theme.palettes[theme.currentPalette];
 }
 
-export function getFontSize(theme: Theme, size?: keyof FontSizes): number {
-    return size === 'text'
-        ? theme.fontSizes.text * theme.fontScale
-        : theme.fontSizes[size || 'normal'];
-}
-
-export function getFontFamily(theme: Theme, key: keyof FontFamilies): string {
-    return theme.fontFamilies[key];
-}
-
 const defaultColors: Palette = {
     text: '#000',
     primary: '#fff',
     secondary: '#eee',
     accent: '#777',
+    dimmed: '#ddd',
     highlight: '#aaf',
     shadow: '#000',
     semiTransparent: 'rgba(0, 0, 0, 0.3)',
@@ -110,27 +106,28 @@ export const defaultTheme: Theme = {
         dark: {
             ...defaultColors,
             text: '#999',
-            primary: '#000',
-            secondary: '#222',
+            primary: '#222',
+            secondary: '#000',
             accent: '#ddd',
+            dimmed: '#333',
             highlight: '#fff',
             shadow: '#333',
         },
     },
     currentPalette: 'light',
     fontFamilies: {
-        book: 'Georgia',
-        menu: 'Open Sans',
+        book: 'Lora',
+        menu: 'Lato',
     },
     fontSizes: {
-        nano: 14,
-        micro: 18,
-        small: 22,
-        normal: 26,
-        large: 30,
-        macro: 36,
-        text: 26,
+        xxsmall: 10,
+        xsmall: 14,
+        small: 18,
+        normal: 20,
+        large: 24,
+        xlarge: 30,
+        xxlarge: 36,
+        text: 24,
     },
     fontScale: 1,
-    radius: 5,
 };

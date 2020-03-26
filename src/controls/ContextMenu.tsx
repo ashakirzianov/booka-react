@@ -6,8 +6,11 @@ import {
     ContextMenuTrigger, ContextMenu as ReactContextMenu, MenuItem,
 } from 'react-contextmenu';
 
-import { Themed, colors, getFontSize } from '../core';
-import { HasChildren, menuWidth, normalPadding, normalMargin } from './common';
+import { Themed, colors } from '../core';
+import {
+    HasChildren, menuWidth, normalPadding, normalMargin,
+    fontCss,
+} from './common';
 import { OverlayPanel } from './Panel';
 import { IconName, Icon } from './Icon';
 
@@ -79,7 +82,7 @@ export function TextContextMenuItem({
             }
             <span css={{
                 margin: normalMargin,
-                fontSize: getFontSize(theme, 'micro'),
+                ...fontCss({ theme, fontSize: 'xsmall' }),
                 fontFamily: theme.fontFamilies.menu,
             }}>
                 {text}

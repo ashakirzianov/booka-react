@@ -2,8 +2,10 @@
 import React from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { Themed, getFontFamily, getFontSize, colors } from './theme';
-import { actionShadow, doublePadding } from './common';
+import { Themed, colors } from './theme';
+import {
+    actionCss, actionHoverCss, doublePadding, fontCss,
+} from './common';
 
 export function PreviewText({ text, lines, theme }: Themed & {
     text: string,
@@ -11,18 +13,16 @@ export function PreviewText({ text, lines, theme }: Themed & {
 }) {
     return <div css={{
         padding: doublePadding,
-        boxShadow: actionShadow(colors(theme).shadow),
         color: colors(theme).text,
         backgroundColor: colors(theme).primary,
-        fontSize: getFontSize(theme, 'small'),
-        fontFamily: getFontFamily(theme, 'book'),
         margin: 0,
         minHeight: 0,
         maxHeight: '100%',
         textIndent: doublePadding,
         cursor: 'pointer',
+        ...actionCss({ theme }),
         '&:hover': {
-            boxShadow: actionShadow(colors(theme).highlight),
+            ...actionHoverCss({ theme }),
         },
     }}>
         <p css={{
@@ -37,8 +37,11 @@ export function PreviewText({ text, lines, theme }: Themed & {
             minHeight: 0,
             maxHeight: '100%',
             color: colors(theme).text,
-            fontSize: getFontSize(theme, 'small'),
-            fontFamily: getFontFamily(theme, 'book'),
+            ...fontCss({
+                theme,
+                fontFamily: 'book',
+                fontSize: 'small',
+            }),
             margin: 0,
             textIndent: doublePadding,
         }}>

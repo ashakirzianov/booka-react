@@ -3,9 +3,10 @@ import React from 'react';
 import { View } from 'react-native';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { Themed, getFontSize, colors } from './theme';
+import { Themed, colors } from './theme';
 import {
-    actionShadow, buttonHeight, actionBack, normalPadding, normalMargin,
+    buttonHeight, actionBack, normalPadding, normalMargin,
+    fontCss, actionCss, actionHoverCss,
 } from './common';
 
 export function TextInput({
@@ -27,13 +28,15 @@ export function TextInput({
                 borderWidth: 0,
                 height: buttonHeight,
                 color: colors(theme).text,
-                fontSize: getFontSize(theme, 'macro'),
-                boxShadow: actionShadow(colors(theme).shadow),
+                ...fontCss({ theme, fontSize: 'xlarge' }),
+                ...actionCss({ theme }),
                 backgroundColor: actionBack(theme),
+                '&:hover': {
+                    ...actionHoverCss({ theme }),
+                },
                 '&::placeholder': {
                     color: colors(theme).accent,
-                    fontSize: getFontSize(theme, 'normal'),
-                    fontStyle: 'italic',
+                    ...fontCss({ theme, italic: true }),
                     fontWeight: 100,
                 },
                 '&:focus::placeholder': {
@@ -42,7 +45,7 @@ export function TextInput({
                 '&:focus': {
                     outline: 'none',
                     color: colors(theme).highlight,
-                    boxShadow: actionShadow(colors(theme).highlight),
+                    ...actionHoverCss({ theme, color: 'highlight' }),
                 },
             }}
             placeholder={placeholder}
