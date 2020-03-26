@@ -12,7 +12,7 @@ export function TagLabel({
     color?: PaletteColor,
 }) {
     const actualColor = colors(theme)[color ?? 'accent'];
-    const fontSize = getFontSize(theme, 'xxsmall');
+    const fontSize = getFontSize(theme, 'xsmall');
     return <div css={{
         margin: xxsmallMargin,
         paddingLeft: normalPadding, paddingRight: normalPadding,

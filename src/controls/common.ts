@@ -68,13 +68,13 @@ export const radius = 3;
 
 export const userAreaWidth = point(50);
 export const panelHeight = point(15);
-export const buttonHeight = 48;
-export const buttonWidth = 150;
+export const buttonHeight = 50;
+export const buttonWidth = 120;
 export const smallButtonHeight = 24;
 export const menuWidth = point(15);
 
 export const normalMargin = point(0.5);
-export const halfMargin = point(0.5);
+export const halfMargin = point(0.25);
 export const xxsmallMargin = point(0.1);
 export const doubleMargin = point(1);
 export const normalPadding = point(0.5);

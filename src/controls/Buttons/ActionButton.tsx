@@ -31,7 +31,7 @@ export function ActionButton({
                 fontFamily: getFontFamily(theme, 'menu'),
                 color: colors(theme).primary,
                 borderColor: colors(theme)[color],
-                boxShadow: actionShadow(colors(theme)[color]),
+                boxShadow: actionShadow(colors(theme).shadow),
                 backgroundColor: colors(theme)[color],
                 '&:hover': {
                     borderColor: colors(theme).highlight,

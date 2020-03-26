@@ -34,6 +34,7 @@ export type FontSizes = {
     normal: FontSize,
     large: FontSize,
     xlarge: FontSize,
+    xxlarge: FontSize,
     text: FontSize,
 };
 export type FontFamilies = {
@@ -124,12 +125,13 @@ export const defaultTheme: Theme = {
         menu: 'Open Sans',
     },
     fontSizes: {
-        xxsmall: 14,
-        xsmall: 18,
-        small: 22,
-        normal: 26,
-        large: 30,
-        xlarge: 36,
+        xxsmall: 10,
+        xsmall: 14,
+        small: 18,
+        normal: 20,
+        large: 24,
+        xlarge: 30,
+        xxlarge: 36,
         text: 26,
     },
     fontScale: 1,

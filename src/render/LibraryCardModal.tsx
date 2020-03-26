@@ -141,7 +141,7 @@ function ContinueRead({ card }: {
         <Label
             theme={theme}
             text='Continue reading'
-            size='xxsmall'
+            size='xsmall'
             color='accent'
         />
         <ParagraphPreview

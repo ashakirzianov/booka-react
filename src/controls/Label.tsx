@@ -14,7 +14,7 @@ export function Label({
 }) {
     return <span style={{
         color: colors(theme)[color ?? 'text'],
-        fontSize: getFontSize(theme, size ?? 'small'),
+        fontSize: getFontSize(theme, size ?? 'normal'),
         fontFamily: theme.fontFamilies.menu,
         fontStyle: italic ? 'italic' : undefined,
         fontWeight: bold ? 900 : undefined,
