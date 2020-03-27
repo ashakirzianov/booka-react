@@ -8,9 +8,9 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo256.png",
+      "src": "apple-touch-icon.png",
       "type": "image/png",
-      "sizes": "257x256"
+      "sizes": "256x256"
     },
     {
       "src": "logo512.png",
