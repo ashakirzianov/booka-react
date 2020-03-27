@@ -5,7 +5,6 @@ import {
 } from './common';
 import { Themed, colors } from './theme';
 import { defaultAnimationDuration } from './Animations';
-import { View } from 'react-native';
 
 export function Panel({ theme, title, children }: HasChildren & Themed & {
     title?: string,

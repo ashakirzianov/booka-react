@@ -1,6 +1,6 @@
 {
-  "short_name": "booka",
-  "name": "booka co-reading app",
+  "short_name": "Booqas",
+  "name": "Booqas co-reading app",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,9 +8,9 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "apple-touch-icon.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "256x256"
     },
     {
       "src": "logo512.png",
