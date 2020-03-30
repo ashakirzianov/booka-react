@@ -82,10 +82,22 @@ export function createApi(token?: AuthToken) {
             );
         },
         getCollection(name: CardCollectionName) {
-            return withInitial({ name, cards: [] }, optional(token && back.get('/collections', {
-                auth: token.token,
-                query: { name },
-            })));
+            if (name === 'uploads') {
+                return withInitial(
+                    { name, cards: [] },
+                    optional(token && lib.get('/user-uploads', {
+                        auth: token.token,
+                    })),
+                );
+            } else {
+                return withInitial(
+                    { name, cards: [] },
+                    optional(token && back.get('/collections', {
+                        auth: token.token,
+                        query: { name },
+                    })),
+                );
+            }
         },
         getSearchResults(query: string) {
             return lib.get('/search', {
