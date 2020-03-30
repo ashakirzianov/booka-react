@@ -3,7 +3,7 @@ import { map } from 'rxjs/operators';
 
 import {
     AuthToken, Bookmark, Highlight, BookFragment, LibraryCard,
-    SearchResult, CardCollections, BookPath, firstPath, CurrentPosition,
+    SearchResult, CardCollection, BookPath, firstPath, CurrentPosition, CardCollectionName,
 } from 'booka-common';
 import { PaletteName } from '../core';
 import { useUrlActions } from './urlHooks';
@@ -143,20 +143,15 @@ export function useAccount() {
     return { accountState, logout };
 }
 
-export type CollectionsState = {
-    collections: CardCollections,
-};
-export function useCollections() {
-    const { collections, addToCollection, removeFromCollection } = useDataProvider();
-    const [collectionsState, setCollectionsState] = useState<CollectionsState>({ collections: {} });
+export type CollectionsState = Loadable<CardCollection>;
+export function useCollection(name: CardCollectionName) {
+    const { collection, addToCollection, removeFromCollection } = useDataProvider();
+    const [collectionsState, setCollectionsState] = useState<CollectionsState>({ loading: true });
     useEffect(() => {
-        const sub = collections().pipe(
-            map((c): CollectionsState => ({
-                collections: c,
-            })),
-        ).subscribe(setCollectionsState);
+        const sub = collection(name)
+            .subscribe(setCollectionsState);
         return () => sub.unsubscribe();
-    }, [collections]);
+    }, [collection, name]);
 
     return {
         collectionsState,

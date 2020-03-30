@@ -1,15 +1,16 @@
 import { switchMap } from 'rxjs/operators';
 import {
-    CardCollections, LibraryCard, CardCollectionName, replaceOrAdd,
+    CardCollection, LibraryCard,
+    CardCollectionName, replaceOrAdd,
 } from 'booka-common';
 import { LocalChange, LocalChangeStore } from './localChange';
 import { Api } from './api';
 
 export function collectionsProvider(localChangeStore: LocalChangeStore, api: Api) {
     return {
-        collections() {
-            return api.getCollections().pipe(
-                switchMap(cs => localChangeStore.observe(cs, applyChange))
+        collection(name: CardCollectionName) {
+            return api.getCollection(name).pipe(
+                switchMap(c => localChangeStore.observe(c, applyChange)),
             );
         },
         addToCollection(card: LibraryCard, collection: CardCollectionName) {
@@ -27,23 +28,27 @@ export function collectionsProvider(localChangeStore: LocalChangeStore, api: Api
     };
 }
 
-function applyChange(collections: CardCollections, change: LocalChange): CardCollections {
+function applyChange(collection: CardCollection, change: LocalChange): CardCollection {
     switch (change.change) {
         case 'collection-add':
-            return {
-                ...collections,
-                [change.collection]: replaceOrAdd(
-                    collections[change.collection] ?? [],
-                    c => c.id === change.card.id,
-                    change.card,
-                ),
-            };
+            return change.collection === collection.name
+                ? {
+                    ...collection,
+                    cards: replaceOrAdd(
+                        collection.cards,
+                        c => c.id === change.card.id,
+                        change.card,
+                    ),
+                }
+                : collection;
         case 'collection-remove':
-            return {
-                ...collections,
-                [change.collection]: (collections[change.collection] ?? []).filter(c => c.id !== change.bookId),
-            };
+            return change.collection === collection.name
+                ? {
+                    ...collection,
+                    cards: collection.cards.filter(c => c.id !== change.bookId),
+                }
+                : collection;
         default:
-            return collections;
+            return collection;
     }
 }

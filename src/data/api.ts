@@ -78,12 +78,13 @@ export function createApi(token?: AuthToken) {
                     } else {
                         throw new Error(`No book for id: ${bookId}`);
                     }
-                })
+                }),
             );
         },
-        getCollections() {
-            return withInitial({}, optional(token && back.get('/collections', {
+        getCollection(name: CardCollectionName) {
+            return withInitial({ name, cards: [] }, optional(token && back.get('/collections', {
                 auth: token.token,
+                query: { name },
             })));
         },
         getSearchResults(query: string) {
@@ -91,7 +92,7 @@ export function createApi(token?: AuthToken) {
                 auth: token?.token,
                 query: { query },
             }).pipe(
-                map(r => r.values)
+                map(r => r.values),
             );
         },
         postAddBookmark(bookmark: Bookmark) {
