@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { map } from 'rxjs/operators';
 import { BookFragment, BookPath, firstPath } from 'booka-common';
 import { Loadable } from './utils';
@@ -48,4 +48,12 @@ export function usePreview(bookId: string, path: BookPath) {
     }, [data, bookId, path]);
 
     return { previewState };
+}
+
+export function useUpload() {
+    const data = useDataProvider();
+    const uploadEpub = useCallback((bookData: any, publicDomain: boolean) => {
+        return data.uploadBook(bookData, publicDomain);
+    }, [data]);
+    return { uploadEpub };
 }

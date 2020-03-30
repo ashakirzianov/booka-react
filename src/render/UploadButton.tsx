@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { useTheme } from '../application';
+import React, { useRef, useState, useCallback } from 'react';
+import { useTheme, useUpload } from '../application';
 import {
     IconButton, WithPopover, Label, View, ActionButton, CheckBox,
     regularSpace, SelectFileDialog, SelectFileDialogRef, SelectFileResult,
@@ -79,6 +79,12 @@ function SelectFilePanel({ theme, onSelect }: Themed & {
 function UploadFilePanel({ theme, fileData }: Themed & {
     fileData: SelectFileResult,
 }) {
+    const { uploadEpub } = useUpload();
+    const [isPublicDomain, setIsPublicDomain] = useState(true);
+    const uploadCallback = useCallback(
+        () => uploadEpub(fileData.data, isPublicDomain),
+        [uploadEpub, isPublicDomain, fileData],
+    );
     return <>
         <Label
             theme={theme}
@@ -90,14 +96,16 @@ function UploadFilePanel({ theme, fileData }: Themed & {
         }}>
             <CheckBox
                 theme={theme}
-                checked={false}
+                checked={isPublicDomain}
                 text='This book is in the Public Domain'
+                onChange={() => setIsPublicDomain(!isPublicDomain)}
             />
         </View>
         <ActionButton
             theme={theme}
             color='positive'
             text='Upload'
+            callback={uploadCallback}
         />
     </>;
 }
