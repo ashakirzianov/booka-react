@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { useTheme, useUpload } from '../application';
+import { useTheme, useUpload, useAccount } from '../application';
 import {
     IconButton, WithPopover, Label, View, ActionButton, CheckBox,
     regularSpace, SelectFileDialog, SelectFileDialogRef, SelectFileResult,
@@ -7,6 +7,7 @@ import {
 } from '../controls';
 import { Themed } from '../core';
 import { assertNever } from '../reader/RichText/utils';
+import { LoginOptions } from './LoginOptions';
 
 export function UploadButton() {
     const { theme } = useTheme();
@@ -32,6 +33,8 @@ export function UploadButton() {
 }
 
 type UploadState = {
+    state: 'not-signed',
+} | {
     state: 'select',
 } | {
     state: 'upload',
@@ -46,9 +49,18 @@ type UploadState = {
 };
 function UploadPanel({ theme }: Themed) {
     const { uploadEpub } = useUpload();
-    const [state, setState] = useState<UploadState>({ state: 'select' });
+    const { accountState } = useAccount();
+    const [state, setState] = useState<UploadState>(
+        accountState.state === 'signed'
+            ? { state: 'select' }
+            : { state: 'not-signed' },
+    );
 
     switch (state.state) {
+        case 'not-signed':
+            return <NotSignedPanel
+                theme={theme}
+            />;
         case 'select':
             return <SelectFilePanel
                 theme={theme}
@@ -171,6 +183,18 @@ function SuccessPanel({ theme, fileName }: Themed & {
         <Label
             theme={theme}
             text={`Successfully uploaded '${fileName}'!`}
+        />
+    </>;
+}
+
+function NotSignedPanel({ theme }: Themed) {
+    return <>
+        <Label
+            theme={theme}
+            text='Sign in to upload'
+        />
+        <LoginOptions
+            theme={theme}
         />
     </>;
 }
