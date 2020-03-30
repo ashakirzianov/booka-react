@@ -155,6 +155,17 @@ export function createApi(token?: AuthToken) {
                 query: { bookId, collection },
             }));
         },
+        uploadBook(bookData: any, publicDomain: boolean) {
+            return optional(token && lib.post('/upload', {
+                auth: token.token,
+                extra: {
+                    postData: bookData,
+                },
+                query: {
+                    publicDomain,
+                },
+            }));
+        },
     };
 }
 

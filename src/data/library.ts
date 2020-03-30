@@ -24,7 +24,7 @@ export function libraryProvider(api: Api, storage: Storage) {
                     map(book => {
                         bookCache.add(bookId, book);
                         return resolveFragment(book, path);
-                    })
+                    }),
                 ),
             );
         }
@@ -43,7 +43,7 @@ export function libraryProvider(api: Api, storage: Storage) {
                         bookCache.add(bookId, book);
                         const fragment = resolveRefId(book, refId);
                         return fragment;
-                    })
+                    }),
                 );
             }
         },
@@ -56,13 +56,13 @@ export function libraryProvider(api: Api, storage: Storage) {
                     map(card => {
                         cardCache.add(bookId, card);
                         return card;
-                    })
+                    }),
                 );
             }
         },
         textPreview(bookId: string, path: BookPath) {
             return getFragmentForPath(bookId, path).pipe(
-                map(f => fragmentPreviewForPath(f, path))
+                map(f => fragmentPreviewForPath(f, path)),
             );
         },
     };
