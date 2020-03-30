@@ -1,28 +1,34 @@
 import React from 'react';
 
 import { Themed } from '../core';
-import { Label } from './Label';
-import { actionCss } from './common';
+import { fontCss, normalMargin } from './common';
 
-export function Checkbox({
+export function CheckBox({
     checked, text, onChange, theme,
 }: Themed & {
     checked: boolean,
     text?: string,
     onChange?: () => void,
 }) {
-    return <div>
+    return <div style={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+    }}>
         <input
             type='checkbox'
             checked={checked}
             onChange={onChange}
             style={{
-                ...actionCss({ theme }),
+                border: 'none',
+                transform: 'scale(1.5)',
             }}
         />
-        {text && <Label
-            theme={theme}
-            text={text}
-        />}
+        <span style={{
+            ...fontCss({ theme, fontSize: 'small' }),
+            marginLeft: normalMargin,
+        }}>
+            {text}
+        </span>
     </div>;
 }

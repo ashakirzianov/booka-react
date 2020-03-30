@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { useTheme } from '../application';
 import {
-    IconButton, WithPopover, Label, View, ActionButton,
-    normalPadding, SelectFileDialog, SelectFileDialogRef, SelectFileResult,
+    IconButton, WithPopover, Label, View, ActionButton, CheckBox,
+    normalPadding, SelectFileDialog, SelectFileDialogRef, SelectFileResult, point, doubleMargin, megaMargin,
 } from '../controls';
 import { Themed } from '../core';
 
@@ -29,6 +29,7 @@ function UploadPanel({ theme }: Themed) {
     return <View style={{
         alignItems: 'center',
         padding: normalPadding,
+        width: point(20),
     }}>
         {
             fileData
@@ -80,8 +81,18 @@ function UploadFilePanel({ theme, fileData }: Themed & {
     return <>
         <Label
             theme={theme}
-            text={`Upload '${fileData.fileName}`}
+            text={`Upload '${fileData.fileName}'`}
         />
+        <View style={{
+            margin: doubleMargin,
+            marginLeft: megaMargin,
+        }}>
+            <CheckBox
+                theme={theme}
+                checked={false}
+                text='This book is in the Public Domain'
+            />
+        </View>
         <ActionButton
             theme={theme}
             color='positive'

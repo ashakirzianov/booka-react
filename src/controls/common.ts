@@ -73,6 +73,7 @@ export const normalMargin = point(0.5);
 export const halfMargin = point(0.25);
 export const xxsmallMargin = point(0.1);
 export const doubleMargin = point(1);
+export const megaMargin = point(3);
 export const normalPadding = point(0.5);
 export const doublePadding = point(1);
 export const megaPadding = point(3);
