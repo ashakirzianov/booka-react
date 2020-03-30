@@ -4,10 +4,11 @@ import { AccountInfo } from 'booka-common';
 import { AccountState } from '../ducks';
 import { useTheme, useAccount } from '../application';
 import {
-    WithPopover, FacebookLogin, View,
-    PictureButton, IconButton, Label, ActionButton, point, doubleSpace,
+    WithPopover, View, PictureButton, IconButton, Label,
+    ActionButton, point, doubleSpace,
 } from '../controls';
 import { Themed } from '../core';
+import { LoginOptions } from './LoginOptions';
 
 export function AccountButton() {
     const { theme } = useTheme();
@@ -37,7 +38,7 @@ function AccountButtonDumb({
                     logout={logout}
                 />
                 : ({ scheduleUpdate }) =>
-                    <SignInPanel
+                    <LoginOptions
                         theme={theme}
                         onStatusChanged={scheduleUpdate}
                     />
@@ -89,13 +90,4 @@ function AccountPanel({ account, theme, logout }: Themed & {
             callback={logout}
         />
     </View>;
-}
-
-function SignInPanel({ theme, onStatusChanged }: Themed & {
-    onStatusChanged?: () => void,
-}) {
-    return <FacebookLogin
-        theme={theme}
-        onStatusChange={onStatusChanged}
-    />;
 }
