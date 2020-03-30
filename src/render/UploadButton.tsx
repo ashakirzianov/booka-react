@@ -1,8 +1,8 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useTheme } from '../application';
 import {
     IconButton, WithPopover, Label, View, ActionButton,
-    normalPadding, SelectFileDialog, SelectFileDialogRef,
+    normalPadding, SelectFileDialog, SelectFileDialogRef, SelectFileResult,
 } from '../controls';
 import { Themed } from '../core';
 
@@ -23,19 +23,39 @@ export function UploadButton() {
     </WithPopover>;
 }
 
-export function UploadPanel({ theme }: Themed) {
-    const dialogRef = useRef<SelectFileDialogRef>();
+function UploadPanel({ theme }: Themed) {
+    const [fileData, setFileData] = useState<SelectFileResult | undefined>(undefined);
+
     return <View style={{
         alignItems: 'center',
         padding: normalPadding,
     }}>
+        {
+            fileData
+                ? <UploadFilePanel
+                    theme={theme}
+                    fileData={fileData}
+                />
+                : <SelectFilePanel
+                    theme={theme}
+                    onSelect={setFileData}
+                />
+        }
+
+    </View>;
+}
+
+function SelectFilePanel({ theme, onSelect }: Themed & {
+    onSelect: (fileData: SelectFileResult) => void,
+}) {
+    const dialogRef = useRef<SelectFileDialogRef>();
+
+    return <>
         <SelectFileDialog
             accept='application/epub+zip'
             dataKey='book'
             refCallback={r => dialogRef.current = r}
-            onFilesSelected={async data => {
-                return undefined;
-            }}
+            onFilesSelected={onSelect}
         />
         <Label
             theme={theme}
@@ -51,5 +71,21 @@ export function UploadPanel({ theme }: Themed) {
                 }
             }}
         />
-    </View>;
+    </>;
+}
+
+function UploadFilePanel({ theme, fileData }: Themed & {
+    fileData: SelectFileResult,
+}) {
+    return <>
+        <Label
+            theme={theme}
+            text={`Upload '${fileData.fileName}`}
+        />
+        <ActionButton
+            theme={theme}
+            color='positive'
+            text='Upload'
+        />
+    </>;
 }

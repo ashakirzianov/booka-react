@@ -1,6 +1,9 @@
 import React from 'react';
 
-export type Data = { data: any };
+export type SelectFileResult = {
+    data: any,
+    fileName: string,
+};
 export type SelectFileDialogRef = {
     show: () => void,
 };
@@ -10,7 +13,7 @@ export function SelectFileDialog({
     accept?: string,
     dataKey: string,
     refCallback: (ref: SelectFileDialogRef) => void,
-    onFilesSelected: (data: Data) => void,
+    onFilesSelected: (data: SelectFileResult) => void,
 }) {
     return <input
         accept={accept}
@@ -22,7 +25,10 @@ export function SelectFileDialog({
             if (file) {
                 const data = new FormData();
                 data.append(dataKey, file);
-                onFilesSelected({ data });
+                onFilesSelected({
+                    data,
+                    fileName: file.name,
+                });
             }
         }}
     />;
