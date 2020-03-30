@@ -7,7 +7,7 @@ import {
 import { Themed } from './theme';
 import { Icon } from './Icon';
 import {
-    point, buttonStyle, fontCss, normalMargin, buttonHeight,
+    point, buttonStyle, fontCss, regularSpace, buttonHeight,
 } from './common';
 
 type SocialButtonProps = Themed & {
@@ -76,7 +76,7 @@ function ActualButton({ callback, user, theme }: ActualButtonProps) {
             height: buttonHeight,
         }}>
             <View style={{
-                marginLeft: normalMargin,
+                marginLeft: regularSpace,
                 flexGrow: 0,
                 flexShrink: 0,
             }}>
@@ -92,7 +92,7 @@ function ActualButton({ callback, user, theme }: ActualButtonProps) {
             }}>
                 <span style={{
                     ...fontCss({ theme, fontSize: 'xsmall' }),
-                    margin: normalMargin,
+                    margin: regularSpace,
                     textAlign: 'center',
                     whiteSpace: 'pre',
                 }}>

@@ -10,7 +10,7 @@ import {
 } from '../application';
 import {
     Modal, ActivityIndicator, ActionButton, TagLabel,
-    normalMargin, Label, normalPadding,
+    regularSpace, Label,
 } from '../controls';
 import { Themed, PaletteColor } from '../core';
 import { LibraryCardTile } from './LibraryCardTile';
@@ -71,7 +71,7 @@ function TagList({ card, theme }: Themed & {
     return <View style={{
         flexDirection: 'row',
         flexWrap: 'wrap',
-        margin: normalMargin,
+        margin: regularSpace,
     }}>
         {
             data.map(({ color, text }, idx) => {
@@ -110,7 +110,7 @@ function ReadButtons({ card }: {
         flexGrow: 1,
         flexShrink: 1,
         flexWrap: 'wrap',
-        marginBottom: normalMargin,
+        marginBottom: regularSpace,
         justifyContent: 'flex-end',
     }}>
         <ReadingListButton card={card} />
@@ -136,7 +136,7 @@ function ContinueRead({ card }: {
         return null;
     }
     return <View style={{
-        padding: normalPadding,
+        padding: regularSpace,
     }}>
         <Label
             theme={theme}
@@ -214,7 +214,7 @@ function Layout({
     Tags: ReactNode,
 }) {
     return <View style={{
-        padding: normalPadding,
+        padding: regularSpace,
         paddingTop: 0,
     }}>
         <View style={{
@@ -233,7 +233,7 @@ function Layout({
                 flexShrink: 1,
             }}>
                 <View style={{
-                    margin: normalMargin,
+                    margin: regularSpace,
                 }}>
                     {Title}
                     {Author}

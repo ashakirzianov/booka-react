@@ -4,7 +4,7 @@ import React from 'react';
 import { jsx } from '@emotion/core';
 import { Themed, colors } from './theme';
 import {
-    actionCss, actionHoverCss, doublePadding, fontCss,
+    actionCss, actionHoverCss, doubleSpace, fontCss,
 } from './common';
 
 export function PreviewText({ text, lines, theme }: Themed & {
@@ -12,13 +12,13 @@ export function PreviewText({ text, lines, theme }: Themed & {
     lines: number,
 }) {
     return <div css={{
-        padding: doublePadding,
+        padding: doubleSpace,
         color: colors(theme).text,
         backgroundColor: colors(theme).primary,
         margin: 0,
         minHeight: 0,
         maxHeight: '100%',
-        textIndent: doublePadding,
+        textIndent: doubleSpace,
         cursor: 'pointer',
         ...actionCss({ theme }),
         '&:hover': {
@@ -43,7 +43,7 @@ export function PreviewText({ text, lines, theme }: Themed & {
                 fontSize: 'small',
             }),
             margin: 0,
-            textIndent: doublePadding,
+            textIndent: doubleSpace,
         }}>
             {text}
         </p>

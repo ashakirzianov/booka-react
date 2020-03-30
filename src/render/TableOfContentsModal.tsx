@@ -4,7 +4,7 @@ import {
 } from 'booka-common';
 
 import { Themed } from '../core';
-import { Modal, MenuList, MenuListItem, doubleMargin, View } from '../controls';
+import { Modal, MenuList, MenuListItem, doubleSpace, View } from '../controls';
 import { BookPathLink } from './Navigation';
 
 export function TableOfContentsModal({
@@ -26,7 +26,7 @@ export function TableOfContentsModal({
         open={open}
     >
         <View style={{
-            marginTop: doubleMargin,
+            marginTop: doubleSpace,
         }}>
             <MenuList theme={theme}>
                 {toc.items.map(item => {

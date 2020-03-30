@@ -2,7 +2,7 @@
 import { jsx } from '@emotion/core';
 import { Themed, colors, PaletteColor } from '../theme';
 import {
-    buttonHeight, buttonWidth, normalMargin, buttonStyle,
+    buttonHeight, buttonWidth, regularSpace, buttonStyle,
     fontCss, actionCss, actionHoverCss,
 } from '../common';
 import { View } from 'react-native';
@@ -16,7 +16,7 @@ export function ActionButton({
 }) {
     color = color ?? 'accent';
     return <View style={{
-        margin: normalMargin,
+        margin: regularSpace,
     }}>
         <button
             onClick={callback}

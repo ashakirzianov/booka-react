@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     HasChildren, percent, panelShadow, userAreaWidth,
-    normalMargin, panelHeight, Size, radius, fontCss, doubleMargin,
+    regularSpace, panelHeight, Size, radius, fontCss, doubleSpace,
 } from './common';
 import { Themed, colors } from './theme';
 import { defaultAnimationDuration } from './Animations';
@@ -20,14 +20,14 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
         justifyContent: 'flex-start',
         width: '100%',
         alignSelf: 'center',
-        marginBottom: doubleMargin,
+        marginBottom: doubleSpace,
     }}>
         {
             title ?
                 <div style={{
                     display: 'flex',
                     alignSelf: 'flex-start',
-                    margin: normalMargin,
+                    margin: regularSpace,
                 }}>
                     <span style={{
                         ...fontCss({ theme }),
@@ -44,7 +44,7 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
             alignItems: 'center',
             justifyContent: 'center',
             minHeight: panelHeight,
-            marginLeft: normalMargin, marginRight: normalMargin,
+            marginLeft: regularSpace, marginRight: regularSpace,
         }}>
             {children}
         </div>

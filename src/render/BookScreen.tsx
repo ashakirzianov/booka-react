@@ -16,8 +16,8 @@ import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
 import { BookmarkButton } from './BookmarkButton';
 import {
-    FixedPanel, View, IconButton, Label, normalPadding, userAreaWidth,
-    FullScreenActivityIndicator, Screen, megaPadding, doublePadding,
+    FixedPanel, View, IconButton, Label, regularSpace, userAreaWidth,
+    FullScreenActivityIndicator, Screen, megaSpace, doubleSpace,
     Clickable,
 } from '../controls';
 import { ShowTocLink, FeedLink } from './Navigation';
@@ -119,8 +119,8 @@ function BookReady({
             <Clickable callback={toggleControls}>
                 <View style={{
                     maxWidth: userAreaWidth,
-                    paddingTop: megaPadding, paddingBottom: megaPadding,
-                    paddingLeft: doublePadding, paddingRight: doublePadding,
+                    paddingTop: megaSpace, paddingBottom: megaSpace,
+                    paddingLeft: doubleSpace, paddingRight: doubleSpace,
                 }}>
                     <BookView
                         bookId={bookId}
@@ -198,7 +198,7 @@ function Footer({
             alignItems: 'center',
             justifyContent: 'space-between',
             backgroundColor: colors(theme).secondary,
-            padding: normalPadding,
+            padding: regularSpace,
             shadowColor: colors(theme).secondary,
             shadowRadius: 10,
         }}>

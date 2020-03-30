@@ -8,8 +8,7 @@ import {
 
 import { Themed, colors } from '../core';
 import {
-    HasChildren, menuWidth, normalPadding, normalMargin,
-    fontCss,
+    HasChildren, menuWidth, regularSpace, fontCss,
 } from './common';
 import { OverlayPanel } from './Panel';
 import { IconName, Icon } from './Icon';
@@ -45,7 +44,7 @@ export function ContextMenuItem({ callback, theme, children }: HasChildren & The
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-            padding: normalPadding,
+            padding: regularSpace,
         }}>
             {children}
         </div>
@@ -70,18 +69,18 @@ export function TextContextMenuItem({
                 backgroundColor: colors(theme).highlight,
                 color: colors(theme).primary,
             },
-            padding: normalPadding,
+            padding: regularSpace,
         }}>
             {
                 !icon ? null :
                     <Icon
                         theme={theme}
                         name={icon}
-                        margin={normalMargin}
+                        margin={regularSpace}
                     />
             }
             <span css={{
-                margin: normalMargin,
+                margin: regularSpace,
                 ...fontCss({ theme, fontSize: 'xsmall' }),
                 fontFamily: theme.fontFamilies.menu,
             }}>

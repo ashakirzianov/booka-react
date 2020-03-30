@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Themed } from '../core';
-import { fontCss, normalMargin } from './common';
+import { fontCss, regularSpace } from './common';
 
 export function CheckBox({
     checked, text, onChange, theme,
@@ -26,7 +26,7 @@ export function CheckBox({
         />
         <span style={{
             ...fontCss({ theme, fontSize: 'small' }),
-            marginLeft: normalMargin,
+            marginLeft: regularSpace,
         }}>
             {text}
         </span>
