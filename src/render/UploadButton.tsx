@@ -1,11 +1,12 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState } from 'react';
 import { useTheme, useUpload } from '../application';
 import {
     IconButton, WithPopover, Label, View, ActionButton, CheckBox,
     regularSpace, SelectFileDialog, SelectFileDialogRef, SelectFileResult,
-    point, doubleSpace, megaSpace,
+    point, doubleSpace, megaSpace, ActivityIndicator,
 } from '../controls';
 import { Themed } from '../core';
+import { assertNever } from '../reader/RichText/utils';
 
 export function UploadButton() {
     const { theme } = useTheme();
@@ -13,9 +14,15 @@ export function UploadButton() {
     return <WithPopover
         theme={theme}
         popoverPlacement='bottom'
-        body={<UploadPanel
-            theme={theme}
-        />}
+        body={<View style={{
+            alignItems: 'center',
+            padding: regularSpace,
+            width: point(20),
+        }}>
+            <UploadPanel
+                theme={theme}
+            />
+        </View>}
     >
         <IconButton
             theme={theme}
@@ -24,27 +31,64 @@ export function UploadButton() {
     </WithPopover>;
 }
 
+type UploadState = {
+    state: 'select',
+} | {
+    state: 'upload',
+    fileName: string,
+    data: any,
+} | {
+    state: 'uploading',
+    fileName: string,
+} | {
+    state: 'success',
+    fileName: string,
+};
 function UploadPanel({ theme }: Themed) {
-    const [fileData, setFileData] = useState<SelectFileResult | undefined>(undefined);
+    const { uploadEpub } = useUpload();
+    const [state, setState] = useState<UploadState>({ state: 'select' });
 
-    return <View style={{
-        alignItems: 'center',
-        padding: regularSpace,
-        width: point(20),
-    }}>
-        {
-            fileData
-                ? <UploadFilePanel
-                    theme={theme}
-                    fileData={fileData}
-                />
-                : <SelectFilePanel
-                    theme={theme}
-                    onSelect={setFileData}
-                />
-        }
-
-    </View>;
+    switch (state.state) {
+        case 'select':
+            return <SelectFilePanel
+                theme={theme}
+                onSelect={res => setState({
+                    state: 'upload',
+                    fileName: res.fileName,
+                    data: res.data,
+                })}
+            />;
+        case 'upload':
+            return <UploadFilePanel
+                theme={theme}
+                fileData={state}
+                upload={(data, pd) => {
+                    uploadEpub(data, pd).subscribe(() => {
+                        setState({
+                            ...state,
+                            state: 'success',
+                        });
+                    });
+                    setState({
+                        ...state,
+                        state: 'uploading',
+                    });
+                }}
+            />;
+        case 'uploading':
+            return <FileUploadingPanel
+                theme={theme}
+                fileName={state.fileName}
+            />;
+        case 'success':
+            return <SuccessPanel
+                theme={theme}
+                fileName={state.fileName}
+            />;
+        default:
+            assertNever(state);
+            return null;
+    }
 }
 
 function SelectFilePanel({ theme, onSelect }: Themed & {
@@ -76,15 +120,11 @@ function SelectFilePanel({ theme, onSelect }: Themed & {
     </>;
 }
 
-function UploadFilePanel({ theme, fileData }: Themed & {
+function UploadFilePanel({ theme, fileData, upload }: Themed & {
     fileData: SelectFileResult,
+    upload: (bookData: any, publicDomain: boolean) => void,
 }) {
-    const { uploadEpub } = useUpload();
     const [isPublicDomain, setIsPublicDomain] = useState(true);
-    const uploadCallback = useCallback(
-        () => uploadEpub(fileData.data, isPublicDomain),
-        [uploadEpub, isPublicDomain, fileData],
-    );
     return <>
         <Label
             theme={theme}
@@ -105,7 +145,32 @@ function UploadFilePanel({ theme, fileData }: Themed & {
             theme={theme}
             color='positive'
             text='Upload'
-            callback={uploadCallback}
+            callback={() => upload(fileData.data, isPublicDomain)}
+        />
+    </>;
+}
+
+function FileUploadingPanel({ theme, fileName }: Themed & {
+    fileName: string,
+}) {
+    return <>
+        <Label
+            theme={theme}
+            text={`Uploading '${fileName}'`}
+        />
+        <ActivityIndicator
+            theme={theme}
+        />
+    </>;
+}
+
+function SuccessPanel({ theme, fileName }: Themed & {
+    fileName: string,
+}) {
+    return <>
+        <Label
+            theme={theme}
+            text={`Successfully uploaded '${fileName}'!`}
         />
     </>;
 }
