@@ -13,6 +13,13 @@ export function ReadingList() {
     />;
 }
 
+export function UploadedList() {
+    return <CardCollection
+        collection='uploads'
+        title='Uploads'
+    />;
+}
+
 function CardCollection({ collection, title }: {
     collection: CardCollectionName,
     title: string,
