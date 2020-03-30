@@ -17,25 +17,24 @@ export function WithPopover({
     open?: boolean,
 }) {
     const [isOpen, setIsOpen] = React.useState(open || false);
-    let isInBody = false;
 
     return <Manager>
         <Reference>
             {({ ref }) =>
                 <>
+                    <FadeIn visible={isOpen}>
+                        <div style={{
+                            position: 'fixed',
+                            left: 0, right: 0, top: 0, bottom: 0,
+                            background: 'rgba(0,0,0,0.1)',
+                        }}
+                            onClick={() => setIsOpen(false)}
+                        />
+                    </FadeIn>
                     <div
                         ref={ref}
                         style={{ display: 'flex' }}
-                        onMouseEnter={() => {
-                            setIsOpen(true);
-                        }}
-                        onMouseLeave={() => {
-                            setTimeout(() => {
-                                if (!isInBody) {
-                                    setIsOpen(false);
-                                }
-                            });
-                        }}
+                        onClick={() => setIsOpen(!isOpen)}
                     >
                         {children}
                     </div>
@@ -54,13 +53,6 @@ export function WithPopover({
                             zIndex: 100,
                         }}
                             data-placement={placement}
-                            onMouseOver={() => {
-                                isInBody = true;
-                            }}
-                            onMouseLeave={() => {
-                                isInBody = false;
-                                setIsOpen(false);
-                            }}
                         >
                             {/* TODO: add arrows */}
                             <OverlayPanel theme={theme}>
