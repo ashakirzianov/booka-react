@@ -13,5 +13,6 @@ export * from './Modal';
 export * from './Panel';
 export * from './Popover';
 export * from './PreviewText';
+export * from './SelectFileDialog';
 export * from './TagLabel';
 export * from './TextInput';
