@@ -5,6 +5,7 @@ import {
     findReference, BookFragment, defaultFragmentLength,
     tocForBook, firstPath,
     fragmentPreviewForPath,
+    previewForPath,
 } from 'booka-common';
 import { Api } from './api';
 import { Storage } from './storage';
@@ -61,9 +62,13 @@ export function libraryProvider(api: Api, storage: Storage) {
             }
         },
         textPreview(bookId: string, path: BookPath) {
-            return getFragmentForPath(bookId, path).pipe(
-                map(f => fragmentPreviewForPath(f, path)),
-            );
+            const cached = bookCache.existing(bookId);
+            if (cached) {
+                const preview = previewForPath(cached, path);
+                return of(preview);
+            } else {
+                return api.getPreview(bookId, path);
+            }
         },
         popularBooks() {
             return api.getPopularBooks();

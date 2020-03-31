@@ -142,15 +142,16 @@ function ContinueRead({ card }: {
     );
     const continueReadPosition = mostRecentPosition(currentPositions);
     const continuePath = continueReadPosition?.path;
-    if (!continuePath) {
-        return null;
-    }
+
     return <View style={{
         padding: regularSpace,
     }}>
         <Label
             theme={theme}
-            text='Continue reading'
+            text={continuePath
+                ? 'Continue reading'
+                : 'Book preview'
+            }
             fontSize='xsmall'
             color='accent'
         />

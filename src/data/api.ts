@@ -50,6 +50,11 @@ export function createApi(token?: AuthToken) {
                 map(r => r.book),
             );
         },
+        getPreview(bookId: string, path: BookPath) {
+            return lib.get('/preview', {
+                query: { bookId, node: path.node },
+            });
+        },
         getBookmarks(bookId: string) {
             return withInitial([], optional(token && back.get('/bookmarks', {
                 auth: token.token,
