@@ -85,7 +85,7 @@ export function createApi(token?: AuthToken) {
             if (name === 'uploads') {
                 return withInitial(
                     { name, cards: [] },
-                    optional(token && lib.get('/user-uploads', {
+                    optional(token && lib.get('/uploads', {
                         auth: token.token,
                     })),
                 );
@@ -156,7 +156,7 @@ export function createApi(token?: AuthToken) {
             }));
         },
         uploadBook(bookData: any, publicDomain: boolean) {
-            return optional(token && lib.post('/upload', {
+            return optional(token && lib.post('/uploads', {
                 auth: token.token,
                 extra: {
                     postData: bookData,
