@@ -43,6 +43,12 @@ export function TableOfContentsModal({
                             left={item.title}
                             right={item.page}
                             ident={item.level}
+                            italic={item.kind !== 'chapter'}
+                            icon={
+                                item.kind === 'bookmark'
+                                    ? 'bookmark-empty'
+                                    : undefined
+                            }
                         />
                     </BookPathLink>;
                 },
@@ -71,13 +77,14 @@ function buildDisplayItems({
 }): DisplayItem[] {
     const maxLevel = toc.items.reduce((max, i) => Math.max(max, i.level), 0);
     const result: DisplayItem[] = [];
+    let lastLevel = 0;
     for (const tocItem of toc.items) {
         for (const bm of [...bookmarks]) {
             if (pathLessThan(bm.path, tocItem.path)) {
                 result.push({
                     kind: 'bookmark',
-                    title: '** bookmark',
-                    level: 0,
+                    title: 'your bookmark',
+                    level: lastLevel + 1,
                     path: bm.path,
                 });
                 bookmarks = bookmarks.filter(b => b !== bm);
@@ -90,6 +97,7 @@ function buildDisplayItems({
             level: maxLevel - tocItem.level,
             path: tocItem.path,
         });
+        lastLevel = tocItem.level;
     }
 
     return result;
