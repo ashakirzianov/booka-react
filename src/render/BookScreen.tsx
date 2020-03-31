@@ -71,7 +71,7 @@ function BookReady({
     );
 
     const { updateBookPath, updateQuoteRange, updateToc } = useUrlActions();
-    const { addCurrentPosition } = usePositions();
+    const { positions, addCurrentPosition } = usePositions();
     const [needToScroll, setNeedToScroll] = useState(true);
     const updatePath = useCallback((p: BookPath | undefined) => {
         if (needToScroll) {
@@ -108,6 +108,7 @@ function BookReady({
             theme={theme}
             toc={toc}
             bookmarks={bookmarks}
+            currents={positions.filter(p => p.bookId === bookId)}
             id={bookId}
             closeToc={closeToc}
             open={showToc}
