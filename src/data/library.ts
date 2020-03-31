@@ -65,6 +65,9 @@ export function libraryProvider(api: Api, storage: Storage) {
                 map(f => fragmentPreviewForPath(f, path)),
             );
         },
+        popularBooks() {
+            return api.getPopularBooks();
+        },
     };
 }
 

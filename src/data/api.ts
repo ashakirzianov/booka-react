@@ -107,6 +107,9 @@ export function createApi(token?: AuthToken) {
                 map(r => r.values),
             );
         },
+        getPopularBooks() {
+            return lib.get('/popular', {});
+        },
         postAddBookmark(bookmark: Bookmark) {
             return optional(token && back.post('/bookmarks', {
                 auth: token.token,
