@@ -75,6 +75,9 @@ export const regularSpace = point(0.5);
 export const doubleSpace = point(1);
 export const megaSpace = point(3);
 
+export const bookCoverHeight = 180;
+export const bookCoverWidth = 120;
+
 export const buttonStyle: CSSProperties = {
     cursor: 'pointer',
     border: 'none',

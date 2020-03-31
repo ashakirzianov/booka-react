@@ -239,6 +239,7 @@ function Layout({
             <View style={{
                 flexGrow: 0,
                 minWidth: 'auto',
+                marginRight: regularSpace,
             }}>
                 {Cover}
             </View>

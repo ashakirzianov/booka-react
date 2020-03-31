@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { usePopularBooks, useTheme } from '../application';
-import { GridList, Panel, ActivityIndicator } from '../controls';
-import { LibraryCardTile } from './LibraryCardTile';
+import { Panel, ActivityIndicator } from '../controls';
+import { BookList } from './BookList';
 
 export function PopularBooks() {
     const { theme } = useTheme();
@@ -17,17 +17,10 @@ export function PopularBooks() {
         theme={theme}
         title='Popular'
     >
-        <GridList theme={theme}>
-            {
-                popularBooksState.map(
-                    (card, idx) =>
-                        <LibraryCardTile
-                            theme={theme}
-                            key={idx}
-                            card={card}
-                        />,
-                )
-            }
-        </GridList>
+        <BookList
+            theme={theme}
+            books={popularBooksState}
+            lines={3}
+        />
     </Panel>;
 }

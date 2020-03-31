@@ -7,7 +7,7 @@ import {
     Themed, colors, Color,
 } from './theme';
 import {
-    Style, actionCss, actionHoverCss, regularSpace,
+    Style, actionCss, actionHoverCss, regularSpace, bookCoverHeight, bookCoverWidth,
 } from './common';
 
 export function BookTile({
@@ -24,7 +24,7 @@ export function BookTile({
         flex: 1,
         flexDirection: 'column',
         flexGrow: 0,
-        width: 160,
+        width: bookCoverWidth,
         margin: regularSpace,
         alignItems: 'center',
         color: colors(theme).text,
@@ -81,8 +81,8 @@ function BookImageCover({ theme, imageUrl, title, showShadow }: Themed & {
     showShadow: boolean,
 }) {
     return <div style={{
-        height: 180,
-        width: 120,
+        height: bookCoverHeight,
+        width: bookCoverWidth,
     }}>
         <img
             src={imageUrl}
@@ -109,8 +109,8 @@ function BookEmptyCover({ title, showShadow, theme }: Themed & {
 }) {
     const { back, text } = colorForString(title);
     return <div css={{
-        height: 160,
-        width: 110,
+        height: bookCoverHeight,
+        width: bookCoverWidth,
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         textAlign: 'center',
@@ -141,8 +141,8 @@ function calcFontSize(title: string) {
         .sort((a, b) => b.length - a.length);
     const maxLength = words[0]?.length ?? 0;
     const count = words.length;
-    const width = 110 / maxLength;
-    const height = 160 / 2 / count;
+    const width = bookCoverWidth / maxLength;
+    const height = bookCoverHeight / 2 / count;
     const size = Math.min(width, height);
     return `${size}px`;
 }

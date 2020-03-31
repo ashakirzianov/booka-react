@@ -56,6 +56,7 @@ function SearchResults({ query, state, theme }: Themed & {
                 : <BookList
                     theme={theme}
                     books={state.results.map(r => r.desc)}
+                    lines={2}
                 />
         }
     </Panel>;
