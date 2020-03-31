@@ -78,20 +78,33 @@ export function createApi(token?: AuthToken) {
                     } else {
                         throw new Error(`No book for id: ${bookId}`);
                     }
-                })
+                }),
             );
         },
-        getCollections() {
-            return withInitial({}, optional(token && back.get('/collections', {
-                auth: token.token,
-            })));
+        getCollection(name: CardCollectionName) {
+            if (name === 'uploads') {
+                return withInitial(
+                    { name, cards: [] },
+                    optional(token && lib.get('/uploads', {
+                        auth: token.token,
+                    })),
+                );
+            } else {
+                return withInitial(
+                    { name, cards: [] },
+                    optional(token && back.get('/collections', {
+                        auth: token.token,
+                        query: { name },
+                    })),
+                );
+            }
         },
         getSearchResults(query: string) {
             return lib.get('/search', {
                 auth: token?.token,
                 query: { query },
             }).pipe(
-                map(r => r.values)
+                map(r => r.values),
             );
         },
         postAddBookmark(bookmark: Bookmark) {
@@ -140,6 +153,17 @@ export function createApi(token?: AuthToken) {
             return optional(token && back.delete('/collections', {
                 auth: token.token,
                 query: { bookId, collection },
+            }));
+        },
+        uploadBook(bookData: any, publicDomain: boolean) {
+            return optional(token && lib.post('/uploads', {
+                auth: token.token,
+                extra: {
+                    postData: bookData,
+                },
+                query: {
+                    publicDomain,
+                },
             }));
         },
     };

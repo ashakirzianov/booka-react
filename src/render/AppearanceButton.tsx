@@ -3,7 +3,7 @@ import React from 'react';
 import { useTheme } from '../application';
 import {
     WithPopover, View, IconButton,
-    TextButton, Separator, point, doubleMargin, CircleButton,
+    TextButton, Separator, point, doubleSpace, CircleButton,
 } from '../controls';
 import { PaletteName, Themed, FontSizes } from '../core';
 
@@ -28,7 +28,7 @@ function ThemePicker({ theme, setPalette, incrementScale }: Themed & {
 }) {
     return <View style={{
         width: point(14),
-        margin: doubleMargin,
+        margin: doubleSpace,
     }}>
         <FontScale theme={theme} incrementScale={incrementScale} />
         <Separator />

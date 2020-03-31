@@ -69,14 +69,11 @@ export const buttonWidth = 120;
 export const smallButtonHeight = 24;
 export const menuWidth = point(15);
 
-export const normalMargin = point(0.5);
-export const halfMargin = point(0.25);
-export const xxsmallMargin = point(0.1);
-export const doubleMargin = point(1);
-export const normalPadding = point(0.5);
-export const doublePadding = point(1);
-export const megaPadding = point(3);
-export const halfPadding = point(0.25);
+export const xsmallSpace = point(0.1);
+export const smallSpace = point(0.25);
+export const regularSpace = point(0.5);
+export const doubleSpace = point(1);
+export const megaSpace = point(3);
 
 export const buttonStyle: CSSProperties = {
     cursor: 'pointer',

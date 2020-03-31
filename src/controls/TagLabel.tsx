@@ -3,7 +3,7 @@ import { jsx } from '@emotion/core';
 import {
     Themed, colors, PaletteColor,
 } from './theme';
-import { normalPadding, xxsmallMargin, fontCss } from './common';
+import { regularSpace, xsmallSpace, fontCss } from './common';
 
 export function TagLabel({
     text, theme, color,
@@ -13,8 +13,8 @@ export function TagLabel({
 }) {
     const actualColor = colors(theme)[color ?? 'accent'];
     return <div css={{
-        margin: xxsmallMargin,
-        paddingLeft: normalPadding, paddingRight: normalPadding,
+        margin: xsmallSpace,
+        paddingLeft: regularSpace, paddingRight: regularSpace,
         borderStyle: 'solid',
         borderWidth: 2,
         borderRadius: theme.fontSizes.xsmall,

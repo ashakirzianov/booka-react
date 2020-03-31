@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Screen } from '../controls';
-import { ReadingList } from './Collections';
+import { ReadingList, UploadedList } from './Collections';
 import { LibraryCardModal } from './LibraryCardModal';
 import { TopBar } from './TopBar';
 import { CurrentBook } from './CurrentBook';
@@ -18,6 +18,7 @@ export function FeedScreen({ show, query }: {
         <TopBar query={query} />
         <CurrentBook />
         <RecentBooks />
+        <UploadedList />
         <ReadingList />
     </Screen>;
 }

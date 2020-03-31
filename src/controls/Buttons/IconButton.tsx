@@ -4,8 +4,7 @@ import { jsx } from '@emotion/core';
 import { Themed, colors } from '../theme';
 import { IconName, Icon } from '../Icon';
 import {
-    buttonHeight, normalMargin,
-    buttonStyle, smallButtonHeight, normalPadding,
+    buttonHeight, regularSpace, buttonStyle, smallButtonHeight,
     actionCss, actionHoverCss, actionBack,
 } from '../common';
 
@@ -26,7 +25,7 @@ export function IconButton({
         <div css={{
             display: 'flex',
             pointerEvents: 'auto',
-            margin: normalMargin,
+            margin: regularSpace,
             borderWidth: 0,
             height: buttonHeight,
             width: buttonHeight,
@@ -63,7 +62,7 @@ export function PlaneIconButton({
             // border: '1px solid red',
             display: 'flex',
             pointerEvents: 'auto',
-            padding: normalPadding,
+            padding: regularSpace,
             height: smallButtonHeight,
             width: smallButtonHeight,
             color: colors(theme).accent,

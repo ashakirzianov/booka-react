@@ -2,7 +2,7 @@
 import { jsx } from '@emotion/core';
 import { Themed } from '../theme';
 import {
-    buttonHeight, actionCss, actionHoverCss, normalMargin, buttonStyle,
+    buttonHeight, actionCss, actionHoverCss, regularSpace, buttonStyle,
 } from '../common';
 
 export function PictureButton({
@@ -21,7 +21,7 @@ export function PictureButton({
             css={{
                 display: 'flex',
                 pointerEvents: 'auto',
-                margin: normalMargin,
+                margin: regularSpace,
                 justifyContent: 'center',
                 alignItems: 'center',
                 height: buttonHeight,

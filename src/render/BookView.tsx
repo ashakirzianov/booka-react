@@ -11,7 +11,7 @@ import { useCopy } from '../application';
 import { Themed, colors, Theme } from '../core';
 import { config } from '../config';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
-import { View, BorderButton, normalMargin, colorForHighlightGroup } from '../controls';
+import { View, BorderButton, regularSpace, colorForHighlightGroup } from '../controls';
 import { BookPathLink } from './Navigation';
 
 export function BookView({
@@ -105,7 +105,7 @@ function AnchorButton({
     } else {
         return <View style={{
             flexDirection: 'row',
-            margin: normalMargin,
+            margin: regularSpace,
             justifyContent: 'center',
         }}>
             <BookPathLink bookId={bookId} path={anchor.path}>

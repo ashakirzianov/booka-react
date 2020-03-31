@@ -1,8 +1,8 @@
 import React from 'react';
 import { LibraryCard, CardCollectionName } from 'booka-common';
 
-import { Panel } from '../controls';
-import { useTheme, useCollections } from '../application';
+import { Panel, ActivityIndicator } from '../controls';
+import { useTheme, useCollection } from '../application';
 import { Themed } from '../core';
 import { BookList } from './BookList';
 
@@ -13,20 +13,27 @@ export function ReadingList() {
     />;
 }
 
+export function UploadedList() {
+    return <CardCollection
+        collection='uploads'
+        title='Uploads'
+    />;
+}
+
 function CardCollection({ collection, title }: {
     collection: CardCollectionName,
     title: string,
 }) {
     const { theme } = useTheme();
+    const { collectionsState } = useCollection(collection);
 
-    const { collectionsState } = useCollections();
-    const readingList = collectionsState.collections[collection];
-
-    return <CardCollectionView
-        theme={theme}
-        displayName={title}
-        cards={readingList}
-    />;
+    return collectionsState.loading
+        ? <ActivityIndicator theme={theme} />
+        : <CardCollectionView
+            theme={theme}
+            displayName={title}
+            cards={collectionsState.cards}
+        />;
 }
 
 function CardCollectionView({ theme, cards, displayName }: Themed & {

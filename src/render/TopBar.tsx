@@ -12,6 +12,7 @@ import { Themed } from '../core';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
 import { BookList } from './BookList';
+import { UploadButton } from './UploadButton';
 
 export function TopBar({ query }: {
     query: string | undefined,
@@ -29,6 +30,7 @@ export function TopBar({ query }: {
             onChange={querySearch}
         />}
         Buttons={<>
+            <UploadButton />
             <AppearanceButton />
             <AccountButton />
         </>}

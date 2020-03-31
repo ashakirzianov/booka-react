@@ -7,7 +7,8 @@ function prodConfig() {
     };
 }
 
-const useLocalServices = process.env.REACT_APP_LOCAL === 'all';
+const useLocalLib = process.env.REACT_APP_LOCAL === 'all' || process.env.REACT_APP_LOCAL === 'lib';
+const useLocalBack = process.env.REACT_APP_LOCAL === 'all' || process.env.REACT_APP_LOCAL === 'back';
 function debugConfig(): AppConfig {
     const prod = prodConfig();
     return {
@@ -15,10 +16,10 @@ function debugConfig(): AppConfig {
         frontUrl: window && window.location && window.location.hostname
             ? `https://${window.location.hostname}:3000`
             : prod.frontUrl,
-        backUrl: useLocalServices
+        backUrl: useLocalBack
             ? 'https://localhost:3042'
             : prod.backUrl,
-        libUrl: useLocalServices
+        libUrl: useLocalLib
             ? 'http://localhost:3141'
             : prod.libUrl,
     };

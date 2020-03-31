@@ -4,7 +4,7 @@ import React from 'react';
 import { jsx } from '@emotion/core';
 
 import {
-    HasChildren, point, normalPadding, doublePadding, fontCss,
+    HasChildren, point, regularSpace, doubleSpace, fontCss,
 } from './common';
 import { Themed, colors } from './theme';
 
@@ -44,8 +44,8 @@ export function MenuListItem({ theme, left, right, ident }: Themed & {
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'space-between',
-            paddingTop: normalPadding, paddingBottom: normalPadding,
-            paddingLeft: doublePadding, paddingRight: doublePadding,
+            paddingTop: regularSpace, paddingBottom: regularSpace,
+            paddingLeft: doubleSpace, paddingRight: doubleSpace,
             color: colors(theme).text,
             ...fontCss({ theme, fontSize: 'xsmall' }),
             fontFamily: theme.fontFamilies.menu,

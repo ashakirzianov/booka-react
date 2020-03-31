@@ -9,6 +9,7 @@ import { createApi } from './api';
 import { postLocalChange } from './post';
 import { createStorage } from './storage';
 import { libraryProvider } from './library';
+import { uploadProvider } from './upload';
 
 export type DataProvider = ReturnType<typeof createDataProvider>;
 
@@ -30,5 +31,6 @@ export function createDataProvider(info: UserInfo | undefined) {
         ...collectionsProvider(localChangeStore, api),
         ...searchProvider(api),
         ...libraryProvider(api, storage.sub('library')),
+        ...uploadProvider(api),
     };
 }

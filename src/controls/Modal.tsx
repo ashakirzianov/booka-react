@@ -4,7 +4,7 @@ import { Transition } from 'react-transition-group';
 
 import { Themed, colors } from './theme';
 import {
-    HasChildren, normalMargin, normalPadding, fontCss,
+    HasChildren, regularSpace, fontCss,
 } from './common';
 import { defaultAnimationDuration } from './Animations';
 import { OverlayPanel } from './Panel';
@@ -76,11 +76,11 @@ function ModalTitle({ theme, title, close }: Themed & {
             flexBasis: 'auto',
             flexGrow: 1,
             flexShrink: 1,
-            marginLeft: normalMargin, marginRight: normalMargin,
+            marginLeft: regularSpace, marginRight: regularSpace,
             justifyContent: 'center',
         }}>
             <span title={title} style={{
-                padding: normalPadding,
+                padding: regularSpace,
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',

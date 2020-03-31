@@ -7,7 +7,7 @@ import {
     Themed, colors, Color,
 } from './theme';
 import {
-    Style, actionCss, actionHoverCss, normalMargin,
+    Style, actionCss, actionHoverCss, regularSpace,
 } from './common';
 
 export function BookTile({
@@ -25,7 +25,7 @@ export function BookTile({
         flexDirection: 'column',
         flexGrow: 0,
         width: 160,
-        margin: normalMargin,
+        margin: regularSpace,
         alignItems: 'center',
         color: colors(theme).text,
         fontFamily: theme.fontFamilies.book,

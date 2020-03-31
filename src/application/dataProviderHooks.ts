@@ -3,7 +3,7 @@ import {
     PropsWithChildren, createElement,
 } from 'react';
 import { createDataProvider } from '../data';
-import { useAccount } from './dataHooks';
+import { useAccount } from './accountHooks';
 
 const DataProviderContext = createContext(createDataProvider(undefined));
 
