@@ -15,7 +15,7 @@ export function PopularBooks() {
 
     return <Panel
         theme={theme}
-        title='Recent'
+        title='Popular'
     >
         <GridList theme={theme}>
             {

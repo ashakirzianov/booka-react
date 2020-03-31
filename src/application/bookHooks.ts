@@ -58,7 +58,9 @@ export function usePopularBooks() {
 
     useEffect(() => {
         const sub = data.popularBooks().pipe(
-            map((cards): PopularBooksState => cards),
+            map((cards): PopularBooksState => {
+                return cards;
+            }),
         ).subscribe(setPopularBooksState);
         return () => sub.unsubscribe();
     }, [data]);
