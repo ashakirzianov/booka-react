@@ -2,7 +2,7 @@ import React, { useCallback, ReactNode } from 'react';
 import { View } from 'react-native';
 
 import {
-    LibraryCard, BookPath, firstPath, filterUndefined,
+    LibraryCard, BookPath, firstPath, filterUndefined, pageForPosition,
 } from 'booka-common';
 import {
     useTheme, useLibraryCard,
@@ -59,14 +59,20 @@ function LibraryCardModalImpl({ bookId }: {
                     Read={<ReadButtons card={card} />}
                     Continue={<ContinueRead card={card} />}
                     Tags={<TagList theme={theme} card={card} />}
-                    Length={<View>
+                    Length={<View style={{
+                        flexDirection: 'row',
+                        padding: regularSpace,
+                    }}>
                         <Icon
                             theme={theme}
                             name='pages'
+                            color='accent'
                         />
                         <Label
                             theme={theme}
-                            text={`${card.length} pages`}
+                            text={`${pageForPosition(card.length)} pages`}
+                            fontSize='xsmall'
+                            color='accent'
                         />
                     </View>}
                 />
@@ -253,8 +259,8 @@ function Layout({
                     {Title}
                     {Author}
                 </View>
-                {Length}
                 {Tags}
+                {Length}
                 {Read}
             </View>
         </View>
