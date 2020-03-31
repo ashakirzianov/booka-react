@@ -9,6 +9,8 @@ import {
     FaCircle, FaSignInAlt, FaFacebookSquare,
     FaQuestion, FaBookmark, FaRegBookmark, FaHighlighter, FaUnderline,
     FaRegTrashAlt, FaPlus,
+    FaSafari, FaChrome, FaFirefox, FaEdge, FaInternetExplorer,
+    FaMobile, FaDesktop,
 } from 'react-icons/fa';
 import { PaletteColor, Themed, colors } from './theme';
 import { Size } from './common';
@@ -20,6 +22,8 @@ export type IconName =
     | 'bookmark-empty' | 'bookmark-solid'
     | 'highlight' | 'underline'
     | 'remove'
+    | 'safari' | 'chrome' | 'firefox' | 'edge' | 'ie'
+    | 'mobile' | 'desktop'
     ;
 
 export type IconProps = Themed & {
@@ -84,6 +88,20 @@ function iconClassForName(name: IconName) {
             return FaUnderline;
         case 'remove':
             return FaRegTrashAlt;
+        case 'safari':
+            return FaSafari;
+        case 'chrome':
+            return FaChrome;
+        case 'firefox':
+            return FaFirefox;
+        case 'edge':
+            return FaEdge;
+        case 'ie':
+            return FaInternetExplorer;
+        case 'mobile':
+            return FaMobile;
+        case 'desktop':
+            return FaDesktop;
         default:
             assertNever(name);
             return FaQuestion;

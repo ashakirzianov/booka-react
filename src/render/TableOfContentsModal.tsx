@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {
     TableOfContents, pathToString, Bookmark, BookPath,
-    CurrentPosition, comparePaths,
+    CurrentPosition, comparePaths, EntitySource, sourceToString,
 } from 'booka-common';
 
 import { Themed } from '../core';
-import { Modal, MenuList, MenuListItem, doubleSpace, View } from '../controls';
+import { Modal, MenuList, MenuListItem, doubleSpace, View, IconName } from '../controls';
 import { BookPathLink } from './Navigation';
 
 export function TableOfContentsModal({
@@ -46,11 +46,7 @@ export function TableOfContentsModal({
                             right={item.page}
                             ident={item.level}
                             italic={item.kind !== 'chapter'}
-                            icon={
-                                item.kind === 'bookmark'
-                                    ? 'bookmark-empty'
-                                    : undefined
-                            }
+                            icon={item.icon}
                         />
                     </BookPathLink>;
                 },
@@ -70,6 +66,7 @@ type DisplayItem = {
     page?: string,
     level: number,
     path: BookPath,
+    icon?: IconName,
 };
 function buildDisplayItems({
     toc, bookmarks, currents,
@@ -91,12 +88,14 @@ function buildDisplayItems({
         title: 'your bookmark',
         level: 0,
         path: bm.path,
+        icon: 'bookmark-empty',
     }));
     const fromCurrents = currents.map<DisplayItem>(cur => ({
         kind: 'current',
-        title: `currently at ${cur.source}`,
+        title: `currently at ${sourceToString(cur.source)}`,
         level: 0,
         path: cur.path,
+        icon: iconForSource(cur.source),
     }));
     const items = [...fromToc, ...fromBookmarks, ...fromCurrents]
         .sort((a, b) => comparePaths(a.path, b.path));
@@ -110,4 +109,23 @@ function buildDisplayItems({
     }
 
     return items;
+}
+
+function iconForSource(source: EntitySource): IconName {
+    switch (source.kind) {
+        case 'safari':
+            return 'safari';
+        case 'chrome':
+            return 'chrome';
+        case 'firefox':
+            return 'firefox';
+        case 'edge':
+            return 'edge';
+        case 'ie':
+            return 'ie';
+        default:
+            return source.mobile
+                ? 'mobile'
+                : 'desktop';
+    }
 }
