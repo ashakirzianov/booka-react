@@ -3,9 +3,7 @@ import { map } from 'rxjs/operators';
 import {
     Book, BookPath, fragmentForPath, LibraryCard,
     findReference, BookFragment, defaultFragmentLength,
-    tocForBook, firstPath,
-    fragmentPreviewForPath,
-    previewForPath,
+    tocForBook, firstPath, previewForPath,
 } from 'booka-common';
 import { Api } from './api';
 import { Storage } from './storage';

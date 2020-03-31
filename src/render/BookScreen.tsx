@@ -1,17 +1,18 @@
 import React, { useState, useCallback } from 'react';
 
 import {
-    positionForPath, BookPath,
+    positionForPath, BookPath, pageForPosition,
     BookFragment, BookRange, TableOfContents,
 } from 'booka-common';
 
 import {
-    useTheme, useBook, useHighlights, useUrlActions, usePositions, useBookmarks,
+    useTheme, useBook, useHighlights, useUrlActions,
+    usePositions, useBookmarks,
 } from '../application';
 
 import { Themed, colors } from '../core';
 import { BookView } from './BookView';
-import { TableOfContentsModal, pageForPosition } from './TableOfContentsModal';
+import { TableOfContentsModal } from './TableOfContentsModal';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
 import { BookmarkButton } from './BookmarkButton';
