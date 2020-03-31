@@ -53,7 +53,9 @@ export function createApi(token?: AuthToken) {
         getPreview(bookId: string, path: BookPath) {
             return lib.get('/preview', {
                 query: { bookId, node: path.node },
-            });
+            }).pipe(
+                map(r => r.preview),
+            );
         },
         getBookmarks(bookId: string) {
             return withInitial([], optional(token && back.get('/bookmarks', {
