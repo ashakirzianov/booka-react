@@ -4,16 +4,16 @@ import {
 } from 'booka-common';
 import { LocalChange, LocalChangeStore } from './localChange';
 import { Api } from './api';
+import { config } from '../config';
 
-// TODO: implement
-const source = 'not-implemented';
+const source = config().source;
 export function currentPositionsProvider(localChangeStore: LocalChangeStore, api: Api) {
     return {
         currentPositions() {
             return api.getCurrentPositions().pipe(
                 switchMap(ps =>
-                    localChangeStore.observe(ps, applyChange)
-                )
+                    localChangeStore.observe(ps, applyChange),
+                ),
             );
         },
         addCurrentPosition({ path, bookId }: {
