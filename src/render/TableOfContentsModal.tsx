@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
-    TableOfContents, pathToString, Bookmark, pathLessThan, BookPath, CurrentPosition, comparePaths,
+    TableOfContents, pathToString, Bookmark, BookPath,
+    CurrentPosition, comparePaths,
 } from 'booka-common';
 
 import { Themed } from '../core';
