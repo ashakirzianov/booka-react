@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-    TableOfContents, pathToString,
+    TableOfContents, pathToString, Bookmark, pathLessThan, BookPath,
 } from 'booka-common';
 
 import { Themed } from '../core';
@@ -8,9 +8,10 @@ import { Modal, MenuList, MenuListItem, doubleSpace, View } from '../controls';
 import { BookPathLink } from './Navigation';
 
 export function TableOfContentsModal({
-    theme, toc, id, closeToc, open,
+    theme, toc, id, closeToc, open, bookmarks,
 }: Themed & {
     toc: TableOfContents | undefined,
+    bookmarks: Bookmark[],
     id: string,
     open: boolean,
     closeToc: () => void,
@@ -18,7 +19,9 @@ export function TableOfContentsModal({
     if (!open || !toc) {
         return null;
     }
-    const maxLevel = toc.items.reduce((max, i) => Math.max(max, i.level), 0);
+
+    const items = buildDisplayItems({ toc, bookmarks });
+
     return <Modal
         theme={theme}
         title='Table of Contents'
@@ -29,7 +32,7 @@ export function TableOfContentsModal({
             marginTop: doubleSpace,
         }}>
             <MenuList theme={theme}>
-                {toc.items.map(item => {
+                {items.map(item => {
                     return <BookPathLink
                         key={pathToString(item.path)}
                         bookId={id}
@@ -38,8 +41,8 @@ export function TableOfContentsModal({
                         <MenuListItem
                             theme={theme}
                             left={item.title}
-                            right={`${pageForPosition(item.position)}`}
-                            ident={maxLevel - item.level}
+                            right={item.page}
+                            ident={item.level}
                         />
                     </BookPathLink>;
                 },
@@ -51,4 +54,43 @@ export function TableOfContentsModal({
 
 export function pageForPosition(position: number): number {
     return Math.floor(position / 1500) + 1;
+}
+
+type DisplayItem = {
+    kind: 'chapter' | 'bookmark' | 'current',
+    title: string,
+    page?: string,
+    level: number,
+    path: BookPath,
+};
+function buildDisplayItems({
+    toc, bookmarks,
+}: {
+    toc: TableOfContents,
+    bookmarks: Bookmark[],
+}): DisplayItem[] {
+    const maxLevel = toc.items.reduce((max, i) => Math.max(max, i.level), 0);
+    const result: DisplayItem[] = [];
+    for (const tocItem of toc.items) {
+        for (const bm of [...bookmarks]) {
+            if (pathLessThan(bm.path, tocItem.path)) {
+                result.push({
+                    kind: 'bookmark',
+                    title: '** bookmark',
+                    level: 0,
+                    path: bm.path,
+                });
+                bookmarks = bookmarks.filter(b => b !== bm);
+            }
+        }
+        result.push({
+            kind: 'chapter',
+            title: tocItem.title,
+            page: `${pageForPosition(tocItem.position)}`,
+            level: maxLevel - tocItem.level,
+            path: tocItem.path,
+        });
+    }
+
+    return result;
 }

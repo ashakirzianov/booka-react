@@ -6,7 +6,7 @@ import {
 } from 'booka-common';
 
 import {
-    useTheme, useBook, useHighlights, useUrlActions, usePositions,
+    useTheme, useBook, useHighlights, useUrlActions, usePositions, useBookmarks,
 } from '../application';
 
 import { Themed, colors } from '../core';
@@ -61,8 +61,8 @@ function BookReady({
     toc: TableOfContents | undefined,
     showToc: boolean,
 }) {
-
     const { highlights } = useHighlights(bookId);
+    const { bookmarks } = useBookmarks(bookId);
 
     const [controlsVisible, setControlsVisible] = useState(true);
     const toggleControls = useCallback(
@@ -107,6 +107,7 @@ function BookReady({
         <TableOfContentsModal
             theme={theme}
             toc={toc}
+            bookmarks={bookmarks}
             id={bookId}
             closeToc={closeToc}
             open={showToc}
