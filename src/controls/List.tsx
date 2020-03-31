@@ -4,19 +4,26 @@ import React from 'react';
 import { jsx } from '@emotion/core';
 
 import {
-    HasChildren, point, regularSpace, doubleSpace, fontCss,
+    HasChildren, point, regularSpace, doubleSpace, fontCss, Size,
 } from './common';
 import { Themed, colors } from './theme';
 import { IconName, Icon } from './Icon';
 
-export function GridList({ theme, children }: Themed & HasChildren) {
+export function GridList({
+    theme, children, maxHeight,
+}: Themed & HasChildren & {
+    maxHeight?: Size,
+}) {
     return <div style={{
         display: 'flex',
         flexGrow: 1,
         flexShrink: 1,
-        flexFlow: 'row nowrap',
+        flexFlow: maxHeight
+            ? 'column wrap'
+            : 'row nowrap',
         overflow: 'scroll',
         justifyContent: 'flex-start',
+        maxHeight,
     }}>
         {children}
     </div>;
