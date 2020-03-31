@@ -7,6 +7,7 @@ import { TopBar } from './TopBar';
 import { CurrentBook } from './CurrentBook';
 import { RecentBooks } from './RecentBooks';
 import { useTheme } from '../application';
+import { PopularBooks } from './PopularBooks';
 
 export function FeedScreen({ show, query }: {
     query: string | undefined,
@@ -20,5 +21,6 @@ export function FeedScreen({ show, query }: {
         <RecentBooks />
         <UploadedList />
         <ReadingList />
+        <PopularBooks />
     </Screen>;
 }
