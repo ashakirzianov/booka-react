@@ -1,9 +1,12 @@
+import { entitySource } from './platform';
+
 function prodConfig() {
     return {
         frontUrl: 'https://www.booqas.com',
         backUrl: 'https://reader-back.herokuapp.com',
         libUrl: 'https://booka-lib.herokuapp.com',
         facebook: { clientId: '555297378441276' },
+        source: entitySource(),
     };
 }
 
