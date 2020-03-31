@@ -10,7 +10,7 @@ import {
 } from '../application';
 import {
     Modal, ActivityIndicator, ActionButton, TagLabel,
-    regularSpace, Label,
+    regularSpace, Label, Icon,
 } from '../controls';
 import { Themed, PaletteColor } from '../core';
 import { LibraryCardTile } from './LibraryCardTile';
@@ -59,6 +59,16 @@ function LibraryCardModalImpl({ bookId }: {
                     Read={<ReadButtons card={card} />}
                     Continue={<ContinueRead card={card} />}
                     Tags={<TagList theme={theme} card={card} />}
+                    Length={<View>
+                        <Icon
+                            theme={theme}
+                            name='pages'
+                        />
+                        <Label
+                            theme={theme}
+                            text={`${card.length} pages`}
+                        />
+                    </View>}
                 />
         }
     </Modal>;
@@ -206,11 +216,12 @@ function BookPathButton({ text, bookId, path }: {
 }
 
 function Layout({
-    Cover, Title, Author, Read, Tags, Continue,
+    Cover, Title, Author, Read, Tags, Continue, Length,
 }: {
     Cover: ReactNode,
     Title: ReactNode,
     Author: ReactNode,
+    Length: ReactNode,
     Read: ReactNode,
     Continue: ReactNode,
     Tags: ReactNode,
@@ -240,6 +251,7 @@ function Layout({
                     {Title}
                     {Author}
                 </View>
+                {Length}
                 {Tags}
                 {Read}
             </View>

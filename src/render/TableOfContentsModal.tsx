@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
     TableOfContents, pathToString, Bookmark, BookPath,
     CurrentPosition, comparePaths, EntitySource, sourceToString,
+    pageForPosition,
 } from 'booka-common';
 
 import { Themed } from '../core';
@@ -54,10 +55,6 @@ export function TableOfContentsModal({
             </MenuList>
         </View>
     </Modal>;
-}
-
-export function pageForPosition(position: number): number {
-    return Math.floor(position / 1500) + 1;
 }
 
 type DisplayItem = {

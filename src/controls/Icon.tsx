@@ -11,6 +11,7 @@ import {
     FaRegTrashAlt, FaPlus,
     FaSafari, FaChrome, FaFirefox, FaEdge, FaInternetExplorer,
     FaMobile, FaDesktop,
+    FaFile,
 } from 'react-icons/fa';
 import { PaletteColor, Themed, colors } from './theme';
 import { Size } from './common';
@@ -24,6 +25,7 @@ export type IconName =
     | 'remove'
     | 'safari' | 'chrome' | 'firefox' | 'edge' | 'ie'
     | 'mobile' | 'desktop'
+    | 'pages'
     ;
 
 export type IconProps = Themed & {
@@ -102,6 +104,8 @@ function iconClassForName(name: IconName) {
             return FaMobile;
         case 'desktop':
             return FaDesktop;
+        case 'pages':
+            return FaFile;
         default:
             assertNever(name);
             return FaQuestion;
