@@ -46,6 +46,9 @@ type UploadState = {
 } | {
     state: 'success',
     fileName: string,
+} | {
+    state: 'error',
+    fileName: string,
 };
 function UploadPanel({ theme }: Themed) {
     const { uploadEpub } = useUpload();
@@ -75,15 +78,20 @@ function UploadPanel({ theme }: Themed) {
                 theme={theme}
                 fileData={state}
                 upload={(data, pd) => {
-                    uploadEpub(data, pd).subscribe(() => {
-                        setState({
-                            ...state,
-                            state: 'success',
+                    uploadEpub(data, pd)
+                        .subscribe({
+                            next: () => setState({
+                                state: 'success',
+                                fileName: state.fileName,
+                            }),
+                            error: () => setState({
+                                state: 'error',
+                                fileName: state.fileName,
+                            }),
                         });
-                    });
                     setState({
-                        ...state,
                         state: 'uploading',
+                        fileName: state.fileName,
                     });
                 }}
             />;
@@ -94,6 +102,11 @@ function UploadPanel({ theme }: Themed) {
             />;
         case 'success':
             return <SuccessPanel
+                theme={theme}
+                fileName={state.fileName}
+            />;
+        case 'error':
+            return <ErrorPanel
                 theme={theme}
                 fileName={state.fileName}
             />;
@@ -183,6 +196,17 @@ function SuccessPanel({ theme, fileName }: Themed & {
         <Label
             theme={theme}
             text={`Successfully uploaded '${fileName}'!`}
+        />
+    </>;
+}
+
+function ErrorPanel({ theme, fileName }: Themed & {
+    fileName: string,
+}) {
+    return <>
+        <Label
+            theme={theme}
+            text={`Error uploading '${fileName}'!`}
         />
     </>;
 }
