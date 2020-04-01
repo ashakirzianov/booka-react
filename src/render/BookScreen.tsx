@@ -65,7 +65,7 @@ function BookReady({
     toc: TableOfContents | undefined,
     showToc: boolean,
 }) {
-    const { highlights } = useHighlights(bookId);
+    const highlights = useHighlights(bookId);
     const { bookmarks } = useBookmarks(bookId);
 
     const [controlsVisible, setControlsVisible] = useState(true);

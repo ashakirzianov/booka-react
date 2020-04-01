@@ -5,7 +5,7 @@ import { sameArrays } from '../utils';
 
 export type HighlightsState = Highlight[];
 export function useHighlights(bookId: string, token?: AuthToken) {
-    const { highlightsForId, addHighlight, removeHighlight, updateHighlightGroup } = useDataProvider();
+    const { highlightsForId } = useDataProvider();
     const [highlights, setHighlights] = useState<HighlightsState>([]);
     useEffect(() => {
         const sub = highlightsForId(bookId).subscribe(hs => {
@@ -15,10 +15,10 @@ export function useHighlights(bookId: string, token?: AuthToken) {
         });
         return () => sub.unsubscribe();
     }, [highlightsForId, bookId]);
-    return {
-        highlights,
-        addHighlight,
-        removeHighlight,
-        updateHighlightGroup,
-    };
+    return highlights;
+}
+
+export function useHighlightsActions() {
+    const { addHighlight, removeHighlight, updateHighlightGroup } = useDataProvider();
+    return { addHighlight, removeHighlight, updateHighlightGroup };
 }

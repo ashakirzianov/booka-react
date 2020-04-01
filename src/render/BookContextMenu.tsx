@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Highlight, BookRange, HighlightGroup } from 'booka-common';
 import { BookSelection } from '../reader';
-import { useHighlights, useTheme } from '../application';
+import { useTheme, useHighlightsActions } from '../application';
 import {
     ContextMenu, ContextMenuItem, TextContextMenuItem,
     CircleButton, colorForHighlightGroup, SimpleButton,
@@ -36,7 +36,7 @@ export function BookContextMenu({
     const { theme } = useTheme();
     const {
         addHighlight, removeHighlight, updateHighlightGroup,
-    } = useHighlights(bookId);
+    } = useHighlightsActions();
 
     return <ContextMenu
         theme={theme}

@@ -7,7 +7,7 @@ import {
 import {
     BookFragmentComp, BookSelection, ColorizedRange,
 } from '../reader';
-import { useOnCopy, useOnClick } from '../application';
+import { useOnCopy } from '../application';
 import { Themed, colors, Theme } from '../core';
 import { config } from '../config';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
