@@ -36,13 +36,12 @@
     "typescript": "3.8.3"
   },
   "scripts": {
-    "start": "tsc server && node dist/server.js",
+    "start": "node --experimental-modules server.mjs",
     "debug": "HTTPS=true react-scripts start",
     "debug-local": "HTTPS=true REACT_APP_LOCAL=all react-scripts start",
     "debug-local-lib": "HTTPS=true REACT_APP_LOCAL=lib react-scripts start",
     "debug-local-back": "HTTPS=true REACT_APP_LOCAL=back react-scripts start",
     "build": "react-scripts build",
-    "build:server": "tsc --project tsconfig.server.json",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

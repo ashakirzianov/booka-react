@@ -38,6 +38,7 @@
         "multiline",
         "paren",
         "parens",
+        "promisify",
         "quotemark",
         "rbls",
         "royalblue",
