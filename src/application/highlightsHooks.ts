@@ -10,11 +10,14 @@ export function useHighlights(bookId: string, token?: AuthToken) {
     useEffect(() => {
         const sub = highlightsForId(bookId).subscribe(hs => {
             if (!sameArrays(highlights, hs)) {
+                console.log('------');
+                console.log(highlights);
+                console.log(hs);
                 setHighlights(hs);
             }
         });
         return () => sub.unsubscribe();
-    }, [highlightsForId, bookId]);
+    }, [highlights, highlightsForId, bookId]);
     return highlights;
 }
 
