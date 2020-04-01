@@ -85,7 +85,7 @@ function BookReady({
         if (p) {
             addCurrentPosition({ path: p, bookId });
         }
-    }, 300),
+    }, 1000),
         [setNeedToScroll, updateBookPath, addCurrentPosition, needToScroll, bookId],
     );
     const closeToc = useCallback(
