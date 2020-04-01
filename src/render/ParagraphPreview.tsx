@@ -22,7 +22,7 @@ export function ParagraphPreview({ bookId, path, theme }: Themed & {
             <PreviewText
                 theme={theme}
                 lines={10}
-                text={previewState.preview || 'preview is not available'}
+                text={previewState.preview?.trimStart() || 'preview is not available'}
             />
         </BookPathLink>;
     }

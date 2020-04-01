@@ -1,17 +1,18 @@
 import React, { useState, useCallback } from 'react';
 
 import {
-    positionForPath, BookPath,
+    positionForPath, BookPath, pageForPosition,
     BookFragment, BookRange, TableOfContents,
 } from 'booka-common';
 
 import {
-    useTheme, useBook, useHighlights, useUrlActions, usePositions,
+    useTheme, useBook, useHighlights, useUrlActions,
+    usePositions, useBookmarks,
 } from '../application';
 
 import { Themed, colors } from '../core';
 import { BookView } from './BookView';
-import { TableOfContentsModal, pageForPosition } from './TableOfContentsModal';
+import { TableOfContentsModal } from './TableOfContentsModal';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
 import { BookmarkButton } from './BookmarkButton';
@@ -61,8 +62,8 @@ function BookReady({
     toc: TableOfContents | undefined,
     showToc: boolean,
 }) {
-
     const { highlights } = useHighlights(bookId);
+    const { bookmarks } = useBookmarks(bookId);
 
     const [controlsVisible, setControlsVisible] = useState(true);
     const toggleControls = useCallback(
@@ -71,7 +72,7 @@ function BookReady({
     );
 
     const { updateBookPath, updateQuoteRange, updateToc } = useUrlActions();
-    const { addCurrentPosition } = usePositions();
+    const { positions, addCurrentPosition } = usePositions();
     const [needToScroll, setNeedToScroll] = useState(true);
     const updatePath = useCallback((p: BookPath | undefined) => {
         if (needToScroll) {
@@ -107,6 +108,8 @@ function BookReady({
         <TableOfContentsModal
             theme={theme}
             toc={toc}
+            bookmarks={bookmarks}
+            currents={positions.filter(p => p.bookId === bookId)}
             id={bookId}
             closeToc={closeToc}
             open={showToc}

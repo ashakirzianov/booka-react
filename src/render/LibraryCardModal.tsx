@@ -2,7 +2,7 @@ import React, { useCallback, ReactNode } from 'react';
 import { View } from 'react-native';
 
 import {
-    LibraryCard, BookPath, firstPath, filterUndefined,
+    LibraryCard, BookPath, firstPath, filterUndefined, pageForPosition,
 } from 'booka-common';
 import {
     useTheme, useLibraryCard,
@@ -10,7 +10,7 @@ import {
 } from '../application';
 import {
     Modal, ActivityIndicator, ActionButton, TagLabel,
-    regularSpace, Label,
+    regularSpace, Label, Icon,
 } from '../controls';
 import { Themed, PaletteColor } from '../core';
 import { LibraryCardTile } from './LibraryCardTile';
@@ -59,6 +59,22 @@ function LibraryCardModalImpl({ bookId }: {
                     Read={<ReadButtons card={card} />}
                     Continue={<ContinueRead card={card} />}
                     Tags={<TagList theme={theme} card={card} />}
+                    Length={<View style={{
+                        flexDirection: 'row',
+                        padding: regularSpace,
+                    }}>
+                        <Icon
+                            theme={theme}
+                            name='pages'
+                            color='accent'
+                        />
+                        <Label
+                            theme={theme}
+                            text={`${pageForPosition(card.length)} pages`}
+                            fontSize='xsmall'
+                            color='accent'
+                        />
+                    </View>}
                 />
         }
     </Modal>;
@@ -132,15 +148,16 @@ function ContinueRead({ card }: {
     );
     const continueReadPosition = mostRecentPosition(currentPositions);
     const continuePath = continueReadPosition?.path;
-    if (!continuePath) {
-        return null;
-    }
+
     return <View style={{
         padding: regularSpace,
     }}>
         <Label
             theme={theme}
-            text='Continue reading'
+            text={continuePath
+                ? 'Continue reading'
+                : 'Book preview'
+            }
             fontSize='xsmall'
             color='accent'
         />
@@ -206,11 +223,12 @@ function BookPathButton({ text, bookId, path }: {
 }
 
 function Layout({
-    Cover, Title, Author, Read, Tags, Continue,
+    Cover, Title, Author, Read, Tags, Continue, Length,
 }: {
     Cover: ReactNode,
     Title: ReactNode,
     Author: ReactNode,
+    Length: ReactNode,
     Read: ReactNode,
     Continue: ReactNode,
     Tags: ReactNode,
@@ -227,6 +245,7 @@ function Layout({
             <View style={{
                 flexGrow: 0,
                 minWidth: 'auto',
+                marginRight: regularSpace,
             }}>
                 {Cover}
             </View>
@@ -241,6 +260,7 @@ function Layout({
                     {Author}
                 </View>
                 {Tags}
+                {Length}
                 {Read}
             </View>
         </View>

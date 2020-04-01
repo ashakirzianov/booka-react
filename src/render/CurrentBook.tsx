@@ -4,7 +4,7 @@ import { CurrentPosition } from 'booka-common';
 import {
     usePositions, useTheme,
 } from '../application';
-import { Panel } from '../controls';
+import { Panel, regularSpace } from '../controls';
 import { Themed } from '../core';
 import { ParagraphPreview } from './ParagraphPreview';
 import { BookIdTile } from './LibraryCardTile';
@@ -61,6 +61,7 @@ function Layout({ Tile, Preview }: {
             maxHeight: '100%',
             width: '100%',
             minHeight: 0,
+            marginLeft: regularSpace,
         }}>
             {Preview}
         </View>

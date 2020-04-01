@@ -50,6 +50,13 @@ export function createApi(token?: AuthToken) {
                 map(r => r.book),
             );
         },
+        getPreview(bookId: string, path: BookPath) {
+            return lib.get('/preview', {
+                query: { bookId, node: path.node },
+            }).pipe(
+                map(r => r.preview),
+            );
+        },
         getBookmarks(bookId: string) {
             return withInitial([], optional(token && back.get('/bookmarks', {
                 auth: token.token,
@@ -106,6 +113,9 @@ export function createApi(token?: AuthToken) {
             }).pipe(
                 map(r => r.values),
             );
+        },
+        getPopularBooks() {
+            return lib.get('/popular', {});
         },
         postAddBookmark(bookmark: Bookmark) {
             return optional(token && back.post('/bookmarks', {
