@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { map } from 'rxjs/operators';
-import { BookFragment, BookPath, firstPath, LibraryCard } from 'booka-common';
+import { BookFragment, BookPath, firstPath, LibraryCard, pathLessThan } from 'booka-common';
 import { Loadable } from './utils';
 import { useDataProvider } from './dataProviderHooks';
 
 export type BookState = Loadable<{
+    bookId: string,
     fragment: BookFragment,
 }>;
 export function useBook({ bookId, path, refId }: {
@@ -15,20 +16,36 @@ export function useBook({ bookId, path, refId }: {
     const data = useDataProvider();
     const [bookState, setBookState] = useState<BookState>({ loading: true });
     useEffect(() => {
-        const observable = refId
-            ? data.fragmentForRef(bookId, refId)
-            : data.fragmentForPath(bookId, path || firstPath());
-        const sub = observable
-            .pipe(
-                map((fragment): BookState => ({
-                    fragment,
-                })),
-            )
-            .subscribe(setBookState);
-        return () => sub.unsubscribe();
-    }, [data, bookId, path, refId]);
+        const actualPath = path || firstPath();
+        const needUpdateFragment = bookState.loading
+            || refId || bookState.bookId !== bookId
+            || !isInFragment(bookState.fragment, actualPath)
+            ;
+        if (needUpdateFragment) {
+            const observable = refId
+                ? data.fragmentForRef(bookId, refId)
+                : data.fragmentForPath(bookId, actualPath);
+            const sub = observable
+                .pipe(
+                    map((fragment): BookState => ({
+                        fragment,
+                        bookId,
+                    })),
+                )
+                .subscribe(setBookState);
+            return () => sub.unsubscribe();
+        }
+    }, [data, bookId, path, refId, bookState]);
 
     return { bookState };
+}
+
+// TODO: move to 'common'
+function isInFragment(fragment: BookFragment, path: BookPath) {
+    return !pathLessThan(path, fragment.current.path)
+        && (
+            fragment.next === undefined || pathLessThan(path, fragment.next.path)
+        );
 }
 
 export type TextPreviewState = Loadable<{

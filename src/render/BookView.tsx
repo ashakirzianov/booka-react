@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, memo } from 'react';
+import React, { useRef, useCallback, memo, useMemo } from 'react';
 import {
     BookFragment, BookPath, BookRange,
     Highlight, BookAnchor, doesRangeOverlap, rangeToString,
@@ -41,9 +41,12 @@ export const BookView = memo(function BookViewF({
         setQuoteRange(selection.current && selection.current.range);
     }, [bookId, setQuoteRange]));
 
-    const colorization = quoteColorization(quoteRange, theme)
-        .concat(highlightsColorization(highlights, theme))
-        ;
+    const colorization = useMemo(
+        () => quoteColorization(quoteRange, theme)
+            .concat(highlightsColorization(highlights, theme))
+        ,
+        [quoteRange, highlights, theme],
+    );
 
     const currentSelection = selection.current;
     const selectedHighlight = currentSelection !== undefined

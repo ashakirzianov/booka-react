@@ -51,6 +51,10 @@ function BookRoute() {
 
 function useQuery() {
     const { search } = useLocation();
-    const result = parse(search);
+    // TODO: do we really need this ?
+    const result = useMemo(
+        () => parse(search),
+        [search],
+    );
     return result;
 }

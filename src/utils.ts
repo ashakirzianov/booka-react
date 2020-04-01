@@ -8,7 +8,7 @@ export async function initWhyDidYouRender() {
     if (isDebug()) {
         const { default: why } = await import('@welldone-software/why-did-you-render');
         why(React, {
-            trackAllPureComponents: true,
+            // trackAllPureComponents: true,
         });
     }
 }

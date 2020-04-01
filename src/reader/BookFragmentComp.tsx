@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import {
     BookFragment, BookPath, BookRange,
@@ -34,14 +34,19 @@ export function BookFragmentComp({
     pathToScroll, colorization,
     fontSize, fontFamily, color, refColor, refHoverColor,
 }: BookFragmentProps) {
-    const blocksData = buildBlocksData({
-        fragment,
-        colorization,
-        fontSize,
-        refColor,
-        refHoverColor,
-    });
-    const scrollHandler = React.useCallback((path: Path) => {
+    const blocksData = useMemo(
+        () => {
+            return buildBlocksData({
+                fragment,
+                colorization,
+                fontSize,
+                refColor,
+                refHoverColor,
+            });
+        },
+        [fragment, colorization, fontSize, refColor, refHoverColor],
+    );
+    const scrollHandler = useCallback((path: Path) => {
         if (!onScroll) {
             return;
         } else {
@@ -52,7 +57,7 @@ export function BookFragmentComp({
         }
     }, [onScroll, blocksData]);
 
-    const selectionHandler = React.useCallback((richTextSelection: RichTextSelection | undefined) => {
+    const selectionHandler = useCallback((richTextSelection: RichTextSelection | undefined) => {
         if (!onSelectionChange) {
             return;
         }

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 
 import {
     positionForPath, BookPath, pageForPosition,
@@ -22,8 +22,9 @@ import {
     Clickable,
 } from '../controls';
 import { ShowTocLink, FeedLink } from './Navigation';
+import { trackComponent } from '../utils';
 
-export function BookScreen({ bookId, showToc, path, quote }: {
+export const BookScreen = memo(function BookScreenF({ bookId, showToc, path, quote }: {
     bookId: string,
     showToc: boolean,
     path?: BookPath,
@@ -50,7 +51,8 @@ export function BookScreen({ bookId, showToc, path, quote }: {
             quote={quote}
         />;
     }
-}
+});
+trackComponent(BookScreen);
 
 function BookReady({
     theme, fragment, toc, showToc, bookId, path, quote,
