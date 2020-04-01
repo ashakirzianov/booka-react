@@ -13,6 +13,7 @@ import { config } from '../config';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
 import { View, BorderButton, regularSpace, colorForHighlightGroup } from '../controls';
 import { BookPathLink } from './Navigation';
+import { trackComponent } from '../utils';
 
 export const BookView = memo(function BookViewF({
     bookId, fragment, theme, pathToScroll, updateBookPosition,
@@ -94,6 +95,7 @@ export const BookView = memo(function BookViewF({
         />
     </BookContextMenu>;
 });
+trackComponent(BookView);
 
 function AnchorButton({
     theme, defaultTitle, anchor, bookId, callback,
