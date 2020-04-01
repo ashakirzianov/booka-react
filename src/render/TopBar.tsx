@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { View } from 'react-native';
-import { throttle } from 'lodash';
+import { debounce } from 'lodash';
 
 import {
     useLibrarySearch, SearchState, useTheme,
@@ -19,7 +19,7 @@ export function TopBar({ query }: {
 }) {
     const { theme } = useTheme();
     const { searchState, doQuery } = useLibrarySearch(query);
-    const querySearch = React.useCallback(throttle((q: string) => {
+    const querySearch = React.useCallback(debounce((q: string) => {
         doQuery(q ? q : undefined);
     }, 300), [doQuery]);
     return <Layout
