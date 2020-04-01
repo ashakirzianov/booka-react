@@ -46,27 +46,13 @@ export const BookView = memo(function BookViewF({
         setMenuTarget(target);
     }, [highlights]);
     useOnCopy(useCallback((e: ClipboardEvent) => {
+        e.preventDefault();
         if (selection.current && e.clipboardData) {
-            e.preventDefault();
             const selectionText = `${selection.current.text}\n${generateQuoteLink(bookId, selection.current.range)}`;
             e.clipboardData.setData('text/plain', selectionText);
         }
         setQuoteRange(selection.current && selection.current.range);
     }, [bookId, setQuoteRange, selection]));
-    // useOnClick(useCallback(e => {
-    //     const sel = selection.current;
-    //     const selectedHighlight = sel !== undefined
-    //         ? highlights.find(h => doesRangeOverlap(h.range, sel.range))
-    //         : undefined;
-    //     const target: ContextMenuTarget = sel
-    //         ? (
-    //             selectedHighlight
-    //                 ? { target: 'highlight', highlight: selectedHighlight }
-    //                 : { target: 'selection', selection: sel }
-    //         )
-    //         : { target: 'empty' };
-    //     setMenuTarget(target);
-    // }, [selection, setMenuTarget, highlights]));
 
     const colorization = useMemo(
         () => quoteColorization(quoteRange, theme)

@@ -14,7 +14,7 @@ export function useHighlights(bookId: string, token?: AuthToken) {
             }
         });
         return () => sub.unsubscribe();
-    }, [highlights, highlightsForId, bookId]);
+    }, [highlightsForId, bookId]);
     return {
         highlights,
         addHighlight,
