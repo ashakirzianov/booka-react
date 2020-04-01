@@ -4,7 +4,7 @@ import { Highlight, BookRange, HighlightGroup } from 'booka-common';
 import { BookSelection } from '../reader';
 import { useHighlights, useTheme } from '../application';
 import {
-    ContextMenu, ContextMenuItem, HasChildren, TextContextMenuItem,
+    ContextMenu, ContextMenuItem, TextContextMenuItem,
     CircleButton, colorForHighlightGroup, SimpleButton,
     Icon,
 } from '../controls';
@@ -28,8 +28,8 @@ export type ContextMenuTarget =
     ;
 
 export function BookContextMenu({
-    children, target, bookId,
-}: HasChildren & {
+    target, bookId,
+}: {
     bookId: string
     target: ContextMenuTarget,
 }) {
@@ -38,13 +38,9 @@ export function BookContextMenu({
         addHighlight, removeHighlight, updateHighlightGroup,
     } = useHighlights(bookId);
 
-    if (target.target === 'empty') {
-        return <>{children}</>;
-    }
     return <ContextMenu
         theme={theme}
-        id='book-menu'
-        trigger={children}
+        position={{ top: 100, left: 100 }}
     >
         <AddHighlightItem
             theme={theme}

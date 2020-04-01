@@ -1,10 +1,7 @@
-import React, { ReactNode } from 'react';
+// eslint-disable-next-line
+import React from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-
-import {
-    ContextMenuTrigger, ContextMenu as ReactContextMenu, MenuItem,
-} from 'react-contextmenu';
 
 import { Themed, colors } from '../core';
 import {
@@ -14,41 +11,40 @@ import { OverlayPanel } from './Panel';
 import { IconName, Icon } from './Icon';
 
 export function ContextMenu({
-    id, trigger, children, theme,
+    children, theme, position,
 }: HasChildren & Themed & {
-    id: string,
-    trigger: ReactNode,
+    position: { top: number, left: number },
 }) {
-    return <React.Fragment>
-        <ContextMenuTrigger id={id}>
-            {trigger}
-        </ContextMenuTrigger>
-        <ReactContextMenu id={id}>
-            <OverlayPanel
-                theme={theme}
-                width={menuWidth}
-            >
-                {children}
-            </OverlayPanel>
-        </ReactContextMenu>
-    </React.Fragment>;
+    return <div style={{
+        position: 'fixed',
+        top: position.top, left: position.left,
+        display: 'flex',
+        flexDirection: 'column',
+    }}>
+        <OverlayPanel
+            theme={theme}
+            width={menuWidth}
+        >
+            {children}
+        </OverlayPanel>
+    </div>;
 }
 
 export function ContextMenuItem({ callback, theme, children }: HasChildren & Themed & {
     callback?: () => void,
 }) {
-    return <MenuItem onClick={callback}>
-        <div css={{
-            display: 'flex',
-            flexBasis: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: regularSpace,
-        }}>
-            {children}
-        </div>
-    </MenuItem>;
+    return <div css={{
+        display: 'flex',
+        flexBasis: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: regularSpace,
+    }}
+        onClick={callback}
+    >
+        {children}
+    </div>;
 }
 
 export function TextContextMenuItem({
@@ -58,34 +54,34 @@ export function TextContextMenuItem({
     icon?: IconName,
     callback?: () => void,
 }) {
-    return <MenuItem onClick={callback}>
-        <div css={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            width: '100%',
-            color: colors(theme).text,
-            '&:hover': {
-                backgroundColor: colors(theme).highlight,
-                color: colors(theme).primary,
-            },
-            padding: regularSpace,
+    return <div css={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%',
+        color: colors(theme).text,
+        '&:hover': {
+            backgroundColor: colors(theme).highlight,
+            color: colors(theme).primary,
+        },
+        padding: regularSpace,
+    }}
+        onClick={callback}
+    >
+        {
+            !icon ? null :
+                <Icon
+                    theme={theme}
+                    name={icon}
+                    margin={regularSpace}
+                />
+        }
+        <span css={{
+            margin: regularSpace,
+            ...fontCss({ theme, fontSize: 'xsmall' }),
+            fontFamily: theme.fontFamilies.menu,
         }}>
-            {
-                !icon ? null :
-                    <Icon
-                        theme={theme}
-                        name={icon}
-                        margin={regularSpace}
-                    />
-            }
-            <span css={{
-                margin: regularSpace,
-                ...fontCss({ theme, fontSize: 'xsmall' }),
-                fontFamily: theme.fontFamilies.menu,
-            }}>
-                {text}
-            </span>
-        </div>
-    </MenuItem>;
+            {text}
+        </span>
+    </div>;
 }

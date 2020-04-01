@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, memo, useMemo } from 'react';
+import React, { useCallback, memo, useMemo, useState, useRef } from 'react';
 import {
     BookFragment, BookPath, BookRange,
     Highlight, BookAnchor, doesRangeOverlap, rangeToString,
@@ -7,7 +7,7 @@ import {
 import {
     BookFragmentComp, BookSelection, ColorizedRange,
 } from '../reader';
-import { useCopy } from '../application';
+import { useOnCopy, useOnClick } from '../application';
 import { Themed, colors, Theme } from '../core';
 import { config } from '../config';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
@@ -30,17 +30,43 @@ export const BookView = memo(function BookViewF({
     onNavigation?: () => void,
 }) {
     const selection = useRef<BookSelection | undefined>(undefined);
+    const [menuTarget, setMenuTarget] = useState<ContextMenuTarget>({ target: 'empty' });
     const selectionHandler = useCallback((sel: BookSelection | undefined) => {
-        selection.current = sel;
-    }, []);
-    useCopy(useCallback((e: ClipboardEvent) => {
+        selection.current = sel?.text?.length ? sel : undefined;
+        const selectedHighlight = sel !== undefined
+            ? highlights.find(h => doesRangeOverlap(h.range, sel.range))
+            : undefined;
+        const target: ContextMenuTarget = sel
+            ? (
+                selectedHighlight
+                    ? { target: 'highlight', highlight: selectedHighlight }
+                    : { target: 'selection', selection: sel }
+            )
+            : { target: 'empty' };
+        setMenuTarget(target);
+    }, [highlights]);
+    useOnCopy(useCallback((e: ClipboardEvent) => {
         if (selection.current && e.clipboardData) {
             e.preventDefault();
             const selectionText = `${selection.current.text}\n${generateQuoteLink(bookId, selection.current.range)}`;
             e.clipboardData.setData('text/plain', selectionText);
         }
         setQuoteRange(selection.current && selection.current.range);
-    }, [bookId, setQuoteRange]));
+    }, [bookId, setQuoteRange, selection]));
+    // useOnClick(useCallback(e => {
+    //     const sel = selection.current;
+    //     const selectedHighlight = sel !== undefined
+    //         ? highlights.find(h => doesRangeOverlap(h.range, sel.range))
+    //         : undefined;
+    //     const target: ContextMenuTarget = sel
+    //         ? (
+    //             selectedHighlight
+    //                 ? { target: 'highlight', highlight: selectedHighlight }
+    //                 : { target: 'selection', selection: sel }
+    //         )
+    //         : { target: 'empty' };
+    //     setMenuTarget(target);
+    // }, [selection, setMenuTarget, highlights]));
 
     const colorization = useMemo(
         () => quoteColorization(quoteRange, theme)
@@ -49,23 +75,7 @@ export const BookView = memo(function BookViewF({
         [quoteRange, highlights, theme],
     );
 
-    const currentSelection = selection.current;
-    const selectedHighlight = currentSelection !== undefined
-        ? highlights.find(h => doesRangeOverlap(h.range, currentSelection.range))
-        : undefined;
-
-    const menuTarget: ContextMenuTarget = selection.current
-        ? (
-            selectedHighlight
-                ? { target: 'highlight', highlight: selectedHighlight }
-                : { target: 'selection', selection: selection.current }
-        )
-        : { target: 'empty' };
-
-    return <BookContextMenu
-        bookId={bookId}
-        target={menuTarget}
-    >
+    return <>
         <AnchorButton
             theme={theme}
             defaultTitle='Previous'
@@ -93,7 +103,11 @@ export const BookView = memo(function BookViewF({
             bookId={bookId}
             callback={onNavigation}
         />
-    </BookContextMenu>;
+        <BookContextMenu
+            bookId={bookId}
+            target={menuTarget}
+        />
+    </>;
 });
 trackComponent(BookView);
 
