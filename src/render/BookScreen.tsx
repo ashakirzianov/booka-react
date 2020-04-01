@@ -91,6 +91,10 @@ function BookReady({
         () => setNeedToScroll(true),
         [setNeedToScroll],
     );
+    const openRef = useCallback(
+        () => undefined,
+        [],
+    );
 
     return <Screen theme={theme}>
         <Header
@@ -134,7 +138,7 @@ function BookReady({
                         updateBookPosition={updatePath}
                         quoteRange={quote}
                         setQuoteRange={updateQuoteRange}
-                        openRef={() => undefined}
+                        openRef={openRef}
                         onNavigation={onNavigation}
                     />
                 </View>

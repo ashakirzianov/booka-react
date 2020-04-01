@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, memo } from 'react';
 import {
     BookFragment, BookPath, BookRange,
     Highlight, BookAnchor, doesRangeOverlap, rangeToString,
@@ -14,7 +14,7 @@ import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
 import { View, BorderButton, regularSpace, colorForHighlightGroup } from '../controls';
 import { BookPathLink } from './Navigation';
 
-export function BookView({
+export const BookView = memo(function BookViewF({
     bookId, fragment, theme, pathToScroll, updateBookPosition,
     highlights, quoteRange, setQuoteRange, openRef, onNavigation,
 }: Themed & {
@@ -90,7 +90,7 @@ export function BookView({
             callback={onNavigation}
         />
     </BookContextMenu>;
-}
+});
 
 function AnchorButton({
     theme, defaultTitle, anchor, bookId, callback,

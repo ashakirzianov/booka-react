@@ -11,7 +11,7 @@ export function highlightsProvider(localChangeStore: LocalChangeStore, api: Api)
             return api.getHighlights(bookId).pipe(
                 switchMap(hs =>
                     localChangeStore.observe(hs, applyChange).pipe(
-                        map(localHs => localHs.filter(h => h.bookId === bookId))
+                        map(localHs => localHs.filter(h => h.bookId === bookId)),
                     ),
                 ),
             );
