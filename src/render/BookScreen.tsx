@@ -1,4 +1,5 @@
 import React, { useState, useCallback, memo } from 'react';
+import { throttle } from 'lodash';
 
 import {
     positionForPath, BookPath, pageForPosition,
@@ -76,7 +77,7 @@ function BookReady({
     const { updateBookPath, updateQuoteRange, updateToc } = useUrlActions();
     const { positions, addCurrentPosition } = usePositions();
     const [needToScroll, setNeedToScroll] = useState(true);
-    const updatePath = useCallback((p: BookPath | undefined) => {
+    const updatePath = useCallback(throttle((p: BookPath | undefined) => {
         if (needToScroll) {
             setNeedToScroll(false);
         }
@@ -84,7 +85,9 @@ function BookReady({
         if (p) {
             addCurrentPosition({ path: p, bookId });
         }
-    }, [setNeedToScroll, updateBookPath, addCurrentPosition, needToScroll, bookId]);
+    }, 300),
+        [setNeedToScroll, updateBookPath, addCurrentPosition, needToScroll, bookId],
+    );
     const closeToc = useCallback(
         () => updateToc(false),
         [updateToc],
