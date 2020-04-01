@@ -109,7 +109,7 @@ function BookReady({
             theme={theme}
             fragment={fragment}
             visible={controlsVisible}
-            path={fragment.current.path}
+            path={path}
         />
         <TableOfContentsModal
             theme={theme}
@@ -185,9 +185,10 @@ function Footer({
     fragment, path, theme, visible,
 }: Themed & {
     fragment: BookFragment,
-    path: BookPath,
+    path: BookPath | undefined,
     visible: boolean,
 }) {
+    path = path ?? fragment.current.path;
     const total = fragment.toc
         ? pageForPosition(fragment.toc.length)
         : undefined;
