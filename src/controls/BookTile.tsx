@@ -80,7 +80,7 @@ function BookImageCover({ theme, imageUrl, title, showShadow }: Themed & {
     title: string,
     showShadow: boolean,
 }) {
-    return <div style={{
+    return <div title={title} style={{
         height: bookCoverHeight,
         width: bookCoverWidth,
     }}>
@@ -108,7 +108,7 @@ function BookEmptyCover({ title, showShadow, theme }: Themed & {
     showShadow: boolean,
 }) {
     const { back, text } = colorForString(title);
-    return <div css={{
+    return <div title={title} css={{
         height: bookCoverHeight,
         width: bookCoverWidth,
         overflow: 'hidden',
