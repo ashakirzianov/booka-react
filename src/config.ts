@@ -1,4 +1,5 @@
 import { entitySource } from './platform';
+import { isDebug } from './utils';
 
 function prodConfig() {
     return {
@@ -33,13 +34,4 @@ export function config() {
         ? debugConfig()
         : prodConfig();
 }
-export function whileDebug(callback: () => void) {
-    if (isDebug()) {
-        callback();
-    }
-}
 export type AppConfig = ReturnType<typeof prodConfig>;
-
-function isDebug() {
-    return process.env.NODE_ENV === 'development';
-}
