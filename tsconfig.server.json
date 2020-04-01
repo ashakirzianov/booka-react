@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "target": "es2018",
+        "lib": [
+            "dom",
+            "dom.iterable",
+            "esnext"
+        ],
+        "incremental": false,
+        "allowJs": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "outDir": "dist"
+    },
+    "include": [
+        "server"
+    ]
+}

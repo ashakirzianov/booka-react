@@ -42,7 +42,7 @@
     "debug-local-lib": "HTTPS=true REACT_APP_LOCAL=lib react-scripts start",
     "debug-local-back": "HTTPS=true REACT_APP_LOCAL=back react-scripts start",
     "build": "react-scripts build",
-    "build:sever": "tsc server/*ts --outDir dist",
+    "build:server": "tsc --project tsconfig.server.json",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

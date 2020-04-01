@@ -1,10 +1,10 @@
 import Koa from 'koa';
-import * as send from 'koa-send';
+import send from 'koa-send';
 import * as http from 'http';
 
 startup(new Koa());
 
-const forceHttps: Koa.Middleware = (ctx, next) => {
+const forceHttps: Koa.Middleware = async (ctx, next) => {
     if (ctx.request.headers['x-forwarded-proto'] !== 'https') {
         return ctx.redirect(
             [
