@@ -2,18 +2,19 @@ import React, { useCallback, memo, useMemo, useState, useRef } from 'react';
 import { throttle } from 'lodash';
 import {
     BookFragment, BookPath, BookRange,
-    Highlight, BookAnchor, doesRangeOverlap, rangeToString,
+    Highlight, BookAnchor, rangeToString,
 } from 'booka-common';
 
 import {
     BookFragmentComp, BookSelection, ColorizedRange,
 } from '../reader';
 import {
-    useOnCopy, useHighlights, useTheme, useUrlActions, useUrlQuery, usePositions, useOnClick,
+    useOnCopy, useHighlights, useTheme, useUrlActions, useUrlQuery,
+    usePositions,
 } from '../application';
 import { Themed, colors, Theme } from '../core';
 import { config } from '../config';
-import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
+import { BookContextMenu } from './BookContextMenu';
 import { View, BorderButton, regularSpace, colorForHighlightGroup } from '../controls';
 import { BookPathLink } from './Navigation';
 
@@ -25,12 +26,12 @@ export const BookView = memo(function BookViewF({
 }) {
     const { theme } = useTheme();
     const { pathToScroll, onScroll, onNavigation } = useScrollHandlers(bookId);
-    const { onSelectionChange, menuTarget } = useSelectionHandlers(bookId);
+    const { onSelectionChange, selection } = useSelectionHandlers(bookId);
     const { colorization } = useColorization(bookId);
 
     return <BookContextMenu
         bookId={bookId}
-        target={menuTarget}
+        selection={selection}
     >
         <AnchorButton
             theme={theme}
@@ -78,9 +79,7 @@ function useColorization(bookId: string) {
 function useSelectionHandlers(bookId: string) {
     const { updateQuoteRange } = useUrlActions();
 
-    const highlights = useHighlights(bookId);
     const selection = useRef<BookSelection | undefined>(undefined);
-    const [menuTarget, setMenuTarget] = useState<ContextMenuTarget>({ target: 'empty' });
     const onSelectionChange = useCallback((sel: BookSelection | undefined) => {
         selection.current = sel?.text?.length ? sel : undefined;
     }, []);
@@ -92,21 +91,8 @@ function useSelectionHandlers(bookId: string) {
         }
         updateQuoteRange(selection.current && selection.current.range);
     }, [bookId, updateQuoteRange, selection]));
-    useOnClick(useCallback(e => {
-        const sel = selection.current;
-        if (sel !== undefined) {
-            const selectedHighlight = highlights
-                .find(h => doesRangeOverlap(h.range, sel.range));
-            const target: ContextMenuTarget = selectedHighlight
-                ? { target: 'highlight', highlight: selectedHighlight }
-                : { target: 'selection', selection: sel };
-            setMenuTarget(target);
-        } else {
-            setMenuTarget({ target: 'empty' });
-        }
-    }, [highlights]));
 
-    return { onSelectionChange, menuTarget };
+    return { onSelectionChange, selection };
 }
 
 function useScrollHandlers(bookId: string) {

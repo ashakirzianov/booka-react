@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useCallback, MutableRefObject } from 'react';
 
-import { Highlight, BookRange, HighlightGroup } from 'booka-common';
+import { Highlight, BookRange, HighlightGroup, doesRangeOverlap } from 'booka-common';
 import { BookSelection } from '../reader';
-import { useTheme, useHighlightsActions } from '../application';
+import { useTheme, useHighlightsActions, useHighlights } from '../application';
 import {
     ContextMenu, ContextMenuItem, TextContextMenuItem,
     CircleButton, colorForHighlightGroup, SimpleButton,
@@ -21,28 +21,30 @@ type SelectionTarget = {
 type EmptyTarget = {
     target: 'empty',
 };
-export type ContextMenuTarget =
+type ContextMenuTarget =
     | HighlightTarget
     | SelectionTarget
     | EmptyTarget
     ;
 
+export type SelectionType = MutableRefObject<BookSelection | undefined>;
 export function BookContextMenu({
-    target, bookId, children,
+    bookId, children, selection,
 }: HasChildren & {
     bookId: string
-    target: ContextMenuTarget,
+    selection: SelectionType,
 }) {
     const { theme } = useTheme();
     const {
         addHighlight, removeHighlight, updateHighlightGroup,
     } = useHighlightsActions();
+    const { onTrigger, target } = useMenuTarget(bookId, selection);
 
     return <ContextMenu
         id='book-menu'
         theme={theme}
         trigger={children}
-        enabled={target.target !== 'empty'}
+        onTrigger={onTrigger}
     >
         <AddHighlightItem
             theme={theme}
@@ -57,6 +59,28 @@ export function BookContextMenu({
             removeHighlight={removeHighlight}
         />
     </ContextMenu>;
+}
+
+function useMenuTarget(bookId: string, selection: SelectionType) {
+    const highlights = useHighlights(bookId);
+    const [target, setTarget] = useState<ContextMenuTarget>({ target: 'empty' });
+    const onTrigger = useCallback(() => {
+        const current = selection.current;
+        if (current !== undefined) {
+            const selectedHighlight = highlights
+                .find(h => doesRangeOverlap(h.range, current.range));
+            const newTarget: ContextMenuTarget = selectedHighlight
+                ? { target: 'highlight', highlight: selectedHighlight }
+                : { target: 'selection', selection: current };
+            setTarget(newTarget);
+            return true;
+        } else {
+            setTarget({ target: 'empty' });
+            return false;
+        }
+    }, [highlights, selection]);
+
+    return { onTrigger, target };
 }
 
 function AddHighlightItem({

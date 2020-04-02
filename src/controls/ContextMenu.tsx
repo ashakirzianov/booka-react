@@ -1,5 +1,7 @@
 // eslint-disable-next-line
-import React, { ReactNode, Fragment, useRef, MouseEvent } from 'react';
+import React, {
+    ReactNode, Fragment, useRef, MouseEvent, useCallback,
+} from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 
@@ -9,41 +11,47 @@ import {
 
 import { Themed, colors } from '../core';
 import {
-    HasChildren, regularSpace, fontCss,
+    HasChildren, regularSpace, fontCss, menuWidth,
 } from './common';
 import { IconName, Icon } from './Icon';
 import { OverlayPanel } from './Panel';
 
 export function ContextMenu({
-    children, theme, id, trigger, enabled,
+    children, theme, id, trigger, onTrigger,
 }: HasChildren & Themed & {
     trigger: ReactNode,
     id: string,
-    enabled: boolean,
+    onTrigger: () => boolean,
 }) {
     type EventType = MouseEvent;
     type RefType = {
         handleContextClick: (e: EventType) => void,
     };
     const menuRef = useRef<RefType>();
-    function toggleMenu(event: EventType) {
-        if (enabled && menuRef.current) {
-            menuRef.current.handleContextClick(event);
+    const triggerCallback = useCallback((event: EventType) => {
+        if (menuRef.current) {
+            const show = onTrigger();
+            if (show) {
+                menuRef.current.handleContextClick(event);
+            }
         }
-    }
+    }, [onTrigger]);
     return <Fragment>
         <ContextMenuTrigger
             id={id}
             ref={ref => menuRef.current = ref as any}
         >
             <div
-                onClick={toggleMenu}
+                onClick={triggerCallback}
             >
                 {trigger}
             </div>
         </ContextMenuTrigger>
         <Menu id={id}>
-            <OverlayPanel theme={theme}>
+            <OverlayPanel
+                theme={theme}
+                width={menuWidth}
+            >
                 {children}
             </OverlayPanel>
         </Menu>
