@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { map } from 'rxjs/operators';
-import { BookFragment, BookPath, firstPath, LibraryCard, pathLessThan } from 'booka-common';
+import {
+    BookFragment, BookPath, firstPath, LibraryCard, isPathInFragment,
+} from 'booka-common';
 import { Loadable } from './utils';
 import { useDataProvider } from './dataProviderHooks';
 
@@ -38,14 +40,6 @@ export function useBook({ bookId, path, refId }: {
     }, [data, bookId, path, refId, bookState]);
 
     return { bookState };
-}
-
-// TODO: move to 'common'
-function isPathInFragment(fragment: BookFragment, path: BookPath) {
-    return !pathLessThan(path, fragment.current.path)
-        && (
-            fragment.next === undefined || pathLessThan(path, fragment.next.path)
-        );
 }
 
 export type TextPreviewState = Loadable<{
