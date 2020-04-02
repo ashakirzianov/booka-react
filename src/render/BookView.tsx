@@ -96,11 +96,15 @@ function useSelectionHandlers(bookId: string) {
     useOnClick(useCallback(e => {
         const sel = selection.current;
         if (sel !== undefined) {
+            const position = {
+                top: e.clientY,
+                left: e.clientX,
+            };
             const selectedHighlight = highlights
                 .find(h => doesRangeOverlap(h.range, sel.range));
             const target: ContextMenuTarget = selectedHighlight
-                ? { target: 'highlight', highlight: selectedHighlight }
-                : { target: 'selection', selection: sel };
+                ? { target: 'highlight', highlight: selectedHighlight, position }
+                : { target: 'selection', selection: sel, position };
             setMenuTarget(target);
         } else {
             setMenuTarget({ target: 'empty' });

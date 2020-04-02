@@ -10,10 +10,11 @@ import {
 import { OverlayPanel } from './Panel';
 import { IconName, Icon } from './Icon';
 
+export type MenuPosition = { top: number, left: number };
 export function ContextMenu({
     children, theme, position,
 }: HasChildren & Themed & {
-    position: { top: number, left: number },
+    position: MenuPosition,
 }) {
     return <div style={{
         position: 'fixed',

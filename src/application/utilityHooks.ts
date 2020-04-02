@@ -16,8 +16,8 @@ export function useOnCopy(callback: (e: ClipboardEvent) => void) {
 
 export function useOnClick(callback: (e: MouseEvent) => void) {
     useEffect(() => {
-        window.addEventListener('click', callback);
+        window.addEventListener('mouseup', callback);
 
-        return () => window.removeEventListener('click', callback);
+        return () => window.removeEventListener('mouseup', callback);
     }, [callback]);
 }
