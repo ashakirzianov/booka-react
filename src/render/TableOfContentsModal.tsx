@@ -6,7 +6,10 @@ import {
 } from 'booka-common';
 
 import { Themed } from '../core';
-import { Modal, MenuList, MenuListItem, doubleSpace, View, IconName, ActivityIndicator } from '../controls';
+import {
+    Modal, MenuList, MenuListItem, doubleSpace, View, IconName,
+    ActivityIndicator,
+} from '../controls';
 import {
     useBookmarks, usePositions, useUrlActions, useUrlQuery, useToc, useTheme,
 } from '../application';
@@ -17,6 +20,8 @@ export function TableOfContentsModal({ bookId }: {
 }) {
     const { theme } = useTheme();
     const toc = useToc(bookId);
+    const { bookmarks } = useBookmarks(bookId);
+    const { positions } = usePositions();
     const { updateToc } = useUrlActions();
     const closeToc = useCallback(
         () => updateToc(false),
@@ -37,20 +42,25 @@ export function TableOfContentsModal({ bookId }: {
                     theme={theme}
                     toc={toc}
                     bookId={bookId}
+                    bookmarks={bookmarks}
+                    positions={positions}
                 />
         }
     </Modal>;
 }
 
-function TableOfContentsContent({ toc, bookId, theme }: Themed & {
+function TableOfContentsContent({
+    toc, bookId, theme, bookmarks, positions,
+}: Themed & {
     bookId: string,
     toc: TableOfContents,
+    bookmarks: Bookmark[],
+    positions: CurrentPosition[],
 }) {
-    const { bookmarks } = useBookmarks(bookId);
-    const { positions } = usePositions();
 
     const items = buildDisplayItems({
-        toc, bookmarks,
+        toc,
+        bookmarks: bookmarks.filter(p => p.bookId === bookId),
         currents: positions.filter(p => p.bookId === bookId),
     });
 
