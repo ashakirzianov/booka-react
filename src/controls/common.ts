@@ -1,7 +1,7 @@
 import { PropsWithChildren, CSSProperties } from 'react';
 import { Interpolation } from '@emotion/core';
 import { Color, colors, Theme } from './theme';
-import { HighlightGroup } from 'booka-common';
+import { HighlightGroup, assertNever } from 'booka-common';
 import { PaletteColor, FontSizes, FontFamilies } from '../core';
 
 export function colorForHighlightGroup(group: HighlightGroup): PaletteColor {
@@ -16,7 +16,10 @@ export function colorForHighlightGroup(group: HighlightGroup): PaletteColor {
             return 'red';
         case 'fifth':
             return 'blue';
+        case 'sixth':
+            return 'pink';
         default:
+            assertNever(group);
             return 'neutral';
     }
 }
