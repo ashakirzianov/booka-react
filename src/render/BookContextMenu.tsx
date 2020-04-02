@@ -6,20 +6,17 @@ import { useTheme, useHighlightsActions } from '../application';
 import {
     ContextMenu, ContextMenuItem, TextContextMenuItem,
     CircleButton, colorForHighlightGroup, SimpleButton,
-    Icon,
-    MenuPosition,
+    Icon, HasChildren,
 } from '../controls';
 import { Themed } from '../core';
 
 type HighlightTarget = {
     target: 'highlight',
     highlight: Highlight,
-    position: MenuPosition,
 };
 type SelectionTarget = {
     target: 'selection',
     selection: BookSelection,
-    position: MenuPosition,
 };
 type EmptyTarget = {
     target: 'empty',
@@ -31,8 +28,8 @@ export type ContextMenuTarget =
     ;
 
 export function BookContextMenu({
-    target, bookId,
-}: {
+    target, bookId, children,
+}: HasChildren & {
     bookId: string
     target: ContextMenuTarget,
 }) {
@@ -40,13 +37,12 @@ export function BookContextMenu({
     const {
         addHighlight, removeHighlight, updateHighlightGroup,
     } = useHighlightsActions();
-    if (target.target === 'empty') {
-        return null;
-    }
 
     return <ContextMenu
+        id='book-menu'
         theme={theme}
-        position={target.position}
+        trigger={children}
+        enabled={target.target !== 'empty'}
     >
         <AddHighlightItem
             theme={theme}
