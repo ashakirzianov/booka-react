@@ -20,7 +20,7 @@ export function useBook({ bookId, path, refId }: {
     useEffect(() => {
         const actualPath = path || firstPath();
         const needUpdateFragment = bookState.loading
-            || refId || bookState.bookId !== bookId
+            || bookState.bookId !== bookId
             || !isPathInFragment(bookState.fragment, actualPath)
             ;
         if (needUpdateFragment) {
