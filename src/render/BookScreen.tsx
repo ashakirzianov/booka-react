@@ -23,7 +23,6 @@ import {
     Clickable,
 } from '../controls';
 import { ShowTocLink, FeedLink } from './Navigation';
-import { trackComponent } from '../utils';
 
 export const BookScreen = memo(function BookScreenF({ bookId, showToc, path }: {
     bookId: string,
@@ -131,10 +130,8 @@ function BookReady({
                 }}>
                     <BookView
                         bookId={bookId}
-                        theme={theme}
                         fragment={fragment}
-                        // pathToScroll={needToScroll ? path : undefined}
-                        pathToScroll={undefined}
+                        pathToScroll={needToScroll ? path : undefined}
                         updateBookPosition={updatePath}
                         openRef={openRef}
                         onNavigation={onNavigation}
