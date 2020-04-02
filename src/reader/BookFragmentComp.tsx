@@ -9,6 +9,7 @@ import {
 import {
     ColorizedRange, bookPathForBlockPath, buildBlocksData, blockPathForBookPath,
 } from './BookFragmentComp.blocks';
+import { RefCompType } from './RichText/RichText';
 
 export type BookSelection = {
     text: string,
@@ -25,12 +26,12 @@ export type BookFragmentProps = {
     pathToScroll?: BookPath,
     onScroll?: (path: BookPath) => void,
     onSelectionChange?: (selection: BookSelection | undefined) => void,
-    onRefClick?: (refId: string) => void,
+    RefComp: RefCompType,
 };
 
 export function BookFragmentComp({
     fragment,
-    onScroll, onSelectionChange, onRefClick,
+    onScroll, onSelectionChange, RefComp,
     pathToScroll, colorization,
     fontSize, fontFamily, color, refColor, refHoverColor,
 }: BookFragmentProps) {
@@ -86,6 +87,6 @@ export function BookFragmentComp({
         onScroll={scrollHandler}
         pathToScroll={blockPathToScroll}
         onSelectionChange={selectionHandler}
-        onRefClick={onRefClick}
+        RefComp={RefComp}
     />;
 }

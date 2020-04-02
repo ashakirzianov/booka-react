@@ -1,11 +1,9 @@
-import * as React from 'react';
+import React, { useRef, useCallback, useEffect, ReactNode } from 'react';
 
 import {
-    Color, Path,
-    RichTextBlock, RichTextSelection,
-    RichTextFragment, RichTextSimpleFragment,
-    RichTextImageFragment, RichTextListFragment, RichTextTableFragment,
-    RichTextLineFragment,
+    Color, Path, RichTextBlock, RichTextSelection,
+    RichTextFragment, RichTextSimpleFragment, RichTextImageFragment,
+    RichTextListFragment, RichTextTableFragment, RichTextLineFragment,
 } from './model';
 import {
     fragmentLength, makePathMap, PathMap, assertNever,
@@ -15,7 +13,12 @@ import {
     pathToId, getSelectionRange, scrollToRef,
 } from './web-utils';
 
-export type RichTextProps = {
+export type RefCompType = (props: { refId: string, children: ReactNode }) => JSX.Element;
+export function RichText({
+    blocks, color, fontSize, fontFamily,
+    pathToScroll, onScroll, onSelectionChange,
+    RefComp,
+}: {
     blocks: RichTextBlock[],
     color: Color,
     fontSize: number,
@@ -23,16 +26,11 @@ export type RichTextProps = {
     pathToScroll?: Path,
     onScroll?: (path: Path) => void,
     onSelectionChange?: (selection: RichTextSelection | undefined) => void,
-    onRefClick?: (refId: string) => void,
-};
-export function RichText({
-    blocks, color, fontSize, fontFamily,
-    pathToScroll, onScroll, onSelectionChange,
-    onRefClick,
-}: RichTextProps) {
-    const refMap = React.useRef<PathMap<RefType>>(makePathMap());
+    RefComp: RefCompType,
+}) {
+    const refMap = useRef<PathMap<RefType>>(makePathMap());
 
-    useScroll(React.useCallback(async () => {
+    useScroll(useCallback(async () => {
         if (!onScroll) {
             return;
         }
@@ -42,14 +40,14 @@ export function RichText({
         }
     }, [onScroll]));
 
-    useSelection(React.useCallback(() => {
+    useSelection(useCallback(() => {
         if (onSelectionChange) {
             const selection = getSelectionRange();
             onSelectionChange(selection);
         }
     }, [onSelectionChange]));
 
-    React.useEffect(function scrollToCurrentPath() {
+    useEffect(function scrollToCurrentPath() {
         if (pathToScroll) {
             const refToNavigate = refMap.current.get(pathToScroll);
             if (refToNavigate) {
@@ -76,7 +74,7 @@ export function RichText({
                     refCallback={(ref, path) => {
                         refMap.current.set(path, ref);
                     }}
-                    onRefClick={onRefClick}
+                    RefComp={RefComp}
                 />,
         )}
     </span>;
@@ -86,9 +84,9 @@ type RichTextBlockProps = {
     block: RichTextBlock,
     path: Path,
     refCallback: (ref: RefType, path: Path) => void,
-    onRefClick?: (refId: string) => void,
+    RefComp: RefCompType,
 };
-function RichTextBlockComp({ block, refCallback, path, onRefClick }: RichTextBlockProps) {
+function RichTextBlockComp({ block, refCallback, path, RefComp }: RichTextBlockProps) {
     return <div style={{
         display: 'flex',
         alignSelf: block.center
@@ -108,22 +106,21 @@ function RichTextBlockComp({ block, refCallback, path, onRefClick }: RichTextBlo
             {buildFragments({
                 offset: 0,
                 fragments: block.fragments,
-                path, refCallback, onRefClick,
+                path, refCallback, RefComp,
             }).fragments}
         </span>
     </div>;
 }
 
-type BuildFragmentsProps = {
+function buildFragments({
+    fragments, path, refCallback, offset, RefComp,
+}: {
     fragments: RichTextFragment[],
     offset: number,
     path: Path,
     refCallback: (ref: RefType, path: Path) => void,
-    onRefClick?: (refId: string) => void,
-};
-function buildFragments({
-    fragments, path, refCallback, onRefClick, offset,
-}: BuildFragmentsProps) {
+    RefComp: RefCompType,
+}) {
     const children: JSX.Element[] = [];
     let currentOffset = offset;
     for (let idx = 0; idx < fragments.length; idx++) {
@@ -136,7 +133,7 @@ function buildFragments({
             }}
             fragment={frag}
             refCallback={refCallback}
-            onRefClick={onRefClick}
+            RefComp={RefComp}
         />);
         currentOffset += fragmentLength(frag);
     }
@@ -151,7 +148,7 @@ type RichTextFragmentProps<F extends RichTextFragment = RichTextFragment> = {
     fragment: F,
     path: Path,
     refCallback: (ref: RefType, path: Path) => void,
-    onRefClick?: (refId: string) => void,
+    RefComp: RefCompType,
 };
 function RichTextFragmentComp({ fragment, ...rest }: RichTextFragmentProps) {
     switch (fragment.frag) {
@@ -175,10 +172,10 @@ function RichTextSimpleFragmentComp({
     fragment: { text, attrs },
     refCallback,
     path,
-    onRefClick,
+    RefComp,
 }: RichTextFragmentProps<RichTextSimpleFragment>) {
     attrs = attrs || {};
-    return <span
+    const Span = <span
         id={pathToId(path)}
         ref={ref => refCallback(ref, path)}
         style={{
@@ -208,16 +205,14 @@ function RichTextSimpleFragmentComp({
                 textDecorationStyle: 'dashed',
             }),
         }}
-        onClick={
-            onRefClick === undefined || attrs.ref === undefined ? undefined :
-                e => {
-                    e.preventDefault();
-                    onRefClick(attrs!.ref!);
-                }
-        }
     >
         {text}
     </span>;
+    if (attrs.ref) {
+        return <RefComp refId={attrs.ref}>{Span}</RefComp>;
+    } else {
+        return Span;
+    }
 }
 
 function RichTextImageFragmentComp({
@@ -235,7 +230,7 @@ function RichTextImageFragmentComp({
 
 function RichTextListFragmentComp({
     fragment: { kind, items },
-    onRefClick, refCallback, path,
+    refCallback, path, RefComp,
 }: RichTextFragmentProps<RichTextListFragment>) {
     const lis: JSX.Element[] = [];
     let currentOffset = 0;
@@ -244,7 +239,7 @@ function RichTextListFragmentComp({
         const { fragments, offset } = buildFragments({
             fragments: item,
             offset: currentOffset,
-            onRefClick, refCallback, path,
+            refCallback, path, RefComp,
         });
         lis.push(<li key={listIdx}>
             {fragments}
@@ -264,7 +259,7 @@ function RichTextListFragmentComp({
 
 function RichTextTableFragmentComp({
     fragment: { rows },
-    onRefClick, refCallback, path,
+    RefComp, refCallback, path,
 }: RichTextFragmentProps<RichTextTableFragment>) {
     const trs: JSX.Element[] = [];
     let currentOffset = 0;
@@ -276,7 +271,7 @@ function RichTextTableFragmentComp({
             const { fragments, offset } = buildFragments({
                 fragments: cell,
                 offset: currentOffset,
-                onRefClick, refCallback, path,
+                RefComp, refCallback, path,
             });
             tds.push(<td key={cellIdx}>
                 {fragments}
@@ -296,7 +291,7 @@ function RichTextTableFragmentComp({
 
 function RichTextLineFragmentComp({
     fragment: { direction },
-    onRefClick, refCallback, path,
+    RefComp, refCallback, path,
 }: RichTextFragmentProps<RichTextLineFragment>) {
     return <hr />;
 }

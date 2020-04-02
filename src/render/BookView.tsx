@@ -1,4 +1,4 @@
-import React, { useCallback, memo, useMemo, useState, useRef } from 'react';
+import React, { useCallback, memo, useMemo, useState, useRef, ReactNode } from 'react';
 import { throttle } from 'lodash';
 import {
     BookFragment, BookPath, BookRange,
@@ -13,8 +13,10 @@ import {
 } from '../application';
 import { Themed, colors, Theme } from '../core';
 import { BookContextMenu } from './BookContextMenu';
-import { View, BorderButton, regularSpace, colorForHighlightGroup } from '../controls';
-import { BookPathLink } from './Navigation';
+import {
+    View, BorderButton, regularSpace, colorForHighlightGroup,
+} from '../controls';
+import { BookPathLink, BookRefLink } from './Navigation';
 
 export const BookView = memo(function BookViewF({
     bookId, fragment,
@@ -26,6 +28,11 @@ export const BookView = memo(function BookViewF({
     const { pathToScroll, onScroll, onNavigation } = useScrollHandlers(bookId);
     const { onSelectionChange, selection } = useSelectionHandlers(bookId);
     const { colorization } = useColorization(bookId);
+    const RefComp = useCallback(({ refId, children }: { refId: string, children: ReactNode }) => {
+        return <BookRefLink bookId={bookId} refId={refId}>
+            {children}
+        </BookRefLink>;
+    }, [bookId]);
 
     return <BookContextMenu
         bookId={bookId}
@@ -49,6 +56,7 @@ export const BookView = memo(function BookViewF({
             pathToScroll={pathToScroll}
             onScroll={onScroll}
             onSelectionChange={onSelectionChange}
+            RefComp={RefComp}
         />
         <AnchorButton
             theme={theme}

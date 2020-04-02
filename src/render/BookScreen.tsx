@@ -25,10 +25,10 @@ import { ShowTocLink, FeedLink } from './Navigation';
 export const BookScreen = memo(function BookScreenF({ bookId }: {
     bookId: string,
 }) {
-    const { path } = useUrlQuery();
+    const { path, refId } = useUrlQuery();
     const { theme } = useTheme();
     const { bookState } = useBook({
-        bookId, path,
+        bookId, path, refId,
     });
     if (bookState.loading) {
         return <FullScreenActivityIndicator

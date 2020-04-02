@@ -35,7 +35,7 @@ export function useUrlActions() {
 
 export function useUrlQuery() {
     const { search } = useLocation();
-    const { q, p, toc, show } = parse(search);
+    const { q, p, toc, show, ref } = parse(search);
 
     const quote = useMemo(
         () => typeof q === 'string' ? rangeFromString(q) : undefined,
@@ -45,10 +45,13 @@ export function useUrlQuery() {
         () => typeof p === 'string' ? pathFromString(p) : undefined,
         [p],
     );
+    const refId = typeof ref === 'string' ? ref : undefined;
     const showToc = toc !== undefined;
     const query = typeof q === 'string' ? q : undefined;
     const card = typeof show === 'string' ? show : undefined;
-    return { quote, path, showToc, query, card };
+    return {
+        quote, path, showToc, query, card, refId,
+    };
 }
 
 function replaceHistorySearch(history: History, key: string, value: string | undefined | null) {
