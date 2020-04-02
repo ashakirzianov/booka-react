@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react';
-import { BrowserRouter, Route, Switch, useParams, Redirect } from 'react-router-dom';
-import { pathFromString } from 'booka-common';
+import React from 'react';
+import {
+    BrowserRouter, Route, Switch, useParams, Redirect,
+} from 'react-router-dom';
 
 import { View } from '../controls';
 import { FeedScreen } from './FeedScreen';
 import { BookScreen } from './BookScreen';
-import { useQuery } from '../application';
 
 export function Routes() {
     return <View style={{
@@ -23,26 +23,14 @@ export function Routes() {
 }
 
 function FeedRoute() {
-    const { show, q } = useQuery();
-
-    return <FeedScreen
-        show={typeof show === 'string' ? show : undefined}
-        query={typeof q === 'string' ? q : undefined}
-    />;
+    return <FeedScreen />;
 }
 
 function BookRoute() {
     // TODO: make type safe ?
     const { bookId } = useParams<{ bookId: string }>();
-    const { toc, p } = useQuery();
-    const path = useMemo(
-        () => typeof p === 'string' ? pathFromString(p) : undefined,
-        [p],
-    );
 
     return <BookScreen
         bookId={bookId}
-        showToc={toc !== undefined}
-        path={path}
     />;
 }

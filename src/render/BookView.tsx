@@ -7,14 +7,15 @@ import {
 import {
     BookFragmentComp, BookSelection, ColorizedRange,
 } from '../reader';
-import { useOnCopy, useHighlights, useTheme } from '../application';
+import {
+    useOnCopy, useHighlights, useTheme, useUrlActions, useUrlQuery,
+} from '../application';
 import { Themed, colors, Theme } from '../core';
 import { config } from '../config';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
 import { View, BorderButton, regularSpace, colorForHighlightGroup } from '../controls';
 import { BookPathLink } from './Navigation';
 import { trackComponent } from '../utils';
-import { useQuote } from '../application/quoteHooks';
 
 export const BookView = memo(function BookViewF({
     bookId, fragment, pathToScroll, updateBookPosition,
@@ -28,7 +29,8 @@ export const BookView = memo(function BookViewF({
     onNavigation?: () => void,
 }) {
     const { theme } = useTheme();
-    const { quote, updateQuoteRange } = useQuote();
+    const { quote } = useUrlQuery();
+    const { updateQuoteRange } = useUrlActions();
     const highlights = useHighlights(bookId);
     const selection = useRef<BookSelection | undefined>(undefined);
     const [menuTarget, setMenuTarget] = useState<ContextMenuTarget>({ target: 'empty' });

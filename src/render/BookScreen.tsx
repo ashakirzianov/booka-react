@@ -7,7 +7,7 @@ import {
 } from 'booka-common';
 
 import {
-    useTheme, useBook, useUrlActions,
+    useTheme, useBook, useUrlActions, useUrlQuery,
     usePositions, useBookmarks,
 } from '../application';
 
@@ -24,11 +24,10 @@ import {
 } from '../controls';
 import { ShowTocLink, FeedLink } from './Navigation';
 
-export const BookScreen = memo(function BookScreenF({ bookId, showToc, path }: {
+export const BookScreen = memo(function BookScreenF({ bookId }: {
     bookId: string,
-    showToc: boolean,
-    path?: BookPath,
 }) {
+    const { path, showToc } = useUrlQuery();
     const { theme } = useTheme();
     const { bookState } = useBook({
         bookId, path,
