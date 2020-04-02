@@ -52,10 +52,15 @@ export function createApi(token?: AuthToken) {
         },
         getPreview(bookId: string, path: BookPath) {
             return lib.get('/preview', {
-                query: { bookId, node: path.node },
+                query: { id: bookId, node: path.node },
             }).pipe(
                 map(r => r.preview),
             );
+        },
+        getToc(bookId: string) {
+            return lib.get('/toc', {
+                query: { id: bookId },
+            });
         },
         getBookmarks(bookId: string) {
             return optional(token && back.get('/bookmarks', {
@@ -75,18 +80,9 @@ export function createApi(token?: AuthToken) {
             }));
         },
         getLibraryCard(bookId: string) {
-            return lib.post('/card/batch', {
-                body: [{ id: bookId }],
-            }).pipe(
-                map(res => {
-                    const card = res[0]?.card;
-                    if (card) {
-                        return card;
-                    } else {
-                        throw new Error(`No book for id: ${bookId}`);
-                    }
-                }),
-            );
+            return lib.get('/card', {
+                query: { id: bookId },
+            });
         },
         getCollection(name: CardCollectionName) {
             if (name === 'uploads') {

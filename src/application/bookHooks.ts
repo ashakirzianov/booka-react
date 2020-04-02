@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { map } from 'rxjs/operators';
 import {
-    BookFragment, BookPath, firstPath, LibraryCard, isPathInFragment,
+    BookFragment, BookPath, firstPath, LibraryCard, isPathInFragment, TableOfContents,
 } from 'booka-common';
 import { Loadable } from './utils';
 import { useDataProvider } from './dataProviderHooks';
@@ -40,6 +40,18 @@ export function useBook({ bookId, path, refId }: {
     }, [data, bookId, path, refId, bookState]);
 
     return { bookState };
+}
+
+export function useToc(bookId: string) {
+    const { tableOfContents } = useDataProvider();
+    const [state, setState] = useState<Loadable<TableOfContents>>({ loading: true });
+    useEffect(() => {
+        const sub = tableOfContents(bookId)
+            .subscribe(setState);
+        return () => sub.unsubscribe();
+    }, [tableOfContents, bookId]);
+
+    return state;
 }
 
 export type TextPreviewState = Loadable<{
