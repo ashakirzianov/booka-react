@@ -1,4 +1,5 @@
 import React, { useCallback, memo, useMemo, useState, useRef } from 'react';
+import { throttle } from 'lodash';
 import {
     BookFragment, BookPath, BookRange,
     Highlight, BookAnchor, doesRangeOverlap, rangeToString,
@@ -15,8 +16,6 @@ import { config } from '../config';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
 import { View, BorderButton, regularSpace, colorForHighlightGroup } from '../controls';
 import { BookPathLink } from './Navigation';
-import { trackComponent } from '../utils';
-import { throttle } from 'lodash';
 
 export const BookView = memo(function BookViewF({
     bookId, fragment,
@@ -95,7 +94,6 @@ export const BookView = memo(function BookViewF({
         />
     </>;
 });
-trackComponent(BookView);
 
 function useScrollHandlers(bookId: string) {
     const { path } = useUrlQuery();
