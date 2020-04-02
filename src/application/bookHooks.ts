@@ -19,7 +19,7 @@ export function useBook({ bookId, path, refId }: {
         const actualPath = path || firstPath();
         const needUpdateFragment = bookState.loading
             || refId || bookState.bookId !== bookId
-            || !isInFragment(bookState.fragment, actualPath)
+            || !isPathInFragment(bookState.fragment, actualPath)
             ;
         if (needUpdateFragment) {
             const observable = refId
@@ -41,7 +41,7 @@ export function useBook({ bookId, path, refId }: {
 }
 
 // TODO: move to 'common'
-function isInFragment(fragment: BookFragment, path: BookPath) {
+function isPathInFragment(fragment: BookFragment, path: BookPath) {
     return !pathLessThan(path, fragment.current.path)
         && (
             fragment.next === undefined || pathLessThan(path, fragment.next.path)
