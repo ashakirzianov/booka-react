@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Highlight, AuthToken } from 'booka-common';
 import { useDataProvider } from './dataProviderHooks';
-import { sameArrays } from '../utils';
 
 export type HighlightsState = Highlight[];
 export function useHighlights(bookId: string, token?: AuthToken) {
@@ -9,15 +8,10 @@ export function useHighlights(bookId: string, token?: AuthToken) {
     const [highlights, setHighlights] = useState<HighlightsState>([]);
     useEffect(() => {
         const sub = highlightsForId(bookId).subscribe(hs => {
-            if (!sameArrays(highlights, hs)) {
-                console.log('------');
-                console.log(highlights);
-                console.log(hs);
-                setHighlights(hs);
-            }
+            setHighlights(hs);
         });
         return () => sub.unsubscribe();
-    }, [highlights, highlightsForId, bookId]);
+    }, [highlightsForId, bookId]);
     return highlights;
 }
 

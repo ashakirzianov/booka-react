@@ -1,11 +1,18 @@
 import { useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { History } from 'history';
+import { parse } from 'query-string';
 
 import {
     BookPath, pathToString, BookRange, rangeToString,
 } from 'booka-common';
 import { updateSearch } from './utils';
+
+export function useQuery() {
+    const { search } = useLocation();
+    const result = parse(search);
+    return result;
+}
 
 export function useUrlActions() {
     const history = useHistory();

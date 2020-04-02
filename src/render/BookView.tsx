@@ -7,28 +7,28 @@ import {
 import {
     BookFragmentComp, BookSelection, ColorizedRange,
 } from '../reader';
-import { useOnCopy } from '../application';
+import { useOnCopy, useHighlights } from '../application';
 import { Themed, colors, Theme } from '../core';
 import { config } from '../config';
 import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
 import { View, BorderButton, regularSpace, colorForHighlightGroup } from '../controls';
 import { BookPathLink } from './Navigation';
 import { trackComponent } from '../utils';
+import { useQuote } from '../application/quoteHooks';
 
 export const BookView = memo(function BookViewF({
     bookId, fragment, theme, pathToScroll, updateBookPosition,
-    highlights, quoteRange, setQuoteRange, openRef, onNavigation,
+    openRef, onNavigation,
 }: Themed & {
     bookId: string,
     fragment: BookFragment,
     pathToScroll: BookPath | undefined,
     updateBookPosition: (path: BookPath) => void,
-    quoteRange: BookRange | undefined,
-    highlights: Highlight[],
-    setQuoteRange: (range: BookRange | undefined) => void,
     openRef: (refId: string) => void,
     onNavigation?: () => void,
 }) {
+    const { quote, updateQuoteRange } = useQuote();
+    const highlights = useHighlights(bookId);
     const selection = useRef<BookSelection | undefined>(undefined);
     const [menuTarget, setMenuTarget] = useState<ContextMenuTarget>({ target: 'empty' });
     const selectionHandler = useCallback((sel: BookSelection | undefined) => {
@@ -51,14 +51,14 @@ export const BookView = memo(function BookViewF({
             const selectionText = `${selection.current.text}\n${generateQuoteLink(bookId, selection.current.range)}`;
             e.clipboardData.setData('text/plain', selectionText);
         }
-        setQuoteRange(selection.current && selection.current.range);
-    }, [bookId, setQuoteRange, selection]));
+        updateQuoteRange(selection.current && selection.current.range);
+    }, [bookId, updateQuoteRange, selection]));
 
     const colorization = useMemo(
-        () => quoteColorization(quoteRange, theme)
+        () => quoteColorization(quote, theme)
             .concat(highlightsColorization(highlights, theme))
         ,
-        [quoteRange, highlights, theme],
+        [quote, highlights, theme],
     );
 
     return <>

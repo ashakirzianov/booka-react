@@ -5,7 +5,7 @@ import * as serviceWorker from './serviceWorker';
 import { initWhyDidYouRender } from './utils';
 
 (async function init() {
-    await initWhyDidYouRender(false);
+    await initWhyDidYouRender(true);
 
     ReactDOM.render(<App />, document.getElementById('root'));
 

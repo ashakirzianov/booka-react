@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
-import { BrowserRouter, Route, Switch, useParams, useLocation, Redirect } from 'react-router-dom';
-import { parse } from 'query-string';
-import { pathFromString, rangeFromString } from 'booka-common';
+import { BrowserRouter, Route, Switch, useParams, Redirect } from 'react-router-dom';
+import { pathFromString } from 'booka-common';
 
 import { View } from '../controls';
 import { FeedScreen } from './FeedScreen';
 import { BookScreen } from './BookScreen';
+import { useQuery } from '../application';
 
 export function Routes() {
     return <View style={{
@@ -34,27 +34,15 @@ function FeedRoute() {
 function BookRoute() {
     // TODO: make type safe ?
     const { bookId } = useParams<{ bookId: string }>();
-    const { toc, p, q } = useQuery();
+    const { toc, p } = useQuery();
     const path = useMemo(
         () => typeof p === 'string' ? pathFromString(p) : undefined,
         [p],
     );
-    const quote = typeof q === 'string' ? rangeFromString(q) : undefined;
 
     return <BookScreen
         bookId={bookId}
         showToc={toc !== undefined}
-        path={quote?.start ?? path}
-        quote={quote}
+        path={path}
     />;
-}
-
-function useQuery() {
-    const { search } = useLocation();
-    // TODO: do we really need this ?
-    const result = useMemo(
-        () => parse(search),
-        [search],
-    );
-    return result;
 }

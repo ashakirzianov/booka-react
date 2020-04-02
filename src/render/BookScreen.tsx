@@ -3,11 +3,11 @@ import { throttle } from 'lodash';
 
 import {
     positionForPath, BookPath, pageForPosition,
-    BookFragment, BookRange, TableOfContents,
+    BookFragment, TableOfContents,
 } from 'booka-common';
 
 import {
-    useTheme, useBook, useHighlights, useUrlActions,
+    useTheme, useBook, useUrlActions,
     usePositions, useBookmarks,
 } from '../application';
 
@@ -25,11 +25,10 @@ import {
 import { ShowTocLink, FeedLink } from './Navigation';
 import { trackComponent } from '../utils';
 
-export const BookScreen = memo(function BookScreenF({ bookId, showToc, path, quote }: {
+export const BookScreen = memo(function BookScreenF({ bookId, showToc, path }: {
     bookId: string,
     showToc: boolean,
     path?: BookPath,
-    quote?: BookRange,
 }) {
     const { theme } = useTheme();
     const { bookState } = useBook({
@@ -49,23 +48,19 @@ export const BookScreen = memo(function BookScreenF({ bookId, showToc, path, quo
             fragment={fragment}
             toc={toc}
             showToc={showToc}
-            quote={quote}
         />;
     }
 });
-trackComponent(BookScreen);
 
 function BookReady({
-    theme, fragment, toc, showToc, bookId, path, quote,
+    theme, fragment, toc, showToc, bookId, path,
 }: Themed & {
     bookId: string,
     path: BookPath | undefined,
     fragment: BookFragment,
-    quote: BookRange | undefined,
     toc: TableOfContents | undefined,
     showToc: boolean,
 }) {
-    const highlights = useHighlights(bookId);
     const { bookmarks } = useBookmarks(bookId);
 
     const [controlsVisible, setControlsVisible] = useState(true);
@@ -74,7 +69,7 @@ function BookReady({
         [controlsVisible, setControlsVisible],
     );
 
-    const { updateBookPath, updateQuoteRange, updateToc } = useUrlActions();
+    const { updateBookPath, updateToc } = useUrlActions();
     const { positions, addCurrentPosition } = usePositions();
     const [needToScroll, setNeedToScroll] = useState(true);
     const updatePath = useCallback(throttle((p: BookPath | undefined) => {
@@ -138,11 +133,9 @@ function BookReady({
                         bookId={bookId}
                         theme={theme}
                         fragment={fragment}
-                        highlights={highlights}
-                        pathToScroll={needToScroll ? path : undefined}
+                        // pathToScroll={needToScroll ? path : undefined}
+                        pathToScroll={undefined}
                         updateBookPosition={updatePath}
-                        quoteRange={quote}
-                        setQuoteRange={updateQuoteRange}
                         openRef={openRef}
                         onNavigation={onNavigation}
                     />
