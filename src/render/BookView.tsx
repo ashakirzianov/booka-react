@@ -8,7 +8,7 @@ import {
     BookFragmentComp, BookSelection, ColorizedRange,
 } from '../reader';
 import {
-    useOnCopy, useHighlights, useTheme, useUrlActions, useUrlQuery,
+    useOnCopy, useHighlights, useTheme, useUrlActions, useUrlQuery, usePositions,
 } from '../application';
 import { Themed, colors, Theme } from '../core';
 import { config } from '../config';
@@ -16,17 +16,13 @@ import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
 import { View, BorderButton, regularSpace, colorForHighlightGroup } from '../controls';
 import { BookPathLink } from './Navigation';
 import { trackComponent } from '../utils';
+import { throttle } from 'lodash';
 
 export const BookView = memo(function BookViewF({
-    bookId, fragment, pathToScroll, updateBookPosition,
-    openRef, onNavigation,
+    bookId, fragment,
 }: {
     bookId: string,
     fragment: BookFragment,
-    pathToScroll: BookPath | undefined,
-    updateBookPosition: (path: BookPath) => void,
-    openRef: (refId: string) => void,
-    onNavigation?: () => void,
 }) {
     const { theme } = useTheme();
     const { quote } = useUrlQuery();
@@ -64,6 +60,8 @@ export const BookView = memo(function BookViewF({
         [quote, highlights, theme],
     );
 
+    const { pathToScroll, onScroll, onNavigation } = useScrollHandlers(bookId);
+
     return <>
         <AnchorButton
             theme={theme}
@@ -81,9 +79,8 @@ export const BookView = memo(function BookViewF({
             fontFamily={theme.fontFamilies.book}
             colorization={colorization}
             pathToScroll={pathToScroll}
-            onScroll={updateBookPosition}
+            onScroll={onScroll}
             onSelectionChange={selectionHandler}
-            onRefClick={openRef}
         />
         <AnchorButton
             theme={theme}
@@ -99,6 +96,33 @@ export const BookView = memo(function BookViewF({
     </>;
 });
 trackComponent(BookView);
+
+function useScrollHandlers(bookId: string) {
+    const { path } = useUrlQuery();
+    const { updateBookPath } = useUrlActions();
+    const { addCurrentPosition } = usePositions();
+    const [needToScroll, setNeedToScroll] = useState(true);
+    const onScroll = useCallback(throttle((p: BookPath | undefined) => {
+        if (needToScroll) {
+            setNeedToScroll(false);
+        }
+        updateBookPath(p);
+        if (p) {
+            addCurrentPosition({ path: p, bookId });
+        }
+    }, 1000),
+        [setNeedToScroll, updateBookPath, addCurrentPosition, needToScroll, bookId],
+    );
+    const onNavigation = useCallback(
+        () => setNeedToScroll(true),
+        [setNeedToScroll],
+    );
+
+    return {
+        onScroll, onNavigation,
+        pathToScroll: needToScroll ? path : undefined,
+    };
+}
 
 function AnchorButton({
     theme, defaultTitle, anchor, bookId, callback,

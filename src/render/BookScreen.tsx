@@ -65,31 +65,10 @@ function BookReady({
         [controlsVisible, setControlsVisible],
     );
 
-    const { updateBookPath, updateToc } = useUrlActions();
-    const { addCurrentPosition } = usePositions();
-    const [needToScroll, setNeedToScroll] = useState(true);
-    const updatePath = useCallback(throttle((p: BookPath | undefined) => {
-        if (needToScroll) {
-            setNeedToScroll(false);
-        }
-        updateBookPath(p);
-        if (p) {
-            addCurrentPosition({ path: p, bookId });
-        }
-    }, 1000),
-        [setNeedToScroll, updateBookPath, addCurrentPosition, needToScroll, bookId],
-    );
+    const { updateToc } = useUrlActions();
     const closeToc = useCallback(
         () => updateToc(false),
         [updateToc],
-    );
-    const onNavigation = useCallback(
-        () => setNeedToScroll(true),
-        [setNeedToScroll],
-    );
-    const openRef = useCallback(
-        () => undefined,
-        [],
     );
 
     return <Screen theme={theme}>
@@ -126,10 +105,6 @@ function BookReady({
                     <BookView
                         bookId={bookId}
                         fragment={fragment}
-                        pathToScroll={needToScroll ? path : undefined}
-                        updateBookPosition={updatePath}
-                        openRef={openRef}
-                        onNavigation={onNavigation}
                     />
                 </View>
             </Clickable>
