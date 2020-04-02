@@ -75,8 +75,6 @@ function BookReady({
             path={path}
         />
         <TableOfContentsModal
-            theme={theme}
-            toc={toc}
             bookId={bookId}
         />
         <View style={{
