@@ -8,22 +8,26 @@ import {
 import { Themed } from '../core';
 import { Modal, MenuList, MenuListItem, doubleSpace, View, IconName } from '../controls';
 import { BookPathLink } from './Navigation';
+import { useBookmarks, usePositions } from '../application';
 
 export function TableOfContentsModal({
-    theme, toc, id, closeToc, open, bookmarks, currents,
+    theme, toc, bookId, closeToc, open,
 }: Themed & {
     toc: TableOfContents | undefined,
-    bookmarks: Bookmark[],
-    currents: CurrentPosition[],
-    id: string,
+    bookId: string,
     open: boolean,
     closeToc: () => void,
 }) {
+    const { bookmarks } = useBookmarks(bookId);
+    const { positions } = usePositions();
     if (!open || !toc) {
         return null;
     }
 
-    const items = buildDisplayItems({ toc, bookmarks, currents });
+    const items = buildDisplayItems({
+        toc, bookmarks,
+        currents: positions.filter(p => p.bookId === bookId),
+    });
 
     return <Modal
         theme={theme}
@@ -38,7 +42,7 @@ export function TableOfContentsModal({
                 {items.map(item => {
                     return <BookPathLink
                         key={pathToString(item.path)}
-                        bookId={id}
+                        bookId={bookId}
                         path={item.path}
                     >
                         <MenuListItem

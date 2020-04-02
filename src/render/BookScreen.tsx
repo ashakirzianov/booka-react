@@ -8,7 +8,7 @@ import {
 
 import {
     useTheme, useBook, useUrlActions, useUrlQuery,
-    usePositions, useBookmarks,
+    usePositions,
 } from '../application';
 
 import { Themed, colors } from '../core';
@@ -59,8 +59,6 @@ function BookReady({
     toc: TableOfContents | undefined,
     showToc: boolean,
 }) {
-    const { bookmarks } = useBookmarks(bookId);
-
     const [controlsVisible, setControlsVisible] = useState(true);
     const toggleControls = useCallback(
         () => setControlsVisible(!controlsVisible),
@@ -68,7 +66,7 @@ function BookReady({
     );
 
     const { updateBookPath, updateToc } = useUrlActions();
-    const { positions, addCurrentPosition } = usePositions();
+    const { addCurrentPosition } = usePositions();
     const [needToScroll, setNeedToScroll] = useState(true);
     const updatePath = useCallback(throttle((p: BookPath | undefined) => {
         if (needToScroll) {
@@ -110,9 +108,7 @@ function BookReady({
         <TableOfContentsModal
             theme={theme}
             toc={toc}
-            bookmarks={bookmarks}
-            currents={positions.filter(p => p.bookId === bookId)}
-            id={bookId}
+            bookId={bookId}
             closeToc={closeToc}
             open={showToc}
         />
