@@ -123,12 +123,12 @@ export function applyAttrsRange(fragments: RichTextFragment[], range: AttrsRange
             result.push(frag);
         } else if (start < range.start) {
             const pre: RichTextFragment = {
-                text: frag.text.substring(0, range.start),
+                text: frag.text.substring(0, range.start - start),
                 attrs: frag.attrs,
             };
             if (range.end === undefined || range.end >= end) {
                 const overlap: RichTextFragment = {
-                    text: frag.text.substring(range.start),
+                    text: frag.text.substring(range.start - start),
                     attrs: {
                         ...frag.attrs,
                         ...range.attrs,
@@ -137,21 +137,21 @@ export function applyAttrsRange(fragments: RichTextFragment[], range: AttrsRange
                 result.push(pre, overlap);
             } else {
                 const overlap: RichTextFragment = {
-                    text: frag.text.substring(range.start, range.end),
+                    text: frag.text.substring(range.start - start, range.end - start),
                     attrs: {
                         ...frag.attrs,
                         ...range.attrs,
                     },
                 };
                 const post: RichTextFragment = {
-                    text: frag.text.substring(range.end),
+                    text: frag.text.substring(range.end - start),
                     attrs: frag.attrs,
                 };
                 result.push(pre, overlap, post);
             }
         } else if (range.end === undefined || start < range.end) {
             const overlap: RichTextFragment = {
-                text: frag.text.substring(0, range.end),
+                text: frag.text.substring(0, range.end ? range.end - start : undefined),
                 attrs: {
                     ...frag.attrs,
                     ...range.attrs,
@@ -161,7 +161,7 @@ export function applyAttrsRange(fragments: RichTextFragment[], range: AttrsRange
                 result.push(overlap);
             } else {
                 const post: RichTextFragment = {
-                    text: frag.text.substring(range.end),
+                    text: frag.text.substring(range.end - start),
                     attrs: frag.attrs,
                 };
                 result.push(overlap, post);

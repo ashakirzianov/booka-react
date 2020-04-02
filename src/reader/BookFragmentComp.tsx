@@ -15,7 +15,13 @@ export type BookSelection = {
     text: string,
     range: BookRange,
 };
-export type BookFragmentProps = {
+
+export function BookFragmentComp({
+    fragment,
+    onScroll, onSelectionChange, RefComp,
+    pathToScroll, colorization,
+    fontSize, fontFamily, color, refColor, refHoverColor,
+}: {
     fragment: BookFragment,
     color: Color,
     refColor: Color,
@@ -27,14 +33,7 @@ export type BookFragmentProps = {
     onScroll?: (path: BookPath) => void,
     onSelectionChange?: (selection: BookSelection | undefined) => void,
     RefComp: RefCompType,
-};
-
-export function BookFragmentComp({
-    fragment,
-    onScroll, onSelectionChange, RefComp,
-    pathToScroll, colorization,
-    fontSize, fontFamily, color, refColor, refHoverColor,
-}: BookFragmentProps) {
+}) {
     const blocksData = useMemo(
         () => {
             return buildBlocksData({
