@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useCallback } from 'react';
 import {
     TableOfContents, pathToString, Bookmark, BookPath,
     CurrentPosition, comparePaths, EntitySource, sourceToString,
@@ -7,20 +7,27 @@ import {
 
 import { Themed } from '../core';
 import { Modal, MenuList, MenuListItem, doubleSpace, View, IconName } from '../controls';
+import {
+    useBookmarks, usePositions, useUrlActions, useUrlQuery,
+} from '../application';
 import { BookPathLink } from './Navigation';
-import { useBookmarks, usePositions } from '../application';
 
 export function TableOfContentsModal({
-    theme, toc, bookId, closeToc, open,
+    theme, toc, bookId,
 }: Themed & {
     toc: TableOfContents | undefined,
     bookId: string,
-    open: boolean,
-    closeToc: () => void,
 }) {
+    const { updateToc } = useUrlActions();
+    const closeToc = useCallback(
+        () => updateToc(false),
+        [updateToc],
+    );
     const { bookmarks } = useBookmarks(bookId);
     const { positions } = usePositions();
-    if (!open || !toc) {
+    const { showToc } = useUrlQuery();
+
+    if (!toc) {
         return null;
     }
 
@@ -33,7 +40,7 @@ export function TableOfContentsModal({
         theme={theme}
         title='Table of Contents'
         close={closeToc}
-        open={open}
+        open={showToc}
     >
         <View style={{
             marginTop: doubleSpace,

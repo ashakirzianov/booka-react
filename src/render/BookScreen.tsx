@@ -1,5 +1,4 @@
 import React, { useState, useCallback, memo } from 'react';
-import { throttle } from 'lodash';
 
 import {
     positionForPath, BookPath, pageForPosition,
@@ -7,8 +6,7 @@ import {
 } from 'booka-common';
 
 import {
-    useTheme, useBook, useUrlActions, useUrlQuery,
-    usePositions,
+    useTheme, useBook, useUrlQuery,
 } from '../application';
 
 import { Themed, colors } from '../core';
@@ -27,7 +25,7 @@ import { ShowTocLink, FeedLink } from './Navigation';
 export const BookScreen = memo(function BookScreenF({ bookId }: {
     bookId: string,
 }) {
-    const { path, showToc } = useUrlQuery();
+    const { path } = useUrlQuery();
     const { theme } = useTheme();
     const { bookState } = useBook({
         bookId, path,
@@ -45,30 +43,22 @@ export const BookScreen = memo(function BookScreenF({ bookId }: {
             path={path}
             fragment={fragment}
             toc={toc}
-            showToc={showToc}
         />;
     }
 });
 
 function BookReady({
-    theme, fragment, toc, showToc, bookId, path,
+    theme, fragment, toc, bookId, path,
 }: Themed & {
     bookId: string,
     path: BookPath | undefined,
     fragment: BookFragment,
     toc: TableOfContents | undefined,
-    showToc: boolean,
 }) {
     const [controlsVisible, setControlsVisible] = useState(true);
     const toggleControls = useCallback(
         () => setControlsVisible(!controlsVisible),
         [controlsVisible, setControlsVisible],
-    );
-
-    const { updateToc } = useUrlActions();
-    const closeToc = useCallback(
-        () => updateToc(false),
-        [updateToc],
     );
 
     return <Screen theme={theme}>
@@ -88,8 +78,6 @@ function BookReady({
             theme={theme}
             toc={toc}
             bookId={bookId}
-            closeToc={closeToc}
-            open={showToc}
         />
         <View style={{
             width: '100%',
