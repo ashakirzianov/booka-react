@@ -9,7 +9,7 @@ import {
     BookFragmentComp, BookSelection, ColorizedRange,
 } from '../reader';
 import {
-    useOnCopy, useHighlights, useTheme, useUrlActions, useUrlQuery, usePositions,
+    useOnCopy, useHighlights, useTheme, useUrlActions, useUrlQuery, usePositions, useOnClick,
 } from '../application';
 import { Themed, colors, Theme } from '../core';
 import { config } from '../config';
@@ -84,19 +84,8 @@ function useSelectionHandlers(bookId: string) {
     const [menuTarget, setMenuTarget] = useState<ContextMenuTarget>({ target: 'empty' });
     const onSelectionChange = useCallback((sel: BookSelection | undefined) => {
         selection.current = sel?.text?.length ? sel : undefined;
-        const selectedHighlight = sel !== undefined
-            ? highlights.find(h => doesRangeOverlap(h.range, sel.range))
-            : undefined;
-        const target: ContextMenuTarget = sel
-            ? (
-                selectedHighlight
-                    ? { target: 'highlight', highlight: selectedHighlight }
-                    : { target: 'selection', selection: sel }
-            )
-            : { target: 'empty' };
-        setMenuTarget(target);
-    }, [highlights]);
-    useOnCopy(useCallback((e: ClipboardEvent) => {
+    }, []);
+    useOnCopy(useCallback(e => {
         e.preventDefault();
         if (selection.current && e.clipboardData) {
             const selectionText = `${selection.current.text}\n${generateQuoteLink(bookId, selection.current.range)}`;
@@ -104,6 +93,19 @@ function useSelectionHandlers(bookId: string) {
         }
         updateQuoteRange(selection.current && selection.current.range);
     }, [bookId, updateQuoteRange, selection]));
+    useOnClick(useCallback(e => {
+        const sel = selection.current;
+        if (sel !== undefined) {
+            const selectedHighlight = highlights
+                .find(h => doesRangeOverlap(h.range, sel.range));
+            const target: ContextMenuTarget = selectedHighlight
+                ? { target: 'highlight', highlight: selectedHighlight }
+                : { target: 'selection', selection: sel };
+            setMenuTarget(target);
+        } else {
+            setMenuTarget({ target: 'empty' });
+        }
+    }, [highlights]));
 
     return { onSelectionChange, menuTarget };
 }
