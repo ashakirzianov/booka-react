@@ -24,12 +24,65 @@ export const BookView = memo(function BookViewF({
     fragment: BookFragment,
 }) {
     const { theme } = useTheme();
+    const { pathToScroll, onScroll, onNavigation } = useScrollHandlers(bookId);
+    const { onSelectionChange, menuTarget } = useSelectionHandlers(bookId);
+    const { colorization } = useColorization(bookId);
+
+    return <>
+        <AnchorButton
+            theme={theme}
+            defaultTitle='Previous'
+            anchor={fragment.previous}
+            bookId={bookId}
+            callback={onNavigation}
+        />
+        <BookFragmentComp
+            fragment={fragment}
+            color={colors(theme).text}
+            refColor={colors(theme).accent}
+            refHoverColor={colors(theme).highlight}
+            fontSize={theme.fontSizes.text * theme.fontScale}
+            fontFamily={theme.fontFamilies.book}
+            colorization={colorization}
+            pathToScroll={pathToScroll}
+            onScroll={onScroll}
+            onSelectionChange={onSelectionChange}
+        />
+        <AnchorButton
+            theme={theme}
+            defaultTitle='Next'
+            anchor={fragment.next}
+            bookId={bookId}
+            callback={onNavigation}
+        />
+        <BookContextMenu
+            bookId={bookId}
+            target={menuTarget}
+        />
+    </>;
+});
+
+function useColorization(bookId: string) {
+    const { theme } = useTheme();
     const { quote } = useUrlQuery();
+    const highlights = useHighlights(bookId);
+
+    const colorization = useMemo(
+        () => quoteColorization(quote, theme)
+            .concat(highlightsColorization(highlights, theme))
+        ,
+        [quote, highlights, theme],
+    );
+    return { colorization };
+}
+
+function useSelectionHandlers(bookId: string) {
     const { updateQuoteRange } = useUrlActions();
+
     const highlights = useHighlights(bookId);
     const selection = useRef<BookSelection | undefined>(undefined);
     const [menuTarget, setMenuTarget] = useState<ContextMenuTarget>({ target: 'empty' });
-    const selectionHandler = useCallback((sel: BookSelection | undefined) => {
+    const onSelectionChange = useCallback((sel: BookSelection | undefined) => {
         selection.current = sel?.text?.length ? sel : undefined;
         const selectedHighlight = sel !== undefined
             ? highlights.find(h => doesRangeOverlap(h.range, sel.range))
@@ -52,48 +105,8 @@ export const BookView = memo(function BookViewF({
         updateQuoteRange(selection.current && selection.current.range);
     }, [bookId, updateQuoteRange, selection]));
 
-    const colorization = useMemo(
-        () => quoteColorization(quote, theme)
-            .concat(highlightsColorization(highlights, theme))
-        ,
-        [quote, highlights, theme],
-    );
-
-    const { pathToScroll, onScroll, onNavigation } = useScrollHandlers(bookId);
-
-    return <>
-        <AnchorButton
-            theme={theme}
-            defaultTitle='Previous'
-            anchor={fragment.previous}
-            bookId={bookId}
-            callback={onNavigation}
-        />
-        <BookFragmentComp
-            fragment={fragment}
-            color={colors(theme).text}
-            refColor={colors(theme).accent}
-            refHoverColor={colors(theme).highlight}
-            fontSize={theme.fontSizes.text * theme.fontScale}
-            fontFamily={theme.fontFamilies.book}
-            colorization={colorization}
-            pathToScroll={pathToScroll}
-            onScroll={onScroll}
-            onSelectionChange={selectionHandler}
-        />
-        <AnchorButton
-            theme={theme}
-            defaultTitle='Next'
-            anchor={fragment.next}
-            bookId={bookId}
-            callback={onNavigation}
-        />
-        <BookContextMenu
-            bookId={bookId}
-            target={menuTarget}
-        />
-    </>;
-});
+    return { onSelectionChange, menuTarget };
+}
 
 function useScrollHandlers(bookId: string) {
     const { path } = useUrlQuery();
