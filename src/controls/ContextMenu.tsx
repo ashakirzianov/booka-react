@@ -42,7 +42,7 @@ export function ContextMenuItem({ callback, theme, children }: HasChildren & The
         alignItems: 'center',
         padding: regularSpace,
     }}
-        onClick={callback}
+        onMouseUp={callback}
     >
         {children}
     </div>;
@@ -67,7 +67,7 @@ export function TextContextMenuItem({
         },
         padding: regularSpace,
     }}
-        onClick={callback}
+        onMouseUp={callback}
     >
         {
             !icon ? null :
