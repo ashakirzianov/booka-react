@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import React, {
-    ReactNode, Fragment, useRef, MouseEvent, useCallback,
+    ReactNode, Fragment, useRef, MouseEvent, TouchEvent, useCallback,
 } from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
@@ -23,7 +23,7 @@ export function ContextMenu({
     id: string,
     onTrigger: () => boolean,
 }) {
-    type EventType = MouseEvent;
+    type EventType = MouseEvent | TouchEvent;
     type RefType = {
         handleContextClick: (e: EventType) => void,
     };

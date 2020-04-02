@@ -2,18 +2,16 @@ import React, { useCallback, memo, useMemo, useState, useRef } from 'react';
 import { throttle } from 'lodash';
 import {
     BookFragment, BookPath, BookRange,
-    Highlight, BookAnchor, rangeToString,
+    Highlight, BookAnchor,
 } from 'booka-common';
 
 import {
     BookFragmentComp, BookSelection, ColorizedRange,
 } from '../reader';
 import {
-    useOnCopy, useHighlights, useTheme, useUrlActions, useUrlQuery,
-    usePositions,
+    useHighlights, useTheme, useUrlActions, useUrlQuery, usePositions,
 } from '../application';
 import { Themed, colors, Theme } from '../core';
-import { config } from '../config';
 import { BookContextMenu } from './BookContextMenu';
 import { View, BorderButton, regularSpace, colorForHighlightGroup } from '../controls';
 import { BookPathLink } from './Navigation';
@@ -77,20 +75,10 @@ function useColorization(bookId: string) {
 }
 
 function useSelectionHandlers(bookId: string) {
-    const { updateQuoteRange } = useUrlActions();
-
     const selection = useRef<BookSelection | undefined>(undefined);
     const onSelectionChange = useCallback((sel: BookSelection | undefined) => {
         selection.current = sel?.text?.length ? sel : undefined;
     }, []);
-    useOnCopy(useCallback(e => {
-        e.preventDefault();
-        if (selection.current && e.clipboardData) {
-            const selectionText = `${selection.current.text}\n${generateQuoteLink(bookId, selection.current.range)}`;
-            e.clipboardData.setData('text/plain', selectionText);
-        }
-        updateQuoteRange(selection.current && selection.current.range);
-    }, [bookId, updateQuoteRange, selection]));
 
     return { onSelectionChange, selection };
 }
@@ -163,8 +151,4 @@ function highlightsColorization(highlights: Highlight[], theme: Theme): Colorize
         color: colors(theme)[colorForHighlightGroup(h.group)],
         range: h.range,
     }));
-}
-
-function generateQuoteLink(id: string, quote: BookRange) {
-    return `${config().frontUrl}/book/${id}?q=${rangeToString(quote)}`;
 }

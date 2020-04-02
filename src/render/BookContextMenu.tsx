@@ -1,14 +1,17 @@
 import React, { useState, useCallback, MutableRefObject } from 'react';
 
-import { Highlight, BookRange, HighlightGroup, doesRangeOverlap } from 'booka-common';
+import {
+    Highlight, BookRange, HighlightGroup, doesRangeOverlap, rangeToString,
+} from 'booka-common';
 import { BookSelection } from '../reader';
-import { useTheme, useHighlightsActions, useHighlights } from '../application';
+import { useTheme, useHighlightsActions, useHighlights, useUrlActions, useOnCopy } from '../application';
 import {
     ContextMenu, ContextMenuItem, TextContextMenuItem,
     CircleButton, colorForHighlightGroup, SimpleButton,
     Icon, HasChildren,
 } from '../controls';
 import { Themed } from '../core';
+import { config } from '../config';
 
 type HighlightTarget = {
     target: 'highlight',
@@ -39,6 +42,7 @@ export function BookContextMenu({
         addHighlight, removeHighlight, updateHighlightGroup,
     } = useHighlightsActions();
     const { onTrigger, target } = useMenuTarget(bookId, selection);
+    useCopyQuote(bookId, selection);
 
     return <ContextMenu
         id='book-menu'
@@ -81,6 +85,22 @@ function useMenuTarget(bookId: string, selection: SelectionType) {
     }, [highlights, selection]);
 
     return { onTrigger, target };
+}
+
+function useCopyQuote(bookId: string, selection: SelectionType) {
+    const { updateQuoteRange } = useUrlActions();
+    useOnCopy(useCallback(e => {
+        e.preventDefault();
+        if (selection.current && e.clipboardData) {
+            const selectionText = `${selection.current.text}\n${generateQuoteLink(bookId, selection.current.range)}`;
+            e.clipboardData.setData('text/plain', selectionText);
+        }
+        updateQuoteRange(selection.current && selection.current.range);
+    }, [bookId, updateQuoteRange, selection]));
+}
+
+function generateQuoteLink(id: string, quote: BookRange) {
+    return `${config().frontUrl}/book/${id}?q=${rangeToString(quote)}`;
 }
 
 function AddHighlightItem({
