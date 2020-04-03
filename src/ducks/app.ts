@@ -5,20 +5,24 @@ import { DataAction } from './data';
 import { AccountState, AccountAction } from './account';
 import { ThemeState, ThemeAction } from './theme';
 import { BookState, BookAction } from './book';
+import { BookmarksAction, BookmarksState } from './bookmarks';
 
 export type AppAction =
     | DataAction
     | AccountAction
     | ThemeAction
     | BookAction
+    | BookmarksAction
     ;
-export type ActionForType<T extends AppAction['type']> =
+export type AppActionType = AppAction['type'];
+export type ActionForType<T extends AppActionType> =
     Extract<AppAction, { type: T }>;
 
 export type AppState = {
     account: AccountState,
     theme: ThemeState,
     book: BookState,
+    bookmarks: BookmarksState,
 };
 
 export type AppDependencies = UserDataProvider;
@@ -33,7 +37,7 @@ export function createAppEpicMiddleware(options: {
 }
 
 type TransformObservable<T, U> = (o: Observable<T>) => Observable<U>;
-export function ofAppType<T extends AppAction['type']>(
+export function ofAppType<T extends AppActionType>(
     ...types: T[]
 ): TransformObservable<AppAction, ActionForType<T>> {
     return ofType(...types) as any;

@@ -19,6 +19,7 @@ export function trackComponent(f: (p: any) => any) {
     }
 }
 
+// TODO: move to 'common' ?
 export function sameArrays<T>(a1: T[], a2: T[]) {
     return a1.length === a2.length && a1.every((v, idx) => v === a2[idx]);
 }

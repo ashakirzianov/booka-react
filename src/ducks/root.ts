@@ -4,15 +4,19 @@ import { AppState, AppAction } from './app';
 import { themeReducer } from './theme';
 import { accountReducer, accountEpic } from './account';
 import { dataEpic } from './data';
-import { bookReducer } from './book';
+import { bookReducer, bookEpic } from './book';
+import { bookmarksReducer, bookmarksEpic } from './bookmarks';
 
 export const rootReducer = combineReducers<AppState, AppAction>({
     theme: themeReducer,
     account: accountReducer,
     book: bookReducer,
+    bookmarks: bookmarksReducer,
 });
 
 export const rootEpic = combineEpics(
-    accountEpic,
     dataEpic,
+    accountEpic,
+    bookEpic,
+    bookmarksEpic,
 );
