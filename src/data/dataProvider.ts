@@ -13,7 +13,7 @@ import { uploadProvider } from './upload';
 
 export type DataProvider = ReturnType<typeof createDataProvider>;
 
-// TODO: notexport
+// TODO: not export
 export function createDataProvider(sign: SignState) {
     const token = sign.sign === 'signed'
         ? sign.token : undefined;
