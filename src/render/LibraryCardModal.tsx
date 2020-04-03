@@ -2,11 +2,11 @@ import React, { useCallback, ReactNode } from 'react';
 import { View } from 'react-native';
 
 import {
-    LibraryCard, BookPath, firstPath, filterUndefined, pageForPosition,
+    LibraryCard, BookPath, firstPath, filterUndefined, pageForPosition, CurrentPosition,
 } from 'booka-common';
 import {
     useTheme, useLibraryCard,
-    useCollection, usePositions, mostRecentPosition,
+    useCollection, usePositions,
 } from '../application';
 import {
     Modal, ActivityIndicator, ActionButton, TagLabel,
@@ -268,4 +268,12 @@ function Layout({
             {Continue}
         </View>
     </View>;
+}
+
+function mostRecentPosition(positions: CurrentPosition[]): CurrentPosition | undefined {
+    return positions.length === 0
+        ? undefined
+        : positions.reduce(
+            (most, curr) => most.created < curr.created ? curr : most,
+        );
 }

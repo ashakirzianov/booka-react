@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useAppSelector, useAppDispatch } from './reduxHooks';
-import { doFbLogout } from './facebookSdk';
+import { doFbLogout } from '../facebookSdk';
 
 export function useAccount() {
     const accountState = useAppSelector(s => s.account);

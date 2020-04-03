@@ -2,7 +2,7 @@ import {
     createContext, useState, useEffect, useContext,
     PropsWithChildren, createElement,
 } from 'react';
-import { createDataProvider } from '../data';
+import { createDataProvider } from '../../data';
 import { useAccount } from './accountHooks';
 
 const DataProviderContext = createContext(
