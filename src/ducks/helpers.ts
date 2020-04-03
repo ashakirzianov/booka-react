@@ -18,6 +18,19 @@ export function sideEffectEpic<T extends AppActionType>(
     );
 }
 
+export function dataProviderEpic(
+    projection: (dataProvider: DataProvider) => Observable<AppAction>,
+): AppEpic {
+    return (action$, _, { getCurrentDataProvider }) => action$.pipe(
+        ofAppType('data-provider-update'),
+        mergeMap(() => projection(getCurrentDataProvider()).pipe(
+            takeUntil(action$.pipe(
+                ofAppType('data-provider-update'),
+            ))),
+        ),
+    );
+}
+
 export function bookRequestEpic(
     projection: (bookId: string, dataProvider: DataProvider) => Observable<AppAction>,
 ): AppEpic {

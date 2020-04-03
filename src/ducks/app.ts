@@ -7,6 +7,7 @@ import { ThemeState, ThemeAction } from './theme';
 import { BookState, BookAction } from './book';
 import { BookmarksAction, BookmarksState } from './bookmarks';
 import { HighlightsState, HighlightsAction } from './highlights';
+import { CollectionsAction, CollectionsState } from './collections';
 
 export type AppAction =
     | DataAction
@@ -15,6 +16,7 @@ export type AppAction =
     | BookAction
     | BookmarksAction
     | HighlightsAction
+    | CollectionsAction
     ;
 export type AppActionType = AppAction['type'];
 export type ActionForType<T extends AppActionType> =
@@ -26,6 +28,7 @@ export type AppState = {
     book: BookState,
     bookmarks: BookmarksState,
     highlights: HighlightsState,
+    collections: CollectionsState,
 };
 
 export type AppDependencies = UserDataProvider;

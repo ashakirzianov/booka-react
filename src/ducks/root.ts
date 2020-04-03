@@ -7,6 +7,7 @@ import { dataEpic } from './data';
 import { bookReducer, bookEpic } from './book';
 import { bookmarksReducer, bookmarksEpic } from './bookmarks';
 import { highlightsReducer, highlightsEpic } from './highlights';
+import { collectionsReducer, collectionsEpic } from './collections';
 
 export const rootReducer = combineReducers<AppState, AppAction>({
     theme: themeReducer,
@@ -14,6 +15,7 @@ export const rootReducer = combineReducers<AppState, AppAction>({
     book: bookReducer,
     bookmarks: bookmarksReducer,
     highlights: highlightsReducer,
+    collections: collectionsReducer,
 });
 
 export const rootEpic = combineEpics(
@@ -22,4 +24,5 @@ export const rootEpic = combineEpics(
     bookEpic,
     bookmarksEpic,
     highlightsEpic,
+    collectionsEpic,
 );
