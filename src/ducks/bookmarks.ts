@@ -5,7 +5,7 @@ import {
 } from 'booka-common';
 import { sameArrays } from '../utils';
 import { AppAction } from './app';
-import { bookDataRequestEpic, bookRequestEpic } from './helpers';
+import { sideEffectEpic, bookRequestEpic } from './helpers';
 
 export type BookmarksState = Bookmark[];
 
@@ -51,11 +51,11 @@ const requestBookmarksEpic = bookRequestEpic(({ payload: { bookId } }, dp) => dp
         payload: bookmarks,
     })),
 ));
-const requestBookmarksAddEpic = bookDataRequestEpic(
+const requestBookmarksAddEpic = sideEffectEpic(
     'bookmarks-req-add',
     ({ payload }, dp) => dp.addBookmark(payload.bookId, payload.path),
 );
-const requestBookmarksRemoveEpic = bookDataRequestEpic(
+const requestBookmarksRemoveEpic = sideEffectEpic(
     'bookmarks-req-remove',
     ({ payload }, dp) => dp.removeBookmark(payload.bookmarkId),
 );

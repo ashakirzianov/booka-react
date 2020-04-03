@@ -5,7 +5,7 @@ import {
     AppEpic, AppAction, ActionForType, ofAppType, AppActionType,
 } from './app';
 
-export function bookDataRequestEpic<T extends AppActionType>(
+export function sideEffectEpic<T extends AppActionType>(
     type: T,
     fn: (action: ActionForType<T>, dataProvider: DataProvider) => void,
 ): AppEpic {
