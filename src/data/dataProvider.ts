@@ -12,6 +12,8 @@ import { libraryProvider } from './library';
 import { uploadProvider } from './upload';
 
 export type DataProvider = ReturnType<typeof createDataProvider>;
+
+// TODO: notexport
 export function createDataProvider(sign: SignState) {
     const token = sign.sign === 'signed'
         ? sign.token : undefined;
@@ -31,5 +33,18 @@ export function createDataProvider(sign: SignState) {
         ...searchProvider(api),
         ...libraryProvider(api, storage.sub('library')),
         ...uploadProvider(api),
+    };
+}
+
+export type UserDataProvider = ReturnType<typeof userDataProvider>;
+export function userDataProvider() {
+    let currentDataProvider = createDataProvider({ sign: 'not-signed' });
+    return {
+        getCurrentDataProvider() {
+            return currentDataProvider;
+        },
+        setSign(sign: SignState) {
+            currentDataProvider = createDataProvider(sign);
+        },
     };
 }
