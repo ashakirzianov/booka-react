@@ -3,6 +3,7 @@ import { combineEpics } from 'redux-observable';
 import { AppState, AppAction } from './app';
 import { themeReducer } from './theme';
 import { accountReducer, accountEpic } from './account';
+import { dataEpic } from './data';
 
 export const rootReducer = combineReducers<AppState, AppAction>({
     theme: themeReducer,
@@ -11,4 +12,5 @@ export const rootReducer = combineReducers<AppState, AppAction>({
 
 export const rootEpic = combineEpics(
     accountEpic,
+    dataEpic,
 );

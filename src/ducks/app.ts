@@ -3,10 +3,12 @@ import { Observable } from 'rxjs';
 import { UserDataProvider } from '../data';
 import { ThemeState, ThemeAction } from './theme';
 import { AccountState, AccountAction } from './account';
+import { DataAction } from './data';
 
 export type AppAction =
     | ThemeAction
     | AccountAction
+    | DataAction
     ;
 export type ActionForType<T extends AppAction['type']> =
     Extract<AppAction, { type: T }>;
