@@ -1,10 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { map } from 'rxjs/operators';
-import { BookFragment, BookPath, firstPath, LibraryCard } from 'booka-common';
+import {
+    BookFragment, BookPath, firstPath, LibraryCard, isPathInFragment, TableOfContents,
+} from 'booka-common';
 import { Loadable } from './utils';
 import { useDataProvider } from './dataProviderHooks';
 
 export type BookState = Loadable<{
+    bookId: string,
     fragment: BookFragment,
 }>;
 export function useBook({ bookId, path, refId }: {
@@ -15,20 +18,40 @@ export function useBook({ bookId, path, refId }: {
     const data = useDataProvider();
     const [bookState, setBookState] = useState<BookState>({ loading: true });
     useEffect(() => {
-        const observable = refId
-            ? data.fragmentForRef(bookId, refId)
-            : data.fragmentForPath(bookId, path || firstPath());
-        const sub = observable
-            .pipe(
-                map((fragment): BookState => ({
-                    fragment,
-                })),
-            )
-            .subscribe(setBookState);
-        return () => sub.unsubscribe();
-    }, [data, bookId, path, refId]);
+        const actualPath = path || firstPath();
+        const needUpdateFragment = bookState.loading
+            || bookState.bookId !== bookId
+            || !isPathInFragment(bookState.fragment, actualPath)
+            ;
+        if (needUpdateFragment) {
+            const observable = refId
+                ? data.fragmentForRef(bookId, refId)
+                : data.fragmentForPath(bookId, actualPath);
+            const sub = observable
+                .pipe(
+                    map((fragment): BookState => ({
+                        fragment,
+                        bookId,
+                    })),
+                )
+                .subscribe(setBookState);
+            return () => sub.unsubscribe();
+        }
+    }, [data, bookId, path, refId, bookState]);
 
     return { bookState };
+}
+
+export function useToc(bookId: string) {
+    const { tableOfContents } = useDataProvider();
+    const [state, setState] = useState<Loadable<TableOfContents>>({ loading: true });
+    useEffect(() => {
+        const sub = tableOfContents(bookId)
+            .subscribe(setState);
+        return () => sub.unsubscribe();
+    }, [tableOfContents, bookId]);
+
+    return state;
 }
 
 export type TextPreviewState = Loadable<{

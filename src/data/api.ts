@@ -1,5 +1,5 @@
 import { of, Observable } from 'rxjs';
-import { concat, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import {
     AuthToken, BackContract, LibContract,
     Bookmark, Highlight, HighlightUpdate,
@@ -52,58 +52,48 @@ export function createApi(token?: AuthToken) {
         },
         getPreview(bookId: string, path: BookPath) {
             return lib.get('/preview', {
-                query: { bookId, node: path.node },
+                query: { id: bookId, node: path.node },
             }).pipe(
                 map(r => r.preview),
             );
         },
+        getToc(bookId: string) {
+            return lib.get('/toc', {
+                query: { id: bookId },
+            });
+        },
         getBookmarks(bookId: string) {
-            return withInitial([], optional(token && back.get('/bookmarks', {
+            return optional(token && back.get('/bookmarks', {
                 auth: token.token,
                 query: { bookId },
-            })));
+            }));
         },
         getHighlights(bookId: string) {
-            return withInitial([], optional(token && back.get('/highlights', {
+            return optional(token && back.get('/highlights', {
                 auth: token.token,
                 query: { bookId },
-            })));
+            }));
         },
         getCurrentPositions() {
-            return withInitial([], optional(token && back.get('/current-position', {
+            return optional(token && back.get('/current-position', {
                 auth: token.token,
-            })));
+            }));
         },
         getLibraryCard(bookId: string) {
-            return lib.post('/card/batch', {
-                body: [{ id: bookId }],
-            }).pipe(
-                map(res => {
-                    const card = res[0]?.card;
-                    if (card) {
-                        return card;
-                    } else {
-                        throw new Error(`No book for id: ${bookId}`);
-                    }
-                }),
-            );
+            return lib.get('/card', {
+                query: { id: bookId },
+            });
         },
         getCollection(name: CardCollectionName) {
             if (name === 'uploads') {
-                return withInitial(
-                    { name, cards: [] },
-                    optional(token && lib.get('/uploads', {
-                        auth: token.token,
-                    })),
-                );
+                return optional(token && lib.get('/uploads', {
+                    auth: token.token,
+                }));
             } else {
-                return withInitial(
-                    { name, cards: [] },
-                    optional(token && back.get('/collections', {
-                        auth: token.token,
-                        query: { name },
-                    })),
-                );
+                return optional(token && back.get('/collections', {
+                    auth: token.token,
+                    query: { name },
+                }));
             }
         },
         getSearchResults(query: string) {
@@ -177,13 +167,6 @@ export function createApi(token?: AuthToken) {
             }));
         },
     };
-}
-
-// TODO: rethink this
-function withInitial<T>(init: T, observable: Observable<T>): Observable<T> {
-    return of(init).pipe(
-        concat(observable),
-    );
 }
 
 function optional<T>(observable?: Observable<T>): Observable<T> {

@@ -6,16 +6,14 @@ import { LibraryCardModal } from './LibraryCardModal';
 import { TopBar } from './TopBar';
 import { CurrentBook } from './CurrentBook';
 import { RecentBooks } from './RecentBooks';
-import { useTheme } from '../application';
+import { useTheme, useUrlQuery } from '../application';
 import { PopularBooks } from './PopularBooks';
 
-export function FeedScreen({ show, query }: {
-    query: string | undefined,
-    show: string | undefined,
-}) {
+export function FeedScreen() {
     const { theme } = useTheme();
+    const { card, query } = useUrlQuery();
     return <Screen theme={theme}>
-        <LibraryCardModal bookId={show} />
+        <LibraryCardModal bookId={card} />
         <TopBar query={query} />
         <CurrentBook />
         <RecentBooks />

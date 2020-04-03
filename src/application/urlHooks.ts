@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { History } from 'history';
+import { parse } from 'query-string';
 
 import {
-    BookPath, pathToString, BookRange, rangeToString,
+    BookPath, pathToString, BookRange, rangeToString, rangeFromString, pathFromString,
 } from 'booka-common';
 import { updateSearch } from './utils';
 
@@ -30,6 +31,27 @@ export function useUrlActions() {
             history.goBack();
         },
     }), [history]);
+}
+
+export function useUrlQuery() {
+    const { search } = useLocation();
+    const { q, p, toc, show, ref } = parse(search);
+
+    const quote = useMemo(
+        () => typeof q === 'string' ? rangeFromString(q) : undefined,
+        [q],
+    );
+    const path = useMemo(
+        () => typeof p === 'string' ? pathFromString(p) : undefined,
+        [p],
+    );
+    const refId = typeof ref === 'string' ? ref : undefined;
+    const showToc = toc !== undefined;
+    const query = typeof q === 'string' ? q : undefined;
+    const card = typeof show === 'string' ? show : undefined;
+    return {
+        quote, path, showToc, query, card, refId,
+    };
 }
 
 function replaceHistorySearch(history: History, key: string, value: string | undefined | null) {

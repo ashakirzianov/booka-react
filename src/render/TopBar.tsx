@@ -1,12 +1,12 @@
 import React, { ReactNode } from 'react';
 import { View } from 'react-native';
-import { throttle } from 'lodash';
+import { debounce } from 'lodash';
 
 import {
     useLibrarySearch, SearchState, useTheme,
 } from '../application';
 import {
-    TextInput, ActivityIndicator, Panel, userAreaWidth,
+    TextInput, ActivityIndicator, Panel, userAreaWidth, Label,
 } from '../controls';
 import { Themed } from '../core';
 import { AccountButton } from './AccountButton';
@@ -19,7 +19,7 @@ export function TopBar({ query }: {
 }) {
     const { theme } = useTheme();
     const { searchState, doQuery } = useLibrarySearch(query);
-    const querySearch = React.useCallback(throttle((q: string) => {
+    const querySearch = React.useCallback(debounce((q: string) => {
         doQuery(q ? q : undefined);
     }, 300), [doQuery]);
     return <Layout
@@ -48,18 +48,26 @@ function SearchResults({ query, state, theme }: Themed & {
 }) {
     if (!query) {
         return null;
+    } else if (state.loading) {
+        return <Panel theme={theme}>
+            <ActivityIndicator theme={theme} />
+        </Panel>;
+    } else if (state.results.length === 0) {
+        return <Panel theme={theme}>
+            <Label
+                theme={theme}
+                text='Nothing found'
+            />
+        </Panel>;
+    } else {
+        return <Panel theme={theme}>
+            <BookList
+                theme={theme}
+                books={state.results.map(r => r.desc)}
+                lines={2}
+            />
+        </Panel>;
     }
-    return <Panel theme={theme}>
-        {
-            state.loading
-                ? <ActivityIndicator theme={theme} />
-                : <BookList
-                    theme={theme}
-                    books={state.results.map(r => r.desc)}
-                    lines={2}
-                />
-        }
-    </Panel>;
 }
 
 function Layout({ Input, Buttons, Results }: {

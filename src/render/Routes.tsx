@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react';
-import { BrowserRouter, Route, Switch, useParams, useLocation, Redirect } from 'react-router-dom';
-import { parse } from 'query-string';
-import { pathFromString, rangeFromString } from 'booka-common';
+import React from 'react';
+import {
+    BrowserRouter, Route, Switch, useParams, Redirect,
+} from 'react-router-dom';
 
 import { View } from '../controls';
 import { FeedScreen } from './FeedScreen';
@@ -23,34 +23,14 @@ export function Routes() {
 }
 
 function FeedRoute() {
-    const { show, q } = useQuery();
-
-    return <FeedScreen
-        show={typeof show === 'string' ? show : undefined}
-        query={typeof q === 'string' ? q : undefined}
-    />;
+    return <FeedScreen />;
 }
 
 function BookRoute() {
     // TODO: make type safe ?
     const { bookId } = useParams<{ bookId: string }>();
-    const { toc, p, q } = useQuery();
-    const path = useMemo(
-        () => typeof p === 'string' ? pathFromString(p) : undefined,
-        [p],
-    );
-    const quote = typeof q === 'string' ? rangeFromString(q) : undefined;
 
     return <BookScreen
         bookId={bookId}
-        showToc={toc !== undefined}
-        path={quote?.start ?? path}
-        quote={quote}
     />;
-}
-
-function useQuery() {
-    const { search } = useLocation();
-    const result = parse(search);
-    return result;
 }

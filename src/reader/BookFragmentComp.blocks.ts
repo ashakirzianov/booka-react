@@ -153,10 +153,8 @@ function blockForTitle({ span, level }: TitleNode, env: BuildBlocksEnv): RichTex
 }
 
 function blockForList(node: ListNode, env: BuildBlocksEnv): RichTextBlock {
-    const items = (
-        node.items.map(i =>
-            fragmentsForSpan(i.span, env)
-        )
+    const items = node.items.map(i =>
+        fragmentsForSpan(i.span, env),
     );
     const fragments: RichTextFragment[] = [{
         frag: 'list',

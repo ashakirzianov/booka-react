@@ -1,66 +1,42 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useCallback, memo, useMemo, useState, useRef, ReactNode } from 'react';
+import { throttle } from 'lodash';
 import {
     BookFragment, BookPath, BookRange,
-    Highlight, BookAnchor, doesRangeOverlap, rangeToString,
+    Highlight, BookAnchor,
 } from 'booka-common';
 
 import {
     BookFragmentComp, BookSelection, ColorizedRange,
 } from '../reader';
-import { useCopy } from '../application';
+import {
+    useHighlights, useTheme, useUrlActions, useUrlQuery, usePositions,
+} from '../application';
 import { Themed, colors, Theme } from '../core';
-import { config } from '../config';
-import { BookContextMenu, ContextMenuTarget } from './BookContextMenu';
-import { View, BorderButton, regularSpace, colorForHighlightGroup } from '../controls';
-import { BookPathLink } from './Navigation';
+import { BookContextMenu } from './BookContextMenu';
+import {
+    View, BorderButton, regularSpace, colorForHighlightGroup,
+} from '../controls';
+import { BookPathLink, BookRefLink } from './Navigation';
 
-export function BookView({
-    bookId, fragment, theme, pathToScroll, updateBookPosition,
-    highlights, quoteRange, setQuoteRange, openRef, onNavigation,
-}: Themed & {
+export const BookView = memo(function BookViewF({
+    bookId, fragment,
+}: {
     bookId: string,
     fragment: BookFragment,
-    pathToScroll: BookPath | undefined,
-    updateBookPosition: (path: BookPath) => void,
-    quoteRange: BookRange | undefined,
-    highlights: Highlight[],
-    setQuoteRange: (range: BookRange | undefined) => void,
-    openRef: (refId: string) => void,
-    onNavigation?: () => void,
 }) {
-    const selection = useRef<BookSelection | undefined>(undefined);
-    const selectionHandler = useCallback((sel: BookSelection | undefined) => {
-        selection.current = sel;
-    }, []);
-    useCopy(useCallback((e: ClipboardEvent) => {
-        if (selection.current && e.clipboardData) {
-            e.preventDefault();
-            const selectionText = `${selection.current.text}\n${generateQuoteLink(bookId, selection.current.range)}`;
-            e.clipboardData.setData('text/plain', selectionText);
-        }
-        setQuoteRange(selection.current && selection.current.range);
-    }, [bookId, setQuoteRange]));
-
-    const colorization = quoteColorization(quoteRange, theme)
-        .concat(highlightsColorization(highlights, theme))
-        ;
-
-    const currentSelection = selection.current;
-    const selectedHighlight = currentSelection !== undefined
-        ? highlights.find(h => doesRangeOverlap(h.range, currentSelection.range))
-        : undefined;
-
-    const menuTarget: ContextMenuTarget = selection.current
-        ? (
-            selectedHighlight
-                ? { target: 'highlight', highlight: selectedHighlight }
-                : { target: 'selection', selection: selection.current }
-        )
-        : { target: 'empty' };
+    const { theme } = useTheme();
+    const { pathToScroll, onScroll, onNavigation } = useScrollHandlers(bookId);
+    const { onSelectionChange, selection } = useSelectionHandlers(bookId);
+    const { colorization } = useColorization(bookId);
+    const RefComp = useCallback(({ refId, children }: { refId: string, children: ReactNode }) => {
+        return <BookRefLink bookId={bookId} refId={refId}>
+            {children}
+        </BookRefLink>;
+    }, [bookId]);
 
     return <BookContextMenu
         bookId={bookId}
-        target={menuTarget}
+        selection={selection}
     >
         <AnchorButton
             theme={theme}
@@ -74,13 +50,13 @@ export function BookView({
             color={colors(theme).text}
             refColor={colors(theme).accent}
             refHoverColor={colors(theme).highlight}
-            fontSize={theme.fontSizes.text}
+            fontSize={theme.fontSizes.text * theme.fontScale}
             fontFamily={theme.fontFamilies.book}
             colorization={colorization}
             pathToScroll={pathToScroll}
-            onScroll={updateBookPosition}
-            onSelectionChange={selectionHandler}
-            onRefClick={openRef}
+            onScroll={onScroll}
+            onSelectionChange={onSelectionChange}
+            RefComp={RefComp}
         />
         <AnchorButton
             theme={theme}
@@ -90,6 +66,56 @@ export function BookView({
             callback={onNavigation}
         />
     </BookContextMenu>;
+});
+
+function useColorization(bookId: string) {
+    const { theme } = useTheme();
+    const { quote } = useUrlQuery();
+    const highlights = useHighlights(bookId);
+
+    const colorization = useMemo(
+        () => quoteColorization(quote, theme)
+            .concat(highlightsColorization(highlights, theme))
+        ,
+        [quote, highlights, theme],
+    );
+    return { colorization };
+}
+
+function useSelectionHandlers(bookId: string) {
+    const selection = useRef<BookSelection | undefined>(undefined);
+    const onSelectionChange = useCallback((sel: BookSelection | undefined) => {
+        selection.current = sel?.text?.length ? sel : undefined;
+    }, []);
+
+    return { onSelectionChange, selection };
+}
+
+function useScrollHandlers(bookId: string) {
+    const { path } = useUrlQuery();
+    const { updateBookPath } = useUrlActions();
+    const { addCurrentPosition } = usePositions();
+    const [needToScroll, setNeedToScroll] = useState(true);
+    const onScroll = useCallback(throttle((p: BookPath | undefined) => {
+        if (needToScroll) {
+            setNeedToScroll(false);
+        }
+        updateBookPath(p);
+        if (p) {
+            addCurrentPosition({ path: p, bookId });
+        }
+    }, 1000),
+        [setNeedToScroll, updateBookPath, addCurrentPosition, needToScroll, bookId],
+    );
+    const onNavigation = useCallback(
+        () => setNeedToScroll(true),
+        [setNeedToScroll],
+    );
+
+    return {
+        onScroll, onNavigation,
+        pathToScroll: needToScroll ? path : undefined,
+    };
 }
 
 function AnchorButton({
@@ -133,8 +159,4 @@ function highlightsColorization(highlights: Highlight[], theme: Theme): Colorize
         color: colors(theme)[colorForHighlightGroup(h.group)],
         range: h.range,
     }));
-}
-
-function generateQuoteLink(id: string, quote: BookRange) {
-    return `${config().frontUrl}/book/${id}?q=${rangeToString(quote)}`;
 }

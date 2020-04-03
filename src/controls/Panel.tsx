@@ -80,6 +80,7 @@ export function OverlayPanel({
                 : [{ translateY: '100%' }],
         } as any),
     }}
+        onClick={e => e.stopPropagation()}
     >
         {children}
     </div>;

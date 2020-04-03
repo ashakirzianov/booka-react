@@ -68,6 +68,15 @@ export function libraryProvider(api: Api, storage: Storage) {
                 return api.getPreview(bookId, path);
             }
         },
+        tableOfContents(bookId: string) {
+            const cached = bookCache.existing(bookId);
+            if (cached) {
+                const toc = tocForBook(cached);
+                return of(toc);
+            } else {
+                return api.getToc(bookId);
+            }
+        },
         popularBooks() {
             return api.getPopularBooks();
         },

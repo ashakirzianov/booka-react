@@ -1,43 +1,69 @@
-import React, { ReactNode } from 'react';
+// eslint-disable-next-line
+import React, {
+    ReactNode, Fragment, useRef, MouseEvent, TouchEvent, useCallback,
+} from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 
 import {
-    ContextMenuTrigger, ContextMenu as ReactContextMenu, MenuItem,
+    ContextMenu as Menu, ContextMenuTrigger, MenuItem as Item,
 } from 'react-contextmenu';
 
 import { Themed, colors } from '../core';
 import {
-    HasChildren, menuWidth, regularSpace, fontCss,
+    HasChildren, regularSpace, fontCss, menuWidth,
 } from './common';
-import { OverlayPanel } from './Panel';
 import { IconName, Icon } from './Icon';
+import { OverlayPanel } from './Panel';
 
 export function ContextMenu({
-    id, trigger, children, theme,
+    children, theme, id, trigger, onTrigger,
 }: HasChildren & Themed & {
-    id: string,
     trigger: ReactNode,
+    id: string,
+    onTrigger: () => boolean,
 }) {
-    return <React.Fragment>
-        <ContextMenuTrigger id={id}>
-            {trigger}
+    type EventType = MouseEvent | TouchEvent;
+    type RefType = {
+        handleContextClick: (e: EventType) => void,
+    };
+    const menuRef = useRef<RefType>();
+    const triggerCallback = useCallback((event: EventType) => {
+        if (menuRef.current) {
+            const show = onTrigger();
+            if (show) {
+                menuRef.current.handleContextClick(event);
+            }
+        }
+    }, [onTrigger]);
+    return <Fragment>
+        <ContextMenuTrigger
+            id={id}
+            ref={ref => menuRef.current = ref as any}
+        >
+            <div
+                onClick={triggerCallback}
+            >
+                {trigger}
+            </div>
         </ContextMenuTrigger>
-        <ReactContextMenu id={id}>
+        <Menu id={id}>
             <OverlayPanel
                 theme={theme}
                 width={menuWidth}
             >
                 {children}
             </OverlayPanel>
-        </ReactContextMenu>
-    </React.Fragment>;
+        </Menu>
+    </Fragment>;
 }
 
 export function ContextMenuItem({ callback, theme, children }: HasChildren & Themed & {
     callback?: () => void,
 }) {
-    return <MenuItem onClick={callback}>
+    return <Item
+        onClick={callback}
+    >
         <div css={{
             display: 'flex',
             flexBasis: 1,
@@ -45,10 +71,11 @@ export function ContextMenuItem({ callback, theme, children }: HasChildren & The
             justifyContent: 'space-between',
             alignItems: 'center',
             padding: regularSpace,
-        }}>
+        }}
+        >
             {children}
         </div>
-    </MenuItem>;
+    </Item>;
 }
 
 export function TextContextMenuItem({
@@ -58,7 +85,7 @@ export function TextContextMenuItem({
     icon?: IconName,
     callback?: () => void,
 }) {
-    return <MenuItem onClick={callback}>
+    return <Item onClick={callback}>
         <div css={{
             display: 'flex',
             flexDirection: 'row',
@@ -70,7 +97,8 @@ export function TextContextMenuItem({
                 color: colors(theme).primary,
             },
             padding: regularSpace,
-        }}>
+        }}
+        >
             {
                 !icon ? null :
                     <Icon
@@ -87,5 +115,5 @@ export function TextContextMenuItem({
                 {text}
             </span>
         </div>
-    </MenuItem>;
+    </Item>;
 }

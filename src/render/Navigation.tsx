@@ -21,6 +21,20 @@ export function BookPathLink({ bookId, path, children }: HasChildren & {
     </Link>;
 }
 
+export function BookRefLink({ bookId, refId, children }: HasChildren & {
+    bookId: string,
+    refId: string,
+}) {
+    const to = `/book/${bookId}?ref=${refId}`;
+    return <Link to={to} style={{
+        textDecoration: 'none',
+        minHeight: 0,
+        margin: 0,
+    }}>
+        {children}
+    </Link>;
+}
+
 export function FeedLink({ children }: HasChildren) {
     return <Link to='/feed' style={{
         textDecoration: 'none',

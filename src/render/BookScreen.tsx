@@ -1,13 +1,12 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 
 import {
     positionForPath, BookPath, pageForPosition,
-    BookFragment, BookRange, TableOfContents,
+    BookFragment, TableOfContents,
 } from 'booka-common';
 
 import {
-    useTheme, useBook, useHighlights, useUrlActions,
-    usePositions, useBookmarks,
+    useTheme, useBook, useUrlQuery,
 } from '../application';
 
 import { Themed, colors } from '../core';
@@ -23,15 +22,13 @@ import {
 } from '../controls';
 import { ShowTocLink, FeedLink } from './Navigation';
 
-export function BookScreen({ bookId, showToc, path, quote }: {
+export const BookScreen = memo(function BookScreenF({ bookId }: {
     bookId: string,
-    showToc: boolean,
-    path?: BookPath,
-    quote?: BookRange,
 }) {
+    const { path, refId } = useUrlQuery();
     const { theme } = useTheme();
     const { bookState } = useBook({
-        bookId, path,
+        bookId, path, refId,
     });
     if (bookState.loading) {
         return <FullScreenActivityIndicator
@@ -46,50 +43,22 @@ export function BookScreen({ bookId, showToc, path, quote }: {
             path={path}
             fragment={fragment}
             toc={toc}
-            showToc={showToc}
-            quote={quote}
         />;
     }
-}
+});
 
 function BookReady({
-    theme, fragment, toc, showToc, bookId, path, quote,
+    theme, fragment, toc, bookId, path,
 }: Themed & {
     bookId: string,
     path: BookPath | undefined,
     fragment: BookFragment,
-    quote: BookRange | undefined,
     toc: TableOfContents | undefined,
-    showToc: boolean,
 }) {
-    const { highlights } = useHighlights(bookId);
-    const { bookmarks } = useBookmarks(bookId);
-
     const [controlsVisible, setControlsVisible] = useState(true);
     const toggleControls = useCallback(
         () => setControlsVisible(!controlsVisible),
         [controlsVisible, setControlsVisible],
-    );
-
-    const { updateBookPath, updateQuoteRange, updateToc } = useUrlActions();
-    const { positions, addCurrentPosition } = usePositions();
-    const [needToScroll, setNeedToScroll] = useState(true);
-    const updatePath = useCallback((p: BookPath | undefined) => {
-        if (needToScroll) {
-            setNeedToScroll(false);
-        }
-        updateBookPath(p);
-        if (p) {
-            addCurrentPosition({ path: p, bookId });
-        }
-    }, [setNeedToScroll, updateBookPath, addCurrentPosition, needToScroll, bookId]);
-    const closeToc = useCallback(
-        () => updateToc(false),
-        [updateToc],
-    );
-    const onNavigation = useCallback(
-        () => setNeedToScroll(true),
-        [setNeedToScroll],
     );
 
     return <Screen theme={theme}>
@@ -103,16 +72,10 @@ function BookReady({
             theme={theme}
             fragment={fragment}
             visible={controlsVisible}
-            path={fragment.current.path}
+            path={path}
         />
         <TableOfContentsModal
-            theme={theme}
-            toc={toc}
-            bookmarks={bookmarks}
-            currents={positions.filter(p => p.bookId === bookId)}
-            id={bookId}
-            closeToc={closeToc}
-            open={showToc}
+            bookId={bookId}
         />
         <View style={{
             width: '100%',
@@ -127,15 +90,7 @@ function BookReady({
                 }}>
                     <BookView
                         bookId={bookId}
-                        theme={theme}
                         fragment={fragment}
-                        highlights={highlights}
-                        pathToScroll={needToScroll ? path : undefined}
-                        updateBookPosition={updatePath}
-                        quoteRange={quote}
-                        setQuoteRange={updateQuoteRange}
-                        openRef={() => undefined}
-                        onNavigation={onNavigation}
                     />
                 </View>
             </Clickable>
@@ -179,9 +134,10 @@ function Footer({
     fragment, path, theme, visible,
 }: Themed & {
     fragment: BookFragment,
-    path: BookPath,
+    path: BookPath | undefined,
     visible: boolean,
 }) {
+    path = path ?? fragment.current.path;
     const total = fragment.toc
         ? pageForPosition(fragment.toc.length)
         : undefined;

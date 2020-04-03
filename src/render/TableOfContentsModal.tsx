@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useCallback } from 'react';
 import {
     TableOfContents, pathToString, Bookmark, BookPath,
     CurrentPosition, comparePaths, EntitySource, sourceToString,
@@ -6,55 +6,87 @@ import {
 } from 'booka-common';
 
 import { Themed } from '../core';
-import { Modal, MenuList, MenuListItem, doubleSpace, View, IconName } from '../controls';
+import {
+    Modal, MenuList, MenuListItem, doubleSpace, View, IconName,
+    ActivityIndicator,
+} from '../controls';
+import {
+    useBookmarks, usePositions, useUrlActions, useUrlQuery, useToc, useTheme,
+} from '../application';
 import { BookPathLink } from './Navigation';
 
-export function TableOfContentsModal({
-    theme, toc, id, closeToc, open, bookmarks, currents,
-}: Themed & {
-    toc: TableOfContents | undefined,
-    bookmarks: Bookmark[],
-    currents: CurrentPosition[],
-    id: string,
-    open: boolean,
-    closeToc: () => void,
+export function TableOfContentsModal({ bookId }: {
+    bookId: string,
 }) {
-    if (!open || !toc) {
-        return null;
-    }
-
-    const items = buildDisplayItems({ toc, bookmarks, currents });
+    const { theme } = useTheme();
+    const toc = useToc(bookId);
+    const { bookmarks } = useBookmarks(bookId);
+    const { positions } = usePositions();
+    const { updateToc } = useUrlActions();
+    const closeToc = useCallback(
+        () => updateToc(false),
+        [updateToc],
+    );
+    const { showToc } = useUrlQuery();
 
     return <Modal
         theme={theme}
         title='Table of Contents'
         close={closeToc}
-        open={open}
+        open={showToc}
     >
-        <View style={{
-            marginTop: doubleSpace,
-        }}>
-            <MenuList theme={theme}>
-                {items.map(item => {
-                    return <BookPathLink
-                        key={pathToString(item.path)}
-                        bookId={id}
-                        path={item.path}
-                    >
-                        <MenuListItem
-                            theme={theme}
-                            left={item.title}
-                            right={item.page}
-                            ident={item.level}
-                            italic={item.kind !== 'chapter'}
-                            icon={item.icon}
-                        />
-                    </BookPathLink>;
-                },
-                )}
-            </MenuList>
-        </View>
+        {
+            toc.loading
+                ? <ActivityIndicator theme={theme} size='large' />
+                : <TableOfContentsContent
+                    theme={theme}
+                    toc={toc}
+                    bookId={bookId}
+                    bookmarks={bookmarks}
+                    positions={positions}
+                />
+        }
     </Modal>;
+}
+
+function TableOfContentsContent({
+    toc, bookId, theme, bookmarks, positions,
+}: Themed & {
+    bookId: string,
+    toc: TableOfContents,
+    bookmarks: Bookmark[],
+    positions: CurrentPosition[],
+}) {
+
+    const items = buildDisplayItems({
+        toc,
+        bookmarks: bookmarks.filter(p => p.bookId === bookId),
+        currents: positions.filter(p => p.bookId === bookId),
+    });
+
+    return <View style={{
+        marginTop: doubleSpace,
+    }}>
+        <MenuList theme={theme}>
+            {items.map(item => {
+                return <BookPathLink
+                    key={pathToString(item.path)}
+                    bookId={bookId}
+                    path={item.path}
+                >
+                    <MenuListItem
+                        theme={theme}
+                        left={item.title}
+                        right={item.page}
+                        ident={item.level}
+                        italic={item.kind !== 'chapter'}
+                        icon={item.icon}
+                    />
+                </BookPathLink>;
+            },
+            )}
+        </MenuList>
+    </View>;
 }
 
 type DisplayItem = {

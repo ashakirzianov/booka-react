@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useState, useCallback, MutableRefObject } from 'react';
 
-import { Highlight, BookRange, HighlightGroup } from 'booka-common';
-import { BookSelection } from '../reader';
-import { useHighlights, useTheme } from '../application';
 import {
-    ContextMenu, ContextMenuItem, HasChildren, TextContextMenuItem,
+    Highlight, BookRange, HighlightGroup, doesRangeOverlap, rangeToString,
+} from 'booka-common';
+import { BookSelection } from '../reader';
+import { useTheme, useHighlightsActions, useHighlights, useUrlActions, useOnCopy } from '../application';
+import {
+    ContextMenu, ContextMenuItem, TextContextMenuItem,
     CircleButton, colorForHighlightGroup, SimpleButton,
-    Icon,
+    Icon, HasChildren,
 } from '../controls';
 import { Themed } from '../core';
+import { config } from '../config';
 
 type HighlightTarget = {
     target: 'highlight',
@@ -21,30 +24,31 @@ type SelectionTarget = {
 type EmptyTarget = {
     target: 'empty',
 };
-export type ContextMenuTarget =
+type ContextMenuTarget =
     | HighlightTarget
     | SelectionTarget
     | EmptyTarget
     ;
 
+export type SelectionType = MutableRefObject<BookSelection | undefined>;
 export function BookContextMenu({
-    children, target, bookId,
+    bookId, children, selection,
 }: HasChildren & {
     bookId: string
-    target: ContextMenuTarget,
+    selection: SelectionType,
 }) {
     const { theme } = useTheme();
     const {
         addHighlight, removeHighlight, updateHighlightGroup,
-    } = useHighlights(bookId);
+    } = useHighlightsActions();
+    const { onTrigger, target } = useMenuTarget(bookId, selection);
+    useCopyQuote(bookId, selection);
 
-    if (target.target === 'empty') {
-        return <>{children}</>;
-    }
     return <ContextMenu
-        theme={theme}
         id='book-menu'
+        theme={theme}
         trigger={children}
+        onTrigger={onTrigger}
     >
         <AddHighlightItem
             theme={theme}
@@ -59,6 +63,44 @@ export function BookContextMenu({
             removeHighlight={removeHighlight}
         />
     </ContextMenu>;
+}
+
+function useMenuTarget(bookId: string, selection: SelectionType) {
+    const highlights = useHighlights(bookId);
+    const [target, setTarget] = useState<ContextMenuTarget>({ target: 'empty' });
+    const onTrigger = useCallback(() => {
+        const current = selection.current;
+        if (current !== undefined) {
+            const selectedHighlight = highlights
+                .find(h => doesRangeOverlap(h.range, current.range));
+            const newTarget: ContextMenuTarget = selectedHighlight
+                ? { target: 'highlight', highlight: selectedHighlight }
+                : { target: 'selection', selection: current };
+            setTarget(newTarget);
+            return true;
+        } else {
+            setTarget({ target: 'empty' });
+            return false;
+        }
+    }, [highlights, selection]);
+
+    return { onTrigger, target };
+}
+
+function useCopyQuote(bookId: string, selection: SelectionType) {
+    const { updateQuoteRange } = useUrlActions();
+    useOnCopy(useCallback(e => {
+        e.preventDefault();
+        if (selection.current && e.clipboardData) {
+            const selectionText = `${selection.current.text}\n${generateQuoteLink(bookId, selection.current.range)}`;
+            e.clipboardData.setData('text/plain', selectionText);
+        }
+        updateQuoteRange(selection.current && selection.current.range);
+    }, [bookId, updateQuoteRange, selection]));
+}
+
+function generateQuoteLink(id: string, quote: BookRange) {
+    return `${config().frontUrl}/book/${id}?q=${rangeToString(quote)}`;
 }
 
 function AddHighlightItem({
@@ -84,7 +126,7 @@ function ManageHighlightItem({
     theme, target, setHighlightGroup, removeHighlight,
 }: Themed & {
     target: ContextMenuTarget,
-    setHighlightGroup: (id: string, group: string) => void,
+    setHighlightGroup: (id: string, group: HighlightGroup) => void,
     removeHighlight: (highlightId: string) => void,
 }) {
     if (target.target !== 'highlight') {
@@ -124,7 +166,7 @@ function SetHighlightGroupButton({
 }: Themed & {
     target: HighlightTarget,
     group: HighlightGroup,
-    setHighlightGroup: (id: string, group: string) => void,
+    setHighlightGroup: (id: string, group: HighlightGroup) => void,
 }) {
     const selected = target.highlight.group === group;
     return <CircleButton
