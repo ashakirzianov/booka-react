@@ -9,6 +9,7 @@ import { BookmarksAction, BookmarksState } from './bookmarks';
 import { HighlightsState, HighlightsAction } from './highlights';
 import { CollectionsAction, CollectionsState } from './collections';
 import { PositionsAction, PositionsState } from './positions';
+import { UploadAction, UploadState } from './upload';
 
 export type AppAction =
     | DataAction
@@ -19,6 +20,7 @@ export type AppAction =
     | HighlightsAction
     | CollectionsAction
     | PositionsAction
+    | UploadAction
     ;
 export type AppActionType = AppAction['type'];
 export type ActionForType<T extends AppActionType> =
@@ -32,6 +34,7 @@ export type AppState = {
     highlights: HighlightsState,
     collections: CollectionsState,
     positions: PositionsState,
+    upload: UploadState,
 };
 
 export type AppDependencies = UserDataProvider;
