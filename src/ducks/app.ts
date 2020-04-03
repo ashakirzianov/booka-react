@@ -24,7 +24,7 @@ export type AppEpic<Output extends AppAction = AppAction> =
 export function createAppEpicMiddleware(options: {
     dependencies: AppDependencies,
 }) {
-    return createEpicMiddleware(options);
+    return createEpicMiddleware<AppAction, AppAction, AppState, AppDependencies>(options);
 }
 
 type TransformObservable<T, U> = (o: Observable<T>) => Observable<U>;
