@@ -126,7 +126,7 @@ function ManageHighlightItem({
     theme, target, setHighlightGroup, removeHighlight,
 }: Themed & {
     target: ContextMenuTarget,
-    setHighlightGroup: (id: string, group: string) => void,
+    setHighlightGroup: (id: string, group: HighlightGroup) => void,
     removeHighlight: (highlightId: string) => void,
 }) {
     if (target.target !== 'highlight') {
@@ -166,7 +166,7 @@ function SetHighlightGroupButton({
 }: Themed & {
     target: HighlightTarget,
     group: HighlightGroup,
-    setHighlightGroup: (id: string, group: string) => void,
+    setHighlightGroup: (id: string, group: HighlightGroup) => void,
 }) {
     const selected = target.highlight.group === group;
     return <CircleButton

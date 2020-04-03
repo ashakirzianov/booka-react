@@ -270,7 +270,6 @@ function colorizeFragments(
     for (const col of colorization) {
         const relative = colorizedRangeRelativeToPath(path, col);
         if (relative) {
-            const prev = fragments;
             fragments = applyAttrsRange(fragments, relative);
         }
     }
