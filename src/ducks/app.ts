@@ -1,21 +1,24 @@
 import { Epic, ofType, createEpicMiddleware } from 'redux-observable';
 import { Observable } from 'rxjs';
 import { UserDataProvider } from '../data';
-import { ThemeState, ThemeAction } from './theme';
-import { AccountState, AccountAction } from './account';
 import { DataAction } from './data';
+import { AccountState, AccountAction } from './account';
+import { ThemeState, ThemeAction } from './theme';
+import { BookState, BookAction } from './book';
 
 export type AppAction =
-    | ThemeAction
-    | AccountAction
     | DataAction
+    | AccountAction
+    | ThemeAction
+    | BookAction
     ;
 export type ActionForType<T extends AppAction['type']> =
     Extract<AppAction, { type: T }>;
 
 export type AppState = {
-    theme: ThemeState,
     account: AccountState,
+    theme: ThemeState,
+    book: BookState,
 };
 
 export type AppDependencies = UserDataProvider;
