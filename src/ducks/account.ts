@@ -4,15 +4,6 @@ import { AuthToken, AccountInfo } from 'booka-common';
 import { createAuthApi } from '../data';
 import { AppAction, ofAppType, AppEpic } from './app';
 
-export type SignInProvider = 'facebook';
-export type AccountState = {
-    state: 'not-signed',
-} | {
-    state: 'signed',
-    provider: SignInProvider,
-    account: AccountInfo,
-    token: AuthToken,
-};
 type ReceivedFbTokenAction = {
     type: 'account-receive-fb-token',
     payload: {
@@ -34,6 +25,16 @@ export type AccountAction =
     | ReceivedFbTokenAction | ReceivedAccountInfoAction
     | LogoutAction
     ;
+
+export type SignInProvider = 'facebook';
+export type AccountState = {
+    state: 'not-signed',
+} | {
+    state: 'signed',
+    provider: SignInProvider,
+    account: AccountInfo,
+    token: AuthToken,
+};
 
 const init: AccountState = { state: 'not-signed' };
 export function accountReducer(state: AccountState = init, action: AppAction): AccountState {

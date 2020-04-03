@@ -7,8 +7,6 @@ import { sameArrays } from '../utils';
 import { AppAction } from './app';
 import { sideEffectEpic, bookRequestEpic } from './helpers';
 
-export type BookmarksState = Bookmark[];
-
 type BookmarksRequestAddAction = {
     type: 'bookmarks-req-add',
     payload: {
@@ -31,6 +29,7 @@ export type BookmarksAction =
     | BookmarksReceivedAction
     ;
 
+export type BookmarksState = Bookmark[];
 const init: BookmarksState = [];
 export function bookmarksReducer(state: BookmarksState = init, action: AppAction): BookmarksState {
     switch (action.type) {

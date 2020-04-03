@@ -7,8 +7,6 @@ import { sameArrays } from '../utils';
 import { AppAction } from './app';
 import { sideEffectEpic, bookRequestEpic } from './helpers';
 
-export type HighlightsState = Highlight[];
-
 type HighlightsRequestAddAction = {
     type: 'highlights-req-add',
     payload: {
@@ -40,6 +38,7 @@ export type HighlightsAction =
     | HighlightsReceivedAction
     ;
 
+export type HighlightsState = Highlight[];
 const init: HighlightsState = [];
 export function highlightsReducer(state: HighlightsState = init, action: AppAction): HighlightsState {
     switch (action.type) {

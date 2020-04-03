@@ -8,12 +8,6 @@ import { Loadable } from '../core';
 import { AppAction, ofAppType, AppEpic } from './app';
 import { DataProvider } from '../data';
 
-export type BookState = Loadable<{
-    bookId: string,
-    refId: string | undefined,
-    fragment: BookFragment,
-}>;
-
 type BookRequestAction = {
     type: 'book-req',
     payload: {
@@ -34,6 +28,11 @@ export type BookAction =
     | BookRequestAction | BookReceivedAction
     ;
 
+export type BookState = Loadable<{
+    bookId: string,
+    refId: string | undefined,
+    fragment: BookFragment,
+}>;
 const init: BookState = { loading: true };
 export function bookReducer(state: BookState = init, action: AppAction): BookState {
     switch (action.type) {

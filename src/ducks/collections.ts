@@ -8,8 +8,6 @@ import { AppAction } from './app';
 import { sideEffectEpic, dataProviderEpic } from './helpers';
 import { merge } from 'rxjs';
 
-export type CollectionsState = CardCollections;
-
 type CollectionsRequestAddAction = {
     type: 'collections-req-add',
     payload: {
@@ -33,6 +31,7 @@ export type CollectionsAction =
     | CollectionsReceivedAction
     ;
 
+export type CollectionsState = CardCollections;
 const init: CollectionsState = {};
 export function collectionsReducer(state: CollectionsState = init, action: AppAction): CollectionsState {
     switch (action.type) {
