@@ -45,7 +45,7 @@ export function bookmarksReducer(state: BookmarksState = init, action: AppAction
     }
 }
 
-const requestBookmarksEpic = bookRequestEpic(({ payload: { bookId } }, dp) => dp.bookmarksForId(bookId).pipe(
+const requestBookmarksEpic = bookRequestEpic((bookId, dp) => dp.bookmarksForId(bookId).pipe(
     map((bookmarks): AppAction => ({
         type: 'bookmarks-received',
         payload: bookmarks,

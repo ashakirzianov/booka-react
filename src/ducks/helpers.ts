@@ -1,4 +1,4 @@
-import { mergeMap, takeUntil } from 'rxjs/operators';
+import { mergeMap, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 import { DataProvider } from '../data';
 import {
@@ -19,14 +19,21 @@ export function sideEffectEpic<T extends AppActionType>(
 }
 
 export function bookRequestEpic(
-    projection: (action: ActionForType<'book-req'>, dataProvider: DataProvider) => Observable<AppAction>,
+    projection: (bookId: string, dataProvider: DataProvider) => Observable<AppAction>,
 ): AppEpic {
-    return (action$, _, { getCurrentDataProvider }) => action$.pipe(
-        ofAppType('book-req'),
-        mergeMap(action => projection(action, getCurrentDataProvider()).pipe(
-            takeUntil(action$.pipe(
-                ofAppType('book-req'),
-            )),
-        )),
+    return (action$, state$, { getCurrentDataProvider }) => action$.pipe(
+        ofAppType('book-req', 'data-provider-update'),
+        withLatestFrom(state$),
+        mergeMap(([action, state]) => {
+            const observable = action.type === 'book-req'
+                ? projection(action.payload.bookId, getCurrentDataProvider())
+                : state.book.loading ? of<AppAction>()
+                    : projection(state.book.bookId, getCurrentDataProvider());
+            return observable.pipe(
+                takeUntil(action$.pipe(
+                    ofAppType('book-req', 'data-provider-update'),
+                )),
+            );
+        }),
     );
 }
