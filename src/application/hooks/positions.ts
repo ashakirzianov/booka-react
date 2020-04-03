@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { CurrentPosition } from 'booka-common';
-import { useDataProvider } from './dataProviderHooks';
+import { useDataProvider } from './dataProvider';
 
 export type PositionsState = CurrentPosition[];
 export function usePositions() {

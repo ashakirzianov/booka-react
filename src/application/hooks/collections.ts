@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { CardCollection, CardCollectionName } from 'booka-common';
 import { Loadable } from './utils';
-import { useDataProvider } from './dataProviderHooks';
+import { useDataProvider } from './dataProvider';
 
 export type CollectionsState = Loadable<CardCollection>;
 export function useCollection(name: CardCollectionName) {

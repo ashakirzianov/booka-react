@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { map } from 'rxjs/operators';
 import { SearchResult } from 'booka-common';
 import { Loadable } from './utils';
-import { useDataProvider } from './dataProviderHooks';
-import { useUrlActions } from './urlHooks';
+import { useDataProvider } from './dataProvider';
+import { useUrlActions } from './url';
 
 export type SearchState = Loadable<{
     results: SearchResult[],

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Highlight, AuthToken } from 'booka-common';
-import { useDataProvider } from './dataProviderHooks';
+import { useDataProvider } from './dataProvider';
 
 export type HighlightsState = Highlight[];
 export function useHighlights(bookId: string, token?: AuthToken) {

@@ -4,7 +4,7 @@ import {
     BookFragment, BookPath, firstPath, LibraryCard, isPathInFragment, TableOfContents,
 } from 'booka-common';
 import { Loadable } from './utils';
-import { useDataProvider } from './dataProviderHooks';
+import { useDataProvider } from './dataProvider';
 
 export type BookState = Loadable<{
     bookId: string,

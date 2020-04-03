@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useAppSelector, useAppDispatch } from './reduxHooks';
+import { useAppSelector, useAppDispatch } from './redux';
 import { PaletteName } from '../../core';
 
 export function useTheme() {

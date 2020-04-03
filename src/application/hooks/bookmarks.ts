@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Bookmark, AuthToken } from 'booka-common';
-import { useDataProvider } from './dataProviderHooks';
+import { useDataProvider } from './dataProvider';
 
 export type BookmarksState = Bookmark[];
 export function useBookmarks(bookId: string, token?: AuthToken) {
