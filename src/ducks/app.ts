@@ -8,6 +8,7 @@ import { BookState, BookAction } from './book';
 import { BookmarksAction, BookmarksState } from './bookmarks';
 import { HighlightsState, HighlightsAction } from './highlights';
 import { CollectionsAction, CollectionsState } from './collections';
+import { PositionsAction, PositionsState } from './positions';
 
 export type AppAction =
     | DataAction
@@ -17,6 +18,7 @@ export type AppAction =
     | BookmarksAction
     | HighlightsAction
     | CollectionsAction
+    | PositionsAction
     ;
 export type AppActionType = AppAction['type'];
 export type ActionForType<T extends AppActionType> =
@@ -29,6 +31,7 @@ export type AppState = {
     bookmarks: BookmarksState,
     highlights: HighlightsState,
     collections: CollectionsState,
+    positions: PositionsState,
 };
 
 export type AppDependencies = UserDataProvider;
