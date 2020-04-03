@@ -19,13 +19,6 @@ type ReceivedFbTokenAction = {
         token: string,
     },
 };
-type AuthSuccessAction = {
-    type: 'account-auth-success',
-    payload: {
-        provider: SignInProvider,
-        token: AuthToken,
-    },
-};
 type ReceivedAccountInfoAction = {
     type: 'account-receive-info',
     payload: {
@@ -39,7 +32,6 @@ type LogoutAction = {
 };
 export type AccountAction =
     | ReceivedFbTokenAction | ReceivedAccountInfoAction
-    | AuthSuccessAction
     | LogoutAction
     ;
 
@@ -64,38 +56,23 @@ const accountFbTokenEpic: AppEpic = action$ => action$.pipe(
     ofAppType('account-receive-fb-token'),
     mergeMap(
         action => createAuthApi().getAuthTokenFromFbToken(action.payload.token).pipe(
-            map((token): AppAction => {
-                return {
-                    type: 'account-auth-success',
-                    payload: {
-                        provider: 'facebook',
-                        token,
-                    },
-                };
-            }),
-        ),
-    ),
-);
-
-const accountAuthSuccessEpic: AppEpic = action$ => action$.pipe(
-    ofAppType('account-auth-success'),
-    mergeMap(
-        action => createAuthApi().getAccountInfo(action.payload.token).pipe(
-            map((account): AppAction => {
-                return {
-                    type: 'account-receive-info',
-                    payload: {
-                        account,
-                        token: action.payload.token,
-                        provider: action.payload.provider,
-                    },
-                };
-            }),
+            mergeMap(
+                token => createAuthApi().getAccountInfo(token).pipe(
+                    map((account): AppAction => {
+                        return {
+                            type: 'account-receive-info',
+                            payload: {
+                                account, token,
+                                provider: 'facebook',
+                            },
+                        };
+                    }),
+                ),
+            ),
         ),
     ),
 );
 
 export const accountEpic = combineEpics(
     accountFbTokenEpic,
-    accountAuthSuccessEpic,
 );
