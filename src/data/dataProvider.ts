@@ -1,4 +1,4 @@
-import { AuthToken } from 'booka-common';
+import { SignState } from 'booka-common';
 import { bookmarksProvider } from './bookmarks';
 import { highlightsProvider } from './highlights';
 import { currentPositionsProvider } from './currentPositions';
@@ -12,14 +12,13 @@ import { libraryProvider } from './library';
 import { uploadProvider } from './upload';
 
 export type DataProvider = ReturnType<typeof createDataProvider>;
-
-export type UserInfo = {
-    token: AuthToken,
-    accountId: string,
-};
-export function createDataProvider(info: UserInfo | undefined) {
-    const storage = createStorage(info?.accountId);
-    const api = createApi(info?.token);
+export function createDataProvider(sign: SignState) {
+    const token = sign.sign === 'signed'
+        ? sign.token : undefined;
+    const storageKey = sign.sign === 'signed'
+        ? sign.accountInfo._id : undefined;
+    const storage = createStorage(storageKey);
+    const api = createApi(token);
     const localChangeStore = createLocalChangeStore({
         post: ch => postLocalChange(api, ch),
         storage: storage.cell('local-changes'),
