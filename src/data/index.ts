@@ -1,5 +1,5 @@
 import { SignState } from 'booka-common';
-import { createStorage } from './storage';
+import { createStorage } from '../core';
 import { authProvider } from './auth';
 import { userDataProvider } from './userData';
 import { libraryProvider } from './library';
