@@ -76,8 +76,11 @@ export function createLocalChangeStore({ post, storage }: {
             state = changes.reduce(reducer, state);
             const stateSubject = new BehaviorSubject(state);
             changesSubject.subscribe(ch => {
-                state = reducer(state, ch);
-                stateSubject.next(state);
+                const newState = reducer(state, ch);
+                if (state !== newState) {
+                    state = newState;
+                    stateSubject.next(state);
+                }
             });
             return stateSubject;
         },
