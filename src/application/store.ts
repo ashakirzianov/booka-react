@@ -2,12 +2,12 @@
 import React from 'react';
 import { createStore, compose, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import { createEpicMiddleware } from 'redux-observable';
 import { createLogger } from 'redux-logger';
 
-import { rootReducer, rootEpic } from '../ducks';
-import { startupFbSdk, fbState } from './facebookSdk';
 import { config } from '../config';
+import { createAppEpicMiddleware, rootReducer, rootEpic } from '../ducks';
+import { startupFbSdk, fbState } from './facebookSdk';
+import { udp } from './hooks/dataProvider';
 
 export const ConnectedProvider: React.SFC = ({ children }) =>
     React.createElement(Provider, { store }, children);
@@ -18,7 +18,9 @@ function configureStore() {
         (globalThis.window && (globalThis.window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__)
         || compose;
 
-    const epicMiddleware = createEpicMiddleware();
+    const epicMiddleware = createAppEpicMiddleware({
+        dependencies: udp,
+    });
     const loggerMiddleware = createLogger();
     const middlewares = process.env.NODE_ENV === 'development'
         ? [

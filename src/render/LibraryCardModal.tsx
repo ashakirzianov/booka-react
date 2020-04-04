@@ -2,11 +2,11 @@ import React, { useCallback, ReactNode } from 'react';
 import { View } from 'react-native';
 
 import {
-    LibraryCard, BookPath, firstPath, filterUndefined, pageForPosition,
+    LibraryCard, BookPath, firstPath, filterUndefined, pageForPosition, CurrentPosition,
 } from 'booka-common';
 import {
     useTheme, useLibraryCard,
-    useCollection, usePositions, mostRecentPosition,
+    useCollection, usePositions,
 } from '../application';
 import {
     Modal, ActivityIndicator, ActionButton, TagLabel,
@@ -180,13 +180,13 @@ function ReadingListButton({ card }: {
     } = useCollection('reading-list');
     const readingListCards = collectionsState.loading
         ? []
-        : collectionsState.cards;
+        : collectionsState;
     const addToReadingList = useCallback(
-        () => addToCollection(card, 'reading-list'),
+        () => addToCollection(card),
         [addToCollection, card],
     );
     const removeFromReadingList = useCallback(
-        () => removeFromCollection(card.id, 'reading-list'),
+        () => removeFromCollection(card.id),
         [removeFromCollection, card],
     );
     const isInReadingList = readingListCards.find(c => c.id === card.id) !== undefined;
@@ -268,4 +268,12 @@ function Layout({
             {Continue}
         </View>
     </View>;
+}
+
+function mostRecentPosition(positions: CurrentPosition[]): CurrentPosition | undefined {
+    return positions.length === 0
+        ? undefined
+        : positions.reduce(
+            (most, curr) => most.created < curr.created ? curr : most,
+        );
 }

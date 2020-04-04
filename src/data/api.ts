@@ -14,7 +14,7 @@ const lib = createFetcher<LibContract>(config().libUrl);
 // TODO: rethink location
 export function createAuthApi() {
     return {
-        getAuthFbToken(token: string) {
+        getAuthTokenFromFbToken(token: string) {
             return back.get('/auth/fbtoken', {
                 query: {
                     token,

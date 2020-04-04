@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { useTheme, useUpload, useAccount } from '../application';
+import { useTheme, useUpload } from '../application';
 import {
     IconButton, WithPopover, Label, View, ActionButton, CheckBox,
     regularSpace, SelectFileDialog, SelectFileDialogRef, SelectFileResult,
@@ -32,86 +32,51 @@ export function UploadButton() {
     </WithPopover>;
 }
 
-type UploadState = {
-    state: 'not-signed',
-} | {
-    state: 'select',
-} | {
-    state: 'upload',
-    fileName: string,
-    data: any,
-} | {
-    state: 'uploading',
-    fileName: string,
-} | {
-    state: 'success',
-    fileName: string,
-} | {
-    state: 'error',
-    fileName: string,
-};
 function UploadPanel({ theme }: Themed) {
-    const { uploadEpub } = useUpload();
-    const { accountState } = useAccount();
-    const [state, setState] = useState<UploadState>(
-        accountState.state === 'signed'
-            ? { state: 'select' }
-            : { state: 'not-signed' },
-    );
+    const { uploadState, uploadEpub, selectFile } = useUpload();
 
-    switch (state.state) {
+    switch (uploadState.state) {
         case 'not-signed':
             return <NotSignedPanel
                 theme={theme}
             />;
-        case 'select':
+        case 'empty':
             return <SelectFilePanel
                 theme={theme}
-                onSelect={res => setState({
-                    state: 'upload',
+                onSelect={res => selectFile({
                     fileName: res.fileName,
                     data: res.data,
                 })}
             />;
-        case 'upload':
+        case 'selected':
             return <UploadFilePanel
                 theme={theme}
-                fileData={state}
-                upload={(data, pd) => {
-                    uploadEpub(data, pd)
-                        .subscribe({
-                            next: () => setState({
-                                state: 'success',
-                                fileName: state.fileName,
-                            }),
-                            error: () => setState({
-                                state: 'error',
-                                fileName: state.fileName,
-                            }),
-                        });
-                    setState({
-                        state: 'uploading',
-                        fileName: state.fileName,
-                    });
+                fileData={{
+                    fileName: uploadState.fileName,
+                    data: uploadState.data,
                 }}
+                upload={(data, publicDomain) => uploadEpub({
+                    fileName: uploadState.fileName,
+                    data, publicDomain,
+                })}
             />;
         case 'uploading':
             return <FileUploadingPanel
                 theme={theme}
-                fileName={state.fileName}
+                fileName={uploadState.fileName}
             />;
         case 'success':
             return <SuccessPanel
                 theme={theme}
-                fileName={state.fileName}
+                fileName={uploadState.fileName}
             />;
         case 'error':
             return <ErrorPanel
                 theme={theme}
-                fileName={state.fileName}
+                fileName={uploadState.fileName}
             />;
         default:
-            assertNever(state);
+            assertNever(uploadState);
             return null;
     }
 }

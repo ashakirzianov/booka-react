@@ -66,7 +66,7 @@ export function BookContextMenu({
 }
 
 function useMenuTarget(bookId: string, selection: SelectionType) {
-    const highlights = useHighlights(bookId);
+    const highlights = useHighlights();
     const [target, setTarget] = useState<ContextMenuTarget>({ target: 'empty' });
     const onTrigger = useCallback(() => {
         const current = selection.current;
@@ -108,7 +108,7 @@ function AddHighlightItem({
 }: Themed & {
     target: ContextMenuTarget,
     bookId: string,
-    addHighlight: (bookId: string, range: BookRange, group: HighlightGroup) => void,
+    addHighlight: (params: { bookId: string, range: BookRange, group: HighlightGroup }) => void,
 }) {
     if (target.target !== 'selection') {
         return null;
@@ -118,7 +118,11 @@ function AddHighlightItem({
         theme={theme}
         text='Add Highlight'
         icon='highlight'
-        callback={() => addHighlight(bookId, target.selection.range, 'first')}
+        callback={() => addHighlight({
+            bookId,
+            range: target.selection.range,
+            group: 'first',
+        })}
     />;
 }
 
@@ -126,8 +130,8 @@ function ManageHighlightItem({
     theme, target, setHighlightGroup, removeHighlight,
 }: Themed & {
     target: ContextMenuTarget,
-    setHighlightGroup: (id: string, group: HighlightGroup) => void,
-    removeHighlight: (highlightId: string) => void,
+    setHighlightGroup: (params: { highlightId: string, group: HighlightGroup }) => void,
+    removeHighlight: (params: { highlightId: string }) => void,
 }) {
     if (target.target !== 'highlight') {
         return null;
@@ -156,7 +160,9 @@ function ManageHighlightItem({
         />
         <RemoveHighlightButton
             theme={theme}
-            removeHighlight={() => removeHighlight(target.highlight.uuid)}
+            removeHighlight={() => removeHighlight({
+                highlightId: target.highlight.uuid,
+            })}
         />
     </ContextMenuItem>;
 }
@@ -166,7 +172,7 @@ function SetHighlightGroupButton({
 }: Themed & {
     target: HighlightTarget,
     group: HighlightGroup,
-    setHighlightGroup: (id: string, group: HighlightGroup) => void,
+    setHighlightGroup: (params: { highlightId: string, group: HighlightGroup }) => void,
 }) {
     const selected = target.highlight.group === group;
     return <CircleButton
@@ -178,7 +184,10 @@ function SetHighlightGroupButton({
         border={selected ? 'white' : undefined}
         fontSize='xsmall'
         size={30}
-        callback={() => setHighlightGroup(target.highlight.uuid, group)}
+        callback={() => setHighlightGroup({
+            highlightId: target.highlight.uuid,
+            group,
+        })}
     />;
 }
 

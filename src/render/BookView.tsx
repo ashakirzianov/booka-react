@@ -26,8 +26,8 @@ export const BookView = memo(function BookViewF({
 }) {
     const { theme } = useTheme();
     const { pathToScroll, onScroll, onNavigation } = useScrollHandlers(bookId);
-    const { onSelectionChange, selection } = useSelectionHandlers(bookId);
-    const { colorization } = useColorization(bookId);
+    const { onSelectionChange, selection } = useSelectionHandlers();
+    const { colorization } = useColorization();
     const RefComp = useCallback(({ refId, children }: { refId: string, children: ReactNode }) => {
         return <BookRefLink bookId={bookId} refId={refId}>
             {children}
@@ -68,10 +68,10 @@ export const BookView = memo(function BookViewF({
     </BookContextMenu>;
 });
 
-function useColorization(bookId: string) {
+function useColorization() {
     const { theme } = useTheme();
     const { quote } = useUrlQuery();
-    const highlights = useHighlights(bookId);
+    const highlights = useHighlights();
 
     const colorization = useMemo(
         () => quoteColorization(quote, theme)
@@ -82,7 +82,7 @@ function useColorization(bookId: string) {
     return { colorization };
 }
 
-function useSelectionHandlers(bookId: string) {
+function useSelectionHandlers() {
     const selection = useRef<BookSelection | undefined>(undefined);
     const onSelectionChange = useCallback((sel: BookSelection | undefined) => {
         selection.current = sel?.text?.length ? sel : undefined;
@@ -102,7 +102,7 @@ function useScrollHandlers(bookId: string) {
         }
         updateBookPath(p);
         if (p) {
-            addCurrentPosition({ path: p, bookId });
+            addCurrentPosition({ bookId, path: p });
         }
     }, 1000),
         [setNeedToScroll, updateBookPath, addCurrentPosition, needToScroll, bookId],

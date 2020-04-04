@@ -16,10 +16,7 @@ export function currentPositionsProvider(localChangeStore: LocalChangeStore, api
                 ),
             );
         },
-        addCurrentPosition({ path, bookId }: {
-            path: BookPath,
-            bookId: string,
-        }) {
+        addCurrentPosition(bookId: string, path: BookPath) {
             const created = new Date(Date.now());
             localChangeStore.addChange({
                 change: 'current-position-update',

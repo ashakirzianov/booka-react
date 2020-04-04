@@ -1,29 +1,13 @@
-import { Epic, combineEpics } from 'redux-observable';
+import { combineEpics } from 'redux-observable';
 import { mergeMap, map } from 'rxjs/operators';
 import { AuthToken, AccountInfo } from 'booka-common';
-import { AppAction, ofAppType } from './app';
-import { createAuthApi } from '../data/api';
+import { createAuthApi } from '../data';
+import { AppAction, ofAppType, AppEpic } from './app';
 
-export type SignInProvider = 'facebook';
-export type AccountState = {
-    state: 'not-signed',
-} | {
-    state: 'signed',
-    provider: SignInProvider,
-    account: AccountInfo,
-    token: AuthToken,
-};
 type ReceivedFbTokenAction = {
     type: 'account-receive-fb-token',
     payload: {
         token: string,
-    },
-};
-type AuthSuccessAction = {
-    type: 'account-auth-success',
-    payload: {
-        provider: SignInProvider,
-        token: AuthToken,
     },
 };
 type ReceivedAccountInfoAction = {
@@ -39,9 +23,18 @@ type LogoutAction = {
 };
 export type AccountAction =
     | ReceivedFbTokenAction | ReceivedAccountInfoAction
-    | AuthSuccessAction
     | LogoutAction
     ;
+
+export type SignInProvider = 'facebook';
+export type AccountState = {
+    state: 'not-signed',
+} | {
+    state: 'signed',
+    provider: SignInProvider,
+    account: AccountInfo,
+    token: AuthToken,
+};
 
 const init: AccountState = { state: 'not-signed' };
 export function accountReducer(state: AccountState = init, action: AppAction): AccountState {
@@ -60,42 +53,27 @@ export function accountReducer(state: AccountState = init, action: AppAction): A
     }
 }
 
-const accountFbTokenEpic: Epic<AppAction> = action$ => action$.pipe(
+const accountFbTokenEpic: AppEpic = action$ => action$.pipe(
     ofAppType('account-receive-fb-token'),
     mergeMap(
-        action => createAuthApi().getAuthFbToken(action.payload.token).pipe(
-            map((token): AppAction => {
-                return {
-                    type: 'account-auth-success',
-                    payload: {
-                        provider: 'facebook',
-                        token,
-                    },
-                };
-            }),
-        ),
-    ),
-);
-
-const accountAuthSuccessEpic: Epic<AppAction> = action$ => action$.pipe(
-    ofAppType('account-auth-success'),
-    mergeMap(
-        action => createAuthApi().getAccountInfo(action.payload.token).pipe(
-            map((account): AppAction => {
-                return {
-                    type: 'account-receive-info',
-                    payload: {
-                        account,
-                        token: action.payload.token,
-                        provider: action.payload.provider,
-                    },
-                };
-            }),
+        action => createAuthApi().getAuthTokenFromFbToken(action.payload.token).pipe(
+            mergeMap(
+                token => createAuthApi().getAccountInfo(token).pipe(
+                    map((account): AppAction => {
+                        return {
+                            type: 'account-receive-info',
+                            payload: {
+                                account, token,
+                                provider: 'facebook',
+                            },
+                        };
+                    }),
+                ),
+            ),
         ),
     ),
 );
 
 export const accountEpic = combineEpics(
     accountFbTokenEpic,
-    accountAuthSuccessEpic,
 );

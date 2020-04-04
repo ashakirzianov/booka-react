@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { LibraryCard } from 'booka-common';
 import { Loadable } from './utils';
-import { useDataProvider } from './dataProviderHooks';
-import { useUrlActions } from './urlHooks';
+import { useDataProvider } from './dataProvider';
+import { useUrlActions } from './url';
 
 export type LibraryCardState = Loadable<LibraryCard>;
 export function useLibraryCard(bookId: string) {

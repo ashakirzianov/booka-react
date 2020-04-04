@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import { useAppSelector, useAppDispatch } from './reduxHooks';
-import { PaletteName } from '../core';
+import { useAppSelector, useAppDispatch } from './redux';
+import { PaletteName } from '../../core';
 
 export function useTheme() {
     const theme = useAppSelector(s => s.theme);
