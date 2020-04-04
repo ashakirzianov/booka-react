@@ -5,6 +5,7 @@ import { userDataProvider } from './userData';
 import { libraryProvider } from './library';
 import { bookmarksProvider } from './bookmarks';
 import { highlightsProvider } from './highlights';
+import { positionsProvider } from './positions';
 
 export type DataProvider = ReturnType<typeof createDataProvider>;
 export function createDataProvider({ storage, token }: {
@@ -18,7 +19,8 @@ export function createDataProvider({ storage, token }: {
         ...authProvider(),
         ...bookmarksProvider({ token, storage: storage.sub('bookmarks') }),
         ...highlightsProvider({ token, storage: storage.sub('highlights') }),
+        ...positionsProvider({ token, storage: storage.sub('positions') }),
         ...userDataProvider({ token }),
-        ...libraryProvider({ token, storage }),
+        ...libraryProvider({ token, storage: storage.sub('library') }),
     };
 }

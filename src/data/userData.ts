@@ -1,6 +1,6 @@
 import { of, Observable } from 'rxjs';
 import {
-    AuthToken, CardCollectionName, CurrentPositionPost,
+    AuthToken, CardCollectionName,
 } from 'booka-common';
 import { libFetcher, backFetcher } from './utils';
 
@@ -11,18 +11,6 @@ export function userDataProvider({ token }: {
     token: AuthToken | undefined,
 }) {
     return {
-        getCurrentPositions() {
-            return optional(token && back.get('/current-position', {
-                auth: token.token,
-            }));
-        },
-        postAddCurrentPosition(position: CurrentPositionPost) {
-            return optional(token && back.put('/current-position', {
-                auth: token.token,
-                body: position,
-            }));
-        },
-
         getCollection(name: CardCollectionName) {
             if (name === 'uploads') {
                 return optional(token && lib.get('/uploads', {
