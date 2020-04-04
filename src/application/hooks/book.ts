@@ -15,7 +15,7 @@ export function useOpenBook({ bookId, path, refId }: {
     const dispatch = useAppDispatch();
     useEffect(() => {
         dispatch({
-            type: 'book-req',
+            type: 'book-change',
             payload: {
                 bookId, refId, path,
             },

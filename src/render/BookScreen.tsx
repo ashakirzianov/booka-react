@@ -30,7 +30,7 @@ export const BookScreen = memo(function BookScreenF({ bookId }: {
     const bookState = useOpenBook({
         bookId, path, refId,
     });
-    if (bookState.loading) {
+    if (bookState.fragment.loading) {
         return <FullScreenActivityIndicator
             theme={theme}
         />;

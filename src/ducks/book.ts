@@ -6,14 +6,21 @@ import {
 } from 'booka-common';
 import { Loadable } from '../core';
 import { AppAction, ofAppType, AppEpic } from './app';
-import { DataProvider } from '../data';
 
-type BookRequestAction = {
-    type: 'book-req',
+// TODO: rename
+type BookChangeAction = {
+    type: 'book-change',
     payload: {
         bookId: string,
         path?: BookPath,
         refId?: string,
+    },
+};
+type BookRequestAction = {
+    type: 'book-req',
+    payload: {
+        bookId: string,
+        path: BookPath,
     },
 };
 type BookReceivedAction = {
@@ -25,72 +32,65 @@ type BookReceivedAction = {
     },
 };
 export type BookAction =
-    | BookRequestAction | BookReceivedAction
+    | BookChangeAction | BookRequestAction | BookReceivedAction
     ;
 
-export type BookState = Loadable<{
+export type BookState = {
     bookId: string,
-    refId: string | undefined,
-    fragment: BookFragment,
-}>;
-const init: BookState = { loading: true };
+    fragment: Loadable<BookFragment>,
+};
+const init: BookState = {
+    bookId: '', // TODO: rethink this
+    fragment: { loading: true },
+};
 export function bookReducer(state: BookState = init, action: AppAction): BookState {
     switch (action.type) {
         case 'book-received':
             return {
                 bookId: action.payload.bookId,
                 fragment: action.payload.fragment,
-                refId: action.payload.refId,
             };
         default:
             return state;
     }
 }
 
-const requestBookEpic: AppEpic = (action$, state$, { getCurrentDataProvider }) => action$.pipe(
-    ofAppType('book-req'),
+const changeBookEpic: AppEpic = (action$, state$) => action$.pipe(
+    ofAppType('book-change'),
     withLatestFrom(state$),
-    mergeMap(([{ payload: { path, bookId, refId } }, { book }]) => getBookFragment({
-        dataProvider: getCurrentDataProvider(),
-        current: book,
-        bookId, path, refId,
-    }).pipe(
-        map((fragment): AppAction => ({
-            type: 'book-received',
-            payload: {
-                fragment, bookId, path, refId,
-            },
-        })),
-        takeUntil(action$.pipe(
-            ofAppType('book-req'),
-        )),
-    )),
+    mergeMap(([{ payload: { path, bookId } }, { book }]) => {
+        const actualPath = path || firstPath();
+        const needUpdateFragment = book.bookId !== bookId
+            || book.fragment.loading
+            || !isPathInFragment(book.fragment, actualPath);
+        if (needUpdateFragment) {
+            return of<AppAction>({
+                type: 'book-req',
+                payload: { bookId, path: actualPath },
+            });
+        } else {
+            return of<AppAction>();
+        }
+    }),
 );
 
-function getBookFragment({
-    dataProvider, current, bookId, path, refId,
-}: {
-    dataProvider: DataProvider,
-    current: BookState,
-    bookId: string,
-    path?: BookPath,
-    refId?: string,
-}) {
-    if (refId) {
-        return dataProvider.fragmentForRef(bookId, refId);
-    }
-    const actualPath = path || firstPath();
-    const needUpdateFragment = current.loading
-        || current.bookId !== bookId
-        || !isPathInFragment(current.fragment, actualPath)
-        ;
-    if (needUpdateFragment) {
-        return dataProvider.fragmentForPath(bookId, actualPath);
-    } else {
-        return of<BookFragment>();
-    }
-}
+const requestBookEpic: AppEpic = (action$, _, { getCurrentDataProvider }) => action$.pipe(
+    ofAppType('book-req'),
+    mergeMap(({ payload: { path, bookId } }) =>
+        getCurrentDataProvider().fragmentForPath(bookId, path).pipe(
+            map((fragment): AppAction => ({
+                type: 'book-received',
+                payload: {
+                    fragment, bookId, path,
+                },
+            })),
+            takeUntil(action$.pipe(
+                ofAppType('book-req'),
+            )),
+        )),
+);
 
 export const bookEpic = combineEpics(
+    changeBookEpic,
     requestBookEpic,
 );
