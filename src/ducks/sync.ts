@@ -3,6 +3,7 @@ import { Observable, of } from 'rxjs';
 import { DataProvider } from '../data';
 import { Storage } from '../core';
 
+export type SyncWorker = ReturnType<typeof createSyncWorker>;
 export function createSyncWorker({ storage, dataProvider }: {
     storage: Storage,
     dataProvider: DataProvider,

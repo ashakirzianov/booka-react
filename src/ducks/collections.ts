@@ -69,8 +69,15 @@ export function collectionsReducer(state: CollectionsState = init, action: AppAc
 }
 
 const names: CardCollectionName[] = ['reading-list', 'uploads'];
-const requestCollectionsEpic = dataProviderEpic(dp => merge(
+const requestCollectionsEpic = dataProviderEpic((dp, sync) => merge(
     ...names.map(name => dp.getCollection(name).pipe(
+        map(c => {
+            const withLocalChanges = sync.reduce({ [c.name]: c }, collectionsReducer);
+            return {
+                name: c.name,
+                cards: withLocalChanges[c.name] ?? [],
+            };
+        }),
         map((collection): AppAction => ({
             type: 'collections-replace',
             payload: collection,

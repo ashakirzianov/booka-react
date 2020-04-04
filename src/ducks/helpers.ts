@@ -4,6 +4,7 @@ import { DataProvider } from '../data';
 import {
     AppEpic, AppAction, ActionForType, ofAppType, AppActionType,
 } from './app';
+import { SyncWorker } from './sync';
 
 export function sideEffectEpic<T extends AppActionType>(
     type: T,
@@ -19,11 +20,11 @@ export function sideEffectEpic<T extends AppActionType>(
 }
 
 export function dataProviderEpic(
-    projection: (dataProvider: DataProvider) => Observable<AppAction>,
+    projection: (dataProvider: DataProvider, syncWorker: SyncWorker) => Observable<AppAction>,
 ): AppEpic {
-    return (action$, _, { dataProvider }) => action$.pipe(
+    return (action$, _, { dataProvider, syncWorker }) => action$.pipe(
         ofAppType('data-provider-update'),
-        mergeMap(() => projection(dataProvider()).pipe(
+        mergeMap(() => projection(dataProvider(), syncWorker()).pipe(
             takeUntil(action$.pipe(
                 ofAppType('data-provider-update'),
             ))),
@@ -32,15 +33,15 @@ export function dataProviderEpic(
 }
 
 export function bookRequestEpic(
-    projection: (bookId: string, dataProvider: DataProvider) => Observable<AppAction>,
+    projection: (bookId: string, dataProvider: DataProvider, syncWorker: SyncWorker) => Observable<AppAction>,
 ): AppEpic {
-    return (action$, state$, { dataProvider }) => action$.pipe(
+    return (action$, state$, { dataProvider, syncWorker }) => action$.pipe(
         ofAppType('book-req', 'data-provider-update'),
         withLatestFrom(state$),
         mergeMap(([action, state]) => {
             const observable = action.type === 'book-req'
-                ? projection(action.payload.bookId, dataProvider())
-                : projection(state.book.bookId, dataProvider());
+                ? projection(action.payload.bookId, dataProvider(), syncWorker())
+                : projection(state.book.bookId, dataProvider(), syncWorker());
             return observable.pipe(
                 takeUntil(action$.pipe(
                     ofAppType('book-req', 'data-provider-update'),
