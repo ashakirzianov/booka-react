@@ -7,10 +7,6 @@ export function optional<T>(observable?: Observable<T>): Observable<T> {
     return observable ?? of<T>();
 }
 
-export function optionalOf<T>(value: T | undefined): Observable<T> {
-    return value !== undefined ? of<T>(value) : of<T>();
-}
-
 export function libFetcher() {
     return createFetcher<LibContract>(config().libUrl);
 }

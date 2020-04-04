@@ -1,6 +1,6 @@
 import { of, Observable } from 'rxjs';
 import {
-    AuthToken, Bookmark, Highlight, HighlightUpdate, CardCollectionName,
+    AuthToken, Highlight, HighlightUpdate, CardCollectionName,
     CurrentPositionPost,
 } from 'booka-common';
 import { libFetcher, backFetcher } from './utils';
@@ -12,25 +12,6 @@ export function userDataProvider({ token }: {
     token: AuthToken | undefined,
 }) {
     return {
-        getBookmarks(bookId: string) {
-            return optional(token && back.get('/bookmarks', {
-                auth: token.token,
-                query: { bookId },
-            }));
-        },
-        postAddBookmark(bookmark: Bookmark) {
-            return optional(token && back.post('/bookmarks', {
-                auth: token.token,
-                body: bookmark,
-            }));
-        },
-        postRemoveBookmark(bookmarkId: string) {
-            return optional(token && back.delete('/bookmarks', {
-                auth: token.token,
-                query: { id: bookmarkId },
-            }));
-        },
-
         getHighlights(bookId: string) {
             return optional(token && back.get('/highlights', {
                 auth: token.token,
