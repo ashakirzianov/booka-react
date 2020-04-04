@@ -1,50 +1,67 @@
 import { map } from 'rxjs/operators';
+import { merge } from 'rxjs';
 import { combineEpics } from 'redux-observable';
 import {
     CardCollection, CardCollectionName, CardCollections, LibraryCard,
 } from 'booka-common';
-import { sameArrays } from '../utils';
 import { AppAction } from './app';
-import { sideEffectEpic, dataProviderEpic } from './helpers';
-import { merge } from 'rxjs';
+import { dataProviderEpic } from './helpers';
 
-type CollectionsRequestAddAction = {
-    type: 'collections-req-add',
+type CollectionsAddAction = {
+    type: 'collections-add',
     payload: {
         name: CardCollectionName,
         card: LibraryCard,
     },
 };
-type CollectionsRequestRemoveAction = {
-    type: 'collections-req-remove',
+type CollectionsRemoveAction = {
+    type: 'collections-remove',
     payload: {
         name: CardCollectionName,
         bookId: string,
     },
 };
-type CollectionsReceivedAction = {
-    type: 'collections-received',
+type CollectionsReplaceAction = {
+    type: 'collections-replace',
     payload: CardCollection,
 };
 export type CollectionsAction =
-    | CollectionsRequestAddAction | CollectionsRequestRemoveAction
-    | CollectionsReceivedAction
+    | CollectionsAddAction | CollectionsRemoveAction
+    | CollectionsReplaceAction
     ;
 
 export type CollectionsState = CardCollections;
 const init: CollectionsState = {};
 export function collectionsReducer(state: CollectionsState = init, action: AppAction): CollectionsState {
     switch (action.type) {
-        case 'collections-received': {
-            const collection = state[action.payload.name];
-            if (collection && sameArrays(collection, action.payload.cards)) {
+        case 'collections-add': {
+            const cards = state[action.payload.name] ?? [];
+            if (cards.find(c => c.id === action.payload.card.id)) {
                 return state;
             } else {
                 return {
                     ...state,
-                    [action.payload.name]: action.payload.cards,
+                    [action.payload.name]: [action.payload.card, ...cards],
                 };
             }
+        }
+        case 'collections-remove': {
+            const cards = state[action.payload.name] ?? [];
+            if (cards.find(c => c.id === action.payload.bookId)) {
+                return {
+                    ...state,
+                    [action.payload.name]: cards
+                        .filter(c => c.id !== action.payload.bookId),
+                };
+            } else {
+                return state;
+            }
+        }
+        case 'collections-replace': {
+            return {
+                ...state,
+                [action.payload.name]: action.payload.cards,
+            };
         }
         default:
             return state;
@@ -52,27 +69,22 @@ export function collectionsReducer(state: CollectionsState = init, action: AppAc
 }
 
 const names: CardCollectionName[] = ['reading-list', 'uploads'];
-const requestCollectionsEpic = dataProviderEpic(dp => merge(
-    ...names.map(name => dp.collection(name).pipe(
+const requestCollectionsEpic = dataProviderEpic((dp, sync) => merge(
+    ...names.map(name => dp.getCollection(name).pipe(
+        map(c => {
+            const withLocalChanges = sync.reduce({ [c.name]: c.cards }, collectionsReducer);
+            return {
+                name: c.name,
+                cards: withLocalChanges[c.name] ?? [],
+            };
+        }),
         map((collection): AppAction => ({
-            type: 'collections-received',
+            type: 'collections-replace',
             payload: collection,
         })),
     )),
 ));
-const requestCollectionsAddEpic = sideEffectEpic(
-    'collections-req-add',
-    ({ payload }, dp) =>
-        dp.addToCollection(payload.card, payload.name),
-);
-const requestCollectionsRemoveEpic = sideEffectEpic(
-    'collections-req-remove',
-    ({ payload }, dp) =>
-        dp.removeFromCollection(payload.bookId, payload.name),
-);
 
 export const collectionsEpic = combineEpics(
     requestCollectionsEpic,
-    requestCollectionsAddEpic,
-    requestCollectionsRemoveEpic,
 );

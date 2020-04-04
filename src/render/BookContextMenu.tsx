@@ -130,7 +130,7 @@ function ManageHighlightItem({
     theme, target, setHighlightGroup, removeHighlight,
 }: Themed & {
     target: ContextMenuTarget,
-    setHighlightGroup: (params: { highlightId: string, group: HighlightGroup }) => void,
+    setHighlightGroup: (highlightId: string, group: HighlightGroup) => void,
     removeHighlight: (params: { highlightId: string }) => void,
 }) {
     if (target.target !== 'highlight') {
@@ -172,7 +172,7 @@ function SetHighlightGroupButton({
 }: Themed & {
     target: HighlightTarget,
     group: HighlightGroup,
-    setHighlightGroup: (params: { highlightId: string, group: HighlightGroup }) => void,
+    setHighlightGroup: (highlightId: string, group: HighlightGroup) => void,
 }) {
     const selected = target.highlight.group === group;
     return <CircleButton
@@ -184,10 +184,7 @@ function SetHighlightGroupButton({
         border={selected ? 'white' : undefined}
         fontSize='xsmall'
         size={30}
-        callback={() => setHighlightGroup({
-            highlightId: target.highlight.uuid,
-            group,
-        })}
+        callback={() => setHighlightGroup(target.highlight.uuid, group)}
     />;
 }
 

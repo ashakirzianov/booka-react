@@ -1,6 +1,7 @@
-import { userDataProvider } from '../../data';
+import { createDataAccess } from '../../ducks';
+import { createStorage } from '../../core';
 
-export const udp = userDataProvider();
+export const dataAccess = createDataAccess(createStorage());
 export function useDataProvider() {
-    return udp.getCurrentDataProvider();
+    return dataAccess.dataProvider();
 }

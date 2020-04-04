@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { map } from 'rxjs/operators';
 import {
     BookPath, LibraryCard, TableOfContents,
 } from 'booka-common';
 import { Loadable } from './utils';
-import { useAppDispatch, useAppSelector, useDispatchCallback } from './redux';
+import {
+    useAppDispatch, useAppSelector,
+} from './redux';
 import { useDataProvider } from './dataProvider';
 
 export function useOpenBook({ bookId, path, refId }: {
@@ -77,8 +79,15 @@ export function usePopularBooks() {
 
 export function useUpload() {
     const uploadState = useAppSelector(s => s.upload);
-    const uploadEpub = useDispatchCallback('upload-req-upload');
-    const selectFile = useDispatchCallback('upload-select-file');
+    const dispatch = useAppDispatch();
+    const uploadEpub = useCallback((publicDomain: boolean) => dispatch({
+        type: 'upload-req-upload',
+        payload: { publicDomain },
+    }), [dispatch]);
+    const selectFile = useCallback((fileName: string, data: any) => dispatch({
+        type: 'upload-select-file',
+        payload: { fileName, data },
+    }), [dispatch]);
 
     return { uploadState, uploadEpub, selectFile };
 }

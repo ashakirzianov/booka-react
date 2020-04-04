@@ -1,54 +1,47 @@
-import { switchMap } from 'rxjs/operators';
+import { of, concat } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import {
-    CardCollection, LibraryCard,
-    CardCollectionName, replaceOrAdd,
+    AuthToken, CardCollectionName, CardCollection,
 } from 'booka-common';
-import { LocalChange, LocalChangeStore } from './localChange';
-import { Api } from './api';
+import { Storage, persistentCache } from '../core';
+import { libFetcher, backFetcher, optional } from './utils';
 
-export function collectionsProvider(localChangeStore: LocalChangeStore, api: Api) {
+const back = backFetcher();
+const lib = libFetcher();
+
+export function collectionsProvider({ storage, token }: {
+    storage: Storage,
+    token: AuthToken | undefined,
+}) {
+    const cache = persistentCache<CardCollection>(storage);
     return {
-        collection(name: CardCollectionName) {
-            return api.getCollection(name).pipe(
-                switchMap(c => localChangeStore.observe(c, applyChange)),
+        getCollection(name: CardCollectionName) {
+            const actual = name === 'uploads'
+                ? optional(token && lib.get('/uploads', {
+                    auth: token.token,
+                }))
+                : optional(token && back.get('/collections', {
+                    auth: token.token,
+                    query: { name },
+                }));
+            return concat(
+                of(cache.existing(name) ?? { name, cards: [] }),
+                actual.pipe(
+                    tap(c => cache.add(name, c)),
+                ),
             );
         },
-        addToCollection(card: LibraryCard, collection: CardCollectionName) {
-            localChangeStore.addChange({
-                change: 'collection-add',
-                card, collection,
-            });
+        postAddToCollection(bookId: string, collection: CardCollectionName) {
+            return optional(token && back.post('/collections', {
+                auth: token.token,
+                query: { bookId, collection },
+            }));
         },
-        removeFromCollection(bookId: string, collection: CardCollectionName) {
-            localChangeStore.addChange({
-                change: 'collection-remove',
-                bookId, collection,
-            });
+        postRemoveFromCollection(bookId: string, collection: CardCollectionName) {
+            return optional(token && back.delete('/collections', {
+                auth: token.token,
+                query: { bookId, collection },
+            }));
         },
     };
-}
-
-function applyChange(collection: CardCollection, change: LocalChange): CardCollection {
-    switch (change.change) {
-        case 'collection-add':
-            return change.collection === collection.name
-                ? {
-                    ...collection,
-                    cards: replaceOrAdd(
-                        collection.cards,
-                        c => c.id === change.card.id,
-                        change.card,
-                    ),
-                }
-                : collection;
-        case 'collection-remove':
-            return change.collection === collection.name
-                ? {
-                    ...collection,
-                    cards: collection.cards.filter(c => c.id !== change.bookId),
-                }
-                : collection;
-        default:
-            return collection;
-    }
 }

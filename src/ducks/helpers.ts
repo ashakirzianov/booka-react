@@ -4,26 +4,27 @@ import { DataProvider } from '../data';
 import {
     AppEpic, AppAction, ActionForType, ofAppType, AppActionType,
 } from './app';
+import { SyncWorker } from './sync';
 
 export function sideEffectEpic<T extends AppActionType>(
     type: T,
     fn: (action: ActionForType<T>, dataProvider: DataProvider) => void,
 ): AppEpic {
-    return (action$, _, { getCurrentDataProvider }) => action$.pipe(
+    return (action$, _, { dataProvider }) => action$.pipe(
         ofAppType(type),
         mergeMap(action => {
-            fn(action, getCurrentDataProvider());
+            fn(action, dataProvider());
             return of<AppAction>();
         }),
     );
 }
 
 export function dataProviderEpic(
-    projection: (dataProvider: DataProvider) => Observable<AppAction>,
+    projection: (dataProvider: DataProvider, syncWorker: SyncWorker) => Observable<AppAction>,
 ): AppEpic {
-    return (action$, _, { getCurrentDataProvider }) => action$.pipe(
+    return (action$, _, { dataProvider, syncWorker }) => action$.pipe(
         ofAppType('data-provider-update'),
-        mergeMap(() => projection(getCurrentDataProvider()).pipe(
+        mergeMap(() => projection(dataProvider(), syncWorker()).pipe(
             takeUntil(action$.pipe(
                 ofAppType('data-provider-update'),
             ))),
@@ -32,15 +33,15 @@ export function dataProviderEpic(
 }
 
 export function bookRequestEpic(
-    projection: (bookId: string, dataProvider: DataProvider) => Observable<AppAction>,
+    projection: (bookId: string, dataProvider: DataProvider, syncWorker: SyncWorker) => Observable<AppAction>,
 ): AppEpic {
-    return (action$, state$, { getCurrentDataProvider }) => action$.pipe(
+    return (action$, state$, { dataProvider, syncWorker }) => action$.pipe(
         ofAppType('book-req', 'data-provider-update'),
         withLatestFrom(state$),
         mergeMap(([action, state]) => {
             const observable = action.type === 'book-req'
-                ? projection(action.payload.bookId, getCurrentDataProvider())
-                : projection(state.book.bookId, getCurrentDataProvider());
+                ? projection(action.payload.bookId, dataProvider(), syncWorker())
+                : projection(state.book.bookId, dataProvider(), syncWorker());
             return observable.pipe(
                 takeUntil(action$.pipe(
                     ofAppType('book-req', 'data-provider-update'),

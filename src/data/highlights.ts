@@ -1,60 +1,45 @@
-import { switchMap, map } from 'rxjs/operators';
-import {
-    Highlight, BookRange, HighlightGroup, localHighlight,
-} from 'booka-common';
-import { LocalChange, LocalChangeStore } from './localChange';
-import { Api } from './api';
+import { of, concat } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { AuthToken, Highlight, HighlightUpdate } from 'booka-common';
+import { backFetcher, optional } from './utils';
+import { persistentCache, Storage } from '../core';
 
-export function highlightsProvider(localChangeStore: LocalChangeStore, api: Api) {
+const back = backFetcher();
+
+export function highlightsProvider({ storage, token }: {
+    storage: Storage,
+    token: AuthToken | undefined,
+}) {
+    const cache = persistentCache<Highlight[]>(storage);
     return {
-        highlightsForId(bookId: string) {
-            return api.getHighlights(bookId).pipe(
-                switchMap(hs =>
-                    localChangeStore.observe(hs, applyChange).pipe(
-                        map(localHs => localHs.filter(h => h.bookId === bookId)),
-                    ),
-                ),
+        getHighlights(bookId: string) {
+            return concat(
+                of(cache.existing(bookId) ?? []),
+                optional(token && back.get('/highlights', {
+                    auth: token.token,
+                    query: { bookId },
+                }).pipe(
+                    tap(hs => cache.add(bookId, hs)),
+                )),
             );
         },
-        addHighlight(bookId: string, range: BookRange, group: HighlightGroup) {
-            localChangeStore.addChange({
-                change: 'highlight-add',
-                highlight: localHighlight({
-                    bookId, range, group,
-                }),
-            });
+        postAddHighlight(highlight: Highlight) {
+            return optional(token && back.post('/highlights', {
+                auth: token.token,
+                body: highlight,
+            }));
         },
-        removeHighlight(highlightId: string) {
-            localChangeStore.addChange({
-                change: 'highlight-remove',
-                highlightId,
-            });
+        postRemoveHighlight(highlightId: string) {
+            return optional(token && back.delete('/highlights', {
+                auth: token.token,
+                query: { highlightId },
+            }));
         },
-        updateHighlightGroup(highlightId: string, group: HighlightGroup) {
-            localChangeStore.addChange({
-                change: 'highlight-update',
-                highlightId, group,
-            });
+        postUpdateHighlight(update: HighlightUpdate) {
+            return optional(token && back.patch('/highlights', {
+                auth: token.token,
+                body: update,
+            }));
         },
     };
-}
-
-function applyChange(highlights: Highlight[], change: LocalChange): Highlight[] {
-    switch (change.change) {
-        case 'highlight-add':
-            return [...highlights, change.highlight];
-        case 'highlight-remove':
-            return highlights.filter(h => h.uuid !== change.highlightId);
-        case 'highlight-update':
-            return highlights.map(
-                h => h.uuid === change.highlightId
-                    ? {
-                        ...h,
-                        group: change.group ?? h.group,
-                    }
-                    : h,
-            );
-        default:
-            return highlights;
-    }
 }

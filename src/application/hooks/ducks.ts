@@ -1,10 +1,12 @@
 import { useCallback } from 'react';
-import { doFbLogout } from '../facebookSdk';
 import {
-    useAppSelector, useDispatchCallback, useAppDispatch,
-} from './redux';
-import { CardCollectionName, LibraryCard } from 'booka-common';
+    CardCollectionName, LibraryCard, BookPath, localBookmark,
+    HighlightGroup, localHighlight, EntityData, Highlight,
+} from 'booka-common';
 import { Loadable } from '../../core';
+import { config } from '../../config';
+import { doFbLogout } from '../facebookSdk';
+import { useAppSelector, useAppDispatch } from './redux';
 
 export function useAccount() {
     const accountState = useAppSelector(s => s.account);
@@ -20,21 +22,28 @@ export function useAccount() {
 
 export function useBookmarks() {
     const bookmarks = useAppSelector(s => s.bookmarks);
-    const addBookmark = useDispatchCallback('bookmarks-req-add');
-    const removeBookmark = useDispatchCallback('bookmarks-req-remove');
+    const dispatch = useAppDispatch();
+    const addBookmark = useCallback((bookId: string, path: BookPath) => dispatch({
+        type: 'bookmarks-add',
+        payload: localBookmark({ bookId, path }),
+    }), [dispatch]);
+    const removeBookmark = useCallback((bookmarkId: string) => dispatch({
+        type: 'bookmarks-remove',
+        payload: { bookmarkId },
+    }), [dispatch]);
     return { bookmarks, addBookmark, removeBookmark };
 }
 
 export function useCollection(name: CardCollectionName) {
     const collectionsState: Loadable<LibraryCard[]> =
-        useAppSelector(s => s.collections[name]) ?? { loading: true };
+        useAppSelector(s => s.collections[name] ?? []) ?? { loading: true };
     const dispatch = useAppDispatch();
     const addToCollection = useCallback((card: LibraryCard) => dispatch({
-        type: 'collections-req-add',
+        type: 'collections-add',
         payload: { name, card },
     }), [name, dispatch]);
     const removeFromCollection = useCallback((bookId: string) => dispatch({
-        type: 'collections-req-remove',
+        type: 'collections-remove',
         payload: { name, bookId },
     }), [name, dispatch]);
 
@@ -50,14 +59,32 @@ export function useHighlights() {
 }
 
 export function useHighlightsActions() {
-    const addHighlight = useDispatchCallback('highlights-req-add');
-    const removeHighlight = useDispatchCallback('highlights-req-remove');
-    const updateHighlightGroup = useDispatchCallback('highlights-req-change-group');
+    const dispatch = useAppDispatch();
+    const addHighlight = useCallback((data: EntityData<Highlight>) => dispatch({
+        type: 'highlights-add',
+        payload: localHighlight(data),
+    }), [dispatch]);
+    const removeHighlight = useCallback((highlightId) => dispatch({
+        type: 'highlights-remove',
+        payload: { highlightId },
+    }), [dispatch]);
+    const updateHighlightGroup = useCallback((highlightId: string, group: HighlightGroup) => dispatch({
+        type: 'highlights-change-group',
+        payload: { highlightId, group },
+    }), [dispatch]);
     return { addHighlight, removeHighlight, updateHighlightGroup };
 }
 
 export function usePositions() {
     const positions = useAppSelector(s => s.positions);
-    const addCurrentPosition = useDispatchCallback('positions-req-add');
+    const dispatch = useAppDispatch();
+    const source = config().source;
+    const addCurrentPosition = useCallback((bookId: string, path: BookPath) => dispatch({
+        type: 'positions-add',
+        payload: {
+            bookId, path, source,
+            created: new Date(Date.now()),
+        },
+    }), [dispatch, source]);
     return { positions, addCurrentPosition };
 }

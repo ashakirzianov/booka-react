@@ -43,10 +43,7 @@ function UploadPanel({ theme }: Themed) {
         case 'empty':
             return <SelectFilePanel
                 theme={theme}
-                onSelect={res => selectFile({
-                    fileName: res.fileName,
-                    data: res.data,
-                })}
+                onSelect={res => selectFile(res.fileName, res.data)}
             />;
         case 'selected':
             return <UploadFilePanel
@@ -55,10 +52,7 @@ function UploadPanel({ theme }: Themed) {
                     fileName: uploadState.fileName,
                     data: uploadState.data,
                 }}
-                upload={(data, publicDomain) => uploadEpub({
-                    fileName: uploadState.fileName,
-                    data, publicDomain,
-                })}
+                upload={(data, publicDomain) => uploadEpub(publicDomain)}
             />;
         case 'uploading':
             return <FileUploadingPanel

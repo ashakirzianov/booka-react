@@ -102,7 +102,7 @@ function useScrollHandlers(bookId: string) {
         }
         updateBookPath(p);
         if (p) {
-            addCurrentPosition({ bookId, path: p });
+            addCurrentPosition(bookId, p);
         }
     }, 1000),
         [setNeedToScroll, updateBookPath, addCurrentPosition, needToScroll, bookId],

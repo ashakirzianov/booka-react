@@ -1,45 +1,39 @@
-import { switchMap, map } from 'rxjs/operators';
-import {
-    Bookmark, BookPath, localBookmark,
-} from 'booka-common';
-import { LocalChange, LocalChangeStore } from './localChange';
-import { Api } from './api';
+import { concat, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { AuthToken, Bookmark } from 'booka-common';
+import { Storage, persistentCache } from '../core';
+import { optional, backFetcher } from './utils';
 
-export function bookmarksProvider(localChangeStore: LocalChangeStore, api: Api) {
+const back = backFetcher();
+
+export function bookmarksProvider({ token, storage }: {
+    storage: Storage,
+    token: AuthToken | undefined,
+}) {
+    const cache = persistentCache<Bookmark[]>(storage);
     return {
-        bookmarksForId(bookId: string) {
-            return api.getBookmarks(bookId).pipe(
-                switchMap(bs =>
-                    localChangeStore.observe(bs, applyChange).pipe(
-                        map(localBms => localBms.filter(b => b.bookId === bookId))
-                    ),
-                ),
+        getBookmarks(bookId: string) {
+            return concat(
+                of(cache.existing(bookId) ?? []),
+                optional(token && back.get('/bookmarks', {
+                    auth: token.token,
+                    query: { bookId },
+                }).pipe(
+                    tap(bs => cache.add(bookId, bs)),
+                )),
             );
         },
-        addBookmark(bookId: string, path: BookPath) {
-            localChangeStore.addChange({
-                change: 'bookmark-add',
-                bookmark: localBookmark({
-                    bookId, path,
-                }),
-            });
+        postAddBookmark(bookmark: Bookmark) {
+            return optional(token && back.post('/bookmarks', {
+                auth: token.token,
+                body: bookmark,
+            }));
         },
-        removeBookmark(bookmarkId: string) {
-            localChangeStore.addChange({
-                change: 'bookmark-remove',
-                bookmarkId,
-            });
+        postRemoveBookmark(bookmarkId: string) {
+            return optional(token && back.delete('/bookmarks', {
+                auth: token.token,
+                query: { id: bookmarkId },
+            }));
         },
     };
-}
-
-function applyChange(bookmarks: Bookmark[], change: LocalChange): Bookmark[] {
-    switch (change.change) {
-        case 'bookmark-add':
-            return [...bookmarks, change.bookmark];
-        case 'bookmark-remove':
-            return bookmarks.filter(b => b.uuid !== change.bookmarkId);
-        default:
-            return bookmarks;
-    }
 }
