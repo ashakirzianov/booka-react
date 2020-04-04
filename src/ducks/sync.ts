@@ -54,8 +54,28 @@ export function syncWorker(api: Api) {
 }
 
 function appendAction(queue: AppAction[], action: AppAction): AppAction[] {
-    // TODO: implement action reducing here
-    return [...queue, action];
+    switch (action.type) {
+        case 'positions-add':
+            return [
+                ...queue.filter(
+                    a => a.type !== 'positions-add'
+                        // Note: next line is really not necessary
+                        // || a.payload.source.id !== action.payload.source.id
+                        || a.payload.bookId !== action.payload.bookId,
+                ),
+                action,
+            ];
+        case 'bookmarks-add':
+        case 'bookmarks-remove':
+        case 'highlights-add':
+        case 'highlights-remove':
+        case 'highlights-change-group':
+        case 'collections-add':
+        case 'collections-remove':
+            return [...queue, action];
+        default:
+            return queue;
+    }
 }
 
 function postAction(action: AppAction, api: Api): Observable<unknown> {
