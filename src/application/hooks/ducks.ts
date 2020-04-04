@@ -36,7 +36,7 @@ export function useBookmarks() {
 
 export function useCollection(name: CardCollectionName) {
     const collectionsState: Loadable<LibraryCard[]> =
-        useAppSelector(s => s.collections[name]) ?? { loading: true };
+        useAppSelector(s => s.collections[name] ?? []) ?? { loading: true };
     const dispatch = useAppDispatch();
     const addToCollection = useCallback((card: LibraryCard) => dispatch({
         type: 'collections-add',

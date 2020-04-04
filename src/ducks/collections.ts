@@ -72,7 +72,7 @@ const names: CardCollectionName[] = ['reading-list', 'uploads'];
 const requestCollectionsEpic = dataProviderEpic((dp, sync) => merge(
     ...names.map(name => dp.getCollection(name).pipe(
         map(c => {
-            const withLocalChanges = sync.reduce({ [c.name]: c }, collectionsReducer);
+            const withLocalChanges = sync.reduce({ [c.name]: c.cards }, collectionsReducer);
             return {
                 name: c.name,
                 cards: withLocalChanges[c.name] ?? [],
