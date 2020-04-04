@@ -1,6 +1,7 @@
-import { mergeMap, map } from 'rxjs/operators';
+import { mergeMap, map, withLatestFrom } from 'rxjs/operators';
 import { combineEpics } from 'redux-observable';
 import { AppAction, AppEpic, ofAppType } from './app';
+import { of } from 'rxjs';
 
 type UploadSelectFileAction = {
     type: 'upload-select-file',
@@ -12,8 +13,6 @@ type UploadSelectFileAction = {
 type UploadRequestUploadAction = {
     type: 'upload-req-upload',
     payload: {
-        fileName: string,
-        data: any,
         publicDomain: boolean,
     },
 };
@@ -92,19 +91,22 @@ export function uploadReducer(state: UploadState = init, action: AppAction): Upl
     }
 }
 
-const requestUploadEpic: AppEpic = (action$, _, { getCurrentDataProvider }) => action$.pipe(
+const requestUploadEpic: AppEpic = (action$, state$, { getCurrentDataProvider }) => action$.pipe(
     ofAppType('upload-req-upload'),
-    mergeMap(action =>
-        getCurrentDataProvider().uploadBook(action.payload.data, action.payload.publicDomain).pipe(
-            map((bookId): AppAction => ({
-                type: 'upload-success',
-                payload: {
-                    fileName: action.payload.fileName,
-                    bookId,
-                },
-            })),
-        ),
-    ),
+    withLatestFrom(state$),
+    mergeMap(([action, state]) => {
+        if (state.upload.state === 'selected') {
+            const { data, fileName } = state.upload;
+            return getCurrentDataProvider().uploadBook(data, action.payload.publicDomain).pipe(
+                map((bookId): AppAction => ({
+                    type: 'upload-success',
+                    payload: { fileName, bookId },
+                })),
+            );
+        } else {
+            return of<AppAction>();
+        }
+    }),
 );
 
 export const uploadEpic = combineEpics(

@@ -1,5 +1,5 @@
 import { AppAction } from './app';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Api } from '../data/api';
 
 export function syncWorker(api: Api) {
@@ -61,6 +61,6 @@ function appendAction(queue: AppAction[], action: AppAction): AppAction[] {
 function postAction(action: AppAction, api: Api): Observable<unknown> {
     switch (action.type) {
         default:
-            return new Observable(s => s.complete());
+            return of();
     }
 }

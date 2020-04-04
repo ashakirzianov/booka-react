@@ -18,15 +18,13 @@ export function BookmarkButton({ bookId, path }: {
         return <IconButton
             theme={theme}
             icon='bookmark-solid'
-            callback={() => removeBookmark({
-                bookmarkId: currentBookmark.uuid,
-            })}
+            callback={() => removeBookmark(currentBookmark.uuid)}
         />;
     } else {
         return <IconButton
             theme={theme}
             icon='bookmark-empty'
-            callback={() => addBookmark({ bookId, path })}
+            callback={() => addBookmark(bookId, path)}
         />;
     }
 }
