@@ -1,4 +1,4 @@
-import { Storage } from '../core';
+import { Storage } from './storage';
 
 export type Cache<T> = {
     existing: (key: string) => T | undefined,

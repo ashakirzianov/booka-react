@@ -1,6 +1,5 @@
 import { AuthToken, Book, LibraryCard } from 'booka-common';
-import { Storage } from '../../core';
-import { persistentCache } from '../cache';
+import { Storage, persistentCache } from '../../core';
 import { booksProvider } from './books';
 import { libraryMiscProvider } from './misc';
 
