@@ -1,9 +1,10 @@
-import { map } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 import { combineEpics } from 'redux-observable';
-import { AppEpic, ofAppType } from './app';
-import { createDataProvider } from '../data';
-import { createSyncWorker } from './sync';
 import { SignState } from 'booka-common';
+import { createDataProvider } from '../data';
+import { AppEpic, ofAppType, AppAction } from './app';
+import { createSyncWorker } from './sync';
 
 export type DataAccess = ReturnType<typeof createDataAccess>;
 export function createDataAccess() {
@@ -30,10 +31,10 @@ export type DataAction =
     | DataUpdateProviderAction
     ;
 
-const updateDataProviderEpic: AppEpic = (action$, _, deps) => action$.pipe(
+const updateDataProviderEpic: AppEpic = (action$, _, { setSignState }) => action$.pipe(
     ofAppType('account-receive-info'),
     map(action => {
-        deps.setSignState({
+        setSignState({
             sign: 'signed',
             accountInfo: action.payload.account,
             token: action.payload.token,
@@ -42,6 +43,14 @@ const updateDataProviderEpic: AppEpic = (action$, _, deps) => action$.pipe(
     }),
 );
 
+const syncEpic: AppEpic = (action$, _, { syncWorker }) => action$.pipe(
+    mergeMap(action => {
+        syncWorker().enqueue(action);
+        return of<AppAction>();
+    }),
+);
+
 export const dataEpic = combineEpics(
     updateDataProviderEpic,
+    syncEpic,
 );
