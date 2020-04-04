@@ -82,8 +82,8 @@ export function usePositions() {
     const addCurrentPosition = useCallback((bookId: string, path: BookPath) => dispatch({
         type: 'positions-add',
         payload: {
-            bookId, path,
-            source,
+            bookId, path, source,
+            created: new Date(Date.now()),
         },
     }), [dispatch, source]);
     return { positions, addCurrentPosition };
