@@ -58,6 +58,7 @@ export function createSyncWorker({ storage, dataProvider }: {
     return {
         enqueue(action: AppAction) {
             queue = appendAction(queue, action);
+            store();
             takeNext();
         },
         reduce<T>(state: T, reducer: (s: T, action: AppAction) => T): T {
