@@ -7,7 +7,7 @@ import {
 } from 'booka-common';
 import { createFetcher } from '../fetcher';
 import { config } from '../../config';
-import { Cache } from './cache';
+import { Cache } from '../cache';
 
 const lib = createFetcher<LibContract>(config().libUrl);
 
