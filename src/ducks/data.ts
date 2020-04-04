@@ -5,15 +5,33 @@ import { SignState } from 'booka-common';
 import { createDataProvider } from '../data';
 import { AppEpic, ofAppType, AppAction } from './app';
 import { createSyncWorker } from './sync';
+import { Storage } from '../core';
 
 export type DataAccess = ReturnType<typeof createDataAccess>;
-export function createDataAccess() {
-    let dataProvider = createDataProvider({ sign: 'not-signed' });
-    let syncWorker = createSyncWorker(dataProvider);
+export function createDataAccess(rootStorage: Storage) {
+    const defaultStorage = rootStorage.sub('default');
+    let dataProvider = createDataProvider({
+        storage: defaultStorage,
+        token: undefined,
+    });
+    let syncWorker = createSyncWorker({
+        storage: defaultStorage,
+        dataProvider,
+    });
     return {
         setSignState(sign: SignState) {
-            dataProvider = createDataProvider(sign);
-            syncWorker = createSyncWorker(dataProvider);
+            const userStorage = rootStorage.sub(
+                sign.sign === 'signed' ? sign.accountInfo._id : 'default',
+            );
+            dataProvider = createDataProvider({
+                storage: userStorage,
+                token: sign.sign === 'signed'
+                    ? sign.token : undefined,
+            });
+            syncWorker = createSyncWorker({
+                storage: userStorage,
+                dataProvider,
+            });
         },
         dataProvider() {
             return dataProvider;

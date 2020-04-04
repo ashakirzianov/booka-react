@@ -1,10 +1,22 @@
 import { AppAction } from './app';
 import { Observable, of } from 'rxjs';
 import { DataProvider } from '../data';
+import { Storage } from '../core';
 
-export function createSyncWorker(dp: DataProvider) {
-    let queue: AppAction[] = [];
+export function createSyncWorker({ storage, dataProvider }: {
+    storage: Storage,
+    dataProvider: DataProvider,
+}) {
+    const actionsCell = storage.cell<AppAction[]>('actions');
+    let queue: AppAction[] = restore();
     let current: AppAction | undefined;
+
+    function restore() {
+        return actionsCell.restore() ?? [];
+    }
+    function store() {
+        actionsCell.store(queue);
+    }
     function takeNext() {
         if (!current) {
             const [head, ...tail] = queue;
@@ -16,9 +28,10 @@ export function createSyncWorker(dp: DataProvider) {
         }
     }
     function doPost(action: AppAction, retries: number) {
-        postAction(action, dp).subscribe({
+        postAction(action, dataProvider).subscribe({
             complete() {
                 current = undefined;
+                store();
                 takeNext();
             },
             error() {
@@ -27,6 +40,7 @@ export function createSyncWorker(dp: DataProvider) {
                 } else {
                     current = undefined;
                     queue = [action, ...queue];
+                    store();
                 }
             },
         });
@@ -38,6 +52,8 @@ export function createSyncWorker(dp: DataProvider) {
             return queue;
         }
     }
+
+    takeNext();
 
     return {
         enqueue(action: AppAction) {
