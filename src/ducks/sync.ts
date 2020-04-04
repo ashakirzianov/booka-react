@@ -60,6 +60,25 @@ function appendAction(queue: AppAction[], action: AppAction): AppAction[] {
 
 function postAction(action: AppAction, api: Api): Observable<unknown> {
     switch (action.type) {
+        case 'bookmarks-add':
+            return api.postAddBookmark(action.payload);
+        case 'bookmarks-remove':
+            return api.postRemoveBookmark(action.payload.bookmarkId);
+        case 'highlights-add':
+            return api.postAddHighlight(action.payload);
+        case 'highlights-remove':
+            return api.postRemoveHighlight(action.payload.highlightId);
+        case 'highlights-change-group':
+            return api.postUpdateHighlight({
+                uuid: action.payload.highlightId,
+                group: action.payload.group,
+            });
+        case 'collections-add':
+            return api.postAddToCollection(action.payload.card.id, action.payload.name);
+        case 'collections-remove':
+            return api.postRemoveFromCollection(action.payload.bookId, action.payload.name);
+        case 'positions-add':
+            return api.postAddCurrentPosition(action.payload);
         default:
             return of();
     }

@@ -1,16 +1,12 @@
 import { map } from 'rxjs/operators';
 import { combineEpics } from 'redux-observable';
-import { CurrentPosition, BookPath, EntitySource } from 'booka-common';
+import { CurrentPosition, CurrentPositionPost } from 'booka-common';
 import { AppAction } from './app';
 import { dataProviderEpic } from './helpers';
 
 type PositionsAddAction = {
     type: 'positions-add',
-    payload: {
-        bookId: string,
-        path: BookPath,
-        source: EntitySource,
-    },
+    payload: CurrentPositionPost,
 };
 type PositionsReplaceAction = {
     type: 'positions-replace',
@@ -26,11 +22,8 @@ export function positionsReducer(state: PositionsState = init, action: AppAction
     switch (action.type) {
         case 'positions-add': {
             const position: CurrentPosition = {
-                uuid: '', // TODO: remove uuid from model
-                source: action.payload.source,
-                bookId: action.payload.bookId,
-                path: action.payload.path,
-                created: new Date(Date.now()),
+                uuid: '', // TODO: remove from model
+                ...action.payload,
             };
             return [
                 position,
