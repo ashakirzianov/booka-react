@@ -18,7 +18,7 @@ export function createSyncWorker({ storage, dataProvider }: {
         actionsCell.store(queue);
     }
     function takeNext() {
-        if (!current) {
+        if (!current && dataProvider.isSigned()) {
             const [head, ...tail] = queue;
             if (head) {
                 current = head;

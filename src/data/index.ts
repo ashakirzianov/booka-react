@@ -10,6 +10,9 @@ export function createDataProvider({ storage, token }: {
     token: AuthToken | undefined,
 }) {
     return {
+        isSigned() {
+            return token !== undefined;
+        },
         ...authProvider(),
         ...userDataProvider({ token }),
         ...libraryProvider({ token, storage }),
