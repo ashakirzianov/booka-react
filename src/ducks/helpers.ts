@@ -9,10 +9,10 @@ export function sideEffectEpic<T extends AppActionType>(
     type: T,
     fn: (action: ActionForType<T>, dataProvider: DataProvider) => void,
 ): AppEpic {
-    return (action$, _, { getCurrentDataProvider }) => action$.pipe(
+    return (action$, _, { dataProvider }) => action$.pipe(
         ofAppType(type),
         mergeMap(action => {
-            fn(action, getCurrentDataProvider());
+            fn(action, dataProvider());
             return of<AppAction>();
         }),
     );
@@ -21,9 +21,9 @@ export function sideEffectEpic<T extends AppActionType>(
 export function dataProviderEpic(
     projection: (dataProvider: DataProvider) => Observable<AppAction>,
 ): AppEpic {
-    return (action$, _, { getCurrentDataProvider }) => action$.pipe(
+    return (action$, _, { dataProvider }) => action$.pipe(
         ofAppType('data-provider-update'),
-        mergeMap(() => projection(getCurrentDataProvider()).pipe(
+        mergeMap(() => projection(dataProvider()).pipe(
             takeUntil(action$.pipe(
                 ofAppType('data-provider-update'),
             ))),
@@ -34,13 +34,13 @@ export function dataProviderEpic(
 export function bookRequestEpic(
     projection: (bookId: string, dataProvider: DataProvider) => Observable<AppAction>,
 ): AppEpic {
-    return (action$, state$, { getCurrentDataProvider }) => action$.pipe(
+    return (action$, state$, { dataProvider }) => action$.pipe(
         ofAppType('book-req', 'data-provider-update'),
         withLatestFrom(state$),
         mergeMap(([action, state]) => {
             const observable = action.type === 'book-req'
-                ? projection(action.payload.bookId, getCurrentDataProvider())
-                : projection(state.book.bookId, getCurrentDataProvider());
+                ? projection(action.payload.bookId, dataProvider())
+                : projection(state.book.bookId, dataProvider());
             return observable.pipe(
                 takeUntil(action$.pipe(
                     ofAppType('book-req', 'data-provider-update'),

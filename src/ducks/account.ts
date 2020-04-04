@@ -1,7 +1,6 @@
 import { combineEpics } from 'redux-observable';
 import { mergeMap, map } from 'rxjs/operators';
 import { AuthToken, AccountInfo } from 'booka-common';
-import { createAuthApi } from '../data';
 import { AppAction, ofAppType, AppEpic } from './app';
 
 type ReceivedFbTokenAction = {
@@ -53,12 +52,12 @@ export function accountReducer(state: AccountState = init, action: AppAction): A
     }
 }
 
-const accountFbTokenEpic: AppEpic = action$ => action$.pipe(
+const accountFbTokenEpic: AppEpic = (action$, _, { dataProvider }) => action$.pipe(
     ofAppType('account-receive-fb-token'),
     mergeMap(
-        action => createAuthApi().getAuthTokenFromFbToken(action.payload.token).pipe(
+        action => dataProvider().getAuthTokenFromFbToken(action.payload.token).pipe(
             mergeMap(
-                token => createAuthApi().getAccountInfo(token).pipe(
+                token => dataProvider().getAccountInfo(token).pipe(
                     map((account): AppAction => {
                         return {
                             type: 'account-receive-info',

@@ -1,7 +1,6 @@
 import { Epic, ofType, createEpicMiddleware } from 'redux-observable';
 import { Observable } from 'rxjs';
-import { UserDataProvider } from '../data';
-import { DataAction } from './data';
+import { DataAction, DataAccess } from './data';
 import { AccountState, AccountAction } from './account';
 import { ThemeState, ThemeAction } from './theme';
 import { BookState, BookAction } from './book';
@@ -39,7 +38,7 @@ export type AppState = {
     upload: UploadState,
 };
 
-export type AppDependencies = UserDataProvider;
+export type AppDependencies = DataAccess;
 
 export type AppEpic<Output extends AppAction = AppAction> =
     Epic<AppAction, Output, AppState, AppDependencies>;

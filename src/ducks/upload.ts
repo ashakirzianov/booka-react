@@ -91,13 +91,13 @@ export function uploadReducer(state: UploadState = init, action: AppAction): Upl
     }
 }
 
-const requestUploadEpic: AppEpic = (action$, state$, { getCurrentDataProvider }) => action$.pipe(
+const requestUploadEpic: AppEpic = (action$, state$, { dataProvider }) => action$.pipe(
     ofAppType('upload-req-upload'),
     withLatestFrom(state$),
     mergeMap(([action, state]) => {
         if (state.upload.state === 'selected') {
             const { data, fileName } = state.upload;
-            return getCurrentDataProvider().uploadBook(data, action.payload.publicDomain).pipe(
+            return dataProvider().uploadEpub(data, action.payload.publicDomain).pipe(
                 map((bookId): AppAction => ({
                     type: 'upload-success',
                     payload: { fileName, bookId },

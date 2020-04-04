@@ -1,8 +1,8 @@
 import { AppAction } from './app';
 import { Observable, of } from 'rxjs';
-import { Api } from '../data/api';
+import { DataProvider } from '../data';
 
-export function syncWorker(api: Api) {
+export function createSyncWorker(dp: DataProvider) {
     let queue: AppAction[] = [];
     let current: AppAction | undefined;
     function takeNext() {
@@ -16,7 +16,7 @@ export function syncWorker(api: Api) {
         }
     }
     function doPost(action: AppAction, retries: number) {
-        postAction(action, api).subscribe({
+        postAction(action, dp).subscribe({
             complete() {
                 current = undefined;
                 takeNext();
@@ -78,27 +78,27 @@ function appendAction(queue: AppAction[], action: AppAction): AppAction[] {
     }
 }
 
-function postAction(action: AppAction, api: Api): Observable<unknown> {
+function postAction(action: AppAction, dp: DataProvider): Observable<unknown> {
     switch (action.type) {
         case 'bookmarks-add':
-            return api.postAddBookmark(action.payload);
+            return dp.postAddBookmark(action.payload);
         case 'bookmarks-remove':
-            return api.postRemoveBookmark(action.payload.bookmarkId);
+            return dp.postRemoveBookmark(action.payload.bookmarkId);
         case 'highlights-add':
-            return api.postAddHighlight(action.payload);
+            return dp.postAddHighlight(action.payload);
         case 'highlights-remove':
-            return api.postRemoveHighlight(action.payload.highlightId);
+            return dp.postRemoveHighlight(action.payload.highlightId);
         case 'highlights-change-group':
-            return api.postUpdateHighlight({
+            return dp.postUpdateHighlight({
                 uuid: action.payload.highlightId,
                 group: action.payload.group,
             });
         case 'collections-add':
-            return api.postAddToCollection(action.payload.card.id, action.payload.name);
+            return dp.postAddToCollection(action.payload.card.id, action.payload.name);
         case 'collections-remove':
-            return api.postRemoveFromCollection(action.payload.bookId, action.payload.name);
+            return dp.postRemoveFromCollection(action.payload.bookId, action.payload.name);
         case 'positions-add':
-            return api.postAddCurrentPosition(action.payload);
+            return dp.postAddCurrentPosition(action.payload);
         default:
             return of();
     }

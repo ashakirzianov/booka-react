@@ -55,7 +55,7 @@ export function highlightsReducer(state: HighlightsState = init, action: AppActi
     }
 }
 
-const requestHighlightsEpic = bookRequestEpic((bookId, { highlightsForId }) => highlightsForId(bookId).pipe(
+const requestHighlightsEpic = bookRequestEpic((bookId, { getHighlights }) => getHighlights(bookId).pipe(
     map((highlights): AppAction => ({
         type: 'highlights-replace',
         payload: highlights,

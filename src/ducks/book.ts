@@ -74,10 +74,10 @@ const changeBookEpic: AppEpic = (action$, state$) => action$.pipe(
     }),
 );
 
-const requestBookEpic: AppEpic = (action$, _, { getCurrentDataProvider }) => action$.pipe(
+const requestBookEpic: AppEpic = (action$, _, { dataProvider }) => action$.pipe(
     ofAppType('book-req'),
     mergeMap(({ payload: { path, bookId } }) =>
-        getCurrentDataProvider().fragmentForPath(bookId, path).pipe(
+        dataProvider().fragmentForPath(bookId, path).pipe(
             map((fragment): AppAction => ({
                 type: 'book-received',
                 payload: {

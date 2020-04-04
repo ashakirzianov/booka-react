@@ -39,7 +39,7 @@ export function positionsReducer(state: PositionsState = init, action: AppAction
     }
 }
 
-const requestPositionsEpic = dataProviderEpic(dp => dp.currentPositions().pipe(
+const requestPositionsEpic = dataProviderEpic(dp => dp.getCurrentPositions().pipe(
     map((positions): AppAction => ({
         type: 'positions-replace',
         payload: positions,

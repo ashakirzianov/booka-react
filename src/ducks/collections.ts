@@ -70,7 +70,7 @@ export function collectionsReducer(state: CollectionsState = init, action: AppAc
 
 const names: CardCollectionName[] = ['reading-list', 'uploads'];
 const requestCollectionsEpic = dataProviderEpic(dp => merge(
-    ...names.map(name => dp.collection(name).pipe(
+    ...names.map(name => dp.getCollection(name).pipe(
         map((collection): AppAction => ({
             type: 'collections-replace',
             payload: collection,
