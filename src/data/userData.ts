@@ -1,7 +1,6 @@
 import { of, Observable } from 'rxjs';
 import {
-    AuthToken, Highlight, HighlightUpdate, CardCollectionName,
-    CurrentPositionPost,
+    AuthToken, CardCollectionName, CurrentPositionPost,
 } from 'booka-common';
 import { libFetcher, backFetcher } from './utils';
 
@@ -12,31 +11,6 @@ export function userDataProvider({ token }: {
     token: AuthToken | undefined,
 }) {
     return {
-        getHighlights(bookId: string) {
-            return optional(token && back.get('/highlights', {
-                auth: token.token,
-                query: { bookId },
-            }));
-        },
-        postAddHighlight(highlight: Highlight) {
-            return optional(token && back.post('/highlights', {
-                auth: token.token,
-                body: highlight,
-            }));
-        },
-        postRemoveHighlight(highlightId: string) {
-            return optional(token && back.delete('/highlights', {
-                auth: token.token,
-                query: { highlightId },
-            }));
-        },
-        postUpdateHighlight(update: HighlightUpdate) {
-            return optional(token && back.patch('/highlights', {
-                auth: token.token,
-                body: update,
-            }));
-        },
-
         getCurrentPositions() {
             return optional(token && back.get('/current-position', {
                 auth: token.token,
