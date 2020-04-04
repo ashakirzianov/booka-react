@@ -32,7 +32,7 @@ function CardCollection({ collection, title }: {
         : <CardCollectionView
             theme={theme}
             displayName={title}
-            cards={collectionsState.cards}
+            cards={collectionsState}
         />;
 }
 

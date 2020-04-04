@@ -6,7 +6,7 @@ import {
 } from 'booka-common';
 
 import {
-    useTheme, useBook, useUrlQuery,
+    useTheme, useUrlQuery, useOpenBook,
 } from '../application';
 
 import { Themed, colors } from '../core';
@@ -27,7 +27,7 @@ export const BookScreen = memo(function BookScreenF({ bookId }: {
 }) {
     const { path, refId } = useUrlQuery();
     const { theme } = useTheme();
-    const { bookState } = useBook({
+    const bookState = useOpenBook({
         bookId, path, refId,
     });
     if (bookState.loading) {

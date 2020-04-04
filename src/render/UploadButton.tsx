@@ -78,17 +78,7 @@ function UploadPanel({ theme }: Themed) {
                 theme={theme}
                 fileData={state}
                 upload={(data, pd) => {
-                    uploadEpub(data, pd)
-                        .subscribe({
-                            next: () => setState({
-                                state: 'success',
-                                fileName: state.fileName,
-                            }),
-                            error: () => setState({
-                                state: 'error',
-                                fileName: state.fileName,
-                            }),
-                        });
+                    uploadEpub(state.fileName, data, pd);
                     setState({
                         state: 'uploading',
                         fileName: state.fileName,

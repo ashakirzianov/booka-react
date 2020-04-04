@@ -1,47 +1,31 @@
 import { useState, useEffect, useCallback } from 'react';
 import { map } from 'rxjs/operators';
 import {
-    BookFragment, BookPath, firstPath, LibraryCard, isPathInFragment, TableOfContents,
+    BookPath, LibraryCard, TableOfContents,
 } from 'booka-common';
 import { Loadable } from './utils';
+import { useAppDispatch, useAppSelector } from './redux';
 import { useDataProvider } from './dataProvider';
 
-export type BookState = Loadable<{
-    bookId: string,
-    fragment: BookFragment,
-}>;
-export function useBook({ bookId, path, refId }: {
+export function useOpenBook({ bookId, path, refId }: {
     bookId: string,
     path?: BookPath,
     refId?: string,
 }) {
-    const data = useDataProvider();
-    const [bookState, setBookState] = useState<BookState>({ loading: true });
+    const dispatch = useAppDispatch();
     useEffect(() => {
-        const actualPath = path || firstPath();
-        const needUpdateFragment = bookState.loading
-            || bookState.bookId !== bookId
-            || !isPathInFragment(bookState.fragment, actualPath)
-            ;
-        if (needUpdateFragment) {
-            const observable = refId
-                ? data.fragmentForRef(bookId, refId)
-                : data.fragmentForPath(bookId, actualPath);
-            const sub = observable
-                .pipe(
-                    map((fragment): BookState => ({
-                        fragment,
-                        bookId,
-                    })),
-                )
-                .subscribe(setBookState);
-            return () => sub.unsubscribe();
-        }
-    }, [data, bookId, path, refId, bookState]);
+        dispatch({
+            type: 'book-req',
+            payload: {
+                bookId, refId, path,
+            },
+        });
+    }, [bookId, path, refId, dispatch]);
 
-    return { bookState };
+    return useAppSelector(s => s.book);
 }
 
+// TODO: re-implement this
 export function useToc(bookId: string) {
     const { tableOfContents } = useDataProvider();
     const [state, setState] = useState<Loadable<TableOfContents>>({ loading: true });
@@ -92,9 +76,14 @@ export function usePopularBooks() {
 }
 
 export function useUpload() {
-    const data = useDataProvider();
-    const uploadEpub = useCallback((bookData: any, publicDomain: boolean) => {
-        return data.uploadBook(bookData, publicDomain);
-    }, [data]);
-    return { uploadEpub };
+    const uploadState = useAppSelector(s => s.upload);
+    const dispatch = useAppDispatch();
+    const uploadEpub = useCallback((fileName: string, data: any, publicDomain: boolean) => dispatch({
+        type: 'upload-req-upload',
+        payload: {
+            fileName, publicDomain, data,
+        },
+    }), [dispatch]);
+
+    return { uploadState, uploadEpub };
 }

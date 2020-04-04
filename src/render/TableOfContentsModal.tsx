@@ -20,7 +20,7 @@ export function TableOfContentsModal({ bookId }: {
 }) {
     const { theme } = useTheme();
     const toc = useToc(bookId);
-    const { bookmarks } = useBookmarks(bookId);
+    const { bookmarks } = useBookmarks();
     const { positions } = usePositions();
     const { updateToc } = useUrlActions();
     const closeToc = useCallback(

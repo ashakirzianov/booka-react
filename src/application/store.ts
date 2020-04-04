@@ -6,8 +6,8 @@ import { createLogger } from 'redux-logger';
 
 import { config } from '../config';
 import { createAppEpicMiddleware, rootReducer, rootEpic } from '../ducks';
-import { userDataProvider } from '../data';
 import { startupFbSdk, fbState } from './facebookSdk';
+import { udp } from './hooks/dataProvider';
 
 export const ConnectedProvider: React.SFC = ({ children }) =>
     React.createElement(Provider, { store }, children);
@@ -19,7 +19,7 @@ function configureStore() {
         || compose;
 
     const epicMiddleware = createAppEpicMiddleware({
-        dependencies: userDataProvider(),
+        dependencies: udp,
     });
     const loggerMiddleware = createLogger();
     const middlewares = process.env.NODE_ENV === 'development'

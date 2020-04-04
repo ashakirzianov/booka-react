@@ -25,6 +25,8 @@ export type AppAction =
 export type AppActionType = AppAction['type'];
 export type ActionForType<T extends AppActionType> =
     Extract<AppAction, { type: T }>;
+export type PayloadForType<T extends AppActionType> =
+    ActionForType<T> extends { payload: infer P } ? P : undefined;
 
 export type AppState = {
     account: AccountState,

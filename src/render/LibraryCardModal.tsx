@@ -180,13 +180,13 @@ function ReadingListButton({ card }: {
     } = useCollection('reading-list');
     const readingListCards = collectionsState.loading
         ? []
-        : collectionsState.cards;
+        : collectionsState;
     const addToReadingList = useCallback(
-        () => addToCollection(card, 'reading-list'),
+        () => addToCollection(card),
         [addToCollection, card],
     );
     const removeFromReadingList = useCallback(
-        () => removeFromCollection(card.id, 'reading-list'),
+        () => removeFromCollection(card.id),
         [removeFromCollection, card],
     );
     const isInReadingList = readingListCards.find(c => c.id === card.id) !== undefined;

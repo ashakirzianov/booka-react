@@ -8,7 +8,7 @@ export function BookmarkButton({ bookId, path }: {
     path: BookPath | undefined,
 }) {
     const { theme } = useTheme();
-    const { bookmarks, addBookmark, removeBookmark } = useBookmarks(bookId);
+    const { bookmarks, addBookmark, removeBookmark } = useBookmarks();
 
     const currentBookmark = path
         ? findBookmark(bookmarks, bookId, path) : undefined;
@@ -18,13 +18,15 @@ export function BookmarkButton({ bookId, path }: {
         return <IconButton
             theme={theme}
             icon='bookmark-solid'
-            callback={() => removeBookmark(currentBookmark.uuid)}
+            callback={() => removeBookmark({
+                bookmarkId: currentBookmark.uuid,
+            })}
         />;
     } else {
         return <IconButton
             theme={theme}
             icon='bookmark-empty'
-            callback={() => addBookmark(bookId, path)}
+            callback={() => addBookmark({ bookId, path })}
         />;
     }
 }
