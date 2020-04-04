@@ -1,27 +1,35 @@
-import { of, Observable } from 'rxjs';
+import { of, concat } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import {
-    AuthToken, CardCollectionName,
+    AuthToken, CardCollectionName, CardCollection,
 } from 'booka-common';
-import { libFetcher, backFetcher } from './utils';
+import { Storage, persistentCache } from '../core';
+import { libFetcher, backFetcher, optional } from './utils';
 
 const back = backFetcher();
 const lib = libFetcher();
 
-export function userDataProvider({ token }: {
+export function collectionsProvider({ storage, token }: {
+    storage: Storage,
     token: AuthToken | undefined,
 }) {
+    const cache = persistentCache<CardCollection>(storage);
     return {
         getCollection(name: CardCollectionName) {
-            if (name === 'uploads') {
-                return optional(token && lib.get('/uploads', {
+            const actual = name === 'uploads'
+                ? optional(token && lib.get('/uploads', {
                     auth: token.token,
-                }));
-            } else {
-                return optional(token && back.get('/collections', {
+                }))
+                : optional(token && back.get('/collections', {
                     auth: token.token,
                     query: { name },
                 }));
-            }
+            return concat(
+                of(cache.existing(name) ?? { name, cards: [] }),
+                actual.pipe(
+                    tap(c => cache.add(name, c)),
+                ),
+            );
         },
         postAddToCollection(bookId: string, collection: CardCollectionName) {
             return optional(token && back.post('/collections', {
@@ -36,8 +44,4 @@ export function userDataProvider({ token }: {
             }));
         },
     };
-}
-
-function optional<T>(observable?: Observable<T>): Observable<T> {
-    return observable ?? of<T>();
 }
