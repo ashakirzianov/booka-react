@@ -2,13 +2,12 @@ import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
     Book, BookPath, LibraryCard, tocForBook, previewForPath,
-    AuthToken, LibContract, BookSearchResult,
+    AuthToken, BookSearchResult,
 } from 'booka-common';
-import { createFetcher } from '../fetcher';
-import { config } from '../../config';
 import { Cache } from '../../core';
+import { libFetcher } from '../utils';
 
-const lib = createFetcher<LibContract>(config().libUrl);
+const lib = libFetcher();
 
 export function libraryMiscProvider({ booksCache, cardsCache, token }: {
     cardsCache: Cache<LibraryCard>,

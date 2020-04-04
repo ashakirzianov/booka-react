@@ -1,13 +1,12 @@
 import { of, Observable } from 'rxjs';
 import {
-    AuthToken, BackContract, LibContract, Bookmark,
-    Highlight, HighlightUpdate, CardCollectionName, CurrentPositionPost,
+    AuthToken, Bookmark, Highlight, HighlightUpdate, CardCollectionName,
+    CurrentPositionPost,
 } from 'booka-common';
-import { config } from '../config';
-import { createFetcher } from './fetcher';
+import { libFetcher, backFetcher } from './utils';
 
-const back = createFetcher<BackContract>(config().backUrl);
-const lib = createFetcher<LibContract>(config().libUrl);
+const back = backFetcher();
+const lib = libFetcher();
 
 export function userDataProvider({ token }: {
     token: AuthToken | undefined,

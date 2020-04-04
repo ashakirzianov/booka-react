@@ -2,14 +2,12 @@ import { of, concat } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
     Book, BookPath, fragmentForPath, findReference, BookFragment,
-    defaultFragmentLength, tocForBook, firstPath,
-    LibContract, pathToString, AuthToken,
+    defaultFragmentLength, tocForBook, firstPath, pathToString, AuthToken,
 } from 'booka-common';
-import { createFetcher } from '../fetcher';
-import { config } from '../../config';
-import { Cache } from '../cache';
+import { Cache } from '../../core';
+import { libFetcher } from '../utils';
 
-const lib = createFetcher<LibContract>(config().libUrl);
+const lib = libFetcher();
 
 export function booksProvider({ booksCache, token }: {
     booksCache: Cache<Book>,

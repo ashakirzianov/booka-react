@@ -1,8 +1,7 @@
-import { AuthToken, BackContract } from 'booka-common';
-import { config } from '../config';
-import { createFetcher } from './fetcher';
+import { AuthToken } from 'booka-common';
+import { backFetcher } from './utils';
 
-const back = createFetcher<BackContract>(config().backUrl);
+const back = backFetcher();
 
 export function authProvider() {
     return {
