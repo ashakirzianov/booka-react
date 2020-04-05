@@ -1,4 +1,4 @@
-import React, { useCallback, memo, useMemo, useState, useRef, ReactNode } from 'react';
+import React, { useCallback, memo, useMemo, useRef, ReactNode } from 'react';
 import { throttle } from 'lodash';
 import {
     BookFragment, BookPath, BookRange,
@@ -17,6 +17,7 @@ import {
     View, BorderButton, regularSpace, colorForHighlightGroup,
 } from '../controls';
 import { BookPathLink, BookRefLink } from './Navigation';
+import { useAppSelector } from '../application/hooks/redux';
 
 export const BookView = memo(function BookViewF({
     bookId, fragment,
@@ -25,7 +26,8 @@ export const BookView = memo(function BookViewF({
     fragment: BookFragment,
 }) {
     const { theme } = useTheme();
-    const { pathToScroll, onScroll, onNavigation } = useScrollHandlers(bookId);
+    const { onScroll } = useScrollHandlers(bookId);
+    const pathToScroll = usePathToScroll();
     const { onSelectionChange, selection } = useSelectionHandlers();
     const { colorization } = useColorization();
     const RefComp = useCallback(({ refId, children }: { refId: string, children: ReactNode }) => {
@@ -43,7 +45,6 @@ export const BookView = memo(function BookViewF({
             defaultTitle='Previous'
             anchor={fragment.previous}
             bookId={bookId}
-            callback={onNavigation}
         />
         <BookFragmentComp
             fragment={fragment}
@@ -63,7 +64,6 @@ export const BookView = memo(function BookViewF({
             defaultTitle='Next'
             anchor={fragment.next}
             bookId={bookId}
-            callback={onNavigation}
         />
     </BookContextMenu>;
 });
@@ -91,31 +91,23 @@ function useSelectionHandlers() {
     return { onSelectionChange, selection };
 }
 
+function usePathToScroll() {
+    return useAppSelector(s => s.book.scrollPath);
+}
+
 function useScrollHandlers(bookId: string) {
-    const { path } = useUrlQuery();
     const { updateBookPath } = useUrlActions();
     const { addCurrentPosition } = usePositions();
-    const [needToScroll, setNeedToScroll] = useState(true);
     const onScroll = useCallback(throttle((p: BookPath | undefined) => {
-        if (needToScroll) {
-            setNeedToScroll(false);
-        }
         updateBookPath(p);
         if (p) {
             addCurrentPosition(bookId, p);
         }
     }, 1000),
-        [setNeedToScroll, updateBookPath, addCurrentPosition, needToScroll, bookId],
-    );
-    const onNavigation = useCallback(
-        () => setNeedToScroll(true),
-        [setNeedToScroll],
+        [updateBookPath, addCurrentPosition, bookId],
     );
 
-    return {
-        onScroll, onNavigation,
-        pathToScroll: needToScroll ? path : undefined,
-    };
+    return { onScroll };
 }
 
 function AnchorButton({

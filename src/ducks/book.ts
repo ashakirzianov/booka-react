@@ -7,9 +7,8 @@ import {
 import { Loadable } from '../core';
 import { AppAction, ofAppType, AppEpic } from './app';
 
-// TODO: rename
-type BookChangeAction = {
-    type: 'book-change',
+type BookPositionUpdateAction = {
+    type: 'book-position-update',
     payload: {
         bookId: string,
         path?: BookPath,
@@ -32,21 +31,30 @@ type BookReceivedAction = {
     },
 };
 export type BookAction =
-    | BookChangeAction | BookRequestAction | BookReceivedAction
+    | BookPositionUpdateAction | BookRequestAction | BookReceivedAction
     ;
 
 export type BookState = {
     bookId: string,
+    scrollPath: BookPath | undefined,
     fragment: Loadable<BookFragment>,
 };
 const init: BookState = {
     bookId: '', // TODO: rethink this
+    scrollPath: undefined,
     fragment: { loading: true },
 };
 export function bookReducer(state: BookState = init, action: AppAction): BookState {
     switch (action.type) {
+        case 'book-req':
+            return { ...state, scrollPath: action.payload.path };
+        case 'book-position-update':
+            return state.scrollPath === undefined
+                ? state
+                : { ...state, scrollPath: undefined };
         case 'book-received':
             return {
+                ...state,
                 bookId: action.payload.bookId,
                 fragment: action.payload.fragment,
             };
@@ -56,7 +64,7 @@ export function bookReducer(state: BookState = init, action: AppAction): BookSta
 }
 
 const changeBookEpic: AppEpic = (action$, state$) => action$.pipe(
-    ofAppType('book-change'),
+    ofAppType('book-position-update'),
     withLatestFrom(state$),
     mergeMap(([{ payload: { path, bookId } }, { book }]) => {
         const actualPath = path || firstPath();
