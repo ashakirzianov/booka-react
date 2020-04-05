@@ -9,8 +9,7 @@ export function useLibraryCard(bookId: string) {
     const data = useDataProvider();
     const [card, setCardState] = useState<LibraryCardState>({ loading: true });
     useEffect(() => {
-        const sub = data.cardForId(bookId).pipe(
-        ).subscribe(setCardState);
+        const sub = data.cardForId(bookId).subscribe(setCardState);
         return () => sub.unsubscribe();
     }, [data, bookId]);
 

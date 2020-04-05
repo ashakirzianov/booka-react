@@ -1,7 +1,7 @@
 import { concat, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import {
-    AuthToken, CurrentPositionPost, CurrentPosition,
+    AuthToken, CurrentPosition,
 } from 'booka-common';
 import { Storage, persistentCache } from '../core';
 import { backFetcher, optional } from './utils';
@@ -24,7 +24,7 @@ export function positionsProvider({ token, storage }: {
                 )),
             );
         },
-        postAddCurrentPosition(position: CurrentPositionPost) {
+        postAddCurrentPosition(position: CurrentPosition) {
             return optional(token && back.put('/current-position', {
                 auth: token.token,
                 body: position,

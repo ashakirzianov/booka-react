@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import {
     CardCollectionName, LibraryCard, BookPath, localBookmark,
-    HighlightGroup, localHighlight, EntityData, Highlight,
+    HighlightGroup, localHighlight, Highlight,
 } from 'booka-common';
 import { Loadable } from '../../core';
 import { config } from '../../config';
@@ -60,7 +60,7 @@ export function useHighlights() {
 
 export function useHighlightsActions() {
     const dispatch = useAppDispatch();
-    const addHighlight = useCallback((data: EntityData<Highlight>) => dispatch({
+    const addHighlight = useCallback((data: Omit<Highlight, 'uuid'>) => dispatch({
         type: 'highlights-add',
         payload: localHighlight(data),
     }), [dispatch]);

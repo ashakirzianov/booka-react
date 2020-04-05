@@ -1,5 +1,5 @@
 import { of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 import {
     Book, BookPath, LibraryCard, tocForBook, previewForPath,
     AuthToken, BookSearchResult,
@@ -21,13 +21,18 @@ export function libraryMiscProvider({ booksCache, cardsCache, token }: {
             if (cached) {
                 return of(cached);
             } else {
-                return lib.get('/card', {
-                    query: { id: bookId },
+                return lib.get('/cards', {
+                    query: { ids: [bookId] },
                 }).pipe(
-                    map(card => {
-                        cardsCache.add(bookId, card);
-                        return card;
+                    map(([card]) => {
+                        if (card) {
+                            cardsCache.add(bookId, card);
+                            return card;
+                        } else {
+                            return undefined;
+                        }
                     }),
+                    filter((c): c is LibraryCard => c !== undefined),
                 );
             }
         },
