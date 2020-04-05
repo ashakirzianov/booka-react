@@ -63,7 +63,7 @@ function SearchResults({ query, state, theme }: Themed & {
         return <Panel theme={theme}>
             <BookList
                 theme={theme}
-                books={state.results.map(r => r.desc)}
+                books={state.results.map(r => r.card)}
                 lines={2}
             />
         </Panel>;
