@@ -39,9 +39,10 @@ export function bookRequestEpic(
         ofAppType('book-req', 'data-provider-update'),
         withLatestFrom(state$),
         mergeMap(([action, state]) => {
-            const observable = action.type === 'book-req'
-                ? projection(action.payload.bookId, dataProvider(), syncWorker())
-                : projection(state.book.bookId, dataProvider(), syncWorker());
+            const observable =
+                action.type === 'book-req' ? projection(action.payload.bookId, dataProvider(), syncWorker())
+                    : state.book.bookId ? projection(state.book.bookId, dataProvider(), syncWorker())
+                        : of<AppAction>();
             return observable.pipe(
                 takeUntil(action$.pipe(
                     ofAppType('book-req', 'data-provider-update'),
