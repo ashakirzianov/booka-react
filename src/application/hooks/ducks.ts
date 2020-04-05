@@ -64,7 +64,7 @@ export function useHighlightsActions() {
         type: 'highlights-add',
         payload: localHighlight(data),
     }), [dispatch]);
-    const removeHighlight = useCallback((highlightId) => dispatch({
+    const removeHighlight = useCallback((highlightId: string) => dispatch({
         type: 'highlights-remove',
         payload: { highlightId },
     }), [dispatch]);

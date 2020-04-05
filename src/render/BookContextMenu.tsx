@@ -131,7 +131,7 @@ function ManageHighlightItem({
 }: Themed & {
     target: ContextMenuTarget,
     setHighlightGroup: (highlightId: string, group: HighlightGroup) => void,
-    removeHighlight: (params: { highlightId: string }) => void,
+    removeHighlight: (highlightId: string) => void,
 }) {
     if (target.target !== 'highlight') {
         return null;
@@ -160,9 +160,7 @@ function ManageHighlightItem({
         />
         <RemoveHighlightButton
             theme={theme}
-            removeHighlight={() => removeHighlight({
-                highlightId: target.highlight.uuid,
-            })}
+            removeHighlight={() => removeHighlight(target.highlight.uuid)}
         />
     </ContextMenuItem>;
 }
