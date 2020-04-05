@@ -10,6 +10,7 @@ import { highlightsReducer, highlightsEpic } from './highlights';
 import { collectionsReducer, collectionsEpic } from './collections';
 import { positionsReducer, positionsEpic } from './positions';
 import { uploadReducer, uploadEpic } from './upload';
+import { linkEpic, linkReducer } from './link';
 
 export const rootReducer = combineReducers<AppState, AppAction>({
     theme: themeReducer,
@@ -20,6 +21,7 @@ export const rootReducer = combineReducers<AppState, AppAction>({
     collections: collectionsReducer,
     positions: positionsReducer,
     upload: uploadReducer,
+    link: linkReducer,
 });
 
 export const rootEpic = combineEpics(
@@ -31,4 +33,5 @@ export const rootEpic = combineEpics(
     collectionsEpic,
     positionsEpic,
     uploadEpic,
+    linkEpic,
 );

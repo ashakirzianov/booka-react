@@ -9,6 +9,7 @@ import { HighlightsState, HighlightsAction } from './highlights';
 import { CollectionsAction, CollectionsState } from './collections';
 import { PositionsAction, PositionsState } from './positions';
 import { UploadAction, UploadState } from './upload';
+import { LinkAction, LinkState } from './link';
 
 export type AppAction =
     | DataAction
@@ -20,6 +21,7 @@ export type AppAction =
     | CollectionsAction
     | PositionsAction
     | UploadAction
+    | LinkAction
     ;
 export type AppActionType = AppAction['type'];
 export type ActionForType<T extends AppActionType> =
@@ -36,6 +38,7 @@ export type AppState = {
     collections: CollectionsState,
     positions: PositionsState,
     upload: UploadState,
+    link: LinkState,
 };
 
 export type AppDependencies = DataAccess;
