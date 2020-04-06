@@ -30,7 +30,7 @@ export function LibraryCardModal({ bookId }: {
 function LibraryCardModalImpl({ bookId }: {
     bookId: string,
 }) {
-    const { theme } = useTheme();
+    const theme = useTheme();
     const card = useLibraryCard(bookId);
     const setCard = useSetCard();
 
@@ -141,7 +141,7 @@ function ReadButtons({ card }: {
 function ContinueRead({ card }: {
     card: LibraryCard,
 }) {
-    const { theme } = useTheme();
+    const theme = useTheme();
     const positions = usePositions();
 
     const currentPositions = positions.filter(
@@ -173,7 +173,7 @@ function ContinueRead({ card }: {
 function ReadingListButton({ card }: {
     card: LibraryCard,
 }) {
-    const { theme } = useTheme();
+    const theme = useTheme();
     const {
         collectionsState,
         addToCollection,
@@ -213,7 +213,7 @@ function BookPathButton({ text, bookId, path }: {
     bookId: string,
     path?: BookPath,
 }) {
-    const { theme } = useTheme();
+    const theme = useTheme();
     return <BookPathLink bookId={bookId} path={path}>
         <ActionButton
             theme={theme}

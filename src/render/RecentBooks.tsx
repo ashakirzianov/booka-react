@@ -7,7 +7,7 @@ import { GridList, Panel } from '../controls';
 import { BookIdTile } from './LibraryCardTile';
 
 export function RecentBooks() {
-    const { theme } = useTheme();
+    const theme = useTheme();
     const positions = usePositions();
     if (positions.length < 2) {
         return null;

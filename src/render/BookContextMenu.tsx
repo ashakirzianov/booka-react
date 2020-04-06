@@ -37,7 +37,7 @@ export function BookContextMenu({
     bookId: string
     selection: SelectionType,
 }) {
-    const { theme } = useTheme();
+    const theme = useTheme();
     const {
         addHighlight, removeHighlight, updateHighlightGroup,
     } = useHighlightsActions();

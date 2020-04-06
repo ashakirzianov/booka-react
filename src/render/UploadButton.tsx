@@ -10,7 +10,7 @@ import { assertNever } from '../reader/RichText/utils';
 import { LoginOptions } from './LoginOptions';
 
 export function UploadButton() {
-    const { theme } = useTheme();
+    const theme = useTheme();
 
     return <WithPopover
         theme={theme}

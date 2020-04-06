@@ -7,7 +7,7 @@ import { Themed, Loadable } from '../core';
 export function BookIdTile({ bookId }: {
     bookId: string,
 }) {
-    const { theme } = useTheme();
+    const theme = useTheme();
     const card = useLibraryCard(bookId);
     return <LibraryCardLink
         theme={theme}

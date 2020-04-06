@@ -15,7 +15,7 @@ import { UploadButton } from './UploadButton';
 export function TopBar({ query }: {
     query: string | undefined,
 }) {
-    const { theme } = useTheme();
+    const theme = useTheme();
     const doQuery = useDoLibraryQuery();
     const querySearch = useCallback(debounce((q: string) => {
         doQuery(q ? q : undefined);
@@ -37,7 +37,7 @@ export function TopBar({ query }: {
 }
 
 function SearchResults() {
-    const { theme } = useTheme();
+    const theme = useTheme();
     const state = useSearch();
     switch (state.state) {
         case 'empty':

@@ -23,7 +23,7 @@ export const BookScreen = memo(function BookScreenF({
 }: {
     location: BookLocation,
 }) {
-    const { theme } = useTheme();
+    const theme = useTheme();
     const bookState = useBook();
     if (bookState.fragment.loading) {
         return <FullScreenActivityIndicator
@@ -190,7 +190,7 @@ function Footer({
 }
 
 function FeedButton() {
-    const { theme } = useTheme();
+    const theme = useTheme();
     return <FeedLink>
         <IconButton
             theme={theme}
@@ -200,7 +200,7 @@ function FeedButton() {
 }
 
 function TocButton() {
-    const { theme } = useTheme();
+    const theme = useTheme();
     const openToc = useSetTocOpen();
     return <IconButton
         theme={theme}

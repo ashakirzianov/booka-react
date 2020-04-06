@@ -13,7 +13,7 @@ import { PopularBooks } from './PopularBooks';
 export function FeedScreen({ location }: {
     location: FeedLocation,
 }) {
-    const { theme } = useTheme();
+    const theme = useTheme();
     const query = location.search;
     const card = location.card;
     return <Screen theme={theme}>

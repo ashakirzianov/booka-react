@@ -26,7 +26,7 @@ export const BookView = memo(function BookViewF({
     quote: BookRange | undefined,
     fragment: BookFragment,
 }) {
-    const { theme } = useTheme();
+    const theme = useTheme();
     const { onScroll } = useScrollHandlers(bookId);
     const pathToScroll = usePathToScroll();
     const { onSelectionChange, selection } = useSelectionHandlers();
@@ -70,7 +70,7 @@ export const BookView = memo(function BookViewF({
 });
 
 function useColorization(quote: BookRange | undefined) {
-    const { theme } = useTheme();
+    const theme = useTheme();
     const highlights = useHighlights();
 
     const colorization = useMemo(

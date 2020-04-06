@@ -19,7 +19,7 @@ import { BookLocation } from '../ducks';
 export function TableOfContentsModal({ location }: {
     location: BookLocation,
 }) {
-    const { theme } = useTheme();
+    const theme = useTheme();
     const toc = useToc(location.bookId);
     const { bookmarks } = useBookmarks();
     const positions = usePositions();

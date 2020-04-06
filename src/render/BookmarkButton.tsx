@@ -7,7 +7,7 @@ export function BookmarkButton({ bookId, path }: {
     bookId: string,
     path: BookPath | undefined,
 }) {
-    const { theme } = useTheme();
+    const theme = useTheme();
     const { bookmarks, addBookmark, removeBookmark } = useBookmarks();
 
     const currentBookmark = path

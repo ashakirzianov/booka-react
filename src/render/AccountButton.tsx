@@ -11,7 +11,7 @@ import { Themed } from '../core';
 import { LoginOptions } from './LoginOptions';
 
 export function AccountButton() {
-    const { theme } = useTheme();
+    const theme = useTheme();
     const { accountState, logout } = useAccount();
 
     return <AccountButtonDumb
