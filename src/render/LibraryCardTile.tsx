@@ -1,7 +1,7 @@
 import React from 'react';
 import { LibraryCard } from 'booka-common';
 import { BookTile, ActivityIndicator } from '../controls';
-import { useLibraryCard, useTheme, useLibraryCardActions } from '../application';
+import { useLibraryCard, useTheme, useSetLibraryCard } from '../application';
 import { Themed, Loadable } from '../core';
 
 export function BookIdTile({ bookId }: {
@@ -18,7 +18,7 @@ export function BookIdTile({ bookId }: {
 export function LibraryCardLink({ card, theme }: Themed & {
     card: Loadable<LibraryCard>,
 }) {
-    const { openCard } = useLibraryCardActions();
+    const openCard = useSetLibraryCard();
     if (card.loading) {
         return <ActivityIndicator theme={theme} />;
     } else {

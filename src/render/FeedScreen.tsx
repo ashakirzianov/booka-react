@@ -15,7 +15,7 @@ export function FeedScreen({ location }: {
 }) {
     const { theme } = useTheme();
     const query = location.search;
-    const card = location.show;
+    const card = location.card;
     return <Screen theme={theme}>
         <LibraryCardModal bookId={card} />
         <TopBar query={query} />

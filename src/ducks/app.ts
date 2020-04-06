@@ -10,7 +10,6 @@ import { CollectionsAction, CollectionsState } from './collections';
 import { PositionsAction, PositionsState } from './positions';
 import { UploadAction, UploadState } from './upload';
 import { LocationAction, LocationState } from './location';
-import { Middleware, Dispatch } from 'redux';
 import { SearchAction, SearchState } from './search';
 
 export type AppAction =
@@ -50,7 +49,11 @@ export type AppDependencies = DataAccess;
 export type AppEpic<Output extends AppAction = AppAction> =
     Epic<AppAction, Output, AppState, AppDependencies>;
 
-export type AppMiddleware = Middleware<{}, AppState, Dispatch<AppAction>>;
+export type AppMiddleware =
+    (store: { getState: () => AppState }) =>
+        (next: (action: AppAction) => AppAction) =>
+            (action: AppAction) =>
+                AppAction;
 
 export function createAppEpicMiddleware(options: {
     dependencies: AppDependencies,

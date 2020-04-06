@@ -16,12 +16,10 @@ export function useLibraryCard(bookId: string) {
     return card;
 }
 
-export function useLibraryCardActions() {
+export function useSetLibraryCard() {
     const dispatch = useAppDispatch();
-    const openCard = useCallback((cardId: string | undefined) => dispatch({
-        type: 'location-update',
-        payload: { location: 'feed', show: cardId },
+    return useCallback((card: string | undefined) => dispatch({
+        type: 'location-update-card',
+        payload: card,
     }), [dispatch]);
-
-    return { openCard };
 }

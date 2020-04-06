@@ -6,7 +6,7 @@ import {
 } from 'booka-common';
 import {
     useTheme, useLibraryCard,
-    useCollection, usePositions, useSetShowCard,
+    useCollection, usePositions, useSetCard,
 } from '../application';
 import {
     Modal, ActivityIndicator, ActionButton, TagLabel,
@@ -32,12 +32,12 @@ function LibraryCardModalImpl({ bookId }: {
 }) {
     const { theme } = useTheme();
     const card = useLibraryCard(bookId);
-    const setShowCard = useSetShowCard();
+    const setCard = useSetCard();
 
     return <Modal
         theme={theme}
         title=''
-        close={() => setShowCard(undefined)}
+        close={() => setCard(undefined)}
         open={true}
     >
         {

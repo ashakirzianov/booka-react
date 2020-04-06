@@ -9,7 +9,7 @@ import {
     BookFragmentComp, BookSelection, ColorizedRange,
 } from '../reader';
 import {
-    useHighlights, useTheme, useQuote, useSetPath, usePositionsActions,
+    useHighlights, useTheme, useSetPath, usePositionsActions,
 } from '../application';
 import { Themed, colors, Theme } from '../core';
 import { BookContextMenu } from './BookContextMenu';
@@ -20,16 +20,17 @@ import { BookPathLink, BookRefLink } from './Navigation';
 import { useAppSelector } from '../application/hooks/redux';
 
 export const BookView = memo(function BookViewF({
-    bookId, fragment,
+    bookId, fragment, quote,
 }: {
     bookId: string,
+    quote: BookRange | undefined,
     fragment: BookFragment,
 }) {
     const { theme } = useTheme();
     const { onScroll } = useScrollHandlers(bookId);
     const pathToScroll = usePathToScroll();
     const { onSelectionChange, selection } = useSelectionHandlers();
-    const { colorization } = useColorization();
+    const { colorization } = useColorization(quote);
     const RefComp = useCallback(({ refId, children }: { refId: string, children: ReactNode }) => {
         return <BookRefLink bookId={bookId} refId={refId}>
             {children}
@@ -68,10 +69,9 @@ export const BookView = memo(function BookViewF({
     </BookContextMenu>;
 });
 
-function useColorization() {
+function useColorization(quote: BookRange | undefined) {
     const { theme } = useTheme();
     const highlights = useHighlights();
-    const quote = useQuote();
 
     const colorization = useMemo(
         () => quoteColorization(quote, theme)

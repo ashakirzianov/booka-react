@@ -12,13 +12,17 @@ export const historySyncMiddleware: AppMiddleware = store => next => action => {
         case 'location-navigate':
             history.push(linkToUrl(store.getState().location));
             break;
-        case 'location-update':
+        case 'location-update-path':
+        case 'location-update-quote':
+        case 'location-update-card':
+        case 'location-update-toc':
+        case 'location-update-search':
             history.replace(linkToUrl(store.getState().location));
             break;
         default:
             break;
     }
-    next(action);
+    return next(action);
 };
 
 export function subscribeToHistory(linkDispatch: (link: AppLocation) => void) {
@@ -31,7 +35,7 @@ function locationToLink(location: Location): AppLocation {
     if (location.pathname === '/feed') {
         return {
             location: 'feed',
-            show: typeof show === 'string'
+            card: typeof show === 'string'
                 ? show : undefined,
             search: typeof q === 'string'
                 ? q : undefined,
@@ -62,7 +66,7 @@ export function linkToUrl(link: AppLocation) {
             return stringifyUrl({
                 url: '/feed',
                 query: {
-                    show: link.show,
+                    show: link.card,
                 },
             });
         case 'book':

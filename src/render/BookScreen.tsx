@@ -78,8 +78,9 @@ function BookReady({
                     paddingLeft: doubleSpace, paddingRight: doubleSpace,
                 }}>
                     <BookView
-                        bookId={location.bookId}
                         fragment={fragment}
+                        bookId={location.bookId}
+                        quote={location.quote}
                     />
                 </View>
             </Clickable>
