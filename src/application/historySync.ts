@@ -8,6 +8,7 @@ import { createBrowserHistory, Location } from 'history';
 const history = createBrowserHistory();
 
 export const historySyncMiddleware: AppMiddleware = store => next => action => {
+    const nextAction = next(action);
     switch (action.type) {
         case 'location-navigate':
             history.push(linkToUrl(store.getState().location));
@@ -22,7 +23,7 @@ export const historySyncMiddleware: AppMiddleware = store => next => action => {
         default:
             break;
     }
-    return next(action);
+    return nextAction;
 };
 
 export function subscribeToHistory(linkDispatch: (link: AppLocation) => void) {
