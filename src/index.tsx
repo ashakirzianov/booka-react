@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom';
 import { App } from './App';
 // import * as serviceWorker from './serviceWorker';
 import { initWhyDidYouRender } from './utils';
+import { config } from './config';
 
 (async function init() {
-    await initWhyDidYouRender(true);
+    await initWhyDidYouRender(config().logRenders);
 
     ReactDOM.render(<App />, document.getElementById('root'));
 

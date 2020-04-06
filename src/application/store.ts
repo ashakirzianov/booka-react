@@ -3,6 +3,7 @@ import React from 'react';
 import { createStore, compose, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { createLogger } from 'redux-logger';
+import { filterUndefined } from 'booka-common';
 
 import { config } from '../config';
 import { createAppEpicMiddleware, rootReducer, rootEpic } from '../ducks';
@@ -22,16 +23,11 @@ function configureStore() {
     const epicMiddleware = createAppEpicMiddleware({
         dependencies: dataAccess,
     });
-    const productionMiddlewares = [
+    const middlewares = filterUndefined([
         epicMiddleware,
         historySyncMiddleware,
-    ];
-    const debugMiddlewares = [
-        createLogger(),
-    ];
-    const middlewares = process.env.NODE_ENV === 'development'
-        ? [...productionMiddlewares, ...debugMiddlewares]
-        : productionMiddlewares;
+        config().logActions ? createLogger() : undefined,
+    ]);
     const s = createStore(
         rootReducer,
         composeEnhancers(
