@@ -1,32 +1,38 @@
 import { of } from 'rxjs';
 import { mergeMap, map } from 'rxjs/operators';
 import { combineEpics } from 'redux-observable';
-import { BookSearchResult } from 'booka-common';
-import { Loadable } from '../core';
+import { SearchResult } from 'booka-common';
 import { AppAction, AppEpic, ofAppType } from './app';
 
 type SearchResultReceivedAction = {
     type: 'search-results-received',
-    payload: BookSearchResult[],
+    payload: SearchResult[],
 };
 
 export type SearchAction =
     | SearchResultReceivedAction;
 
 export type SearchState = {
-    results: Loadable<BookSearchResult[]>,
+    state: 'empty',
+} | {
+    state: 'loading',
+} | {
+    state: 'ready',
+    results: SearchResult[],
 };
-const init: SearchState = { results: [] };
+const init: SearchState = { state: 'empty' };
 export function searchReducer(state: SearchState = init, action: AppAction): SearchState {
     switch (action.type) {
         case 'location-update':
-            if (action.payload.location === 'feed' && action.payload.search !== undefined) {
-                return { results: { loading: true } };
+            if (action.payload.location === 'feed' && ('search' in action.payload)) {
+                return action.payload.search
+                    ? { state: 'loading' }
+                    : { state: 'empty' };
             } else {
                 return state;
             }
         case 'search-results-received':
-            return { results: action.payload };
+            return { state: 'ready', results: action.payload };
         default:
             return state;
     }
@@ -35,7 +41,9 @@ export function searchReducer(state: SearchState = init, action: AppAction): Sea
 const doQueryEpic: AppEpic = (action$, _, { dataProvider }) => action$.pipe(
     ofAppType('location-update'),
     mergeMap(action => {
-        if (action.payload.location === 'feed' && action.payload.search) {
+        console.log('ONE');
+        if (action.payload.location === 'feed' && ('search' in action.payload)) {
+            console.log('TWO');
             return dataProvider().librarySearch(action.payload.search).pipe(
                 map((results): AppAction => ({
                     type: 'search-results-received',

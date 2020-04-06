@@ -57,16 +57,6 @@ export function useSearchQuery() {
     );
 }
 
-export function useSetSearchQuery() {
-    const dispatch = useAppDispatch();
-    const setSearchQuery = useCallback((search: string | undefined) => dispatch({
-        type: 'location-update',
-        payload: { location: 'feed', search },
-    }), [dispatch]);
-
-    return setSearchQuery;
-}
-
 export function useShowCardId() {
     return useAppSelector(
         s => s.location.location === 'feed'
