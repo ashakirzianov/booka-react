@@ -3,12 +3,11 @@ import React, { memo } from 'react';
 import {
     positionForPath, pageForPosition, BookFragment,
 } from 'booka-common';
-import { useTheme, useBook, useSetTocOpen, useToggleControls } from '../application';
+import { useTheme, useBook, useSetTocOpen } from '../application';
 import { Themed, colors } from '../core';
 import {
     FixedPanel, View, IconButton, Label, regularSpace, userAreaWidth,
     FullScreenActivityIndicator, Screen, megaSpace, doubleSpace,
-    Clickable,
 } from '../controls';
 import { BookLocation } from '../ducks';
 import { FeedLink } from './Navigation';
@@ -46,8 +45,6 @@ function BookReady({
     fragment: BookFragment,
     controlsVisible: boolean,
 }) {
-    const toggleControls = useToggleControls();
-
     return <Screen theme={theme}>
         <Header
             theme={theme}
@@ -68,19 +65,17 @@ function BookReady({
             alignItems: 'center',
         }}
         >
-            <Clickable callback={toggleControls}>
-                <View style={{
-                    maxWidth: userAreaWidth,
-                    paddingTop: megaSpace, paddingBottom: megaSpace,
-                    paddingLeft: doubleSpace, paddingRight: doubleSpace,
-                }}>
-                    <BookView
-                        fragment={fragment}
-                        bookId={location.bookId}
-                        quote={location.quote}
-                    />
-                </View>
-            </Clickable>
+            <View style={{
+                maxWidth: userAreaWidth,
+                paddingTop: megaSpace, paddingBottom: megaSpace,
+                paddingLeft: doubleSpace, paddingRight: doubleSpace,
+            }}>
+                <BookView
+                    fragment={fragment}
+                    bookId={location.bookId}
+                    quote={location.quote}
+                />
+            </View>
         </View>
     </Screen>;
 }

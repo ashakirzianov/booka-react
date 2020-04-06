@@ -4,7 +4,7 @@ import {
     Highlight, BookRange, HighlightGroup, doesRangeOverlap, rangeToString,
 } from 'booka-common';
 import { BookSelection } from '../reader';
-import { useTheme, useHighlightsActions, useHighlights, useOnCopy, useSetQuote } from '../application';
+import { useTheme, useHighlightsActions, useHighlights, useOnCopy, useSetQuote, useToggleControls } from '../application';
 import {
     ContextMenu, ContextMenuItem, TextContextMenuItem,
     CircleButton, colorForHighlightGroup, SimpleButton,
@@ -68,6 +68,7 @@ export function BookContextMenu({
 function useMenuTarget(bookId: string, selection: SelectionType) {
     const highlights = useHighlights();
     const [target, setTarget] = useState<ContextMenuTarget>({ target: 'empty' });
+    const toggleControls = useToggleControls();
     const onTrigger = useCallback(() => {
         const current = selection.current;
         if (current !== undefined) {
@@ -79,10 +80,11 @@ function useMenuTarget(bookId: string, selection: SelectionType) {
             setTarget(newTarget);
             return true;
         } else {
+            toggleControls();
             setTarget({ target: 'empty' });
             return false;
         }
-    }, [highlights, selection]);
+    }, [highlights, selection, toggleControls]);
 
     return { onTrigger, target };
 }
