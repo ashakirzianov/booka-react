@@ -3,8 +3,8 @@ import {
     CardCollectionName, LibraryCard, BookPath, localBookmark,
     HighlightGroup, localHighlight, Highlight,
 } from 'booka-common';
-import { Loadable } from '../../core';
 import { config } from '../../config';
+import { Loadable } from '../../core';
 import { doFbLogout } from '../facebookSdk';
 import { useAppSelector, useAppDispatch } from './redux';
 
@@ -23,7 +23,10 @@ export function useLogout() {
 }
 
 export function useBookmarks() {
-    const bookmarks = useAppSelector(s => s.bookmarks);
+    return useAppSelector(s => s.bookmarks);
+}
+
+export function useBookmarksActions() {
     const dispatch = useAppDispatch();
     const addBookmark = useCallback((bookId: string, path: BookPath) => dispatch({
         type: 'bookmarks-add',
@@ -33,12 +36,14 @@ export function useBookmarks() {
         type: 'bookmarks-remove',
         payload: { bookmarkId },
     }), [dispatch]);
-    return { bookmarks, addBookmark, removeBookmark };
+    return { addBookmark, removeBookmark };
 }
 
-export function useCollection(name: CardCollectionName) {
-    const collectionsState: Loadable<LibraryCard[]> =
-        useAppSelector(s => s.collections[name] ?? []) ?? { loading: true };
+export function useCollection(name: CardCollectionName): Loadable<LibraryCard[]> {
+    return useAppSelector(s => s.collections[name]) ?? { loading: true };
+}
+
+export function useCollectionActions(name: CardCollectionName) {
     const dispatch = useAppDispatch();
     const addToCollection = useCallback((card: LibraryCard) => dispatch({
         type: 'collections-add',
@@ -50,7 +55,6 @@ export function useCollection(name: CardCollectionName) {
     }), [name, dispatch]);
 
     return {
-        collectionsState,
         addToCollection,
         removeFromCollection,
     };

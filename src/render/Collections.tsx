@@ -25,7 +25,7 @@ function CardCollection({ collection, title }: {
     title: string,
 }) {
     const theme = useTheme();
-    const { collectionsState } = useCollection(collection);
+    const collectionsState = useCollection(collection);
 
     return collectionsState.loading
         ? <ActivityIndicator theme={theme} />

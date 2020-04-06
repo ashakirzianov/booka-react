@@ -6,7 +6,7 @@ import {
 } from 'booka-common';
 import {
     useTheme, useLibraryCard,
-    useCollection, usePositions, useSetCard,
+    useCollection, usePositions, useSetCard, useCollectionActions,
 } from '../application';
 import {
     Modal, ActivityIndicator, ActionButton, TagLabel,
@@ -174,14 +174,14 @@ function ReadingListButton({ card }: {
     card: LibraryCard,
 }) {
     const theme = useTheme();
+    const collectionState = useCollection('reading-list');
     const {
-        collectionsState,
         addToCollection,
         removeFromCollection,
-    } = useCollection('reading-list');
-    const readingListCards = collectionsState.loading
+    } = useCollectionActions('reading-list');
+    const readingListCards = collectionState.loading
         ? []
-        : collectionsState;
+        : collectionState;
     const addToReadingList = useCallback(
         () => addToCollection(card),
         [addToCollection, card],
