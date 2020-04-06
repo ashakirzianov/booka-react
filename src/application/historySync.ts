@@ -9,17 +9,16 @@ const history = createBrowserHistory();
 
 export const historySyncMiddleware: AppMiddleware = store => next => action => {
     switch (action.type) {
-        case 'location-navigate': {
+        case 'location-navigate':
             history.push(linkToUrl(store.getState().location));
-            return;
-        }
-        case 'location-update': {
+            break;
+        case 'location-update':
             history.replace(linkToUrl(store.getState().location));
-            return;
-        }
+            break;
         default:
-            return;
+            break;
     }
+    next(action);
 };
 
 export function subscribeToHistory(linkDispatch: (link: AppLocation) => void) {
