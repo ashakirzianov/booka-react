@@ -9,15 +9,17 @@ import { doFbLogout } from '../facebookSdk';
 import { useAppSelector, useAppDispatch } from './redux';
 
 export function useAccount() {
-    const accountState = useAppSelector(s => s.account);
+    return useAppSelector(s => s.account);
+}
+
+export function useLogout() {
     const dispatch = useAppDispatch();
-    const logout = useCallback(() => {
+    return useCallback(() => {
         dispatch({
             type: 'account-logout',
         });
         doFbLogout();
     }, [dispatch]);
-    return { accountState, logout };
 }
 
 export function useBookmarks() {
