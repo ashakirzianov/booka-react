@@ -1,9 +1,9 @@
-import React, { useState, useCallback, memo } from 'react';
+import React, { memo } from 'react';
 
 import {
     positionForPath, pageForPosition, BookFragment,
 } from 'booka-common';
-import { useTheme, useBook, useSetTocOpen } from '../application';
+import { useTheme, useBook, useSetTocOpen, useToggleControls } from '../application';
 import { Themed, colors } from '../core';
 import {
     FixedPanel, View, IconButton, Label, regularSpace, userAreaWidth,
@@ -30,26 +30,23 @@ export const BookScreen = memo(function BookScreenF({
             theme={theme}
         />;
     } else {
-        const { fragment } = bookState;
         return <BookReady
             theme={theme}
             location={location}
-            fragment={fragment}
+            controlsVisible={bookState.controls}
+            fragment={bookState.fragment}
         />;
     }
 });
 
 function BookReady({
-    theme, fragment, location,
+    theme, fragment, location, controlsVisible,
 }: Themed & {
     location: BookLocation,
     fragment: BookFragment,
+    controlsVisible: boolean,
 }) {
-    const [controlsVisible, setControlsVisible] = useState(true);
-    const toggleControls = useCallback(
-        () => setControlsVisible(!controlsVisible),
-        [controlsVisible, setControlsVisible],
-    );
+    const toggleControls = useToggleControls();
 
     return <Screen theme={theme}>
         <Header

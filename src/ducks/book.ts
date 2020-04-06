@@ -12,23 +12,28 @@ type BookReceivedAction = {
         fragment: BookFragment,
     },
 };
+type BookToggleControls = {
+    type: 'book-controls-toggle',
+};
 export type BookAction =
-    | BookReceivedAction
+    | BookReceivedAction | BookToggleControls
     ;
 
 export type BookState = {
     scrollPath: BookPath | undefined,
     fragment: Loadable<BookFragment>,
+    controls: boolean,
 };
 const init: BookState = {
     scrollPath: undefined,
     fragment: { loading: true },
+    controls: true,
 };
 export function bookReducer(state: BookState = init, action: AppAction): BookState {
     switch (action.type) {
         case 'location-navigate':
             return action.payload.location === 'book'
-                ? { ...state, scrollPath: action.payload.path }
+                ? { ...state, scrollPath: action.payload.path, controls: true }
                 : state;
         case 'location-update-path':
             return state.scrollPath === undefined
@@ -39,6 +44,8 @@ export function bookReducer(state: BookState = init, action: AppAction): BookSta
                 ...state,
                 fragment: action.payload.fragment,
             };
+        case 'book-controls-toggle':
+            return { ...state, controls: !state.controls };
         default:
             return state;
     }

@@ -13,6 +13,13 @@ export function useBook() {
     return useAppSelector(s => s.book);
 }
 
+export function useToggleControls() {
+    const dispatch = useAppDispatch();
+    return useCallback(() => dispatch({
+        type: 'book-controls-toggle',
+    }), [dispatch]);
+}
+
 // TODO: re-implement this
 export function useToc(bookId: string) {
     const { tableOfContents } = useDataProvider();
