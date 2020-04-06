@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { LibraryCard } from 'booka-common';
-import { Loadable } from './utils';
+import { Loadable } from '../../core';
 import { useDataProvider } from './dataProvider';
 import { useAppDispatch } from './redux';
 

@@ -3,7 +3,7 @@ import { map } from 'rxjs/operators';
 import {
     BookPath, LibraryCard, TableOfContents,
 } from 'booka-common';
-import { Loadable } from './utils';
+import { Loadable } from '../../core';
 import {
     useAppDispatch, useAppSelector,
 } from './redux';

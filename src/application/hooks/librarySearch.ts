@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { map } from 'rxjs/operators';
 import { SearchResult } from 'booka-common';
-import { Loadable } from './utils';
+import { Loadable } from '../../core';
 import { useDataProvider } from './dataProvider';
 
 export type SearchState = Loadable<{

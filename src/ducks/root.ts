@@ -11,6 +11,7 @@ import { collectionsReducer, collectionsEpic } from './collections';
 import { positionsReducer, positionsEpic } from './positions';
 import { uploadReducer, uploadEpic } from './upload';
 import { locationReducer } from './location';
+import { searchEpic, searchReducer } from './search';
 
 export const rootReducer = combineReducers<AppState, AppAction>({
     theme: themeReducer,
@@ -22,6 +23,7 @@ export const rootReducer = combineReducers<AppState, AppAction>({
     positions: positionsReducer,
     upload: uploadReducer,
     location: locationReducer,
+    search: searchReducer,
 });
 
 export const rootEpic = combineEpics(
@@ -33,4 +35,5 @@ export const rootEpic = combineEpics(
     collectionsEpic,
     positionsEpic,
     uploadEpic,
+    searchEpic,
 );

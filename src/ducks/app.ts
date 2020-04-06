@@ -11,6 +11,7 @@ import { PositionsAction, PositionsState } from './positions';
 import { UploadAction, UploadState } from './upload';
 import { LocationAction, LocationState } from './location';
 import { Middleware, Dispatch } from 'redux';
+import { SearchAction, SearchState } from './search';
 
 export type AppAction =
     | DataAction
@@ -23,6 +24,7 @@ export type AppAction =
     | PositionsAction
     | UploadAction
     | LocationAction
+    | SearchAction
     ;
 export type AppActionType = AppAction['type'];
 export type ActionForType<T extends AppActionType> =
@@ -40,6 +42,7 @@ export type AppState = {
     positions: PositionsState,
     upload: UploadState,
     location: LocationState,
+    search: SearchState,
 };
 
 export type AppDependencies = DataAccess;
