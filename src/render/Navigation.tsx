@@ -2,7 +2,7 @@ import React from 'react';
 import { BookPath } from 'booka-common';
 import { HasChildren } from '../controls';
 import { AppLocation } from '../ducks';
-import { linkToUrl } from '../application';
+import { appLocationToUrl } from '../application';
 
 export function BookPathLink({ bookId, path, children }: HasChildren & {
     bookId: string,
@@ -39,7 +39,7 @@ export function FeedLink({ children }: HasChildren) {
 function Link({ link, children }: HasChildren & {
     link: AppLocation,
 }) {
-    const href = linkToUrl(link);
+    const href = appLocationToUrl(link);
     return <a style={{
         textDecoration: 'none',
         minHeight: 0,

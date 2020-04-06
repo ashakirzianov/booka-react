@@ -10,16 +10,22 @@ const history = createBrowserHistory();
 export const historySyncMiddleware: AppMiddleware = store => next => action => {
     const nextAction = next(action);
     switch (action.type) {
-        case 'location-navigate':
-            history.push(linkToUrl(store.getState().location));
+        case 'location-navigate': {
+            const loc = store.getState().location;
+            const url = appLocationToUrl(loc);
+            history.push(url);
             break;
+        }
         case 'location-update-path':
         case 'location-update-quote':
         case 'location-update-card':
         case 'location-update-toc':
-        case 'location-update-search':
-            history.replace(linkToUrl(store.getState().location));
+        case 'location-update-search': {
+            const loc = store.getState().location;
+            const url = appLocationToUrl(loc);
+            history.replace(url);
             break;
+        }
         default:
             break;
     }
@@ -27,11 +33,11 @@ export const historySyncMiddleware: AppMiddleware = store => next => action => {
 };
 
 export function subscribeToHistory(linkDispatch: (link: AppLocation) => void) {
-    const link = locationToLink(history.location);
+    const link = browserToAppLocation(history.location);
     linkDispatch(link);
 }
 
-function locationToLink(location: Location): AppLocation {
+function browserToAppLocation(location: Location): AppLocation {
     const { toc, q, p, show, refId } = parse(location.search);
     if (location.pathname === '/feed') {
         return {
@@ -61,26 +67,26 @@ function locationToLink(location: Location): AppLocation {
     return { location: 'feed' };
 }
 
-export function linkToUrl(link: AppLocation) {
-    switch (link.location) {
+export function appLocationToUrl(loc: AppLocation) {
+    switch (loc.location) {
         case 'feed':
             return stringifyUrl({
                 url: '/feed',
                 query: {
-                    show: link.card,
+                    show: loc.card,
                 },
             });
         case 'book':
             return stringifyUrl({
-                url: `/book/${link.bookId}`,
+                url: `/book/${loc.bookId}`,
                 query: {
-                    p: link.path
-                        ? pathToString(link.path) : undefined,
-                    refId: link.refId,
+                    p: loc.path
+                        ? pathToString(loc.path) : undefined,
+                    refId: loc.refId,
                 },
             });
         default:
-            assertNever(link);
+            assertNever(loc);
             return stringifyUrl({
                 url: '/feed',
                 query: {},
