@@ -43,8 +43,8 @@ export function bookRequestEpic(
                 action.type === 'location-navigate'
                     && action.payload.location === 'book'
                     ? projection(action.payload.bookId, dataProvider(), syncWorker())
-                    : state.book.bookId
-                        ? projection(state.book.bookId, dataProvider(), syncWorker())
+                    : state.location.location === 'book'
+                        ? projection(state.location.bookId, dataProvider(), syncWorker())
                         : of<AppAction>();
             return observable.pipe(
                 takeUntil(action$.pipe(

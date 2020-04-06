@@ -14,12 +14,15 @@ export type BookLocation = {
     quote?: BookRange,
     refId?: string,
 };
-// TODO: rename
 export type AppLocation = FeedLocation | BookLocation;
 
-type NavigateToLocationAction = {
+type NavigateToBookAction = {
     type: 'location-navigate',
-    payload: AppLocation,
+    payload: BookLocation,
+};
+type NavigateToFeedAction = {
+    type: 'location-navigate',
+    payload: FeedLocation,
 };
 type UpdateBookPathAction = {
     type: 'location-update-path',
@@ -42,7 +45,7 @@ type UpdateCardAction = {
     payload: string | undefined,
 };
 export type LocationAction =
-    | NavigateToLocationAction
+    | NavigateToBookAction | NavigateToFeedAction
     | UpdateBookPathAction | UpdateQuoteRangeAction | UpdateTocAction
     | UpdateSearchAction | UpdateCardAction
     ;

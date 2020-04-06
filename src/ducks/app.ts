@@ -1,5 +1,6 @@
 import { Epic, ofType, createEpicMiddleware } from 'redux-observable';
 import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { DataAction, DataAccess } from './data';
 import { AccountState, AccountAction } from './account';
 import { ThemeState, ThemeAction } from './theme';
@@ -9,7 +10,7 @@ import { HighlightsState, HighlightsAction } from './highlights';
 import { CollectionsAction, CollectionsState } from './collections';
 import { PositionsAction, PositionsState } from './positions';
 import { UploadAction, UploadState } from './upload';
-import { LocationAction, LocationState } from './location';
+import { LocationAction, LocationState, AppLocation } from './location';
 import { SearchAction, SearchState } from './search';
 
 export type AppAction =
@@ -61,9 +62,21 @@ export function createAppEpicMiddleware(options: {
     return createEpicMiddleware<AppAction, AppAction, AppState, AppDependencies>(options);
 }
 
-type TransformObservable<T, U> = (o: Observable<T>) => Observable<U>;
+type Operator<T, U> = (o: Observable<T>) => Observable<U>;
 export function ofAppType<T extends AppActionType>(
     ...types: T[]
-): TransformObservable<AppAction, ActionForType<T>> {
+): Operator<AppAction, ActionForType<T>> {
     return ofType(...types) as any;
+}
+
+type NavigationAction<T extends AppLocation['location']> = ActionForType<'location-navigate'> & {
+    payload: Extract<AppLocation, { location: T }>,
+};
+export function ofAppNavigation<T extends AppLocation['location']>(
+    location: T,
+): Operator<AppAction, NavigationAction<T>> {
+    return filter(
+        (action: AppAction): action is NavigationAction<T> =>
+            action.type === 'location-navigate' && action.payload.location === location,
+    );
 }
