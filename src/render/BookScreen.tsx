@@ -1,59 +1,49 @@
 import React, { useState, useCallback, memo } from 'react';
 
 import {
-    positionForPath, BookPath, pageForPosition,
-    BookFragment, TableOfContents,
+    positionForPath, pageForPosition, BookFragment,
 } from 'booka-common';
-
-import {
-    useTheme, useUrlQuery, useOpenBook,
-} from '../application';
-
+import { useTheme, useBook, useSetTocOpen } from '../application';
 import { Themed, colors } from '../core';
-import { BookView } from './BookView';
-import { TableOfContentsModal } from './TableOfContentsModal';
-import { AccountButton } from './AccountButton';
-import { AppearanceButton } from './AppearanceButton';
-import { BookmarkButton } from './BookmarkButton';
 import {
     FixedPanel, View, IconButton, Label, regularSpace, userAreaWidth,
     FullScreenActivityIndicator, Screen, megaSpace, doubleSpace,
     Clickable,
 } from '../controls';
-import { ShowTocLink, FeedLink } from './Navigation';
+import { BookLocation } from '../ducks';
+import { FeedLink } from './Navigation';
+import { BookView } from './BookView';
+import { TableOfContentsModal } from './TableOfContentsModal';
+import { AccountButton } from './AccountButton';
+import { AppearanceButton } from './AppearanceButton';
+import { BookmarkButton } from './BookmarkButton';
 
-export const BookScreen = memo(function BookScreenF({ bookId }: {
-    bookId: string,
+export const BookScreen = memo(function BookScreenF({
+    location,
+}: {
+    location: BookLocation,
 }) {
-    const { path, refId } = useUrlQuery();
     const { theme } = useTheme();
-    const bookState = useOpenBook({
-        bookId, path, refId,
-    });
+    const bookState = useBook();
     if (bookState.fragment.loading) {
         return <FullScreenActivityIndicator
             theme={theme}
         />;
     } else {
         const { fragment } = bookState;
-        const { toc } = fragment;
         return <BookReady
             theme={theme}
-            bookId={bookId}
-            path={path}
+            location={location}
             fragment={fragment}
-            toc={toc}
         />;
     }
 });
 
 function BookReady({
-    theme, fragment, toc, bookId, path,
+    theme, fragment, location,
 }: Themed & {
-    bookId: string,
-    path: BookPath | undefined,
+    location: BookLocation,
     fragment: BookFragment,
-    toc: TableOfContents | undefined,
 }) {
     const [controlsVisible, setControlsVisible] = useState(true);
     const toggleControls = useCallback(
@@ -63,19 +53,18 @@ function BookReady({
 
     return <Screen theme={theme}>
         <Header
-            bookId={bookId}
-            path={path}
             theme={theme}
+            location={location}
             visible={controlsVisible}
         />
         <Footer
             theme={theme}
+            location={location}
             fragment={fragment}
             visible={controlsVisible}
-            path={path}
         />
         <TableOfContentsModal
-            bookId={bookId}
+            location={location}
         />
         <View style={{
             width: '100%',
@@ -89,7 +78,7 @@ function BookReady({
                     paddingLeft: doubleSpace, paddingRight: doubleSpace,
                 }}>
                     <BookView
-                        bookId={bookId}
+                        bookId={location.bookId}
                         fragment={fragment}
                     />
                 </View>
@@ -98,12 +87,9 @@ function BookReady({
     </Screen>;
 }
 
-function Header({
-    theme, visible, bookId, path,
-}: Themed & {
-    bookId: string,
-    path: BookPath | undefined,
+function Header({ visible, location }: Themed & {
     visible: boolean,
+    location: BookLocation,
 }) {
     return <FixedPanel
         placement='top'
@@ -122,7 +108,10 @@ function Header({
             <View style={{
                 flexDirection: 'row',
             }}>
-                <BookmarkButton bookId={bookId} path={path} />
+                <BookmarkButton
+                    bookId={location.bookId}
+                    path={location.path}
+                />
                 <AppearanceButton />
                 <AccountButton />
             </View>
@@ -131,13 +120,13 @@ function Header({
 }
 
 function Footer({
-    fragment, path, theme, visible,
+    fragment, location, theme, visible,
 }: Themed & {
     fragment: BookFragment,
-    path: BookPath | undefined,
+    location: BookLocation,
     visible: boolean,
 }) {
-    path = path ?? fragment.current.path;
+    const path = location.path ?? fragment.current.path;
     const total = fragment.toc
         ? pageForPosition(fragment.toc.length)
         : undefined;
@@ -211,10 +200,10 @@ function FeedButton() {
 
 function TocButton() {
     const { theme } = useTheme();
-    return <ShowTocLink toShow={true}>
-        <IconButton
-            theme={theme}
-            icon='items'
-        />
-    </ShowTocLink>;
+    const openToc = useSetTocOpen();
+    return <IconButton
+        theme={theme}
+        icon='items'
+        callback={() => openToc(true)}
+    />;
 }

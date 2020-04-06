@@ -9,21 +9,7 @@ import {
 } from './redux';
 import { useDataProvider } from './dataProvider';
 
-export function useOpenBook({ bookId, path, refId }: {
-    bookId: string,
-    path?: BookPath,
-    refId?: string,
-}) {
-    const dispatch = useAppDispatch();
-    useEffect(() => {
-        dispatch({
-            type: 'book-position-update',
-            payload: {
-                bookId, refId, path,
-            },
-        });
-    }, [bookId, path, refId, dispatch]);
-
+export function useBook() {
     return useAppSelector(s => s.book);
 }
 

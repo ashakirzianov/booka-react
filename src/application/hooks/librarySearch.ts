@@ -3,7 +3,6 @@ import { map } from 'rxjs/operators';
 import { SearchResult } from 'booka-common';
 import { Loadable } from './utils';
 import { useDataProvider } from './dataProvider';
-import { useUrlActions } from './url';
 
 export type SearchState = Loadable<{
     results: SearchResult[],
@@ -20,7 +19,6 @@ export function useLibrarySearch(query: string | undefined) {
         ).subscribe(setSearchState);
         return () => sub.unsubscribe();
     }, [data, query]);
-    const { updateSearchQuery } = useUrlActions();
 
-    return { searchState, doQuery: updateSearchQuery };
+    return searchState;
 }

@@ -11,7 +11,7 @@ import { BookIdTile } from './LibraryCardTile';
 
 export function CurrentBook() {
     const { theme } = useTheme();
-    const { positions } = usePositions();
+    const positions = usePositions();
     if (positions.length === 0) {
         return null;
     }

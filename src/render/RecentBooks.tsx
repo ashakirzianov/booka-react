@@ -8,7 +8,7 @@ import { BookIdTile } from './LibraryCardTile';
 
 export function RecentBooks() {
     const { theme } = useTheme();
-    const { positions } = usePositions();
+    const positions = usePositions();
     if (positions.length < 2) {
         return null;
     }
@@ -27,7 +27,7 @@ export function RecentBooks() {
                         <BookIdTile
                             key={idx}
                             bookId={pos.bookId}
-                        />
+                        />,
                 )
             }
         </GridList>

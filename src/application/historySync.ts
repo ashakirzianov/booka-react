@@ -2,36 +2,36 @@ import { parse, stringifyUrl } from 'query-string';
 import {
     pathToString, assertNever, pathFromString, rangeFromString,
 } from 'booka-common';
-import { AppAction, Link, AppState } from '../ducks';
+import { AppLocation, AppMiddleware } from '../ducks';
 import { createBrowserHistory, Location } from 'history';
 
 const history = createBrowserHistory();
 
-export function updateHistory(state: AppState, action: AppAction) {
+export const historySyncMiddleware: AppMiddleware = store => next => action => {
     switch (action.type) {
-        case 'link-open': {
-            history.push(linkToUrl(state.link));
+        case 'location-navigate': {
+            history.push(linkToUrl(store.getState().location));
             return;
         }
-        case 'link-update-path': {
-            history.replace(linkToUrl(state.link));
+        case 'location-update': {
+            history.replace(linkToUrl(store.getState().location));
             return;
         }
         default:
             return;
     }
-}
+};
 
-export function subscribeToHistory(linkDispatch: (link: Link) => void) {
+export function subscribeToHistory(linkDispatch: (link: AppLocation) => void) {
     const link = locationToLink(history.location);
     linkDispatch(link);
 }
 
-function locationToLink(location: Location): Link {
+function locationToLink(location: Location): AppLocation {
     const { toc, q, p, show, refId } = parse(location.search);
     if (location.pathname === '/feed') {
         return {
-            link: 'feed',
+            location: 'feed',
             show: typeof show === 'string'
                 ? show : undefined,
             search: typeof q === 'string'
@@ -42,7 +42,7 @@ function locationToLink(location: Location): Link {
     if (match && match[1]) {
         const bookId = match[1];
         return {
-            link: 'book',
+            location: 'book',
             bookId,
             toc: toc !== undefined,
             path: typeof p === 'string'
@@ -54,11 +54,11 @@ function locationToLink(location: Location): Link {
         };
     }
 
-    return { link: 'feed' };
+    return { location: 'feed' };
 }
 
-function linkToUrl(link: Link) {
-    switch (link.link) {
+export function linkToUrl(link: AppLocation) {
+    switch (link.location) {
         case 'feed':
             return stringifyUrl({
                 url: '/feed',

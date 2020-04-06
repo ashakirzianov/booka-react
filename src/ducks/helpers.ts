@@ -36,17 +36,19 @@ export function bookRequestEpic(
     projection: (bookId: string, dataProvider: DataProvider, syncWorker: SyncWorker) => Observable<AppAction>,
 ): AppEpic {
     return (action$, state$, { dataProvider, syncWorker }) => action$.pipe(
-        ofAppType('link-open', 'data-provider-update'),
+        ofAppType('location-navigate', 'data-provider-update'),
         withLatestFrom(state$),
         mergeMap(([action, state]) => {
             const observable =
-                action.type === 'link-open'
-                    && action.payload.link === 'book' ? projection(action.payload.bookId, dataProvider(), syncWorker())
-                    : state.book.bookId ? projection(state.book.bookId, dataProvider(), syncWorker())
+                action.type === 'location-navigate'
+                    && action.payload.location === 'book'
+                    ? projection(action.payload.bookId, dataProvider(), syncWorker())
+                    : state.book.bookId
+                        ? projection(state.book.bookId, dataProvider(), syncWorker())
                         : of<AppAction>();
             return observable.pipe(
                 takeUntil(action$.pipe(
-                    ofAppType('link-open', 'data-provider-update'),
+                    ofAppType('location-navigate', 'data-provider-update'),
                 )),
             );
         }),

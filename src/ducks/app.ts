@@ -9,7 +9,8 @@ import { HighlightsState, HighlightsAction } from './highlights';
 import { CollectionsAction, CollectionsState } from './collections';
 import { PositionsAction, PositionsState } from './positions';
 import { UploadAction, UploadState } from './upload';
-import { LinkAction, LinkState } from './link';
+import { LocationAction, LocationState } from './location';
+import { Middleware, Dispatch } from 'redux';
 
 export type AppAction =
     | DataAction
@@ -21,7 +22,7 @@ export type AppAction =
     | CollectionsAction
     | PositionsAction
     | UploadAction
-    | LinkAction
+    | LocationAction
     ;
 export type AppActionType = AppAction['type'];
 export type ActionForType<T extends AppActionType> =
@@ -38,13 +39,15 @@ export type AppState = {
     collections: CollectionsState,
     positions: PositionsState,
     upload: UploadState,
-    link: LinkState,
+    location: LocationState,
 };
 
 export type AppDependencies = DataAccess;
 
 export type AppEpic<Output extends AppAction = AppAction> =
     Epic<AppAction, Output, AppState, AppDependencies>;
+
+export type AppMiddleware = Middleware<{}, AppState, Dispatch<AppAction>>;
 
 export function createAppEpicMiddleware(options: {
     dependencies: AppDependencies,

@@ -9,7 +9,7 @@ import {
     BookFragmentComp, BookSelection, ColorizedRange,
 } from '../reader';
 import {
-    useHighlights, useTheme, useUrlActions, useUrlQuery, usePositions,
+    useHighlights, useTheme, useQuote, useSetPath, usePositionsActions,
 } from '../application';
 import { Themed, colors, Theme } from '../core';
 import { BookContextMenu } from './BookContextMenu';
@@ -70,8 +70,8 @@ export const BookView = memo(function BookViewF({
 
 function useColorization() {
     const { theme } = useTheme();
-    const { quote } = useUrlQuery();
     const highlights = useHighlights();
+    const quote = useQuote();
 
     const colorization = useMemo(
         () => quoteColorization(quote, theme)
@@ -96,8 +96,8 @@ function usePathToScroll() {
 }
 
 function useScrollHandlers(bookId: string) {
-    const { updateBookPath } = useUrlActions();
-    const { addCurrentPosition } = usePositions();
+    const updateBookPath = useSetPath();
+    const { addCurrentPosition } = usePositionsActions();
     const onScroll = useCallback(throttle((p: BookPath | undefined) => {
         updateBookPath(p);
         if (p) {

@@ -4,7 +4,7 @@ import {
     Highlight, BookRange, HighlightGroup, doesRangeOverlap, rangeToString,
 } from 'booka-common';
 import { BookSelection } from '../reader';
-import { useTheme, useHighlightsActions, useHighlights, useUrlActions, useOnCopy } from '../application';
+import { useTheme, useHighlightsActions, useHighlights, useOnCopy, useSetQuote } from '../application';
 import {
     ContextMenu, ContextMenuItem, TextContextMenuItem,
     CircleButton, colorForHighlightGroup, SimpleButton,
@@ -88,7 +88,7 @@ function useMenuTarget(bookId: string, selection: SelectionType) {
 }
 
 function useCopyQuote(bookId: string, selection: SelectionType) {
-    const { updateQuoteRange } = useUrlActions();
+    const updateQuoteRange = useSetQuote();
     useOnCopy(useCallback(e => {
         e.preventDefault();
         if (selection.current && e.clipboardData) {

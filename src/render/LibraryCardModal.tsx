@@ -6,7 +6,7 @@ import {
 } from 'booka-common';
 import {
     useTheme, useLibraryCard,
-    useCollection, usePositions,
+    useCollection, usePositions, useSetShowCard,
 } from '../application';
 import {
     Modal, ActivityIndicator, ActionButton, TagLabel,
@@ -31,12 +31,13 @@ function LibraryCardModalImpl({ bookId }: {
     bookId: string,
 }) {
     const { theme } = useTheme();
-    const { card, closeCard } = useLibraryCard(bookId);
+    const card = useLibraryCard(bookId);
+    const setShowCard = useSetShowCard();
 
     return <Modal
         theme={theme}
         title=''
-        close={closeCard}
+        close={() => setShowCard(undefined)}
         open={true}
     >
         {
@@ -141,7 +142,7 @@ function ContinueRead({ card }: {
     card: LibraryCard,
 }) {
     const { theme } = useTheme();
-    const { positions } = usePositions();
+    const positions = usePositions();
 
     const currentPositions = positions.filter(
         p => p.bookId === card.id,

@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { debounce } from 'lodash';
 
 import {
-    useLibrarySearch, SearchState, useTheme,
+    useLibrarySearch, SearchState, useTheme, useSetSearchQuery,
 } from '../application';
 import {
     TextInput, ActivityIndicator, Panel, userAreaWidth, Label,
@@ -18,7 +18,8 @@ export function TopBar({ query }: {
     query: string | undefined,
 }) {
     const { theme } = useTheme();
-    const { searchState, doQuery } = useLibrarySearch(query);
+    const searchState = useLibrarySearch(query);
+    const doQuery = useSetSearchQuery();
     const querySearch = React.useCallback(debounce((q: string) => {
         doQuery(q ? q : undefined);
     }, 300), [doQuery]);

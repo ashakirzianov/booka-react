@@ -76,7 +76,10 @@ export function useHighlightsActions() {
 }
 
 export function usePositions() {
-    const positions = useAppSelector(s => s.positions);
+    return useAppSelector(s => s.positions);
+}
+
+export function usePositionsActions() {
     const dispatch = useAppDispatch();
     const source = config().source;
     const addCurrentPosition = useCallback((bookId: string, path: BookPath) => dispatch({
@@ -86,5 +89,5 @@ export function usePositions() {
             created: new Date(Date.now()),
         },
     }), [dispatch, source]);
-    return { positions, addCurrentPosition };
+    return { addCurrentPosition };
 }
