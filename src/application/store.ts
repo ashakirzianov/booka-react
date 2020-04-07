@@ -40,6 +40,9 @@ function configureStore() {
 }
 
 const store = configureStore();
+store.dispatch({
+    type: 'data-provider-update',
+});
 subscribeToHistory(link => {
     store.dispatch({
         type: 'location-navigate',
