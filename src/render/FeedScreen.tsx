@@ -10,15 +10,13 @@ import { CurrentBook } from './CurrentBook';
 import { RecentBooks } from './RecentBooks';
 import { PopularBooks } from './PopularBooks';
 
-export function FeedScreen({ location }: {
+export function FeedScreen({ location: { search, card } }: {
     location: FeedLocation,
 }) {
     const theme = useTheme();
-    const query = location.search;
-    const card = location.card;
     return <Screen theme={theme}>
         <LibraryCardModal bookId={card} />
-        <TopBar query={query} />
+        <TopBar query={search} />
         <CurrentBook />
         <RecentBooks />
         <UploadedList />

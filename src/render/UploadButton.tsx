@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { assertNever } from 'booka-common';
 import { useTheme, useUpload } from '../application';
 import {
     IconButton, WithPopover, Label, View, ActionButton, CheckBox,
@@ -6,11 +7,12 @@ import {
     point, doubleSpace, megaSpace, ActivityIndicator,
 } from '../controls';
 import { Themed } from '../core';
-import { assertNever } from '../reader/RichText/utils';
+import { UploadState } from '../ducks';
 import { LoginOptions } from './LoginOptions';
 
 export function UploadButton() {
     const theme = useTheme();
+    const { uploadState, uploadEpub, selectFile } = useUpload();
 
     return <WithPopover
         theme={theme}
@@ -22,6 +24,9 @@ export function UploadButton() {
         }}>
             <UploadPanel
                 theme={theme}
+                state={uploadState}
+                doUpload={uploadEpub}
+                selectFile={selectFile}
             />
         </View>}
     >
@@ -32,10 +37,12 @@ export function UploadButton() {
     </WithPopover>;
 }
 
-function UploadPanel({ theme }: Themed) {
-    const { uploadState, uploadEpub, selectFile } = useUpload();
-
-    switch (uploadState.state) {
+function UploadPanel({ theme, state, doUpload, selectFile }: Themed & {
+    state: UploadState,
+    doUpload: (publicDomain: boolean) => void,
+    selectFile: (fileName: string, data: any) => void,
+}) {
+    switch (state.state) {
         case 'not-signed':
             return <NotSignedPanel
                 theme={theme}
@@ -49,28 +56,28 @@ function UploadPanel({ theme }: Themed) {
             return <UploadFilePanel
                 theme={theme}
                 fileData={{
-                    fileName: uploadState.fileName,
-                    data: uploadState.data,
+                    fileName: state.fileName,
+                    data: state.data,
                 }}
-                upload={(data, publicDomain) => uploadEpub(publicDomain)}
+                upload={(data, publicDomain) => doUpload(publicDomain)}
             />;
         case 'uploading':
             return <FileUploadingPanel
                 theme={theme}
-                fileName={uploadState.fileName}
+                fileName={state.fileName}
             />;
         case 'success':
             return <SuccessPanel
                 theme={theme}
-                fileName={uploadState.fileName}
+                fileName={state.fileName}
             />;
         case 'error':
             return <ErrorPanel
                 theme={theme}
-                fileName={uploadState.fileName}
+                fileName={state.fileName}
             />;
         default:
-            assertNever(uploadState);
+            assertNever(state);
             return null;
     }
 }
