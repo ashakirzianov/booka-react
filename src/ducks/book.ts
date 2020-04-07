@@ -53,8 +53,9 @@ export function bookReducer(state: BookState = init, action: AppAction): BookSta
 
 const requestBookEpic: AppEpic = (action$, _, { dataProvider }) => action$.pipe(
     ofAppNavigation('book'),
-    mergeMap(({ payload: { bookId, path } }) =>
-        dataProvider().fragmentForPath(bookId, path ?? firstPath()).pipe(
+    mergeMap(({ payload: { bookId, path, quote } }) => {
+        const actualPath = quote?.start ?? path ?? firstPath();
+        return dataProvider().fragmentForPath(bookId, actualPath).pipe(
             map((fragment): AppAction => ({
                 type: 'book-received',
                 payload: {
@@ -64,7 +65,9 @@ const requestBookEpic: AppEpic = (action$, _, { dataProvider }) => action$.pipe(
             takeUntil(action$.pipe(
                 ofAppNavigation('book'),
             )),
-        )),
+        );
+    },
+    ),
 );
 
 export const bookEpic = combineEpics(

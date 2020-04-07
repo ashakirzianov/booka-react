@@ -26,14 +26,16 @@ export function BookView({
     fragment: BookFragment,
 }) {
     const theme = useTheme();
+    const quote = useQuote();
+    const { colorization } = useColorization(quote, theme);
     const { onScroll } = useScrollHandlers(bookId);
     const { onSelectionChange, selection } = useSelectionHandlers();
-    const { colorization } = useColorization();
     const RefComp = useCallback(({ refId, children }: { refId: string, children: ReactNode }) => {
         return <BookRefLink bookId={bookId} refId={refId}>
             {children}
         </BookRefLink>;
     }, [bookId]);
+    const pathToScroll = quote?.start ?? scrollPath;
 
     return <BookContextMenu
         bookId={bookId}
@@ -53,7 +55,7 @@ export function BookView({
             fontSize={theme.fontSizes.text * theme.fontScale}
             fontFamily={theme.fontFamilies.book}
             colorization={colorization}
-            pathToScroll={scrollPath}
+            pathToScroll={pathToScroll}
             onScroll={onScroll}
             onSelectionChange={onSelectionChange}
             RefComp={RefComp}
@@ -67,9 +69,7 @@ export function BookView({
     </BookContextMenu>;
 }
 
-function useColorization() {
-    const theme = useTheme();
-    const quote = useQuote();
+function useColorization(quote: BookRange | undefined, theme: Theme) {
     const highlights = useHighlights();
 
     const colorization = useMemo(
