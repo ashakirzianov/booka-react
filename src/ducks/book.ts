@@ -33,7 +33,12 @@ export function bookReducer(state: BookState = init, action: AppAction): BookSta
     switch (action.type) {
         case 'location-navigate':
             return action.payload.location === 'book'
-                ? { ...state, scrollPath: action.payload.path, controls: true }
+                ? {
+                    ...state,
+                    fragment: { loading: true },
+                    scrollPath: action.payload.path,
+                    controls: true,
+                }
                 : state;
         case 'location-update-path':
             return state.scrollPath === undefined
