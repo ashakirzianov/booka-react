@@ -25,6 +25,7 @@ export function BorderButton({
             paddingLeft: smallSpace, paddingRight: smallSpace,
             '&:hover': {
                 color: colors(theme).highlight,
+                border: `3px solid ${colors(theme).highlight}`,
             },
         }}
         onClick={callback}
