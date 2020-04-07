@@ -65,7 +65,21 @@ function replaceParams(url: string, params?: object): string {
 }
 
 function queryToString(query?: object): string {
-    return query
-        ? `?${Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&')}`
-        : '';
+    if (query) {
+        const s = Object
+            .entries(query)
+            .map(([key, value]) => {
+                if (Array.isArray(value)) {
+                    return value
+                        .map(v => `${key}=${v}`)
+                        .join(',');
+                } else {
+                    return `${key}=${value}`;
+                }
+            })
+            .join('&');
+        return `?${s}`;
+    } else {
+        return '';
+    }
 }
