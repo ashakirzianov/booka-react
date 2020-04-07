@@ -16,14 +16,9 @@ export type BookLocation = {
 };
 export type AppLocation = FeedLocation | BookLocation;
 
-type NavigateToBookAction = {
+type NavigateToAction = {
     type: 'location-navigate',
-    payload: BookLocation,
-    meta?: { silent?: boolean },
-};
-type NavigateToFeedAction = {
-    type: 'location-navigate',
-    payload: FeedLocation,
+    payload: AppLocation,
     meta?: { silent?: boolean },
 };
 type UpdateBookPathAction = {
@@ -47,7 +42,7 @@ type UpdateCardAction = {
     payload: string | undefined,
 };
 export type LocationAction =
-    | NavigateToBookAction | NavigateToFeedAction
+    | NavigateToAction
     | UpdateBookPathAction | UpdateQuoteRangeAction | UpdateTocAction
     | UpdateSearchAction | UpdateCardAction
     ;
