@@ -1,6 +1,6 @@
 import { parse, stringifyUrl } from 'query-string';
 import {
-    pathToString, assertNever, pathFromString, rangeFromString,
+    pathToString, assertNever, pathFromString, rangeFromString, rangeToString,
 } from 'booka-common';
 import { AppLocation, AppMiddleware } from '../ducks';
 import { createBrowserHistory, Location } from 'history';
@@ -89,6 +89,8 @@ export function appLocationToUrl(loc: AppLocation) {
                 query: {
                     p: loc.path
                         ? pathToString(loc.path) : undefined,
+                    q: loc.quote
+                        ? rangeToString(loc.quote) : undefined,
                     refId: loc.refId,
                 },
             });
