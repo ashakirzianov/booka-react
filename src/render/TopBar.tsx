@@ -2,7 +2,7 @@ import React, { ReactNode, useCallback } from 'react';
 import { View } from 'react-native';
 import { debounce } from 'lodash';
 import {
-    useSearch, useTheme, useDoLibraryQuery,
+    useSearch, useTheme, useDoSearch, useSearchQuery,
 } from '../application';
 import {
     TextInput, ActivityIndicator, Panel, userAreaWidth, Label,
@@ -12,11 +12,10 @@ import { AppearanceButton } from './AppearanceButton';
 import { BookList } from './BookList';
 import { UploadButton } from './UploadButton';
 
-export function TopBar({ query }: {
-    query: string | undefined,
-}) {
+export function TopBar() {
     const theme = useTheme();
-    const doQuery = useDoLibraryQuery();
+    const query = useSearchQuery();
+    const doQuery = useDoSearch();
     const querySearch = useCallback(debounce((q: string) => {
         doQuery(q ? q : undefined);
     }, 300), [doQuery]);

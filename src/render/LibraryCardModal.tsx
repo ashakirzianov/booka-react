@@ -6,7 +6,7 @@ import {
 } from 'booka-common';
 import {
     useTheme, useLibraryCard,
-    useCollection, usePositions, useSetCard, useCollectionActions,
+    useCollection, usePositions, useSetCardId, useCollectionActions, useCardId,
 } from '../application';
 import {
     Modal, ActivityIndicator, ActionButton, TagLabel,
@@ -17,9 +17,8 @@ import { LibraryCardTile } from './LibraryCardTile';
 import { BookPathLink } from './Navigation';
 import { ParagraphPreview } from './ParagraphPreview';
 
-export function LibraryCardModal({ bookId }: {
-    bookId: string | undefined,
-}) {
+export function LibraryCardModal() {
+    const bookId = useCardId();
     if (bookId) {
         return <LibraryCardModalImpl bookId={bookId} />;
     } else {
@@ -32,7 +31,7 @@ function LibraryCardModalImpl({ bookId }: {
 }) {
     const theme = useTheme();
     const card = useLibraryCard(bookId);
-    const setCard = useSetCard();
+    const setCard = useSetCardId();
 
     return <Modal
         theme={theme}

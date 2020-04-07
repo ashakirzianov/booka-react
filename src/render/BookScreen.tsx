@@ -1,15 +1,16 @@
-import React, { memo } from 'react';
+import React from 'react';
 
 import {
     positionForPath, pageForPosition, BookFragment, BookPath,
 } from 'booka-common';
-import { useTheme, useBook, useSetTocOpen } from '../application';
+import {
+    useTheme, useBook, useSetTocOpen, useBookId, useBookPath,
+} from '../application';
 import { Themed, colors } from '../core';
 import {
     FixedPanel, View, IconButton, Label, regularSpace, userAreaWidth,
     FullScreenActivityIndicator, Screen, megaSpace, doubleSpace,
 } from '../controls';
-import { BookLocation } from '../ducks';
 import { FeedLink } from './Navigation';
 import { BookView } from './BookView';
 import { TableOfContentsModal } from './TableOfContentsModal';
@@ -17,32 +18,32 @@ import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
 import { BookmarkButton } from './BookmarkButton';
 
-export const BookScreen = memo(function BookScreenF({
-    location,
-}: {
-    location: BookLocation,
-}) {
+export function BookScreen() {
     const theme = useTheme();
     const bookState = useBook();
-    if (bookState.fragment.loading) {
+    const bookId = useBookId();
+    if (!bookId) {
+        return null;
+    } else if (bookState.fragment.loading) {
         return <FullScreenActivityIndicator
             theme={theme}
         />;
     } else {
         return <BookReady
             theme={theme}
-            location={location}
+            bookId={bookId}
             controlsVisible={bookState.controls}
             scrollPath={bookState.scrollPath}
             fragment={bookState.fragment}
         />;
     }
-});
+}
 
 function BookReady({
-    theme, fragment, location, controlsVisible, scrollPath,
+    theme, fragment, bookId,
+    controlsVisible, scrollPath,
 }: Themed & {
-    location: BookLocation,
+    bookId: string,
     fragment: BookFragment,
     controlsVisible: boolean,
     scrollPath: BookPath | undefined,
@@ -50,18 +51,15 @@ function BookReady({
     return <Screen theme={theme}>
         <Header
             theme={theme}
-            location={location}
+            bookId={bookId}
             visible={controlsVisible}
         />
         <Footer
             theme={theme}
-            location={location}
             fragment={fragment}
             visible={controlsVisible}
         />
-        <TableOfContentsModal
-            location={location}
-        />
+        <TableOfContentsModal bookId={bookId} />
         <View style={{
             width: '100%',
             alignItems: 'center',
@@ -74,8 +72,7 @@ function BookReady({
             }}>
                 <BookView
                     fragment={fragment}
-                    bookId={location.bookId}
-                    quote={location.quote}
+                    bookId={bookId}
                     scrollPath={scrollPath}
                 />
             </View>
@@ -83,10 +80,11 @@ function BookReady({
     </Screen>;
 }
 
-function Header({ visible, location }: Themed & {
+function Header({ visible, bookId }: Themed & {
     visible: boolean,
-    location: BookLocation,
+    bookId: string,
 }) {
+    const path = useBookPath();
     return <FixedPanel
         placement='top'
         open={visible}
@@ -105,8 +103,8 @@ function Header({ visible, location }: Themed & {
                 flexDirection: 'row',
             }}>
                 <BookmarkButton
-                    bookId={location.bookId}
-                    path={location.path}
+                    bookId={bookId}
+                    path={path}
                 />
                 <AppearanceButton />
                 <AccountButton />
@@ -116,13 +114,12 @@ function Header({ visible, location }: Themed & {
 }
 
 function Footer({
-    fragment, location, theme, visible,
+    fragment, theme, visible,
 }: Themed & {
     fragment: BookFragment,
-    location: BookLocation,
     visible: boolean,
 }) {
-    const path = location.path ?? fragment.current.path;
+    const path = useBookPath() ?? fragment.current.path;
     const total = fragment.toc
         ? pageForPosition(fragment.toc.length)
         : undefined;

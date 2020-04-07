@@ -6,13 +6,13 @@ import { BookScreen } from './BookScreen';
 
 export function Routes() {
     const location = useAppLocation();
-    switch (location.location) {
+    switch (location) {
         case 'feed':
-            return <FeedScreen location={location} />;
+            return <FeedScreen />;
         case 'book':
-            return <BookScreen location={location} />;
+            return <BookScreen />;
         default:
             assertNever(location);
-            return <FeedScreen location={{ location: 'feed' }} />;
+            return <FeedScreen />;
     }
 }

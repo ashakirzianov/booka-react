@@ -11,16 +11,17 @@ import {
     ActivityIndicator,
 } from '../controls';
 import {
-    useBookmarks, usePositions, useToc, useTheme, useSetTocOpen,
+    useBookmarks, usePositions, useToc, useTheme,
+    useSetTocOpen, useTocOpen,
 } from '../application';
 import { BookPathLink } from './Navigation';
-import { BookLocation } from '../ducks';
 
-export function TableOfContentsModal({ location }: {
-    location: BookLocation,
+export function TableOfContentsModal({ bookId }: {
+    bookId: string,
 }) {
     const theme = useTheme();
-    const toc = useToc(location.bookId);
+    const isOpen = useTocOpen();
+    const toc = useToc(bookId ?? '');
     const bookmarks = useBookmarks();
     const positions = usePositions();
     const openToc = useSetTocOpen();
@@ -29,7 +30,7 @@ export function TableOfContentsModal({ location }: {
         theme={theme}
         title='Table of Contents'
         close={() => openToc(false)}
-        open={location.toc}
+        open={isOpen}
     >
         {
             toc.loading
@@ -37,7 +38,7 @@ export function TableOfContentsModal({ location }: {
                 : <TableOfContentsContent
                     theme={theme}
                     toc={toc}
-                    bookId={location.bookId}
+                    bookId={bookId}
                     bookmarks={bookmarks}
                     positions={positions}
                 />

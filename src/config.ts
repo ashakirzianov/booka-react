@@ -35,7 +35,7 @@ function debugConfig(): AppConfig {
         libUrl: useLocalLib
             ? 'http://localhost:3141'
             : prod.libUrl,
-        logActions: true,
+        logActions: false,
         logRenders: false,
     };
 }

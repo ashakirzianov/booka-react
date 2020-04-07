@@ -1,4 +1,4 @@
-import React, { useCallback, memo, useMemo, useRef, ReactNode } from 'react';
+import React, { useCallback, useMemo, useRef, ReactNode } from 'react';
 import { throttle } from 'lodash';
 import {
     BookFragment, BookPath, BookRange,
@@ -9,7 +9,7 @@ import {
     BookFragmentComp, BookSelection, ColorizedRange,
 } from '../reader';
 import {
-    useHighlights, useTheme, useSetPath, usePositionsActions,
+    useHighlights, useTheme, useSetBookPath, usePositionsActions, useQuote,
 } from '../application';
 import { Themed, colors, Theme } from '../core';
 import {
@@ -18,18 +18,17 @@ import {
 import { BookContextMenu } from './BookContextMenu';
 import { BookPathLink, BookRefLink } from './Navigation';
 
-export const BookView = memo(function BookViewF({
-    bookId, fragment, quote, scrollPath,
+export function BookView({
+    bookId, fragment, scrollPath,
 }: {
     bookId: string,
-    quote: BookRange | undefined,
     scrollPath: BookPath | undefined,
     fragment: BookFragment,
 }) {
     const theme = useTheme();
     const { onScroll } = useScrollHandlers(bookId);
     const { onSelectionChange, selection } = useSelectionHandlers();
-    const { colorization } = useColorization(quote);
+    const { colorization } = useColorization();
     const RefComp = useCallback(({ refId, children }: { refId: string, children: ReactNode }) => {
         return <BookRefLink bookId={bookId} refId={refId}>
             {children}
@@ -66,10 +65,11 @@ export const BookView = memo(function BookViewF({
             bookId={bookId}
         />
     </BookContextMenu>;
-});
+}
 
-function useColorization(quote: BookRange | undefined) {
+function useColorization() {
     const theme = useTheme();
+    const quote = useQuote();
     const highlights = useHighlights();
 
     const colorization = useMemo(
@@ -91,7 +91,7 @@ function useSelectionHandlers() {
 }
 
 function useScrollHandlers(bookId: string) {
-    const updateBookPath = useSetPath();
+    const updateBookPath = useSetBookPath();
     const { addCurrentPosition } = usePositionsActions();
     const onScroll = useCallback(throttle((p: BookPath | undefined) => {
         updateBookPath(p);
