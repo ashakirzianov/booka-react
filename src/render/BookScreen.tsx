@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 
 import {
-    positionForPath, pageForPosition, BookFragment,
+    positionForPath, pageForPosition, BookFragment, BookPath,
 } from 'booka-common';
 import { useTheme, useBook, useSetTocOpen } from '../application';
 import { Themed, colors } from '../core';
@@ -33,17 +33,19 @@ export const BookScreen = memo(function BookScreenF({
             theme={theme}
             location={location}
             controlsVisible={bookState.controls}
+            scrollPath={bookState.scrollPath}
             fragment={bookState.fragment}
         />;
     }
 });
 
 function BookReady({
-    theme, fragment, location, controlsVisible,
+    theme, fragment, location, controlsVisible, scrollPath,
 }: Themed & {
     location: BookLocation,
     fragment: BookFragment,
     controlsVisible: boolean,
+    scrollPath: BookPath | undefined,
 }) {
     return <Screen theme={theme}>
         <Header
@@ -74,6 +76,7 @@ function BookReady({
                     fragment={fragment}
                     bookId={location.bookId}
                     quote={location.quote}
+                    scrollPath={scrollPath}
                 />
             </View>
         </View>

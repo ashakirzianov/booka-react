@@ -12,23 +12,22 @@ import {
     useHighlights, useTheme, useSetPath, usePositionsActions,
 } from '../application';
 import { Themed, colors, Theme } from '../core';
-import { BookContextMenu } from './BookContextMenu';
 import {
     View, BorderButton, regularSpace, colorForHighlightGroup,
 } from '../controls';
+import { BookContextMenu } from './BookContextMenu';
 import { BookPathLink, BookRefLink } from './Navigation';
-import { useAppSelector } from '../application/hooks/redux';
 
 export const BookView = memo(function BookViewF({
-    bookId, fragment, quote,
+    bookId, fragment, quote, scrollPath,
 }: {
     bookId: string,
     quote: BookRange | undefined,
+    scrollPath: BookPath | undefined,
     fragment: BookFragment,
 }) {
     const theme = useTheme();
     const { onScroll } = useScrollHandlers(bookId);
-    const pathToScroll = usePathToScroll();
     const { onSelectionChange, selection } = useSelectionHandlers();
     const { colorization } = useColorization(quote);
     const RefComp = useCallback(({ refId, children }: { refId: string, children: ReactNode }) => {
@@ -55,7 +54,7 @@ export const BookView = memo(function BookViewF({
             fontSize={theme.fontSizes.text * theme.fontScale}
             fontFamily={theme.fontFamilies.book}
             colorization={colorization}
-            pathToScroll={pathToScroll}
+            pathToScroll={scrollPath}
             onScroll={onScroll}
             onSelectionChange={onSelectionChange}
             RefComp={RefComp}
@@ -89,10 +88,6 @@ function useSelectionHandlers() {
     }, []);
 
     return { onSelectionChange, selection };
-}
-
-function usePathToScroll() {
-    return useAppSelector(s => s.book.scrollPath);
 }
 
 function useScrollHandlers(bookId: string) {
