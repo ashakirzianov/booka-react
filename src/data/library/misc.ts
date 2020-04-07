@@ -84,7 +84,9 @@ export function libraryMiscProvider({ booksCache, cardsCache, token }: {
                     query: {
                         publicDomain,
                     },
-                });
+                }).pipe(
+                    map(r => r.bookId),
+                );
             } else {
                 return of<string>();
             }
