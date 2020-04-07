@@ -2,7 +2,7 @@ import React from 'react';
 import { BookPath } from 'booka-common';
 import { HasChildren, Link } from '../controls';
 import { AppLocation } from '../ducks';
-import { useNavigate, appLocationToUrl } from '../application';
+import { useNavigate, appLocationToUrl, useSetLibraryCard } from '../application';
 
 export function BookPathLink({ bookId, path, children }: HasChildren & {
     bookId: string,
@@ -34,6 +34,18 @@ export function FeedLink({ children }: HasChildren) {
     }}>
         {children}
     </NavigationLink>;
+}
+
+export function CardLink({ bookId, children }: HasChildren & {
+    bookId: string,
+}) {
+    const setCard = useSetLibraryCard();
+    const url = appLocationToUrl({
+        location: 'feed', card: bookId,
+    });
+    return <Link to={url} callback={() => setCard(bookId)}>
+        {children}
+    </Link>;
 }
 
 function NavigationLink({ to, children }: HasChildren & {
