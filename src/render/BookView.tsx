@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef, ReactNode } from 'react';
 import { throttle } from 'lodash';
 import {
-    BookFragment, BookPath, BookRange,
+    AugmentedBookFragment, BookPath, BookRange,
     Highlight, BookAnchor,
 } from 'booka-common';
 
@@ -23,7 +23,7 @@ export function BookView({
 }: {
     bookId: string,
     scrollPath: BookPath | undefined,
-    fragment: BookFragment,
+    fragment: AugmentedBookFragment,
 }) {
     const theme = useTheme();
     const quote = useQuote();

@@ -20,17 +20,11 @@ export function useToggleControls() {
     }), [dispatch]);
 }
 
-// TODO: re-implement this
-export function useToc(bookId: string) {
-    const { tableOfContents } = useDataProvider();
-    const [state, setState] = useState<Loadable<TableOfContents>>({ loading: true });
-    useEffect(() => {
-        const sub = tableOfContents(bookId)
-            .subscribe(setState);
-        return () => sub.unsubscribe();
-    }, [tableOfContents, bookId]);
-
-    return state;
+export function useToc(): Loadable<TableOfContents> {
+    return useAppSelector(
+        s => s.book?.fragment && !s.book.fragment.loading
+            ? s.book.fragment.toc : undefined,
+    ) ?? { loading: true };
 }
 
 export type TextPreviewState = Loadable<{

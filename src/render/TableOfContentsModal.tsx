@@ -21,7 +21,7 @@ export function TableOfContentsModal({ bookId }: {
 }) {
     const theme = useTheme();
     const isOpen = useTocOpen();
-    const toc = useToc(bookId ?? '');
+    const toc = useToc();
     const bookmarks = useBookmarks();
     const positions = usePositions();
     const openToc = useSetTocOpen();
