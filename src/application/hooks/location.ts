@@ -4,6 +4,10 @@ export function useAppLocation() {
     return useAppSelector(s => s.location);
 }
 
+export function useNavigate() {
+    return useAppCallback('location-navigate');
+}
+
 export function useSearch() {
     return useAppSelector(s => s.search);
 }

@@ -1,52 +1,47 @@
 import React from 'react';
 import { BookPath } from 'booka-common';
-import { HasChildren } from '../controls';
+import { HasChildren, Link } from '../controls';
 import { AppLocation } from '../ducks';
-import { appLocationToUrl } from '../application';
+import { useNavigate, appLocationToUrl } from '../application';
 
 export function BookPathLink({ bookId, path, children }: HasChildren & {
     bookId: string,
     path?: BookPath,
 }) {
-    return <Link link={{
+    return <NavigationLink to={{
         location: 'book', toc: false,
         bookId, path,
     }}>
         {children}
-    </Link>;
+    </NavigationLink>;
 }
 
 export function BookRefLink({ bookId, refId, children }: HasChildren & {
     bookId: string,
     refId: string,
 }) {
-    return <Link link={{
+    return <NavigationLink to={{
         location: 'book', toc: false,
         bookId, refId,
     }}>
         {children}
-    </Link>;
+    </NavigationLink>;
 }
 
 export function FeedLink({ children }: HasChildren) {
-    return <Link link={{
+    return <NavigationLink to={{
         location: 'feed',
     }}>
         {children}
-    </Link>;
+    </NavigationLink>;
 }
 
-function Link({ link, children }: HasChildren & {
-    link: AppLocation,
+function NavigationLink({ to, children }: HasChildren & {
+    to: AppLocation,
 }) {
-    const href = appLocationToUrl(link);
-    return <a style={{
-        textDecoration: 'none',
-        minHeight: 0,
-        margin: 0,
-    }}
-        href={href}
-    >
+    const navigate = useNavigate();
+    const url = appLocationToUrl(to);
+    return <Link to={url} callback={() => navigate(to)}>
         {children}
-    </a>;
+    </Link>;
 }
