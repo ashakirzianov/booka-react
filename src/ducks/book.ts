@@ -1,7 +1,7 @@
 import { mergeMap, map, takeUntil } from 'rxjs/operators';
 import { combineEpics } from 'redux-observable';
 import {
-    BookFragment, BookPath, firstPath,
+    AugmentedBookFragment, BookPath, firstPath,
 } from 'booka-common';
 import { Loadable } from '../core';
 import { AppAction, ofAppNavigation, AppEpic } from './app';
@@ -9,7 +9,7 @@ import { AppAction, ofAppNavigation, AppEpic } from './app';
 type BookReceivedAction = {
     type: 'book-received',
     payload: {
-        fragment: BookFragment,
+        fragment: AugmentedBookFragment,
     },
 };
 type BookToggleControls = {
@@ -21,7 +21,7 @@ export type BookAction =
 
 export type BookState = {
     scrollPath: BookPath | undefined,
-    fragment: Loadable<BookFragment>,
+    fragment: Loadable<AugmentedBookFragment>,
     controls: boolean,
 };
 const init: BookState = {

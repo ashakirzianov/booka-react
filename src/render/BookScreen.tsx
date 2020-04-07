@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {
-    positionForPath, pageForPosition, BookFragment, BookPath,
+    positionForPath, pageForPosition, AugmentedBookFragment, BookPath,
 } from 'booka-common';
 import {
     useTheme, useBook, useSetTocOpen, useBookId, useBookPath,
@@ -44,7 +44,7 @@ function BookReady({
     controlsVisible, scrollPath,
 }: Themed & {
     bookId: string,
-    fragment: BookFragment,
+    fragment: AugmentedBookFragment,
     controlsVisible: boolean,
     scrollPath: BookPath | undefined,
 }) {
@@ -116,7 +116,7 @@ function Header({ visible, bookId }: Themed & {
 function Footer({
     fragment, theme, visible,
 }: Themed & {
-    fragment: BookFragment,
+    fragment: AugmentedBookFragment,
     visible: boolean,
 }) {
     const path = useBookPath() ?? fragment.current.path;

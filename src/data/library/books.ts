@@ -1,8 +1,9 @@
 import { of, concat } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
-    Book, BookPath, fragmentForPath, findReference, BookFragment,
-    defaultFragmentLength, tocForBook, firstPath, pathToString, AuthToken,
+    Book, BookPath, fragmentForPath, findReference,
+    defaultFragmentLength, tocForBook, firstPath, pathToString,
+    AuthToken, AugmentedBookFragment,
 } from 'booka-common';
 import { Cache } from '../../core';
 import { libFetcher } from '../utils';
@@ -75,7 +76,7 @@ function resolveRefId(book: Book, refId: string) {
     }
 }
 
-function resolveFragment(book: Book, path: BookPath): BookFragment {
+function resolveFragment(book: Book, path: BookPath): AugmentedBookFragment {
     const fragment = fragmentForPath(book, path, defaultFragmentLength);
     return {
         ...fragment,
