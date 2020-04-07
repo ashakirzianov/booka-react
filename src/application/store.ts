@@ -44,6 +44,7 @@ subscribeToHistory(link => {
     store.dispatch({
         type: 'location-navigate',
         payload: link,
+        meta: { silent: true },
     });
 });
 

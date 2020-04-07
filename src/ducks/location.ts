@@ -19,10 +19,12 @@ export type AppLocation = FeedLocation | BookLocation;
 type NavigateToBookAction = {
     type: 'location-navigate',
     payload: BookLocation,
+    meta?: { silent?: boolean },
 };
 type NavigateToFeedAction = {
     type: 'location-navigate',
     payload: FeedLocation,
+    meta?: { silent?: boolean },
 };
 type UpdateBookPathAction = {
     type: 'location-update-path',

@@ -11,9 +11,11 @@ export const historySyncMiddleware: AppMiddleware = store => next => action => {
     const nextAction = next(action);
     switch (action.type) {
         case 'location-navigate': {
-            const loc = store.getState().location;
-            const url = appLocationToUrl(loc);
-            history.push(url);
+            if (!action?.meta?.silent) {
+                const loc = store.getState().location;
+                const url = appLocationToUrl(loc);
+                history.push(url);
+            }
             break;
         }
         case 'location-update-path':
@@ -33,8 +35,13 @@ export const historySyncMiddleware: AppMiddleware = store => next => action => {
 };
 
 export function subscribeToHistory(linkDispatch: (link: AppLocation) => void) {
-    const link = browserToAppLocation(history.location);
-    linkDispatch(link);
+    linkDispatch(browserToAppLocation(history.location));
+    history.listen((historyLocation, action) => {
+        if (action === 'POP') {
+            const link = browserToAppLocation(history.location);
+            linkDispatch(link);
+        }
+    });
 }
 
 function browserToAppLocation(location: Location): AppLocation {
