@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { map } from 'rxjs/operators';
 import {
-    BookPath, LibraryCard, TableOfContents,
+    BookPath, TableOfContents,
 } from 'booka-common';
 import { Loadable } from '../../core';
 import {
@@ -44,24 +44,6 @@ export function usePreview(bookId: string, path: BookPath) {
     }, [data, bookId, path]);
 
     return { previewState };
-}
-
-export type PopularBooksState = Loadable<LibraryCard[]>;
-export function usePopularBooks() {
-    const data = useDataProvider();
-
-    const [popularBooksState, setPopularBooksState] = useState<PopularBooksState>({ loading: true });
-
-    useEffect(() => {
-        const sub = data.popularBooks().pipe(
-            map((cards): PopularBooksState => {
-                return cards;
-            }),
-        ).subscribe(setPopularBooksState);
-        return () => sub.unsubscribe();
-    }, [data]);
-
-    return { popularBooksState };
 }
 
 export function useUpload() {

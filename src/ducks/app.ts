@@ -12,6 +12,7 @@ import { PositionsAction, PositionsState } from './positions';
 import { UploadAction, UploadState } from './upload';
 import { LocationAction, LocationState, AppLocation } from './location';
 import { SearchAction, SearchState } from './search';
+import { PopularAction, PopularState } from './popular';
 
 export type AppAction =
     | DataAction
@@ -25,6 +26,7 @@ export type AppAction =
     | UploadAction
     | LocationAction
     | SearchAction
+    | PopularAction
     ;
 export type AppActionType = AppAction['type'];
 export type ActionForType<T extends AppActionType> =
@@ -44,6 +46,7 @@ export type AppState = {
     upload: UploadState,
     location: LocationState,
     search: SearchState,
+    popular: PopularState,
 };
 
 export type AppDependencies = DataAccess;

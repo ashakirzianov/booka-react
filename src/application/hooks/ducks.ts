@@ -97,3 +97,7 @@ export function usePositionsActions() {
     }), [dispatch, source]);
     return { addCurrentPosition };
 }
+
+export function usePopularBooks() {
+    return useAppSelector(s => s.popular);
+}
