@@ -4,7 +4,10 @@ import {
     Highlight, BookRange, HighlightGroup, doesRangeOverlap, rangeToString,
 } from 'booka-common';
 import { BookSelection } from '../reader';
-import { useTheme, useHighlightsActions, useHighlights, useOnCopy, useSetQuote, useToggleControls } from '../application';
+import {
+    useTheme, useHighlightsActions, useHighlights, useOnCopy,
+    useSetQuote, useToggleControls,
+} from '../application';
 import {
     ContextMenu, ContextMenuItem, TextContextMenuItem,
     CircleButton, colorForHighlightGroup, SimpleButton,
