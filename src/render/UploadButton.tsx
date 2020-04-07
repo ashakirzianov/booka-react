@@ -9,6 +9,7 @@ import {
 import { Themed } from '../core';
 import { UploadState } from '../ducks';
 import { LoginOptions } from './LoginOptions';
+import { BookPathLink } from './Navigation';
 
 export function UploadButton() {
     const theme = useTheme();
@@ -70,6 +71,7 @@ function UploadPanel({ theme, state, doUpload, selectFile }: Themed & {
             return <SuccessPanel
                 theme={theme}
                 fileName={state.fileName}
+                bookId={state.bookId}
             />;
         case 'error':
             return <ErrorPanel
@@ -155,7 +157,8 @@ function FileUploadingPanel({ theme, fileName }: Themed & {
     </>;
 }
 
-function SuccessPanel({ theme, fileName }: Themed & {
+function SuccessPanel({ theme, fileName, bookId }: Themed & {
+    bookId: string,
     fileName: string,
 }) {
     return <>
@@ -163,6 +166,13 @@ function SuccessPanel({ theme, fileName }: Themed & {
             theme={theme}
             text={`Successfully uploaded '${fileName}'!`}
         />
+        <BookPathLink bookId={bookId}>
+            <ActionButton
+                theme={theme}
+                text='Read now'
+                color='positive'
+            />
+        </BookPathLink>
     </>;
 }
 
