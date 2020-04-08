@@ -9,35 +9,31 @@ import { AppStorage } from '../core';
 
 export type DataAccess = ReturnType<typeof createDataAccess>;
 export function createDataAccess(rootStorage: AppStorage) {
-    const defaultStorage = rootStorage.sub('default');
-    let dataProvider = createDataProvider({
-        storage: defaultStorage,
-        token: undefined,
-    });
-    let syncWorker = createSyncWorker({
-        storage: defaultStorage,
-        dataProvider,
-    });
+    let current = createForSignState({ sign: 'not-signed' });
+    function createForSignState(sign: SignState) {
+        const userStorage = rootStorage.sub(
+            sign.sign === 'signed' ? sign.accountInfo._id : 'default',
+        );
+        const dataProvider = createDataProvider({
+            storage: userStorage.sub('data'),
+            token: sign.sign === 'signed'
+                ? sign.token : undefined,
+        });
+        const syncWorker = createSyncWorker({
+            storage: userStorage.sub('sync'),
+            dataProvider,
+        });
+        return { dataProvider, syncWorker };
+    }
     return {
         setSignState(sign: SignState) {
-            const userStorage = rootStorage.sub(
-                sign.sign === 'signed' ? sign.accountInfo._id : 'default',
-            );
-            dataProvider = createDataProvider({
-                storage: userStorage,
-                token: sign.sign === 'signed'
-                    ? sign.token : undefined,
-            });
-            syncWorker = createSyncWorker({
-                storage: userStorage,
-                dataProvider,
-            });
+            current = createForSignState(sign);
         },
         dataProvider() {
-            return dataProvider;
+            return current.dataProvider;
         },
         syncWorker() {
-            return syncWorker;
+            return current.syncWorker;
         },
     };
 }
