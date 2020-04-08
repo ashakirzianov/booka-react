@@ -7,13 +7,13 @@ import { Loadable } from '../core';
 import { AppAction, ofAppNavigation, AppEpic } from './app';
 
 type BookReceivedAction = {
-    type: 'book-received',
+    type: 'book/received',
     payload: {
         fragment: AugmentedBookFragment,
     },
 };
 type BookToggleControls = {
-    type: 'book-controls-toggle',
+    type: 'book/controls-toggle',
 };
 export type BookAction =
     | BookReceivedAction | BookToggleControls
@@ -31,7 +31,7 @@ const init: BookState = {
 };
 export function bookReducer(state: BookState = init, action: AppAction): BookState {
     switch (action.type) {
-        case 'location-navigate':
+        case 'location/navigate':
             return action.payload.location === 'book'
                 ? {
                     ...state,
@@ -40,16 +40,16 @@ export function bookReducer(state: BookState = init, action: AppAction): BookSta
                     controls: true,
                 }
                 : state;
-        case 'location-update-path':
+        case 'location/update-path':
             return state.scrollPath === undefined
                 ? state
                 : { ...state, scrollPath: undefined };
-        case 'book-received':
+        case 'book/received':
             return {
                 ...state,
                 fragment: action.payload.fragment,
             };
-        case 'book-controls-toggle':
+        case 'book/controls-toggle':
             return { ...state, controls: !state.controls };
         default:
             return state;
@@ -62,7 +62,7 @@ const requestBookEpic: AppEpic = (action$, _, { dataProvider }) => action$.pipe(
         const actualPath = quote?.start ?? path ?? firstPath();
         return dataProvider().fragmentForPath(bookId, actualPath).pipe(
             map((fragment): AppAction => ({
-                type: 'book-received',
+                type: 'book/received',
                 payload: {
                     fragment,
                 },

@@ -16,7 +16,7 @@ export function useBook() {
 export function useToggleControls() {
     const dispatch = useAppDispatch();
     return useCallback(() => dispatch({
-        type: 'book-controls-toggle',
+        type: 'book/controls-toggle',
     }), [dispatch]);
 }
 
@@ -50,11 +50,11 @@ export function useUpload() {
     const uploadState = useAppSelector(s => s.upload);
     const dispatch = useAppDispatch();
     const uploadEpub = useCallback((publicDomain: boolean) => dispatch({
-        type: 'upload-req-upload',
+        type: 'upload/req-upload',
         payload: { publicDomain },
     }), [dispatch]);
     const selectFile = useCallback((fileName: string, data: any) => dispatch({
-        type: 'upload-select-file',
+        type: 'upload/select-file',
         payload: { fileName, data },
     }), [dispatch]);
 

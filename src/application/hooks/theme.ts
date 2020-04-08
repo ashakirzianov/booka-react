@@ -5,9 +5,9 @@ export function useTheme() {
 }
 
 export function useSetPalette() {
-    return useAppCallback('theme-set-palette');
+    return useAppCallback('theme/set-palette');
 }
 
 export function useIncrementScale() {
-    return useAppCallback('theme-increment-scale');
+    return useAppCallback('theme/increment-scale');
 }

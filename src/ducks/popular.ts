@@ -5,7 +5,7 @@ import { AppAction, AppEpic, ofAppType } from './app';
 import { mergeMap, map } from 'rxjs/operators';
 
 type PopularReceivedAction = {
-    type: 'popular-received',
+    type: 'popular/received',
     payload: LibraryCard[],
 };
 export type PopularAction = PopularReceivedAction;
@@ -14,9 +14,9 @@ export type PopularState = Loadable<LibraryCard[]>;
 const init: PopularState = { loading: true };
 export function popularReducer(state: PopularState = init, action: AppAction): PopularState {
     switch (action.type) {
-        case 'popular-received':
+        case 'popular/received':
             return action.payload;
-        case 'data-provider-update':
+        case 'data/update-provider':
             return { loading: true };
         default:
             return state;
@@ -24,10 +24,10 @@ export function popularReducer(state: PopularState = init, action: AppAction): P
 }
 
 const requestPopularEpic: AppEpic = (action$, _, { dataProvider }) => action$.pipe(
-    ofAppType('data-provider-update'),
+    ofAppType('data/update-provider'),
     mergeMap(() => dataProvider().popularBooks().pipe(
         map((cards): AppAction => ({
-            type: 'popular-received',
+            type: 'popular/received',
             payload: cards,
         })),
     )),

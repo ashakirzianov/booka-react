@@ -41,11 +41,11 @@ function configureStore() {
 
 const store = configureStore();
 store.dispatch({
-    type: 'data-provider-update',
+    type: 'data/update-provider',
 });
 subscribeToHistory(link => {
     store.dispatch({
-        type: 'location-navigate',
+        type: 'location/navigate',
         payload: link,
         meta: { silent: true },
     });
@@ -55,7 +55,7 @@ startupFbSdk(config().facebook.clientId);
 fbState().subscribe(state => {
     if (state.state === 'logged' && state.token) {
         store.dispatch({
-            type: 'account-receive-fb-token',
+            type: 'account/receive-fb-token',
             payload: {
                 token: state.token,
             },

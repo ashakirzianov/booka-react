@@ -19,7 +19,7 @@ export function useLibraryCard(bookId: string) {
 export function useSetLibraryCard() {
     const dispatch = useAppDispatch();
     return useCallback((card: string | undefined) => dispatch({
-        type: 'location-update-card',
+        type: 'location/update-card',
         payload: card,
     }), [dispatch]);
 }

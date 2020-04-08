@@ -4,7 +4,7 @@ import { SearchResult } from 'booka-common';
 import { AppAction, AppEpic, ofAppType } from './app';
 
 type SearchResultReceivedAction = {
-    type: 'search-results-received',
+    type: 'search/results-received',
     payload: SearchResult[],
 };
 
@@ -22,11 +22,11 @@ export type SearchState = {
 const init: SearchState = { state: 'empty' };
 export function searchReducer(state: SearchState = init, action: AppAction): SearchState {
     switch (action.type) {
-        case 'location-update-search':
+        case 'location/update-search':
             return action.payload
                 ? { state: 'loading' }
                 : { state: 'empty' };
-        case 'search-results-received':
+        case 'search/results-received':
             return { state: 'ready', results: action.payload };
         default:
             return state;
@@ -34,15 +34,15 @@ export function searchReducer(state: SearchState = init, action: AppAction): Sea
 }
 
 const doQueryEpic: AppEpic = (action$, _, { dataProvider }) => action$.pipe(
-    ofAppType('location-update-search'),
+    ofAppType('location/update-search'),
     mergeMap(action =>
         dataProvider().librarySearch(action.payload).pipe(
             map((results): AppAction => ({
-                type: 'search-results-received',
+                type: 'search/results-received',
                 payload: results,
             })),
             takeUntil(action$.pipe(
-                ofAppType('location-update-search'),
+                ofAppType('location/update-search'),
             )),
         ),
     ),

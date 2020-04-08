@@ -5,17 +5,17 @@ import { AppAction } from './app';
 import { bookRequestEpic } from './helpers';
 
 type BookmarksAddAction = {
-    type: 'bookmarks-add',
+    type: 'bookmarks/add',
     payload: Bookmark,
 };
 type BookmarksRemoveAction = {
-    type: 'bookmarks-remove',
+    type: 'bookmarks/remove',
     payload: {
         bookmarkId: string,
     },
 };
 type BookmarksReplaceAction = {
-    type: 'bookmarks-replace',
+    type: 'bookmarks/replace',
     payload: Bookmark[],
 };
 export type BookmarksAction =
@@ -27,11 +27,11 @@ export type BookmarksState = Bookmark[];
 const init: BookmarksState = [];
 export function bookmarksReducer(state: BookmarksState = init, action: AppAction): BookmarksState {
     switch (action.type) {
-        case 'bookmarks-add':
+        case 'bookmarks/add':
             return [action.payload, ...state];
-        case 'bookmarks-remove':
+        case 'bookmarks/remove':
             return state.filter(b => b.uuid !== action.payload.bookmarkId);
-        case 'bookmarks-replace':
+        case 'bookmarks/replace':
             return action.payload;
         default:
             return state;
@@ -41,7 +41,7 @@ export function bookmarksReducer(state: BookmarksState = init, action: AppAction
 const requestBookmarksEpic = bookRequestEpic((bookId, dp, sync) => dp.getBookmarks(bookId).pipe(
     map(bs => sync.reduce(bs, bookmarksReducer)),
     map((bookmarks): AppAction => ({
-        type: 'bookmarks-replace',
+        type: 'bookmarks/replace',
         payload: bookmarks,
     })),
 ));

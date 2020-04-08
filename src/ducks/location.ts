@@ -17,28 +17,28 @@ export type BookLocation = {
 export type AppLocation = FeedLocation | BookLocation;
 
 type NavigateToAction = {
-    type: 'location-navigate',
+    type: 'location/navigate',
     payload: AppLocation,
     meta?: { silent?: boolean },
 };
 type UpdateBookPathAction = {
-    type: 'location-update-path',
+    type: 'location/update-path',
     payload: BookPath | undefined,
 };
 type UpdateQuoteRangeAction = {
-    type: 'location-update-quote',
+    type: 'location/update-quote',
     payload: BookRange | undefined,
 };
 type UpdateTocAction = {
-    type: 'location-update-toc',
+    type: 'location/update-toc',
     payload: boolean,
 };
 type UpdateSearchAction = {
-    type: 'location-update-search',
+    type: 'location/update-search',
     payload: string | undefined,
 };
 type UpdateCardAction = {
-    type: 'location-update-card',
+    type: 'location/update-card',
     payload: string | undefined,
 };
 export type LocationAction =
@@ -51,25 +51,25 @@ export type LocationState = AppLocation;
 const init: LocationState = { location: 'feed' };
 export function locationReducer(state: LocationState = init, action: AppAction): LocationState {
     switch (action.type) {
-        case 'location-navigate':
+        case 'location/navigate':
             return action.payload;
-        case 'location-update-path':
+        case 'location/update-path':
             return state.location === 'book'
                 ? { ...state, path: action.payload }
                 : state;
-        case 'location-update-quote':
+        case 'location/update-quote':
             return state.location === 'book'
                 ? { ...state, quote: action.payload }
                 : state;
-        case 'location-update-toc':
+        case 'location/update-toc':
             return state.location === 'book'
                 ? { ...state, toc: action.payload }
                 : state;
-        case 'location-update-search':
+        case 'location/update-search':
             return state.location === 'feed'
                 ? { ...state, search: action.payload }
                 : state;
-        case 'location-update-card':
+        case 'location/update-card':
             return state.location === 'feed'
                 ? { ...state, card: action.payload }
                 : state;

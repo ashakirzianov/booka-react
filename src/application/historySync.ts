@@ -10,7 +10,7 @@ const history = createBrowserHistory();
 export const historySyncMiddleware: AppMiddleware = store => next => action => {
     const nextAction = next(action);
     switch (action.type) {
-        case 'location-navigate': {
+        case 'location/navigate': {
             if (!action?.meta?.silent) {
                 const loc = store.getState().location;
                 const url = appLocationToUrl(loc);
@@ -18,11 +18,11 @@ export const historySyncMiddleware: AppMiddleware = store => next => action => {
             }
             break;
         }
-        case 'location-update-path':
-        case 'location-update-quote':
-        case 'location-update-card':
-        case 'location-update-toc':
-        case 'location-update-search': {
+        case 'location/update-path':
+        case 'location/update-quote':
+        case 'location/update-card':
+        case 'location/update-toc':
+        case 'location/update-search': {
             const loc = store.getState().location;
             const url = appLocationToUrl(loc);
             history.replace(url);

@@ -8,21 +8,21 @@ import { AppAction } from './app';
 import { dataProviderEpic } from './helpers';
 
 type CollectionsAddAction = {
-    type: 'collections-add',
+    type: 'collections/add',
     payload: {
         name: CardCollectionName,
         card: LibraryCard,
     },
 };
 type CollectionsRemoveAction = {
-    type: 'collections-remove',
+    type: 'collections/remove',
     payload: {
         name: CardCollectionName,
         bookId: string,
     },
 };
 type CollectionsReplaceAction = {
-    type: 'collections-replace',
+    type: 'collections/replace',
     payload: CardCollection,
 };
 export type CollectionsAction =
@@ -34,7 +34,7 @@ export type CollectionsState = CardCollections;
 const init: CollectionsState = {};
 export function collectionsReducer(state: CollectionsState = init, action: AppAction): CollectionsState {
     switch (action.type) {
-        case 'collections-add': {
+        case 'collections/add': {
             const cards = state[action.payload.name] ?? [];
             if (cards.find(c => c.id === action.payload.card.id)) {
                 return state;
@@ -45,7 +45,7 @@ export function collectionsReducer(state: CollectionsState = init, action: AppAc
                 };
             }
         }
-        case 'collections-remove': {
+        case 'collections/remove': {
             const cards = state[action.payload.name] ?? [];
             if (cards.find(c => c.id === action.payload.bookId)) {
                 return {
@@ -57,7 +57,7 @@ export function collectionsReducer(state: CollectionsState = init, action: AppAc
                 return state;
             }
         }
-        case 'collections-replace': {
+        case 'collections/replace': {
             return {
                 ...state,
                 [action.payload.name]: action.payload.cards,
@@ -79,7 +79,7 @@ const requestCollectionsEpic = dataProviderEpic((dp, sync) => merge(
             };
         }),
         map((collection): AppAction => ({
-            type: 'collections-replace',
+            type: 'collections/replace',
             payload: collection,
         })),
     )),

@@ -73,7 +73,7 @@ export function ofAppType<T extends AppActionType>(
     return ofType(...types) as any;
 }
 
-type NavigationAction<T extends AppLocation['location']> = ActionForType<'location-navigate'> & {
+type NavigationAction<T extends AppLocation['location']> = ActionForType<'location/navigate'> & {
     payload: Extract<AppLocation, { location: T }>,
 };
 export function ofAppNavigation<T extends AppLocation['location']>(
@@ -81,6 +81,6 @@ export function ofAppNavigation<T extends AppLocation['location']>(
 ): Operator<AppAction, NavigationAction<T>> {
     return filter(
         (action: AppAction): action is NavigationAction<T> =>
-            action.type === 'location-navigate' && action.payload.location === location,
+            action.type === 'location/navigate' && action.payload.location === location,
     );
 }

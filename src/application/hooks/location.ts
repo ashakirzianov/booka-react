@@ -12,7 +12,7 @@ export function useBookId() {
 }
 
 export function useNavigate() {
-    return useAppCallback('location-navigate');
+    return useAppCallback('location/navigate');
 }
 
 export function useSearch() {
@@ -27,7 +27,7 @@ export function useSearchQuery() {
 }
 
 export function useDoSearch() {
-    return useAppCallback('location-update-search');
+    return useAppCallback('location/update-search');
 }
 
 export function useCardId() {
@@ -38,7 +38,7 @@ export function useCardId() {
 }
 
 export function useSetCardId() {
-    return useAppCallback('location-update-card');
+    return useAppCallback('location/update-card');
 }
 
 export function useQuote() {
@@ -49,7 +49,7 @@ export function useQuote() {
 }
 
 export function useSetQuote() {
-    return useAppCallback('location-update-quote');
+    return useAppCallback('location/update-quote');
 }
 
 export function useBookPath() {
@@ -60,7 +60,7 @@ export function useBookPath() {
 }
 
 export function useSetBookPath() {
-    return useAppCallback('location-update-path');
+    return useAppCallback('location/update-path');
 }
 
 export function useTocOpen() {
@@ -71,5 +71,5 @@ export function useTocOpen() {
 }
 
 export function useSetTocOpen() {
-    return useAppCallback('location-update-toc');
+    return useAppCallback('location/update-toc');
 }

@@ -73,23 +73,23 @@ export function createSyncWorker({ storage, dataProvider }: {
 
 function appendAction(queue: AppAction[], action: AppAction): AppAction[] {
     switch (action.type) {
-        case 'positions-add':
+        case 'positions/add':
             return [
                 ...queue.filter(
-                    a => a.type !== 'positions-add'
+                    a => a.type !== 'positions/add'
                         // Note: next line is really not necessary
                         // || a.payload.source.id !== action.payload.source.id
                         || a.payload.bookId !== action.payload.bookId,
                 ),
                 action,
             ];
-        case 'bookmarks-add':
-        case 'bookmarks-remove':
-        case 'highlights-add':
-        case 'highlights-remove':
-        case 'highlights-change-group':
-        case 'collections-add':
-        case 'collections-remove':
+        case 'bookmarks/add':
+        case 'bookmarks/remove':
+        case 'highlights/add':
+        case 'highlights/remove':
+        case 'highlights/change-group':
+        case 'collections/add':
+        case 'collections/remove':
             return [...queue, action];
         default:
             return queue;
@@ -98,24 +98,24 @@ function appendAction(queue: AppAction[], action: AppAction): AppAction[] {
 
 function postAction(action: AppAction, dp: DataProvider): Observable<unknown> {
     switch (action.type) {
-        case 'bookmarks-add':
+        case 'bookmarks/add':
             return dp.postAddBookmark(action.payload);
-        case 'bookmarks-remove':
+        case 'bookmarks/remove':
             return dp.postRemoveBookmark(action.payload.bookmarkId);
-        case 'highlights-add':
+        case 'highlights/add':
             return dp.postAddHighlight(action.payload);
-        case 'highlights-remove':
+        case 'highlights/remove':
             return dp.postRemoveHighlight(action.payload.highlightId);
-        case 'highlights-change-group':
+        case 'highlights/change-group':
             return dp.postUpdateHighlight({
                 uuid: action.payload.highlightId,
                 group: action.payload.group,
             });
-        case 'collections-add':
+        case 'collections/add':
             return dp.postAddToCollection(action.payload.card.id, action.payload.name);
-        case 'collections-remove':
+        case 'collections/remove':
             return dp.postRemoveFromCollection(action.payload.bookId, action.payload.name);
-        case 'positions-add':
+        case 'positions/add':
             return dp.postAddCurrentPosition(action.payload);
         default:
             return of();

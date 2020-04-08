@@ -16,7 +16,7 @@ export function useLogout() {
     const dispatch = useAppDispatch();
     return useCallback(() => {
         dispatch({
-            type: 'account-logout',
+            type: 'account/logout',
         });
         doFbLogout();
     }, [dispatch]);
@@ -29,11 +29,11 @@ export function useBookmarks() {
 export function useBookmarksActions() {
     const dispatch = useAppDispatch();
     const addBookmark = useCallback((bookId: string, path: BookPath) => dispatch({
-        type: 'bookmarks-add',
+        type: 'bookmarks/add',
         payload: localBookmark({ bookId, path }),
     }), [dispatch]);
     const removeBookmark = useCallback((bookmarkId: string) => dispatch({
-        type: 'bookmarks-remove',
+        type: 'bookmarks/remove',
         payload: { bookmarkId },
     }), [dispatch]);
     return { addBookmark, removeBookmark };
@@ -46,11 +46,11 @@ export function useCollection(name: CardCollectionName): Loadable<LibraryCard[]>
 export function useCollectionActions(name: CardCollectionName) {
     const dispatch = useAppDispatch();
     const addToCollection = useCallback((card: LibraryCard) => dispatch({
-        type: 'collections-add',
+        type: 'collections/add',
         payload: { name, card },
     }), [name, dispatch]);
     const removeFromCollection = useCallback((bookId: string) => dispatch({
-        type: 'collections-remove',
+        type: 'collections/remove',
         payload: { name, bookId },
     }), [name, dispatch]);
 
@@ -67,15 +67,15 @@ export function useHighlights() {
 export function useHighlightsActions() {
     const dispatch = useAppDispatch();
     const addHighlight = useCallback((data: Omit<Highlight, 'uuid'>) => dispatch({
-        type: 'highlights-add',
+        type: 'highlights/add',
         payload: localHighlight(data),
     }), [dispatch]);
     const removeHighlight = useCallback((highlightId: string) => dispatch({
-        type: 'highlights-remove',
+        type: 'highlights/remove',
         payload: { highlightId },
     }), [dispatch]);
     const updateHighlightGroup = useCallback((highlightId: string, group: HighlightGroup) => dispatch({
-        type: 'highlights-change-group',
+        type: 'highlights/change-group',
         payload: { highlightId, group },
     }), [dispatch]);
     return { addHighlight, removeHighlight, updateHighlightGroup };
@@ -89,7 +89,7 @@ export function usePositionsActions() {
     const dispatch = useAppDispatch();
     const source = config().source;
     const addCurrentPosition = useCallback((bookId: string, path: BookPath) => dispatch({
-        type: 'positions-add',
+        type: 'positions/add',
         payload: {
             bookId, path, source,
             created: new Date(Date.now()),

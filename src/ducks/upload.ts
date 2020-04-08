@@ -4,34 +4,34 @@ import { AppAction, AppEpic, ofAppType } from './app';
 import { of } from 'rxjs';
 
 type UploadSelectFileAction = {
-    type: 'upload-select-file',
+    type: 'upload/select-file',
     payload: {
         fileName: string,
         data: any,
     },
 };
 type UploadRequestUploadAction = {
-    type: 'upload-req-upload',
+    type: 'upload/req-upload',
     payload: {
         publicDomain: boolean,
     },
 };
 type UploadSuccessAction = {
-    type: 'upload-success',
+    type: 'upload/success',
     payload: {
         fileName: string,
         bookId: string,
     },
 };
 type UploadErrorAction = {
-    type: 'upload-fail',
+    type: 'upload/fail',
     payload: {
         fileName: string,
         error: any,
     },
 };
 type UploadClearAction = {
-    type: 'upload-clear',
+    type: 'upload/clear',
 };
 
 export type UploadAction =
@@ -63,26 +63,26 @@ export type UploadState = {
 const init: UploadState = { state: 'not-signed' };
 export function uploadReducer(state: UploadState = init, action: AppAction): UploadState {
     switch (action.type) {
-        case 'upload-select-file':
+        case 'upload/select-file':
             return {
                 state: 'selected',
                 ...action.payload,
             };
-        case 'upload-success':
+        case 'upload/success':
             return {
                 state: 'success',
                 ...action.payload,
             };
-        case 'upload-fail':
+        case 'upload/fail':
             return {
                 state: 'error',
                 fileName: action.payload.fileName,
             };
-        case 'upload-clear':
+        case 'upload/clear':
             return {
                 state: 'empty',
             };
-        case 'account-receive-info':
+        case 'account/receive-info':
             return state.state === 'not-signed'
                 ? { state: 'empty' }
                 : state;
@@ -92,14 +92,14 @@ export function uploadReducer(state: UploadState = init, action: AppAction): Upl
 }
 
 const requestUploadEpic: AppEpic = (action$, state$, { dataProvider }) => action$.pipe(
-    ofAppType('upload-req-upload'),
+    ofAppType('upload/req-upload'),
     withLatestFrom(state$),
     mergeMap(([action, state]) => {
         if (state.upload.state === 'selected') {
             const { data, fileName } = state.upload;
             return dataProvider().uploadEpub(data, action.payload.publicDomain).pipe(
                 map((bookId): AppAction => ({
-                    type: 'upload-success',
+                    type: 'upload/success',
                     payload: { fileName, bookId },
                 })),
             );

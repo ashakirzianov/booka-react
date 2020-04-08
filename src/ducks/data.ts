@@ -43,21 +43,21 @@ export function createDataAccess(rootStorage: Storage) {
 }
 
 type DataUpdateProviderAction = {
-    type: 'data-provider-update',
+    type: 'data/update-provider',
 };
 export type DataAction =
     | DataUpdateProviderAction
     ;
 
 const updateDataProviderEpic: AppEpic = (action$, _, { setSignState }) => action$.pipe(
-    ofAppType('account-receive-info'),
+    ofAppType('account/receive-info'),
     map(action => {
         setSignState({
             sign: 'signed',
             accountInfo: action.payload.account,
             token: action.payload.token,
         });
-        return { type: 'data-provider-update' };
+        return { type: 'data/update-provider' };
     }),
 );
 
