@@ -13,6 +13,7 @@
     "booka-common": "^0.15.5",
     "detect-browser": "^5.0.0",
     "history": "^4.10.1",
+    "idb-keyval": "^3.2.0",
     "koa": "^2.11.0",
     "koa-send": "^5.0.0",
     "koa-static": "^5.0.0",
