@@ -5,10 +5,10 @@ import { SignState } from 'booka-common';
 import { createDataProvider } from '../data';
 import { AppEpic, ofAppType, AppAction } from './app';
 import { createSyncWorker } from './sync';
-import { Storage } from '../core';
+import { AppStorage } from '../core';
 
 export type DataAccess = ReturnType<typeof createDataAccess>;
-export function createDataAccess(rootStorage: Storage) {
+export function createDataAccess(rootStorage: AppStorage) {
     const defaultStorage = rootStorage.sub('default');
     let dataProvider = createDataProvider({
         storage: defaultStorage,

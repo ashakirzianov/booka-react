@@ -3,13 +3,13 @@ import { tap } from 'rxjs/operators';
 import {
     AuthToken, CurrentPosition,
 } from 'booka-common';
-import { Storage, persistentCache } from '../core';
+import { AppStorage, persistentCache } from '../core';
 import { backFetcher, optional } from './utils';
 
 const back = backFetcher();
 
 export function positionsProvider({ token, storage }: {
-    storage: Storage,
+    storage: AppStorage,
     token: AuthToken | undefined,
 }) {
     const cache = persistentCache<CurrentPosition[]>(storage);

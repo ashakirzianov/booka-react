@@ -1,10 +1,10 @@
 import { AuthToken, Book, LibraryCard } from 'booka-common';
-import { Storage, persistentCache } from '../../core';
+import { AppStorage, persistentCache } from '../../core';
 import { booksProvider } from './books';
 import { libraryMiscProvider } from './misc';
 
 export function libraryProvider({ storage, token }: {
-    storage: Storage,
+    storage: AppStorage,
     token: AuthToken | undefined,
 }) {
     const booksCache = persistentCache<Book>(storage.sub('books'));

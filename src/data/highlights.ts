@@ -2,12 +2,12 @@ import { of, concat } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AuthToken, Highlight, HighlightUpdate } from 'booka-common';
 import { backFetcher, optional } from './utils';
-import { persistentCache, Storage } from '../core';
+import { persistentCache, AppStorage } from '../core';
 
 const back = backFetcher();
 
 export function highlightsProvider({ storage, token }: {
-    storage: Storage,
+    storage: AppStorage,
     token: AuthToken | undefined,
 }) {
     const cache = persistentCache<Highlight[]>(storage);

@@ -6,7 +6,7 @@ export type StorageCell<T> = {
     date: () => Date | undefined,
     clear: () => void,
 };
-export type Storage = ReturnType<typeof createStorage>;
+export type AppStorage = ReturnType<typeof createStorage>;
 export function createStorage(optPrefix?: string) {
     const prefix = optPrefix ?? '<root>';
     type CellData<T> = {

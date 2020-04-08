@@ -1,11 +1,11 @@
 import { AppAction } from './app';
 import { Observable, of } from 'rxjs';
 import { DataProvider } from '../data';
-import { Storage } from '../core';
+import { AppStorage } from '../core';
 
 export type SyncWorker = ReturnType<typeof createSyncWorker>;
 export function createSyncWorker({ storage, dataProvider }: {
-    storage: Storage,
+    storage: AppStorage,
     dataProvider: DataProvider,
 }) {
     const actionsCell = storage.cell<AppAction[]>('actions');

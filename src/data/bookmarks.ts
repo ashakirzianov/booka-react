@@ -1,13 +1,13 @@
 import { concat, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AuthToken, Bookmark } from 'booka-common';
-import { Storage, persistentCache } from '../core';
+import { AppStorage, persistentCache } from '../core';
 import { optional, backFetcher } from './utils';
 
 const back = backFetcher();
 
 export function bookmarksProvider({ token, storage }: {
-    storage: Storage,
+    storage: AppStorage,
     token: AuthToken | undefined,
 }) {
     const cache = persistentCache<Bookmark[]>(storage);

@@ -1,11 +1,11 @@
-import { Storage } from './storage';
+import { AppStorage } from './storage';
 
 export type Cache<T> = {
     existing: (key: string) => T | undefined,
     add: (key: string, data: T) => void,
 };
 
-export function persistentCache<T>(storage: Storage): Cache<T> {
+export function persistentCache<T>(storage: AppStorage): Cache<T> {
     return {
         existing(key: string): T | undefined {
             const result = storage.cell<T>(key).restore();
