@@ -1,4 +1,4 @@
-import storeApi from 'store2';
+import { get, set, del, keys } from 'idb-keyval';
 
 export type AsyncStorage<T> = {
     store(value: T, key?: string): Promise<boolean>,
@@ -11,35 +11,36 @@ export function createAsyncStorage<T>(prefix: string): AsyncStorage<T> {
     function fullKey(key?: string) {
         return `${prefix}:${key ?? ''}`;
     }
-    async function keys() {
-        return storeApi.keys().filter(k => k.startsWith(prefix));
+    async function localKeys() {
+        return (await keys()).filter(k => typeof k === 'string' && k.startsWith(prefix));
     }
     return {
         async store(value, key) {
             try {
-                storeApi.set(fullKey(key), value);
+                await set(fullKey(key), value);
                 return true;
             } catch {
                 return false;
             }
         },
         async restore(key) {
-            return storeApi.get(fullKey(key)) as T;
+            return get(fullKey(key));
         },
         async items() {
-            const ks = await keys();
+            const ks = await localKeys();
             return Promise.all(
                 ks.map(async k => {
-                    const value = storeApi.get(k) as T;
+                    const value = await get<T>(k);
                     return [k, value] as [string, T];
                 }),
             );
         },
         async clear(key) {
-            storeApi.remove(fullKey(key));
+            return del(fullKey(key));
         },
         async clearAll() {
-            (await keys()).forEach(storeApi.remove);
+            const ks = await localKeys();
+            await Promise.all(ks.map(k => del(k)));
         },
     };
 }
