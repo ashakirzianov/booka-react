@@ -21,6 +21,6 @@ export function createDataProvider({ storage, token }: {
         ...highlightsProvider({ token, storage: storage.sub('highlights') }),
         ...positionsProvider({ token, storage: storage.sub('positions') }),
         ...collectionsProvider({ token, storage: storage.sub('collections') }),
-        ...libraryProvider({ token, storage: storage.sub('library') }),
+        ...libraryProvider({ token }),
     };
 }

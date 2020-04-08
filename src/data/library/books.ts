@@ -1,65 +1,98 @@
-import { of, concat } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { of, concat, from, Observable } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 import {
     Book, BookPath, fragmentForPath, findReference,
     defaultFragmentLength, tocForBook, firstPath, pathToString,
-    AuthToken, AugmentedBookFragment,
+    AuthToken, AugmentedBookFragment, previewForPath,
 } from 'booka-common';
 import { libFetcher } from '../utils';
-import { BookStore } from './bookStore';
+import { createBookStore } from './bookStore';
 
 const lib = libFetcher();
 
-export function booksProvider({ bookStore, token }: {
-    bookStore: BookStore,
+export function booksProvider({ token }: {
     token?: AuthToken,
 }) {
+    const bookStore = createBookStore();
+    function withCached<T>(bookId: string, proj: (c: Book | undefined) => Observable<T>): Observable<T> {
+        return from(bookStore.existing(bookId)).pipe(
+            mergeMap(proj),
+        );
+    }
     function getFragmentForPath(bookId: string, path: BookPath) {
-        const cached = bookStore.existing(bookId);
-        if (cached) {
-            const fragment = resolveFragment(cached, path);
-            return of(fragment);
-        } else {
-            return concat(
-                lib.get('/fragment', {
-                    auth: token?.token,
-                    query: {
-                        id: bookId,
-                        path: pathToString(path),
-                    },
-                }).pipe(
-                    map(({ fragment }) => ({ fragment, path })),
-                ),
-                lib.get('/full', {
-                    query: { id: bookId },
-                }).pipe(
-                    map(r => {
-                        bookStore.add(bookId, r.book);
-                        return resolveFragment(r.book, path);
-                    }),
-                ),
-            );
-        }
+        return withCached(bookId, book => {
+            if (book) {
+                const fragment = resolveFragment(book, path);
+                return of(fragment);
+            } else {
+                return concat(
+                    lib.get('/fragment', {
+                        auth: token?.token,
+                        query: {
+                            id: bookId,
+                            path: pathToString(path),
+                        },
+                    }).pipe(
+                        map(({ fragment }) => ({ fragment, path })),
+                    ),
+                    lib.get('/full', {
+                        query: { id: bookId },
+                    }).pipe(
+                        map(r => {
+                            bookStore.add(bookId, r.book);
+                            return resolveFragment(r.book, path);
+                        }),
+                    ),
+                );
+            }
+        });
     }
 
     return {
         fragmentForPath: getFragmentForPath,
         fragmentForRef(bookId: string, refId: string) {
-            const cached = bookStore.existing(bookId);
-            if (cached) {
-                const fragment = resolveRefId(cached, refId);
-                return of(fragment);
-            } else {
-                return lib.get('/full', {
-                    query: { id: bookId },
-                }).pipe(
-                    map(({ book }) => {
-                        bookStore.add(bookId, book);
-                        const fragment = resolveRefId(book, refId);
-                        return fragment;
-                    }),
-                );
-            }
+            return withCached(bookId, cached => {
+                if (cached) {
+                    const fragment = resolveRefId(cached, refId);
+                    return of(fragment);
+                } else {
+                    return lib.get('/full', {
+                        query: { id: bookId },
+                    }).pipe(
+                        map(({ book }) => {
+                            bookStore.add(bookId, book);
+                            const fragment = resolveRefId(book, refId);
+                            return fragment;
+                        }),
+                    );
+                }
+            });
+        },
+        textPreview(bookId: string, path: BookPath) {
+            return withCached(bookId, cached => {
+                if (cached) {
+                    const preview = previewForPath(cached, path);
+                    return of(preview);
+                } else {
+                    return lib.get('/preview', {
+                        query: { id: bookId, node: path.node },
+                    }).pipe(
+                        map(r => r.preview),
+                    );
+                }
+            });
+        },
+        tableOfContents(bookId: string) {
+            return withCached(bookId, cached => {
+                if (cached) {
+                    const toc = tocForBook(cached);
+                    return of(toc);
+                } else {
+                    return lib.get('/toc', {
+                        query: { id: bookId },
+                    });
+                }
+            });
         },
     };
 }

@@ -3,7 +3,7 @@ import storeApi from 'store2';
 export type AsyncStorage<T> = {
     store(value: T, key?: string): Promise<boolean>,
     restore(key?: string): Promise<T | undefined>,
-    keys(): Promise<string[]>,
+    items(): Promise<Array<[string, T]>>
     clear(key?: string): Promise<void>,
     clearAll(): Promise<void>,
 };
@@ -26,7 +26,15 @@ export function createAsyncStorage<T>(prefix: string): AsyncStorage<T> {
         async restore(key) {
             return storeApi.get(fullKey(key)) as T;
         },
-        keys,
+        async items() {
+            const ks = await keys();
+            return Promise.all(
+                ks.map(async k => {
+                    const value = storeApi.get(k) as T;
+                    return [k, value] as [string, T];
+                }),
+            );
+        },
         async clear(key) {
             storeApi.remove(fullKey(key));
         },
