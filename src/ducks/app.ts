@@ -9,7 +9,6 @@ import { BookmarksAction, BookmarksState } from './bookmarks';
 import { HighlightsState, HighlightsAction } from './highlights';
 import { CollectionsAction, CollectionsState } from './collections';
 import { PositionsAction, PositionsState } from './positions';
-import { UploadAction, UploadState } from './upload';
 import { LocationAction, LocationState, AppLocation } from './location';
 import { SearchAction, SearchState } from './search';
 import { PopularAction, PopularState } from './popular';
@@ -23,7 +22,6 @@ export type AppAction =
     | HighlightsAction
     | CollectionsAction
     | PositionsAction
-    | UploadAction
     | LocationAction
     | SearchAction
     | PopularAction
@@ -43,7 +41,6 @@ export type AppState = {
     highlights: HighlightsState,
     collections: CollectionsState,
     positions: PositionsState,
-    upload: UploadState,
     location: LocationState,
     search: SearchState,
     popular: PopularState,
