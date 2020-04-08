@@ -46,17 +46,10 @@ export function usePreview(bookId: string, path: BookPath) {
     return { previewState };
 }
 
-export function useUpload() {
-    const uploadState = useAppSelector(s => s.upload);
-    const dispatch = useAppDispatch();
-    const uploadEpub = useCallback((publicDomain: boolean) => dispatch({
-        type: 'upload/req-upload',
-        payload: { publicDomain },
-    }), [dispatch]);
-    const selectFile = useCallback((fileName: string, data: any) => dispatch({
-        type: 'upload/select-file',
-        payload: { fileName, data },
-    }), [dispatch]);
-
-    return { uploadState, uploadEpub, selectFile };
+export function useUploadEpub() {
+    const dp = useDataProvider();
+    return useCallback((data: any, publicDomain: boolean) =>
+        dp.uploadEpub(data, publicDomain),
+        [dp],
+    );
 }

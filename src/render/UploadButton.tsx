@@ -1,48 +1,64 @@
 import React, { useRef, useState } from 'react';
 import { assertNever } from 'booka-common';
-import { useTheme, useUpload } from '../application';
+import { useTheme, useUploadEpub } from '../application';
 import {
-    IconButton, WithPopover, Label, View, ActionButton, CheckBox,
+    IconButton, Label, View, ActionButton, CheckBox,
     regularSpace, SelectFileDialog, SelectFileDialogRef, SelectFileResult,
-    point, doubleSpace, megaSpace, ActivityIndicator,
+    doubleSpace, megaSpace, ActivityIndicator, Modal,
 } from '../controls';
 import { Themed } from '../core';
-import { UploadState } from '../ducks';
 import { LoginOptions } from './LoginOptions';
 import { BookPathLink } from './Navigation';
 
 export function UploadButton() {
     const theme = useTheme();
-    const { uploadState, uploadEpub, selectFile } = useUpload();
+    const [open, setOpen] = useState(false);
 
-    return <WithPopover
-        theme={theme}
-        popoverPlacement='bottom'
-        body={<View style={{
-            alignItems: 'center',
-            padding: regularSpace,
-            width: point(20),
-        }}>
-            <UploadPanel
-                theme={theme}
-                state={uploadState}
-                doUpload={uploadEpub}
-                selectFile={selectFile}
-            />
-        </View>}
-    >
+    return <>
         <IconButton
             theme={theme}
             icon='upload'
+            callback={() => setOpen(true)}
         />
-    </WithPopover>;
+        <Modal
+            theme={theme}
+            title='Upload book'
+            open={open}
+            close={() => setOpen(false)}
+        >
+            <View style={{
+                alignItems: 'center',
+                padding: regularSpace,
+            }}>
+                <UploadPanel />
+            </View>
+        </Modal>
+    </>;
 }
 
-function UploadPanel({ theme, state, doUpload, selectFile }: Themed & {
-    state: UploadState,
-    doUpload: (publicDomain: boolean) => void,
-    selectFile: (fileName: string, data: any) => void,
-}) {
+type UploadState = {
+    state: 'not-signed',
+} | {
+    state: 'empty',
+} | {
+    state: 'selected',
+    fileName: string,
+    data: any,
+} | {
+    state: 'uploading',
+    fileName: string,
+} | {
+    state: 'success',
+    fileName: string,
+    bookId: string,
+} | {
+    state: 'error',
+    fileName: string,
+};
+function UploadPanel() {
+    const theme = useTheme();
+    const [state, setState] = useState<UploadState>({ state: 'empty' });
+    const uploadEpub = useUploadEpub();
     switch (state.state) {
         case 'not-signed':
             return <NotSignedPanel
@@ -51,7 +67,11 @@ function UploadPanel({ theme, state, doUpload, selectFile }: Themed & {
         case 'empty':
             return <SelectFilePanel
                 theme={theme}
-                onSelect={res => selectFile(res.fileName, res.data)}
+                onSelect={res => setState({
+                    state: 'selected',
+                    fileName: res.fileName,
+                    data: res.data,
+                })}
             />;
         case 'selected':
             return <UploadFilePanel
@@ -60,7 +80,23 @@ function UploadPanel({ theme, state, doUpload, selectFile }: Themed & {
                     fileName: state.fileName,
                     data: state.data,
                 }}
-                upload={(data, publicDomain) => doUpload(publicDomain)}
+                upload={(data, pd) => {
+                    setState({
+                        state: 'uploading',
+                        fileName: state.fileName,
+                    });
+                    uploadEpub(data, pd).subscribe({
+                        next: bookId => setState({
+                            state: 'success',
+                            fileName: state.fileName,
+                            bookId,
+                        }),
+                        error: () => setState({
+                            state: 'error',
+                            fileName: state.fileName,
+                        }),
+                    });
+                }}
             />;
         case 'uploading':
             return <FileUploadingPanel
