@@ -10,6 +10,7 @@ type BookReceivedAction = {
     type: 'book/received',
     payload: {
         fragment: AugmentedBookFragment,
+        path: BookPath,
     },
 };
 type BookToggleControls = {
@@ -48,6 +49,7 @@ export function bookReducer(state: BookState = init, action: AppAction): BookSta
             return {
                 ...state,
                 fragment: action.payload.fragment,
+                scrollPath: action.payload.path,
             };
         case 'book/controls-toggle':
             return { ...state, controls: !state.controls };
@@ -58,13 +60,16 @@ export function bookReducer(state: BookState = init, action: AppAction): BookSta
 
 const requestBookEpic: AppEpic = (action$, _, { dataProvider }) => action$.pipe(
     ofAppNavigation('book'),
-    mergeMap(({ payload: { bookId, path, quote } }) => {
-        const actualPath = quote?.start ?? path ?? firstPath();
-        return dataProvider().fragmentForPath(bookId, actualPath).pipe(
-            map((fragment): AppAction => ({
+    mergeMap(({ payload: { bookId, path: payloadPath, quote, refId } }) => {
+        const actualPath = quote?.start ?? payloadPath ?? firstPath();
+        const observable = refId
+            ? dataProvider().fragmentForRef(bookId, refId)
+            : dataProvider().fragmentForPath(bookId, actualPath);
+        return observable.pipe(
+            map(({ fragment, path }): AppAction => ({
                 type: 'book/received',
                 payload: {
-                    fragment,
+                    fragment, path,
                 },
             })),
             takeUntil(action$.pipe(

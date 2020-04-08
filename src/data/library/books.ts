@@ -28,7 +28,7 @@ export function booksProvider({ booksCache, token }: {
                         path: pathToString(path),
                     },
                 }).pipe(
-                    map(r => r.fragment),
+                    map(({ fragment }) => ({ fragment, path })),
                 ),
                 lib.get('/full', {
                     query: { id: bookId },
@@ -76,11 +76,18 @@ function resolveRefId(book: Book, refId: string) {
     }
 }
 
-function resolveFragment(book: Book, path: BookPath): AugmentedBookFragment {
+type FragmentWithPath = {
+    fragment: AugmentedBookFragment,
+    path: BookPath,
+};
+function resolveFragment(book: Book, path: BookPath): FragmentWithPath {
     const fragment = fragmentForPath(book, path, defaultFragmentLength);
     return {
-        ...fragment,
-        images: book.images,
-        toc: tocForBook(book),
+        fragment: {
+            ...fragment,
+            images: book.images,
+            toc: tocForBook(book),
+        },
+        path,
     };
 }
