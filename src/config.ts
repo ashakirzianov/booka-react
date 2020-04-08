@@ -33,7 +33,7 @@ function debugConfig(): AppConfig {
             ? 'https://localhost:3042'
             : prod.backUrl,
         libUrl: useLocalLib
-            ? 'http://localhost:3141'
+            ? 'https://localhost:3141'
             : prod.libUrl,
         logActions: true,
         logRenders: false,
