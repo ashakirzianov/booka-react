@@ -1,20 +1,20 @@
 import { of } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import {
-    Book, BookPath, LibraryCard, tocForBook, previewForPath,
+    BookPath, LibraryCard, tocForBook, previewForPath,
     AuthToken, BookSearchResult,
 } from 'booka-common';
-import { Cache } from '../../core';
+import { persistentCache, createStorage } from '../../core';
 import { libFetcher } from '../utils';
+import { BookStore } from './bookStore';
 
 const lib = libFetcher();
 
-export function libraryMiscProvider({ booksCache, cardsCache, token }: {
-    cardsCache: Cache<LibraryCard>,
-    booksCache: Cache<Book>,
+export function libraryMiscProvider({ bookStore, token }: {
+    bookStore: BookStore,
     token?: AuthToken,
 }) {
-
+    const cardsCache = persistentCache<LibraryCard>(createStorage('<card>'));
     return {
         cardForId(bookId: string) {
             const cached = cardsCache.existing(bookId);
@@ -37,7 +37,7 @@ export function libraryMiscProvider({ booksCache, cardsCache, token }: {
             }
         },
         textPreview(bookId: string, path: BookPath) {
-            const cached = booksCache.existing(bookId);
+            const cached = bookStore.existing(bookId);
             if (cached) {
                 const preview = previewForPath(cached, path);
                 return of(preview);
@@ -50,7 +50,7 @@ export function libraryMiscProvider({ booksCache, cardsCache, token }: {
             }
         },
         tableOfContents(bookId: string) {
-            const cached = booksCache.existing(bookId);
+            const cached = bookStore.existing(bookId);
             if (cached) {
                 const toc = tocForBook(cached);
                 return of(toc);

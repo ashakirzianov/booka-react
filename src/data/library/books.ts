@@ -5,17 +5,17 @@ import {
     defaultFragmentLength, tocForBook, firstPath, pathToString,
     AuthToken, AugmentedBookFragment,
 } from 'booka-common';
-import { Cache } from '../../core';
 import { libFetcher } from '../utils';
+import { BookStore } from './bookStore';
 
 const lib = libFetcher();
 
-export function booksProvider({ booksCache, token }: {
-    booksCache: Cache<Book>,
+export function booksProvider({ bookStore, token }: {
+    bookStore: BookStore,
     token?: AuthToken,
 }) {
     function getFragmentForPath(bookId: string, path: BookPath) {
-        const cached = booksCache.existing(bookId);
+        const cached = bookStore.existing(bookId);
         if (cached) {
             const fragment = resolveFragment(cached, path);
             return of(fragment);
@@ -34,7 +34,7 @@ export function booksProvider({ booksCache, token }: {
                     query: { id: bookId },
                 }).pipe(
                     map(r => {
-                        booksCache.add(bookId, r.book);
+                        bookStore.add(bookId, r.book);
                         return resolveFragment(r.book, path);
                     }),
                 ),
@@ -45,7 +45,7 @@ export function booksProvider({ booksCache, token }: {
     return {
         fragmentForPath: getFragmentForPath,
         fragmentForRef(bookId: string, refId: string) {
-            const cached = booksCache.existing(bookId);
+            const cached = bookStore.existing(bookId);
             if (cached) {
                 const fragment = resolveRefId(cached, refId);
                 return of(fragment);
@@ -54,7 +54,7 @@ export function booksProvider({ booksCache, token }: {
                     query: { id: bookId },
                 }).pipe(
                     map(({ book }) => {
-                        booksCache.add(bookId, book);
+                        bookStore.add(bookId, book);
                         const fragment = resolveRefId(book, refId);
                         return fragment;
                     }),
