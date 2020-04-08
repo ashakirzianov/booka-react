@@ -1,44 +1,32 @@
 import { Book } from 'booka-common';
-import { AppStorage, createStorage } from '../../core';
+import { SyncStorage, createSyncStorage } from '../../core';
 
 export type BookStore = ReturnType<typeof createBookStore>;
 export function createBookStore() {
-    return createBookStoreImpl(createStorage('<book>'));
+    return createBookStoreImpl(createSyncStorage<Book>('<book>'));
 }
 
-function createBookStoreImpl(storage: AppStorage) {
+function createBookStoreImpl(storage: SyncStorage) {
     const inMemory: {
         [bookId: string]: Book | undefined;
     } = {};
     return {
         add(bookId: string, book: Book) {
             inMemory[bookId] = book;
-            const newCell = storage.cell<Book>(bookId);
-            let success = newCell.store(book);
+            let success = storage.store(book, bookId);
             while (!success) {
-                const cells = storage.cells();
-                if (cells.length === 0) {
+                const keys = storage.keys();
+                if (keys.length === 0) {
                     break;
+                } else {
+                    storage.clear(keys[0]);
+                    success = storage.store(book, bookId);
                 }
-                const oldestCell = cells.reduce(
-                    (oldest, curr) => {
-                        const oldestDate = oldest.date();
-                        if (!oldestDate) {
-                            return curr;
-                        }
-                        const currDate = curr.date();
-                        return !currDate
-                            ? oldest
-                            : currDate < oldestDate ? curr : oldest;
-                    },
-                );
-                oldestCell.clear();
-                success = newCell.store(book);
             }
             return success;
         },
         existing(bookId: string): Book | undefined {
-            return inMemory[bookId] || storage.cell<Book>(bookId).restore();
+            return inMemory[bookId] || storage.restore(bookId);
         },
     };
 }

@@ -1,22 +1,21 @@
 import { AppAction } from './app';
 import { Observable, of } from 'rxjs';
 import { DataProvider } from '../data';
-import { AppStorage } from '../core';
+import { SyncStorage } from '../core';
 
 export type SyncWorker = ReturnType<typeof createSyncWorker>;
 export function createSyncWorker({ storage, dataProvider }: {
-    storage: AppStorage,
+    storage: SyncStorage,
     dataProvider: DataProvider,
 }) {
-    const actionsCell = storage.cell<AppAction[]>('actions');
     let queue: AppAction[] = restore();
     let current: AppAction | undefined;
 
     function restore() {
-        return actionsCell.restore() ?? [];
+        return storage.restore() ?? [];
     }
     function store() {
-        actionsCell.store(queue);
+        storage.store(queue);
     }
     function takeNext() {
         if (!current && dataProvider.isSigned()) {

@@ -4,7 +4,7 @@ import {
     BookPath, LibraryCard, tocForBook, previewForPath,
     AuthToken, BookSearchResult,
 } from 'booka-common';
-import { persistentCache, createStorage } from '../../core';
+import { persistentCache, createSyncStorage } from '../../core';
 import { libFetcher } from '../utils';
 import { BookStore } from './bookStore';
 
@@ -14,7 +14,7 @@ export function libraryMiscProvider({ bookStore, token }: {
     bookStore: BookStore,
     token?: AuthToken,
 }) {
-    const cardsCache = persistentCache<LibraryCard>(createStorage('<card>'));
+    const cardsCache = persistentCache<LibraryCard>(createSyncStorage('<card>'));
     return {
         cardForId(bookId: string) {
             const cached = cardsCache.existing(bookId);

@@ -1,7 +1,7 @@
 import { createDataAccess } from '../../ducks';
-import { createStorage } from '../../core';
+import { createSyncStorage } from '../../core';
 
-export const dataAccess = createDataAccess(createStorage('users'));
+export const dataAccess = createDataAccess(createSyncStorage('users'));
 export function useDataProvider() {
     return dataAccess.dataProvider();
 }

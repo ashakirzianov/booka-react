@@ -1,5 +1,5 @@
 import { AuthToken } from 'booka-common';
-import { AppStorage } from '../core';
+import { SyncStorage } from '../core';
 import { authProvider } from './auth';
 import { libraryProvider } from './library';
 import { bookmarksProvider } from './bookmarks';
@@ -9,7 +9,7 @@ import { collectionsProvider } from './collections';
 
 export type DataProvider = ReturnType<typeof createDataProvider>;
 export function createDataProvider({ storage, token }: {
-    storage: AppStorage,
+    storage: SyncStorage,
     token: AuthToken | undefined,
 }) {
     return {

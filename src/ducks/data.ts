@@ -3,12 +3,12 @@ import { map, mergeMap } from 'rxjs/operators';
 import { combineEpics } from 'redux-observable';
 import { SignState } from 'booka-common';
 import { createDataProvider } from '../data';
+import { SyncStorage } from '../core';
 import { AppEpic, ofAppType, AppAction } from './app';
 import { createSyncWorker } from './sync';
-import { AppStorage } from '../core';
 
 export type DataAccess = ReturnType<typeof createDataAccess>;
-export function createDataAccess(rootStorage: AppStorage) {
+export function createDataAccess(rootStorage: SyncStorage) {
     let current = createForSignState({ sign: 'not-signed' });
     function createForSignState(sign: SignState) {
         const userStorage = rootStorage.sub(

@@ -1,11 +1,11 @@
 import { AuthToken } from 'booka-common';
-import { AppStorage } from '../../core';
+import { SyncStorage } from '../../core';
 import { booksProvider } from './books';
 import { libraryMiscProvider } from './misc';
 import { createBookStore } from './bookStore';
 
 export function libraryProvider({ storage, token }: {
-    storage: AppStorage,
+    storage: SyncStorage,
     token: AuthToken | undefined,
 }) {
     const bookStore = createBookStore();
