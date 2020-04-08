@@ -8,8 +8,7 @@ export type StorageCell<T> = {
 };
 export type AppStorage = ReturnType<typeof createStorage>;
 export function createStorage(prefix: string) {
-    function makeCell<T>(key: string): StorageCell<T> {
-        const fullKey = `${prefix}:${key}`;
+    function makeCell<T>(fullKey: string): StorageCell<T> {
         let inMemory: CellData | undefined;
         type CellData = {
             value: T,
@@ -46,10 +45,13 @@ export function createStorage(prefix: string) {
         };
     }
     function keys() {
-        return storeApi.keys().filter(key => key.startsWith(prefix));
+        return storeApi.keys().filter(key => key.startsWith(`${prefix}:`));
     }
     return {
-        cell: makeCell,
+        cell<T>(key: string) {
+            const fullKey = `${prefix}:${key}`;
+            return makeCell<T>(fullKey);
+        },
         cells() {
             return keys().map(makeCell);
         },
