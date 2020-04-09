@@ -39,6 +39,7 @@
         "multiline",
         "paren",
         "parens",
+        "popperjs",
         "promisify",
         "quotemark",
         "rbls",

@@ -44,10 +44,10 @@ export function WithPopover({
         <FadeIn visible={isOpen}>
             <Popper
                 placement={popoverPlacement}
-                positionFixed={true}
+                strategy='fixed'
             >
                 {
-                    ({ ref, style, placement, scheduleUpdate }) =>
+                    ({ ref, style, placement, update }) =>
                         <div ref={ref} style={{
                             ...style,
                             zIndex: 100,
@@ -58,7 +58,7 @@ export function WithPopover({
                             <OverlayPanel theme={theme}>
                                 {
                                     typeof body === 'function'
-                                        ? body({ scheduleUpdate })
+                                        ? body({ scheduleUpdate: update })
                                         : body
                                 }
                             </OverlayPanel>
