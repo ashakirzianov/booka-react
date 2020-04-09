@@ -1,13 +1,9 @@
 // eslint-disable-next-line
 import React, {
-    ReactNode, Fragment, useRef, MouseEvent, TouchEvent, useCallback,
+    ReactNode, Fragment, useState, useCallback,
 } from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-
-import {
-    ContextMenu as Menu, ContextMenuTrigger, MenuItem as Item,
-} from 'react-contextmenu';
 
 import { Themed, colors } from '../core';
 import {
@@ -15,67 +11,74 @@ import {
 } from './common';
 import { IconName, Icon } from './Icon';
 import { OverlayPanel } from './Panel';
+import { useOnScroll } from '../application';
 
+type ContextMenuState = undefined | {
+    top: number,
+    left: number,
+};
+const offset = 10;
 export function ContextMenu({
-    children, theme, id, trigger, onTrigger,
+    children, theme, trigger, onTrigger,
 }: HasChildren & Themed & {
     trigger: ReactNode,
     id: string,
     onTrigger: () => boolean,
 }) {
-    type EventType = MouseEvent | TouchEvent;
-    type RefType = {
-        handleContextClick: (e: EventType) => void,
-    };
-    const menuRef = useRef<RefType>();
-    const triggerCallback = useCallback((event: EventType) => {
-        if (menuRef.current) {
-            const show = onTrigger();
-            if (show) {
-                menuRef.current.handleContextClick(event);
-            }
+    const [state, setState] = useState<ContextMenuState>(undefined);
+    useOnScroll(useCallback(() => {
+        if (state) {
+            setState(undefined);
         }
-    }, [onTrigger]);
+    }, [state, setState]));
+
     return <Fragment>
-        <ContextMenuTrigger
-            id={id}
-            ref={ref => menuRef.current = ref as any}
+        <div
+            onClick={e => {
+                const show = onTrigger();
+                if (show) {
+                    e.preventDefault();
+                    setState({
+                        top: e.clientY + offset,
+                        left: e.clientX + offset,
+                    });
+                }
+            }}
         >
-            <div
-                onClick={triggerCallback}
-            >
-                {trigger}
-            </div>
-        </ContextMenuTrigger>
-        <Menu id={id}>
-            <OverlayPanel
-                theme={theme}
-                width={menuWidth}
-            >
-                {children}
-            </OverlayPanel>
-        </Menu>
+            {
+                state === undefined ? null :
+                    <div style={{
+                        position: 'fixed',
+                        top: state.top,
+                        left: state.left,
+                    }}>
+                        <OverlayPanel
+                            theme={theme}
+                            width={menuWidth}
+                        >
+                            {children}
+                        </OverlayPanel>
+                    </div>
+            }
+            {trigger}
+        </div>
     </Fragment>;
 }
 
 export function ContextMenuItem({ callback, theme, children }: HasChildren & Themed & {
     callback?: () => void,
 }) {
-    return <Item
-        onClick={callback}
+    return <div css={{
+        display: 'flex',
+        flexBasis: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: regularSpace,
+    }}
     >
-        <div css={{
-            display: 'flex',
-            flexBasis: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: regularSpace,
-        }}
-        >
-            {children}
-        </div>
-    </Item>;
+        {children}
+    </div>;
 }
 
 export function TextContextMenuItem({
@@ -85,35 +88,33 @@ export function TextContextMenuItem({
     icon?: IconName,
     callback?: () => void,
 }) {
-    return <Item onClick={callback}>
-        <div css={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            width: '100%',
-            color: colors(theme).text,
-            '&:hover': {
-                backgroundColor: colors(theme).highlight,
-                color: colors(theme).primary,
-            },
-            padding: regularSpace,
-        }}
-        >
-            {
-                !icon ? null :
-                    <Icon
-                        theme={theme}
-                        name={icon}
-                        margin={regularSpace}
-                    />
-            }
-            <span css={{
-                margin: regularSpace,
-                ...fontCss({ theme, fontSize: 'xsmall' }),
-                fontFamily: theme.fontFamilies.menu,
-            }}>
-                {text}
-            </span>
-        </div>
-    </Item>;
+    return <div css={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%',
+        color: colors(theme).text,
+        '&:hover': {
+            backgroundColor: colors(theme).highlight,
+            color: colors(theme).primary,
+        },
+        padding: regularSpace,
+    }}
+    >
+        {
+            !icon ? null :
+                <Icon
+                    theme={theme}
+                    name={icon}
+                    margin={regularSpace}
+                />
+        }
+        <span css={{
+            margin: regularSpace,
+            ...fontCss({ theme, fontSize: 'xsmall' }),
+            fontFamily: theme.fontFamilies.menu,
+        }}>
+            {text}
+        </span>
+    </div>;
 }

@@ -22,6 +22,14 @@ export function useOnClick(callback: (e: MouseEvent) => void) {
     }, [callback]);
 }
 
+export function useOnScroll(callback: (e: Event) => void) {
+    useEffect(() => {
+        window.addEventListener('scroll', callback);
+
+        return () => window.removeEventListener('scroll', callback);
+    }, [callback]);
+}
+
 export function useWriteClipboardText() {
     return useCallback((text: string) => {
         navigator.clipboard.writeText(text);
