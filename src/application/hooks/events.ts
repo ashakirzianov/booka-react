@@ -30,14 +30,32 @@ export function useOnScroll(callback: (e: Event) => void) {
     }, [callback]);
 }
 
-export function useOnSelection(callback: (e: Event) => void) {
+type SelectionEvent = {
+    getRect(): {
+        top: number, left: number, height: number, width: number,
+    } | undefined,
+};
+export function useOnSelection(callback: (e: SelectionEvent) => void) {
+    const actual = useCallback((e: Event) => {
+        callback({
+            getRect() {
+                const selection = window.getSelection();
+                const range = selection?.getRangeAt(0);
+                const rect = range?.getBoundingClientRect();
+                return rect && {
+                    top: rect.top, left: rect.left,
+                    width: rect.width, height: rect.height,
+                };
+            },
+        });
+    }, [callback]);
     useEffect(() => {
-        window.document.addEventListener('selectionchange', callback);
+        window.document.addEventListener('selectionchange', actual);
 
         return function unsubscribe() {
-            window.document.removeEventListener('selectionchange', callback);
+            window.document.removeEventListener('selectionchange', actual);
         };
-    }, [callback]);
+    }, [actual]);
 }
 
 export function useWriteClipboardText() {
