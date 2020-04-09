@@ -2,15 +2,17 @@
 import React, {
     ReactNode, useState, useCallback, MouseEvent, TouchEvent,
 } from 'react';
+import { debounce } from 'lodash';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { Popper } from 'react-popper';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/animations/shift-away.css';
+
 import { Themed, colors } from '../core';
 import {
-    HasChildren, regularSpace, fontCss, menuWidth,
+    HasChildren, regularSpace, fontCss, menuWidth, panelShadow, radius,
 } from './common';
 import { IconName, Icon } from './Icon';
-import { OverlayPanel } from './Panel';
 import { useOnScroll, useOnSelection } from '../application';
 
 type ContextMenuState = undefined | {
@@ -31,7 +33,7 @@ export function ContextMenu({
         }
     }, [state, setState]);
     useOnScroll(closeMenu);
-    useOnSelection(closeMenu);
+    useOnSelection(debounce(closeMenu, 300));
     const mouseHandler = useCallback((e: MouseEvent) => {
         const show = onTrigger();
         if (show) {
@@ -68,53 +70,38 @@ export function ContextMenu({
 function ContextMenuBody({ state, theme, children }: HasChildren & Themed & {
     state: ContextMenuState,
 }) {
-    if (state === undefined) {
-        return null;
-    }
-    const anchorRef = virtualRef(state.top, state.left);
-
-    return <Popper
-        referenceElement={anchorRef}
-        placement='bottom-start'
-        modifiers={[{
-            name: 'offset',
-            options: {
-                offset: [20, 20],
-            },
-        }]}
-    >
-        {
-            ({ ref, style, placement }) =>
-                <div ref={ref} style={{
-                    ...style,
-                    zIndex: 100,
-                }}
-                    data-placement={placement}
-                >
-                    <OverlayPanel
-                        theme={theme}
-                        width={menuWidth}
-                    >
-                        {children}
-                    </OverlayPanel>
-                </div>
-        }
-    </Popper>;
-}
-
-function virtualRef(top: number, left: number) {
-    return {
-        getBoundingClientRect() {
-            return {
-                top,
-                left,
-                bottom: top,
-                right: left,
-                width: 0,
-                height: 0,
-            };
+    return <div css={{
+        // pointerEvents: 'auto',
+        '& .tippy-box[data-theme~=\'custom\']': {
+            backgroundColor: colors(theme).secondary,
+            boxShadow: panelShadow(colors(theme).shadow),
+            borderRadius: radius,
+            width: menuWidth,
         },
-    };
+    }}>
+        <Tippy
+            visible={state !== undefined}
+            interactive={true}
+            arrow={false}
+            theme='custom'
+            placement='bottom-start'
+            animation='shift-away'
+            offset={[20, 20]}
+            content={
+                <div style={{
+                    display: state ? 'block' : 'none',
+                }}>
+                    {children}
+                </div>
+            }
+        >
+            <div style={{
+                position: 'fixed',
+                top: state?.top,
+                left: state?.left,
+            }} />
+        </Tippy>
+    </div>;
 }
 
 export function ContextMenuItem({ callback, theme, children }: HasChildren & Themed & {
@@ -128,7 +115,7 @@ export function ContextMenuItem({ callback, theme, children }: HasChildren & The
         alignItems: 'center',
         padding: regularSpace,
     }}
-        onMouseUp={callback}
+        onClick={callback}
     >
         {children}
     </div>;
@@ -145,7 +132,7 @@ export function TextContextMenuItem({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        width: '100%',
+        // width: '100%',
         color: colors(theme).text,
         '&:hover': {
             backgroundColor: colors(theme).highlight,
@@ -153,7 +140,7 @@ export function TextContextMenuItem({
         },
         padding: regularSpace,
     }}
-        onMouseUp={callback}
+        onClick={callback}
     >
         {
             !icon ? null :
