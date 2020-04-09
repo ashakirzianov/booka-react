@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 
 export type ClipboardEvent = {
     preventDefault: () => void,
@@ -20,4 +20,28 @@ export function useOnClick(callback: (e: MouseEvent) => void) {
 
         return () => window.removeEventListener('mouseup', callback);
     }, [callback]);
+}
+
+export function useOnScroll(callback: (e: Event) => void) {
+    useEffect(() => {
+        window.addEventListener('scroll', callback);
+
+        return () => window.removeEventListener('scroll', callback);
+    }, [callback]);
+}
+
+export function useOnSelection(callback: (e: Event) => void) {
+    useEffect(() => {
+        window.document.addEventListener('selectionchange', callback);
+
+        return function unsubscribe() {
+            window.document.removeEventListener('selectionchange', callback);
+        };
+    }, [callback]);
+}
+
+export function useWriteClipboardText() {
+    return useCallback((text: string) => {
+        navigator.clipboard.writeText(text);
+    }, []);
 }

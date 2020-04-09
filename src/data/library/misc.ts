@@ -1,58 +1,36 @@
 import { of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 import {
-    Book, BookPath, LibraryCard, tocForBook, previewForPath,
-    AuthToken, BookSearchResult,
+    LibraryCard, AuthToken, BookSearchResult,
 } from 'booka-common';
-import { Cache } from '../../core';
+import { persistentCache, createSyncStorage } from '../../core';
 import { libFetcher } from '../utils';
 
 const lib = libFetcher();
 
-export function libraryMiscProvider({ booksCache, cardsCache, token }: {
-    cardsCache: Cache<LibraryCard>,
-    booksCache: Cache<Book>,
+export function libraryMiscProvider({ token }: {
     token?: AuthToken,
 }) {
-
+    const cardsCache = persistentCache<LibraryCard>(createSyncStorage('cards'));
     return {
         cardForId(bookId: string) {
             const cached = cardsCache.existing(bookId);
             if (cached) {
                 return of(cached);
             } else {
-                return lib.get('/card', {
-                    query: { id: bookId },
+                return lib.get('/cards', {
+                    query: { ids: [bookId] },
                 }).pipe(
-                    map(card => {
-                        cardsCache.add(bookId, card);
-                        return card;
+                    map(([card]) => {
+                        if (card) {
+                            cardsCache.add(bookId, card);
+                            return card;
+                        } else {
+                            return undefined;
+                        }
                     }),
+                    filter((c): c is LibraryCard => c !== undefined),
                 );
-            }
-        },
-        textPreview(bookId: string, path: BookPath) {
-            const cached = booksCache.existing(bookId);
-            if (cached) {
-                const preview = previewForPath(cached, path);
-                return of(preview);
-            } else {
-                return lib.get('/preview', {
-                    query: { id: bookId, node: path.node },
-                }).pipe(
-                    map(r => r.preview),
-                );
-            }
-        },
-        tableOfContents(bookId: string) {
-            const cached = booksCache.existing(bookId);
-            if (cached) {
-                const toc = tocForBook(cached);
-                return of(toc);
-            } else {
-                return lib.get('/toc', {
-                    query: { id: bookId },
-                });
             }
         },
         librarySearch(query: string | undefined) {
@@ -79,7 +57,9 @@ export function libraryMiscProvider({ booksCache, cardsCache, token }: {
                     query: {
                         publicDomain,
                     },
-                });
+                }).pipe(
+                    map(r => r.bookId),
+                );
             } else {
                 return of<string>();
             }

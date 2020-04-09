@@ -1,14 +1,15 @@
 import React from 'react';
 import { BookPath, findBookmark } from 'booka-common';
-import { useTheme, useBookmarks } from '../application';
+import { useTheme, useBookmarks, useBookmarksActions } from '../application';
 import { IconButton } from '../controls';
 
 export function BookmarkButton({ bookId, path }: {
     bookId: string,
     path: BookPath | undefined,
 }) {
-    const { theme } = useTheme();
-    const { bookmarks, addBookmark, removeBookmark } = useBookmarks();
+    const theme = useTheme();
+    const bookmarks = useBookmarks();
+    const { addBookmark, removeBookmark } = useBookmarksActions();
 
     const currentBookmark = path
         ? findBookmark(bookmarks, bookId, path) : undefined;

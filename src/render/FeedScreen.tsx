@@ -1,20 +1,19 @@
 import React from 'react';
 
 import { Screen } from '../controls';
+import { useTheme } from '../application';
 import { ReadingList, UploadedList } from './Collections';
 import { LibraryCardModal } from './LibraryCardModal';
 import { TopBar } from './TopBar';
 import { CurrentBook } from './CurrentBook';
 import { RecentBooks } from './RecentBooks';
-import { useTheme, useUrlQuery } from '../application';
 import { PopularBooks } from './PopularBooks';
 
 export function FeedScreen() {
-    const { theme } = useTheme();
-    const { card, query } = useUrlQuery();
+    const theme = useTheme();
     return <Screen theme={theme}>
-        <LibraryCardModal bookId={card} />
-        <TopBar query={query} />
+        <LibraryCardModal />
+        <TopBar />
         <CurrentBook />
         <RecentBooks />
         <UploadedList />

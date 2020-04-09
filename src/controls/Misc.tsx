@@ -7,13 +7,6 @@ import { percent, HasChildren } from './common';
 import { colors } from '../core';
 
 export const View = NativeView;
-export function Clickable({ callback, children }: HasChildren & {
-    callback?: () => void,
-}) {
-    return <div onClick={callback}>
-        {children}
-    </div>;
-}
 
 export function Separator() {
     return <hr style={{

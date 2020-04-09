@@ -11,13 +11,14 @@ import {
 } from './common';
 
 export function BookTile({
-    title, author, coverUrl, showTitle, hideShadow, theme,
+    title, author, coverUrl, showTitle, hideShadow, theme, callback,
 }: Themed & {
     coverUrl: string | undefined,
     title: string,
     author: string | undefined,
     showTitle?: boolean,
     hideShadow?: boolean,
+    callback?: () => void,
 }) {
     return <div css={{
         display: 'flex',
@@ -32,7 +33,9 @@ export function BookTile({
         '&:hover': {
             color: colors(theme).highlight,
         },
-    }}>
+    }}
+        onClick={callback}
+    >
         <BookCover
             theme={theme}
             title={title}

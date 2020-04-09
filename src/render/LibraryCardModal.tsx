@@ -6,7 +6,7 @@ import {
 } from 'booka-common';
 import {
     useTheme, useLibraryCard,
-    useCollection, usePositions,
+    useCollection, usePositions, useSetCardId, useCollectionActions, useCardId,
 } from '../application';
 import {
     Modal, ActivityIndicator, ActionButton, TagLabel,
@@ -17,9 +17,8 @@ import { LibraryCardTile } from './LibraryCardTile';
 import { BookPathLink } from './Navigation';
 import { ParagraphPreview } from './ParagraphPreview';
 
-export function LibraryCardModal({ bookId }: {
-    bookId: string | undefined,
-}) {
+export function LibraryCardModal() {
+    const bookId = useCardId();
     if (bookId) {
         return <LibraryCardModalImpl bookId={bookId} />;
     } else {
@@ -30,13 +29,14 @@ export function LibraryCardModal({ bookId }: {
 function LibraryCardModalImpl({ bookId }: {
     bookId: string,
 }) {
-    const { theme } = useTheme();
-    const { card, closeCard } = useLibraryCard(bookId);
+    const theme = useTheme();
+    const card = useLibraryCard(bookId);
+    const setCard = useSetCardId();
 
     return <Modal
         theme={theme}
         title=''
-        close={closeCard}
+        close={() => setCard(undefined)}
         open={true}
     >
         {
@@ -140,8 +140,8 @@ function ReadButtons({ card }: {
 function ContinueRead({ card }: {
     card: LibraryCard,
 }) {
-    const { theme } = useTheme();
-    const { positions } = usePositions();
+    const theme = useTheme();
+    const positions = usePositions();
 
     const currentPositions = positions.filter(
         p => p.bookId === card.id,
@@ -172,15 +172,15 @@ function ContinueRead({ card }: {
 function ReadingListButton({ card }: {
     card: LibraryCard,
 }) {
-    const { theme } = useTheme();
+    const theme = useTheme();
+    const collectionState = useCollection('reading-list');
     const {
-        collectionsState,
         addToCollection,
         removeFromCollection,
-    } = useCollection('reading-list');
-    const readingListCards = collectionsState.loading
+    } = useCollectionActions('reading-list');
+    const readingListCards = collectionState.loading
         ? []
-        : collectionsState;
+        : collectionState;
     const addToReadingList = useCallback(
         () => addToCollection(card),
         [addToCollection, card],
@@ -212,7 +212,7 @@ function BookPathButton({ text, bookId, path }: {
     bookId: string,
     path?: BookPath,
 }) {
-    const { theme } = useTheme();
+    const theme = useTheme();
     return <BookPathLink bookId={bookId} path={path}>
         <ActionButton
             theme={theme}

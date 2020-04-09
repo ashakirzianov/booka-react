@@ -1,41 +1,65 @@
 import React, { useRef, useState } from 'react';
-import { useTheme, useUpload } from '../application';
+import { assertNever } from 'booka-common';
+import { useTheme, useUploadEpub } from '../application';
 import {
-    IconButton, WithPopover, Label, View, ActionButton, CheckBox,
+    IconButton, Label, View, ActionButton, CheckBox,
     regularSpace, SelectFileDialog, SelectFileDialogRef, SelectFileResult,
-    point, doubleSpace, megaSpace, ActivityIndicator,
+    doubleSpace, megaSpace, ActivityIndicator, Modal,
 } from '../controls';
 import { Themed } from '../core';
-import { assertNever } from '../reader/RichText/utils';
 import { LoginOptions } from './LoginOptions';
+import { BookPathLink } from './Navigation';
 
 export function UploadButton() {
-    const { theme } = useTheme();
+    const theme = useTheme();
+    const [open, setOpen] = useState(false);
 
-    return <WithPopover
-        theme={theme}
-        popoverPlacement='bottom'
-        body={<View style={{
-            alignItems: 'center',
-            padding: regularSpace,
-            width: point(20),
-        }}>
-            <UploadPanel
-                theme={theme}
-            />
-        </View>}
-    >
+    return <>
         <IconButton
             theme={theme}
             icon='upload'
+            callback={() => setOpen(true)}
         />
-    </WithPopover>;
+        <Modal
+            theme={theme}
+            title='Upload book'
+            open={open}
+            close={() => setOpen(false)}
+        >
+            <View style={{
+                alignItems: 'center',
+                padding: regularSpace,
+            }}>
+                <UploadPanel />
+            </View>
+        </Modal>
+    </>;
 }
 
-function UploadPanel({ theme }: Themed) {
-    const { uploadState, uploadEpub, selectFile } = useUpload();
-
-    switch (uploadState.state) {
+type UploadState = {
+    state: 'not-signed',
+} | {
+    state: 'empty',
+} | {
+    state: 'selected',
+    fileName: string,
+    data: any,
+} | {
+    state: 'uploading',
+    fileName: string,
+} | {
+    state: 'success',
+    fileName: string,
+    bookId: string,
+} | {
+    state: 'error',
+    fileName: string,
+};
+function UploadPanel() {
+    const theme = useTheme();
+    const [state, setState] = useState<UploadState>({ state: 'empty' });
+    const uploadEpub = useUploadEpub();
+    switch (state.state) {
         case 'not-signed':
             return <NotSignedPanel
                 theme={theme}
@@ -43,34 +67,55 @@ function UploadPanel({ theme }: Themed) {
         case 'empty':
             return <SelectFilePanel
                 theme={theme}
-                onSelect={res => selectFile(res.fileName, res.data)}
+                onSelect={res => setState({
+                    state: 'selected',
+                    fileName: res.fileName,
+                    data: res.data,
+                })}
             />;
         case 'selected':
             return <UploadFilePanel
                 theme={theme}
                 fileData={{
-                    fileName: uploadState.fileName,
-                    data: uploadState.data,
+                    fileName: state.fileName,
+                    data: state.data,
                 }}
-                upload={(data, publicDomain) => uploadEpub(publicDomain)}
+                upload={(data, pd) => {
+                    setState({
+                        state: 'uploading',
+                        fileName: state.fileName,
+                    });
+                    uploadEpub(data, pd).subscribe({
+                        next: bookId => setState({
+                            state: 'success',
+                            fileName: state.fileName,
+                            bookId,
+                        }),
+                        error: () => setState({
+                            state: 'error',
+                            fileName: state.fileName,
+                        }),
+                    });
+                }}
             />;
         case 'uploading':
             return <FileUploadingPanel
                 theme={theme}
-                fileName={uploadState.fileName}
+                fileName={state.fileName}
             />;
         case 'success':
             return <SuccessPanel
                 theme={theme}
-                fileName={uploadState.fileName}
+                fileName={state.fileName}
+                bookId={state.bookId}
             />;
         case 'error':
             return <ErrorPanel
                 theme={theme}
-                fileName={uploadState.fileName}
+                fileName={state.fileName}
             />;
         default:
-            assertNever(uploadState);
+            assertNever(state);
             return null;
     }
 }
@@ -148,7 +193,8 @@ function FileUploadingPanel({ theme, fileName }: Themed & {
     </>;
 }
 
-function SuccessPanel({ theme, fileName }: Themed & {
+function SuccessPanel({ theme, fileName, bookId }: Themed & {
+    bookId: string,
     fileName: string,
 }) {
     return <>
@@ -156,6 +202,13 @@ function SuccessPanel({ theme, fileName }: Themed & {
             theme={theme}
             text={`Successfully uploaded '${fileName}'!`}
         />
+        <BookPathLink bookId={bookId}>
+            <ActionButton
+                theme={theme}
+                text='Read now'
+                color='positive'
+            />
+        </BookPathLink>
     </>;
 }
 

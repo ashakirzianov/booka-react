@@ -1,15 +1,15 @@
 import { concat, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import {
-    AuthToken, CurrentPositionPost, CurrentPosition,
+    AuthToken, CurrentPosition,
 } from 'booka-common';
-import { Storage, persistentCache } from '../core';
+import { SyncStorage, persistentCache } from '../core';
 import { backFetcher, optional } from './utils';
 
 const back = backFetcher();
 
 export function positionsProvider({ token, storage }: {
-    storage: Storage,
+    storage: SyncStorage,
     token: AuthToken | undefined,
 }) {
     const cache = persistentCache<CurrentPosition[]>(storage);
@@ -24,7 +24,7 @@ export function positionsProvider({ token, storage }: {
                 )),
             );
         },
-        postAddCurrentPosition(position: CurrentPositionPost) {
+        postAddCurrentPosition(position: CurrentPosition) {
             return optional(token && back.put('/current-position', {
                 auth: token.token,
                 body: position,

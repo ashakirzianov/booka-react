@@ -8,6 +8,7 @@ export * from './FacebookLogin';
 export * from './FixedPanel';
 export * from './Icon';
 export * from './Label';
+export * from './Link';
 export * from './List';
 export * from './Misc';
 export * from './Modal';

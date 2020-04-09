@@ -1,9 +1,9 @@
 import {
-    BookFragment, BookPath, BookNode, assertNever, flatten,
+    BookPath, BookNode, assertNever, flatten,
     ParagraphNode, ListNode, TableNode, Span,
     AttributeName, pathLessThan, iterateBookFragment,
     BookRange, TitleNode, ImageDic, Image, isSimpleSpan,
-    pathWithSpan, sameNode, BookNodePath,
+    pathWithSpan, sameNode, BookNodePath, AugmentedBookFragment,
 } from 'booka-common';
 import {
     RichTextBlock, AttrsRange, applyAttrsRange, RichTextFragment,
@@ -15,7 +15,7 @@ export type ColorizedRange = {
     range: BookRange,
 };
 type BuildBlocksDataArgs = {
-    fragment: BookFragment,
+    fragment: AugmentedBookFragment,
     colorization: ColorizedRange[] | undefined,
     fontSize: number,
     refColor: Color,

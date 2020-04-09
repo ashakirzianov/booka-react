@@ -1,7 +1,7 @@
-import React, { useCallback, memo, useMemo, useState, useRef, ReactNode } from 'react';
+import React, { useCallback, useMemo, useRef, ReactNode } from 'react';
 import { throttle } from 'lodash';
 import {
-    BookFragment, BookPath, BookRange,
+    AugmentedBookFragment, BookPath, BookRange,
     Highlight, BookAnchor,
 } from 'booka-common';
 
@@ -9,30 +9,33 @@ import {
     BookFragmentComp, BookSelection, ColorizedRange,
 } from '../reader';
 import {
-    useHighlights, useTheme, useUrlActions, useUrlQuery, usePositions,
+    useHighlights, useTheme, useSetBookPath, usePositionsActions, useQuote,
 } from '../application';
 import { Themed, colors, Theme } from '../core';
-import { BookContextMenu } from './BookContextMenu';
 import {
     View, BorderButton, regularSpace, colorForHighlightGroup,
 } from '../controls';
+import { BookContextMenu } from './BookContextMenu';
 import { BookPathLink, BookRefLink } from './Navigation';
 
-export const BookView = memo(function BookViewF({
-    bookId, fragment,
+export function BookView({
+    bookId, fragment, scrollPath,
 }: {
     bookId: string,
-    fragment: BookFragment,
+    scrollPath: BookPath | undefined,
+    fragment: AugmentedBookFragment,
 }) {
-    const { theme } = useTheme();
-    const { pathToScroll, onScroll, onNavigation } = useScrollHandlers(bookId);
+    const theme = useTheme();
+    const quote = useQuote();
+    const { colorization } = useColorization(quote, theme);
+    const { onScroll } = useScrollHandlers(bookId);
     const { onSelectionChange, selection } = useSelectionHandlers();
-    const { colorization } = useColorization();
     const RefComp = useCallback(({ refId, children }: { refId: string, children: ReactNode }) => {
         return <BookRefLink bookId={bookId} refId={refId}>
             {children}
         </BookRefLink>;
     }, [bookId]);
+    const pathToScroll = quote?.start ?? scrollPath;
 
     return <BookContextMenu
         bookId={bookId}
@@ -43,7 +46,6 @@ export const BookView = memo(function BookViewF({
             defaultTitle='Previous'
             anchor={fragment.previous}
             bookId={bookId}
-            callback={onNavigation}
         />
         <BookFragmentComp
             fragment={fragment}
@@ -63,14 +65,11 @@ export const BookView = memo(function BookViewF({
             defaultTitle='Next'
             anchor={fragment.next}
             bookId={bookId}
-            callback={onNavigation}
         />
     </BookContextMenu>;
-});
+}
 
-function useColorization() {
-    const { theme } = useTheme();
-    const { quote } = useUrlQuery();
+function useColorization(quote: BookRange | undefined, theme: Theme) {
     const highlights = useHighlights();
 
     const colorization = useMemo(
@@ -92,30 +91,18 @@ function useSelectionHandlers() {
 }
 
 function useScrollHandlers(bookId: string) {
-    const { path } = useUrlQuery();
-    const { updateBookPath } = useUrlActions();
-    const { addCurrentPosition } = usePositions();
-    const [needToScroll, setNeedToScroll] = useState(true);
+    const updateBookPath = useSetBookPath();
+    const { addCurrentPosition } = usePositionsActions();
     const onScroll = useCallback(throttle((p: BookPath | undefined) => {
-        if (needToScroll) {
-            setNeedToScroll(false);
-        }
         updateBookPath(p);
         if (p) {
             addCurrentPosition(bookId, p);
         }
     }, 1000),
-        [setNeedToScroll, updateBookPath, addCurrentPosition, needToScroll, bookId],
-    );
-    const onNavigation = useCallback(
-        () => setNeedToScroll(true),
-        [setNeedToScroll],
+        [updateBookPath, addCurrentPosition, bookId],
     );
 
-    return {
-        onScroll, onNavigation,
-        pathToScroll: needToScroll ? path : undefined,
-    };
+    return { onScroll };
 }
 
 function AnchorButton({

@@ -1,16 +1,12 @@
-import { AuthToken, Book, LibraryCard } from 'booka-common';
-import { Storage, persistentCache } from '../../core';
+import { AuthToken } from 'booka-common';
 import { booksProvider } from './books';
 import { libraryMiscProvider } from './misc';
 
-export function libraryProvider({ storage, token }: {
-    storage: Storage,
+export function libraryProvider({ token }: {
     token: AuthToken | undefined,
 }) {
-    const booksCache = persistentCache<Book>(storage.sub('books'));
-    const cardsCache = persistentCache<LibraryCard>(storage.sub('cards'));
     return {
-        ...booksProvider({ booksCache, token }),
-        ...libraryMiscProvider({ booksCache, cardsCache, token }),
+        ...booksProvider({ token }),
+        ...libraryMiscProvider({ token }),
     };
 }

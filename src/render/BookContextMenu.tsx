@@ -4,7 +4,10 @@ import {
     Highlight, BookRange, HighlightGroup, doesRangeOverlap, rangeToString,
 } from 'booka-common';
 import { BookSelection } from '../reader';
-import { useTheme, useHighlightsActions, useHighlights, useUrlActions, useOnCopy } from '../application';
+import {
+    useTheme, useHighlightsActions, useHighlights, useOnCopy,
+    useSetQuote, useToggleControls, useWriteClipboardText,
+} from '../application';
 import {
     ContextMenu, ContextMenuItem, TextContextMenuItem,
     CircleButton, colorForHighlightGroup, SimpleButton,
@@ -16,6 +19,7 @@ import { config } from '../config';
 type HighlightTarget = {
     target: 'highlight',
     highlight: Highlight,
+    selection: BookSelection,
 };
 type SelectionTarget = {
     target: 'selection',
@@ -37,11 +41,13 @@ export function BookContextMenu({
     bookId: string
     selection: SelectionType,
 }) {
-    const { theme } = useTheme();
+    const theme = useTheme();
     const {
         addHighlight, removeHighlight, updateHighlightGroup,
     } = useHighlightsActions();
     const { onTrigger, target } = useMenuTarget(bookId, selection);
+    const addToClipboard = useWriteClipboardText();
+    const updateQuoteRange = useSetQuote();
     useCopyQuote(bookId, selection);
 
     return <ContextMenu
@@ -62,33 +68,47 @@ export function BookContextMenu({
             setHighlightGroup={updateHighlightGroup}
             removeHighlight={removeHighlight}
         />
+        <CopyQuoteItem
+            theme={theme}
+            target={target}
+            bookId={bookId}
+            addToClipboard={addToClipboard}
+            setQuote={updateQuoteRange}
+        />
+        <CopyTextItem
+            theme={theme}
+            target={target}
+            addToClipboard={addToClipboard}
+        />
     </ContextMenu>;
 }
 
 function useMenuTarget(bookId: string, selection: SelectionType) {
     const highlights = useHighlights();
     const [target, setTarget] = useState<ContextMenuTarget>({ target: 'empty' });
+    const toggleControls = useToggleControls();
     const onTrigger = useCallback(() => {
         const current = selection.current;
         if (current !== undefined) {
             const selectedHighlight = highlights
                 .find(h => doesRangeOverlap(h.range, current.range));
             const newTarget: ContextMenuTarget = selectedHighlight
-                ? { target: 'highlight', highlight: selectedHighlight }
+                ? { target: 'highlight', selection: current, highlight: selectedHighlight }
                 : { target: 'selection', selection: current };
             setTarget(newTarget);
             return true;
         } else {
+            toggleControls();
             setTarget({ target: 'empty' });
             return false;
         }
-    }, [highlights, selection]);
+    }, [highlights, selection, toggleControls]);
 
     return { onTrigger, target };
 }
 
 function useCopyQuote(bookId: string, selection: SelectionType) {
-    const { updateQuoteRange } = useUrlActions();
+    const updateQuoteRange = useSetQuote();
     useOnCopy(useCallback(e => {
         e.preventDefault();
         if (selection.current && e.clipboardData) {
@@ -99,8 +119,56 @@ function useCopyQuote(bookId: string, selection: SelectionType) {
     }, [bookId, updateQuoteRange, selection]));
 }
 
+function generateQuoteText(text: string, bookId: string, range: BookRange) {
+    return `${text}\n${generateQuoteLink(bookId, range)}`;
+}
+
 function generateQuoteLink(id: string, quote: BookRange) {
     return `${config().frontUrl}/book/${id}?q=${rangeToString(quote)}`;
+}
+
+function CopyQuoteItem({
+    theme, target, bookId, addToClipboard, setQuote,
+}: Themed & {
+    bookId: string,
+    target: ContextMenuTarget,
+    addToClipboard: (text: string) => void,
+    setQuote: (range: BookRange | undefined) => void,
+}) {
+    if (target.target === 'empty') {
+        return null;
+    }
+    const { selection: { text, range } } = target;
+    return <TextContextMenuItem
+        theme={theme}
+        text='Copy quote'
+        icon='quote'
+        callback={() => {
+            const quote = generateQuoteText(text, bookId, range);
+            addToClipboard(quote);
+            setQuote(range);
+        }}
+    />;
+}
+
+function CopyTextItem({
+    theme, target, addToClipboard,
+}: Themed & {
+    target: ContextMenuTarget,
+    addToClipboard: (text: string) => void,
+}) {
+    if (target.target === 'empty') {
+        return null;
+    }
+    const { selection: { text } } = target;
+    return <TextContextMenuItem
+        theme={theme}
+        text='Copy text'
+        icon='copy'
+        callback={() => {
+            addToClipboard(text);
+        }}
+    />;
 }
 
 function AddHighlightItem({
@@ -131,7 +199,7 @@ function ManageHighlightItem({
 }: Themed & {
     target: ContextMenuTarget,
     setHighlightGroup: (highlightId: string, group: HighlightGroup) => void,
-    removeHighlight: (params: { highlightId: string }) => void,
+    removeHighlight: (highlightId: string) => void,
 }) {
     if (target.target !== 'highlight') {
         return null;
@@ -160,9 +228,7 @@ function ManageHighlightItem({
         />
         <RemoveHighlightButton
             theme={theme}
-            removeHighlight={() => removeHighlight({
-                highlightId: target.highlight.uuid,
-            })}
+            removeHighlight={() => removeHighlight(target.highlight.uuid)}
         />
     </ContextMenuItem>;
 }

@@ -1,96 +1,85 @@
-import { withLatestFrom, mergeMap, map, takeUntil } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { mergeMap, map, takeUntil } from 'rxjs/operators';
 import { combineEpics } from 'redux-observable';
 import {
-    BookFragment, BookPath, isPathInFragment, firstPath,
+    AugmentedBookFragment, BookPath, firstPath,
 } from 'booka-common';
 import { Loadable } from '../core';
-import { AppAction, ofAppType, AppEpic } from './app';
+import { AppAction, ofAppNavigation, AppEpic } from './app';
 
-// TODO: rename
-type BookChangeAction = {
-    type: 'book-change',
+type BookReceivedAction = {
+    type: 'book/received',
     payload: {
-        bookId: string,
-        path?: BookPath,
-        refId?: string,
-    },
-};
-type BookRequestAction = {
-    type: 'book-req',
-    payload: {
-        bookId: string,
+        fragment: AugmentedBookFragment,
         path: BookPath,
     },
 };
-type BookReceivedAction = {
-    type: 'book-received',
-    payload: {
-        bookId: string,
-        fragment: BookFragment,
-        refId?: string,
-    },
+type BookToggleControls = {
+    type: 'book/controls-toggle',
 };
 export type BookAction =
-    | BookChangeAction | BookRequestAction | BookReceivedAction
+    | BookReceivedAction | BookToggleControls
     ;
 
 export type BookState = {
-    bookId: string,
-    fragment: Loadable<BookFragment>,
+    scrollPath: BookPath | undefined,
+    fragment: Loadable<AugmentedBookFragment>,
+    controls: boolean,
 };
 const init: BookState = {
-    bookId: '', // TODO: rethink this
+    scrollPath: undefined,
     fragment: { loading: true },
+    controls: true,
 };
 export function bookReducer(state: BookState = init, action: AppAction): BookState {
     switch (action.type) {
-        case 'book-received':
+        case 'location/navigate':
+            return action.payload.location === 'book'
+                ? {
+                    ...state,
+                    fragment: { loading: true },
+                    scrollPath: action.payload.path,
+                    controls: true,
+                }
+                : state;
+        case 'location/update-path':
+            return state.scrollPath === undefined
+                ? state
+                : { ...state, scrollPath: undefined };
+        case 'book/received':
             return {
-                bookId: action.payload.bookId,
+                ...state,
                 fragment: action.payload.fragment,
+                scrollPath: action.payload.path,
             };
+        case 'book/controls-toggle':
+            return { ...state, controls: !state.controls };
         default:
             return state;
     }
 }
 
-const changeBookEpic: AppEpic = (action$, state$) => action$.pipe(
-    ofAppType('book-change'),
-    withLatestFrom(state$),
-    mergeMap(([{ payload: { path, bookId } }, { book }]) => {
-        const actualPath = path || firstPath();
-        const needUpdateFragment = book.bookId !== bookId
-            || book.fragment.loading
-            || !isPathInFragment(book.fragment, actualPath);
-        if (needUpdateFragment) {
-            return of<AppAction>({
-                type: 'book-req',
-                payload: { bookId, path: actualPath },
-            });
-        } else {
-            return of<AppAction>();
-        }
-    }),
-);
-
 const requestBookEpic: AppEpic = (action$, _, { dataProvider }) => action$.pipe(
-    ofAppType('book-req'),
-    mergeMap(({ payload: { path, bookId } }) =>
-        dataProvider().fragmentForPath(bookId, path).pipe(
-            map((fragment): AppAction => ({
-                type: 'book-received',
+    ofAppNavigation('book'),
+    mergeMap(({ payload: { bookId, path: payloadPath, quote, refId } }) => {
+        const actualPath = quote?.start ?? payloadPath ?? firstPath();
+        const observable = refId
+            ? dataProvider().fragmentForRef(bookId, refId)
+            : dataProvider().fragmentForPath(bookId, actualPath);
+        return observable.pipe(
+            map(({ fragment, path }): AppAction => ({
+                type: 'book/received',
                 payload: {
-                    fragment, bookId, path,
+                    fragment, path,
                 },
             })),
             takeUntil(action$.pipe(
-                ofAppType('book-req'),
+                ofAppNavigation('book'),
             )),
-        )),
+        );
+    },
+    ),
 );
 
 export const bookEpic = combineEpics(
-    changeBookEpic,
     requestBookEpic,
 );

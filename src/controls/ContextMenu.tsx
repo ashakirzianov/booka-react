@@ -1,81 +1,137 @@
 // eslint-disable-next-line
 import React, {
-    ReactNode, Fragment, useRef, MouseEvent, TouchEvent, useCallback,
+    ReactNode, useState, useCallback, MouseEvent, TouchEvent,
 } from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-
-import {
-    ContextMenu as Menu, ContextMenuTrigger, MenuItem as Item,
-} from 'react-contextmenu';
-
+import { Popper } from 'react-popper';
 import { Themed, colors } from '../core';
 import {
     HasChildren, regularSpace, fontCss, menuWidth,
 } from './common';
 import { IconName, Icon } from './Icon';
 import { OverlayPanel } from './Panel';
+import { useOnScroll, useOnSelection } from '../application';
 
+type ContextMenuState = undefined | {
+    top: number,
+    left: number,
+};
 export function ContextMenu({
-    children, theme, id, trigger, onTrigger,
+    children, theme, trigger, onTrigger,
 }: HasChildren & Themed & {
     trigger: ReactNode,
     id: string,
     onTrigger: () => boolean,
 }) {
-    type EventType = MouseEvent | TouchEvent;
-    type RefType = {
-        handleContextClick: (e: EventType) => void,
-    };
-    const menuRef = useRef<RefType>();
-    const triggerCallback = useCallback((event: EventType) => {
-        if (menuRef.current) {
-            const show = onTrigger();
-            if (show) {
-                menuRef.current.handleContextClick(event);
-            }
+    const [state, setState] = useState<ContextMenuState>(undefined);
+    const closeMenu = useCallback(() => {
+        if (state) {
+            setState(undefined);
         }
-    }, [onTrigger]);
-    return <Fragment>
-        <ContextMenuTrigger
-            id={id}
-            ref={ref => menuRef.current = ref as any}
-        >
-            <div
-                onClick={triggerCallback}
-            >
-                {trigger}
-            </div>
-        </ContextMenuTrigger>
-        <Menu id={id}>
-            <OverlayPanel
-                theme={theme}
-                width={menuWidth}
-            >
-                {children}
-            </OverlayPanel>
-        </Menu>
-    </Fragment>;
+    }, [state, setState]);
+    useOnScroll(closeMenu);
+    useOnSelection(closeMenu);
+    const mouseHandler = useCallback((e: MouseEvent) => {
+        const show = onTrigger();
+        if (show) {
+            e.preventDefault();
+            setState({
+                top: e.clientY,
+                left: e.clientX,
+            });
+        }
+    }, [onTrigger, setState]);
+    const touchHandler = useCallback((e: TouchEvent) => {
+        const touch = e.touches[0];
+        if (touch && onTrigger()) {
+            e.preventDefault();
+            setState({
+                top: touch.clientY,
+                left: touch.clientX,
+            });
+        }
+    }, [onTrigger, setState]);
+
+    return <div
+        onClick={mouseHandler}
+        onContextMenu={mouseHandler}
+        onTouchEnd={touchHandler}
+    >
+        <ContextMenuBody state={state} theme={theme}>
+            {children}
+        </ContextMenuBody>
+        {trigger}
+    </div>;
+}
+
+function ContextMenuBody({ state, theme, children }: HasChildren & Themed & {
+    state: ContextMenuState,
+}) {
+    if (state === undefined) {
+        return null;
+    }
+    const anchorRef = virtualRef(state.top, state.left);
+
+    return <Popper
+        referenceElement={anchorRef}
+        placement='bottom-start'
+        modifiers={[{
+            name: 'offset',
+            options: {
+                offset: [20, 20],
+            },
+        }]}
+    >
+        {
+            ({ ref, style, placement }) =>
+                <div ref={ref} style={{
+                    ...style,
+                    zIndex: 100,
+                }}
+                    data-placement={placement}
+                >
+                    <OverlayPanel
+                        theme={theme}
+                        width={menuWidth}
+                    >
+                        {children}
+                    </OverlayPanel>
+                </div>
+        }
+    </Popper>;
+}
+
+function virtualRef(top: number, left: number) {
+    return {
+        getBoundingClientRect() {
+            return {
+                top,
+                left,
+                bottom: top,
+                right: left,
+                width: 0,
+                height: 0,
+            };
+        },
+    };
 }
 
 export function ContextMenuItem({ callback, theme, children }: HasChildren & Themed & {
     callback?: () => void,
 }) {
-    return <Item
-        onClick={callback}
+    return <div css={{
+        display: 'flex',
+        flexBasis: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: regularSpace,
+    }}
+        onMouseUp={callback}
     >
-        <div css={{
-            display: 'flex',
-            flexBasis: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: regularSpace,
-        }}
-        >
-            {children}
-        </div>
-    </Item>;
+        {children}
+    </div>;
 }
 
 export function TextContextMenuItem({
@@ -85,35 +141,34 @@ export function TextContextMenuItem({
     icon?: IconName,
     callback?: () => void,
 }) {
-    return <Item onClick={callback}>
-        <div css={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            width: '100%',
-            color: colors(theme).text,
-            '&:hover': {
-                backgroundColor: colors(theme).highlight,
-                color: colors(theme).primary,
-            },
-            padding: regularSpace,
-        }}
-        >
-            {
-                !icon ? null :
-                    <Icon
-                        theme={theme}
-                        name={icon}
-                        margin={regularSpace}
-                    />
-            }
-            <span css={{
-                margin: regularSpace,
-                ...fontCss({ theme, fontSize: 'xsmall' }),
-                fontFamily: theme.fontFamilies.menu,
-            }}>
-                {text}
-            </span>
-        </div>
-    </Item>;
+    return <div css={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%',
+        color: colors(theme).text,
+        '&:hover': {
+            backgroundColor: colors(theme).highlight,
+            color: colors(theme).primary,
+        },
+        padding: regularSpace,
+    }}
+        onMouseUp={callback}
+    >
+        {
+            !icon ? null :
+                <Icon
+                    theme={theme}
+                    name={icon}
+                    margin={regularSpace}
+                />
+        }
+        <span css={{
+            margin: regularSpace,
+            ...fontCss({ theme, fontSize: 'xsmall' }),
+            fontFamily: theme.fontFamilies.menu,
+        }}>
+            {text}
+        </span>
+    </div>;
 }

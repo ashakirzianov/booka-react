@@ -3,61 +3,57 @@ import { map, mergeMap } from 'rxjs/operators';
 import { combineEpics } from 'redux-observable';
 import { SignState } from 'booka-common';
 import { createDataProvider } from '../data';
+import { SyncStorage } from '../core';
 import { AppEpic, ofAppType, AppAction } from './app';
 import { createSyncWorker } from './sync';
-import { Storage } from '../core';
 
 export type DataAccess = ReturnType<typeof createDataAccess>;
-export function createDataAccess(rootStorage: Storage) {
-    const defaultStorage = rootStorage.sub('default');
-    let dataProvider = createDataProvider({
-        storage: defaultStorage,
-        token: undefined,
-    });
-    let syncWorker = createSyncWorker({
-        storage: defaultStorage,
-        dataProvider,
-    });
+export function createDataAccess(rootStorage: SyncStorage) {
+    let current = createForSignState({ sign: 'not-signed' });
+    function createForSignState(sign: SignState) {
+        const userStorage = rootStorage.sub(
+            sign.sign === 'signed' ? sign.accountInfo._id : 'default',
+        );
+        const dataProvider = createDataProvider({
+            storage: userStorage.sub('data'),
+            token: sign.sign === 'signed'
+                ? sign.token : undefined,
+        });
+        const syncWorker = createSyncWorker({
+            storage: userStorage.sub('sync'),
+            dataProvider,
+        });
+        return { dataProvider, syncWorker };
+    }
     return {
         setSignState(sign: SignState) {
-            const userStorage = rootStorage.sub(
-                sign.sign === 'signed' ? sign.accountInfo._id : 'default',
-            );
-            dataProvider = createDataProvider({
-                storage: userStorage,
-                token: sign.sign === 'signed'
-                    ? sign.token : undefined,
-            });
-            syncWorker = createSyncWorker({
-                storage: userStorage,
-                dataProvider,
-            });
+            current = createForSignState(sign);
         },
         dataProvider() {
-            return dataProvider;
+            return current.dataProvider;
         },
         syncWorker() {
-            return syncWorker;
+            return current.syncWorker;
         },
     };
 }
 
 type DataUpdateProviderAction = {
-    type: 'data-provider-update',
+    type: 'data/update-provider',
 };
 export type DataAction =
     | DataUpdateProviderAction
     ;
 
 const updateDataProviderEpic: AppEpic = (action$, _, { setSignState }) => action$.pipe(
-    ofAppType('account-receive-info'),
+    ofAppType('account/receive-info'),
     map(action => {
         setSignState({
             sign: 'signed',
             accountInfo: action.payload.account,
             token: action.payload.token,
         });
-        return { type: 'data-provider-update' };
+        return { type: 'data/update-provider' };
     }),
 );
 

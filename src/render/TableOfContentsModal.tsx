@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import {
     TableOfContents, pathToString, Bookmark, BookPath,
     CurrentPosition, comparePaths, EntitySource, sourceToString,
@@ -11,29 +11,26 @@ import {
     ActivityIndicator,
 } from '../controls';
 import {
-    useBookmarks, usePositions, useUrlActions, useUrlQuery, useToc, useTheme,
+    useBookmarks, usePositions, useToc, useTheme,
+    useSetTocOpen, useTocOpen,
 } from '../application';
 import { BookPathLink } from './Navigation';
 
 export function TableOfContentsModal({ bookId }: {
     bookId: string,
 }) {
-    const { theme } = useTheme();
-    const toc = useToc(bookId);
-    const { bookmarks } = useBookmarks();
-    const { positions } = usePositions();
-    const { updateToc } = useUrlActions();
-    const closeToc = useCallback(
-        () => updateToc(false),
-        [updateToc],
-    );
-    const { showToc } = useUrlQuery();
+    const theme = useTheme();
+    const isOpen = useTocOpen();
+    const toc = useToc();
+    const bookmarks = useBookmarks();
+    const positions = usePositions();
+    const openToc = useSetTocOpen();
 
     return <Modal
         theme={theme}
         title='Table of Contents'
-        close={closeToc}
-        open={showToc}
+        close={() => openToc(false)}
+        open={isOpen}
     >
         {
             toc.loading

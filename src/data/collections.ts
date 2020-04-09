@@ -3,14 +3,14 @@ import { tap } from 'rxjs/operators';
 import {
     AuthToken, CardCollectionName, CardCollection,
 } from 'booka-common';
-import { Storage, persistentCache } from '../core';
+import { SyncStorage, persistentCache } from '../core';
 import { libFetcher, backFetcher, optional } from './utils';
 
 const back = backFetcher();
 const lib = libFetcher();
 
 export function collectionsProvider({ storage, token }: {
-    storage: Storage,
+    storage: SyncStorage,
     token: AuthToken | undefined,
 }) {
     const cache = persistentCache<CardCollection>(storage);

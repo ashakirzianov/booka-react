@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useTheme } from '../application';
+import { useTheme, useIncrementScale, useSetPalette } from '../application';
 import {
     WithPopover, View, IconButton,
     TextButton, Separator, point, doubleSpace, CircleButton,
@@ -8,7 +8,9 @@ import {
 import { PaletteName, Themed, FontSizes } from '../core';
 
 export function AppearanceButton() {
-    const { theme, incrementScale, setPalette } = useTheme();
+    const theme = useTheme();
+    const incrementScale = useIncrementScale();
+    const setPalette = useSetPalette();
     return <WithPopover
         theme={theme}
         popoverPlacement='bottom'

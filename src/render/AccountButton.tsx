@@ -2,7 +2,7 @@ import * as React from 'react';
 import { AccountInfo } from 'booka-common';
 
 import { AccountState } from '../ducks';
-import { useTheme, useAccount } from '../application';
+import { useTheme, useAccount, useLogout } from '../application';
 import {
     WithPopover, View, PictureButton, IconButton, Label,
     ActionButton, point, doubleSpace,
@@ -11,8 +11,9 @@ import { Themed } from '../core';
 import { LoginOptions } from './LoginOptions';
 
 export function AccountButton() {
-    const { theme } = useTheme();
-    const { accountState, logout } = useAccount();
+    const theme = useTheme();
+    const accountState = useAccount();
+    const logout = useLogout();
 
     return <AccountButtonDumb
         theme={theme}

@@ -12,6 +12,7 @@ import {
     FaSafari, FaChrome, FaFirefox, FaEdge, FaInternetExplorer,
     FaMobile, FaDesktop,
     FaFile,
+    FaQuoteRight, FaRegClone,
 } from 'react-icons/fa';
 import { PaletteColor, Themed, colors } from './theme';
 import { Size } from './common';
@@ -26,6 +27,7 @@ export type IconName =
     | 'safari' | 'chrome' | 'firefox' | 'edge' | 'ie'
     | 'mobile' | 'desktop'
     | 'pages'
+    | 'copy' | 'quote'
     ;
 
 export type IconProps = Themed & {
@@ -106,6 +108,10 @@ function iconClassForName(name: IconName) {
             return FaDesktop;
         case 'pages':
             return FaFile;
+        case 'copy':
+            return FaRegClone;
+        case 'quote':
+            return FaQuoteRight;
         default:
             assertNever(name);
             return FaQuestion;

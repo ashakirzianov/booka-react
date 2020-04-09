@@ -5,24 +5,24 @@ import { AppAction } from './app';
 import { bookRequestEpic } from './helpers';
 
 type HighlightsAddAction = {
-    type: 'highlights-add',
+    type: 'highlights/add',
     payload: Highlight,
 };
 type HighlightsRemoveAction = {
-    type: 'highlights-remove',
+    type: 'highlights/remove',
     payload: {
         highlightId: string,
     },
 };
 type HighlightsChangeGroupAction = {
-    type: 'highlights-change-group',
+    type: 'highlights/change-group',
     payload: {
         highlightId: string,
         group: HighlightGroup,
     },
 };
 type HighlightsReplaceAction = {
-    type: 'highlights-replace',
+    type: 'highlights/replace',
     payload: Highlight[],
 };
 export type HighlightsAction =
@@ -35,11 +35,11 @@ export type HighlightsState = Highlight[];
 const init: HighlightsState = [];
 export function highlightsReducer(state: HighlightsState = init, action: AppAction): HighlightsState {
     switch (action.type) {
-        case 'highlights-add':
+        case 'highlights/add':
             return [action.payload, ...state];
-        case 'highlights-remove':
+        case 'highlights/remove':
             return state.filter(h => h.uuid !== action.payload.highlightId);
-        case 'highlights-change-group':
+        case 'highlights/change-group':
             return state.map(
                 h => h.uuid === action.payload.highlightId
                     ? {
@@ -48,7 +48,7 @@ export function highlightsReducer(state: HighlightsState = init, action: AppActi
                     }
                     : h,
             );
-        case 'highlights-replace':
+        case 'highlights/replace':
             return action.payload;
         default:
             return state;
@@ -58,7 +58,7 @@ export function highlightsReducer(state: HighlightsState = init, action: AppActi
 const requestHighlightsEpic = bookRequestEpic((bookId, { getHighlights }, sync) => getHighlights(bookId).pipe(
     map(hs => sync.reduce(hs, highlightsReducer)),
     map((highlights): AppAction => ({
-        type: 'highlights-replace',
+        type: 'highlights/replace',
         payload: highlights,
     })),
 ));

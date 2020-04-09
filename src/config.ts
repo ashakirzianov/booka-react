@@ -1,6 +1,13 @@
 import { entitySource } from './platform';
 import { isDebug } from './utils';
 
+export type AppConfig = ReturnType<typeof prodConfig>;
+export function config() {
+    return isDebug()
+        ? debugConfig()
+        : prodConfig();
+}
+
 function prodConfig() {
     return {
         frontUrl: 'https://www.booqas.com',
@@ -8,6 +15,8 @@ function prodConfig() {
         libUrl: 'https://booka-lib.herokuapp.com',
         facebook: { clientId: '555297378441276' },
         source: entitySource(),
+        logActions: false,
+        logRenders: false,
     };
 }
 
@@ -24,14 +33,9 @@ function debugConfig(): AppConfig {
             ? 'https://localhost:3042'
             : prod.backUrl,
         libUrl: useLocalLib
-            ? 'http://localhost:3141'
+            ? 'https://localhost:3141'
             : prod.libUrl,
+        logActions: false,
+        logRenders: false,
     };
 }
-
-export function config() {
-    return isDebug()
-        ? debugConfig()
-        : prodConfig();
-}
-export type AppConfig = ReturnType<typeof prodConfig>;

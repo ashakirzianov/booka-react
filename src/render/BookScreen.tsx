@@ -1,110 +1,90 @@
-import React, { useState, useCallback, memo } from 'react';
+import React from 'react';
 
 import {
-    positionForPath, BookPath, pageForPosition,
-    BookFragment, TableOfContents,
+    positionForPath, pageForPosition, AugmentedBookFragment, BookPath,
 } from 'booka-common';
-
 import {
-    useTheme, useUrlQuery, useOpenBook,
+    useTheme, useBook, useSetTocOpen, useBookId, useBookPath,
 } from '../application';
-
 import { Themed, colors } from '../core';
+import {
+    FixedPanel, View, IconButton, Label, regularSpace, userAreaWidth,
+    FullScreenActivityIndicator, Screen, megaSpace, doubleSpace,
+} from '../controls';
+import { FeedLink } from './Navigation';
 import { BookView } from './BookView';
 import { TableOfContentsModal } from './TableOfContentsModal';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
 import { BookmarkButton } from './BookmarkButton';
-import {
-    FixedPanel, View, IconButton, Label, regularSpace, userAreaWidth,
-    FullScreenActivityIndicator, Screen, megaSpace, doubleSpace,
-    Clickable,
-} from '../controls';
-import { ShowTocLink, FeedLink } from './Navigation';
 
-export const BookScreen = memo(function BookScreenF({ bookId }: {
-    bookId: string,
-}) {
-    const { path, refId } = useUrlQuery();
-    const { theme } = useTheme();
-    const bookState = useOpenBook({
-        bookId, path, refId,
-    });
-    if (bookState.fragment.loading) {
+export function BookScreen() {
+    const theme = useTheme();
+    const bookState = useBook();
+    const bookId = useBookId();
+    if (!bookId) {
+        return null;
+    } else if (bookState.fragment.loading) {
         return <FullScreenActivityIndicator
             theme={theme}
         />;
     } else {
-        const { fragment } = bookState;
-        const { toc } = fragment;
         return <BookReady
             theme={theme}
             bookId={bookId}
-            path={path}
-            fragment={fragment}
-            toc={toc}
+            controlsVisible={bookState.controls}
+            scrollPath={bookState.scrollPath}
+            fragment={bookState.fragment}
         />;
     }
-});
+}
 
 function BookReady({
-    theme, fragment, toc, bookId, path,
+    theme, fragment, bookId,
+    controlsVisible, scrollPath,
 }: Themed & {
     bookId: string,
-    path: BookPath | undefined,
-    fragment: BookFragment,
-    toc: TableOfContents | undefined,
+    fragment: AugmentedBookFragment,
+    controlsVisible: boolean,
+    scrollPath: BookPath | undefined,
 }) {
-    const [controlsVisible, setControlsVisible] = useState(true);
-    const toggleControls = useCallback(
-        () => setControlsVisible(!controlsVisible),
-        [controlsVisible, setControlsVisible],
-    );
-
     return <Screen theme={theme}>
         <Header
-            bookId={bookId}
-            path={path}
             theme={theme}
+            bookId={bookId}
             visible={controlsVisible}
         />
         <Footer
             theme={theme}
             fragment={fragment}
             visible={controlsVisible}
-            path={path}
         />
-        <TableOfContentsModal
-            bookId={bookId}
-        />
+        <TableOfContentsModal bookId={bookId} />
         <View style={{
             width: '100%',
             alignItems: 'center',
         }}
         >
-            <Clickable callback={toggleControls}>
-                <View style={{
-                    maxWidth: userAreaWidth,
-                    paddingTop: megaSpace, paddingBottom: megaSpace,
-                    paddingLeft: doubleSpace, paddingRight: doubleSpace,
-                }}>
-                    <BookView
-                        bookId={bookId}
-                        fragment={fragment}
-                    />
-                </View>
-            </Clickable>
+            <View style={{
+                maxWidth: userAreaWidth,
+                paddingTop: megaSpace, paddingBottom: megaSpace,
+                paddingLeft: doubleSpace, paddingRight: doubleSpace,
+            }}>
+                <BookView
+                    fragment={fragment}
+                    bookId={bookId}
+                    scrollPath={scrollPath}
+                />
+            </View>
         </View>
     </Screen>;
 }
 
-function Header({
-    theme, visible, bookId, path,
-}: Themed & {
-    bookId: string,
-    path: BookPath | undefined,
+function Header({ visible, bookId }: Themed & {
     visible: boolean,
+    bookId: string,
 }) {
+    const path = useBookPath();
     return <FixedPanel
         placement='top'
         open={visible}
@@ -122,7 +102,10 @@ function Header({
             <View style={{
                 flexDirection: 'row',
             }}>
-                <BookmarkButton bookId={bookId} path={path} />
+                <BookmarkButton
+                    bookId={bookId}
+                    path={path}
+                />
                 <AppearanceButton />
                 <AccountButton />
             </View>
@@ -131,13 +114,12 @@ function Header({
 }
 
 function Footer({
-    fragment, path, theme, visible,
+    fragment, theme, visible,
 }: Themed & {
-    fragment: BookFragment,
-    path: BookPath | undefined,
+    fragment: AugmentedBookFragment,
     visible: boolean,
 }) {
-    path = path ?? fragment.current.path;
+    const path = useBookPath() ?? fragment.current.path;
     const total = fragment.toc
         ? pageForPosition(fragment.toc.length)
         : undefined;
@@ -200,7 +182,7 @@ function Footer({
 }
 
 function FeedButton() {
-    const { theme } = useTheme();
+    const theme = useTheme();
     return <FeedLink>
         <IconButton
             theme={theme}
@@ -210,11 +192,11 @@ function FeedButton() {
 }
 
 function TocButton() {
-    const { theme } = useTheme();
-    return <ShowTocLink toShow={true}>
-        <IconButton
-            theme={theme}
-            icon='items'
-        />
-    </ShowTocLink>;
+    const theme = useTheme();
+    const openToc = useSetTocOpen();
+    return <IconButton
+        theme={theme}
+        icon='items'
+        callback={() => openToc(true)}
+    />;
 }

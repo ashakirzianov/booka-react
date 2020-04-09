@@ -9,7 +9,9 @@ import { bookmarksReducer, bookmarksEpic } from './bookmarks';
 import { highlightsReducer, highlightsEpic } from './highlights';
 import { collectionsReducer, collectionsEpic } from './collections';
 import { positionsReducer, positionsEpic } from './positions';
-import { uploadReducer, uploadEpic } from './upload';
+import { locationReducer } from './location';
+import { searchEpic, searchReducer } from './search';
+import { popularEpic, popularReducer } from './popular';
 
 export const rootReducer = combineReducers<AppState, AppAction>({
     theme: themeReducer,
@@ -19,7 +21,9 @@ export const rootReducer = combineReducers<AppState, AppAction>({
     highlights: highlightsReducer,
     collections: collectionsReducer,
     positions: positionsReducer,
-    upload: uploadReducer,
+    location: locationReducer,
+    search: searchReducer,
+    popular: popularReducer,
 });
 
 export const rootEpic = combineEpics(
@@ -30,5 +34,6 @@ export const rootEpic = combineEpics(
     highlightsEpic,
     collectionsEpic,
     positionsEpic,
-    uploadEpic,
+    searchEpic,
+    popularEpic,
 );
