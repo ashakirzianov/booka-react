@@ -37,10 +37,10 @@
   },
   "scripts": {
     "start": "node --experimental-modules server.mjs",
-    "debug": "HTTPS=true react-scripts start",
-    "debug-local": "HTTPS=true REACT_APP_LOCAL=all react-scripts start",
-    "debug-local-lib": "HTTPS=true REACT_APP_LOCAL=lib react-scripts start",
-    "debug-local-back": "HTTPS=true REACT_APP_LOCAL=back react-scripts start",
+    "debug": "HTTPS=true SSL_KEY_PATH='server.key' SSL_CERT_PATH='server.crt' react-scripts start",
+    "debug-local": "HTTPS=true SSL_KEY_PATH='server.key' SSL_CERT_PATH='server.crt' REACT_APP_LOCAL=all react-scripts start",
+    "debug-local-lib": "HTTPS=true SSL_KEY_PATH='server.key' SSL_CERT_PATH='server.crt' REACT_APP_LOCAL=lib react-scripts start",
+    "debug-local-back": "HTTPS=true SSL_KEY_PATH='server.key' SSL_CERT_PATH='server.crt' REACT_APP_LOCAL=back react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
