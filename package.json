@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/core": "^10.0.28",
     "@popperjs/core": "^2.2.2",
+    "@tippyjs/react": "^4.0.0-alpha.4",
     "@types/jest": "25.1.4",
     "@types/lodash": "^4.14.149",
     "@types/node": "13.9.1",
