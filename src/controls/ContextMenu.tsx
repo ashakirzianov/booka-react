@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import React, {
-    ReactNode, Fragment, useState, useCallback,
+    ReactNode, useState, useCallback, MouseEvent,
 } from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
@@ -30,26 +30,25 @@ export function ContextMenu({
             setState(undefined);
         }
     }, [state, setState]));
+    const handler = useCallback((e: MouseEvent) => {
+        const show = onTrigger();
+        if (show) {
+            e.preventDefault();
+            setState({
+                top: e.clientY,
+                left: e.clientX,
+            });
+        }
+    }, [onTrigger, setState]);
 
-    return <Fragment>
-        <div
-            onClick={e => {
-                const show = onTrigger();
-                if (show) {
-                    e.preventDefault();
-                    setState({
-                        top: e.clientY,
-                        left: e.clientX,
-                    });
-                }
-            }}
-        >
-            <ContextMenuBody state={state} theme={theme}>
-                {children}
-            </ContextMenuBody>
-            {trigger}
-        </div>
-    </Fragment>;
+    return <div
+        onClick={handler}
+    >
+        <ContextMenuBody state={state} theme={theme}>
+            {children}
+        </ContextMenuBody>
+        {trigger}
+    </div>;
 }
 
 function ContextMenuBody({ state, theme, children }: HasChildren & Themed & {
@@ -58,10 +57,10 @@ function ContextMenuBody({ state, theme, children }: HasChildren & Themed & {
     if (state === undefined) {
         return null;
     }
-    const r = virtualRef(state.top, state.left);
+    const anchorRef = virtualRef(state.top, state.left);
 
     return <Popper
-        referenceElement={r}
+        referenceElement={anchorRef}
         placement='bottom-start'
         modifiers={[{
             name: 'offset',
