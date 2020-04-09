@@ -11,7 +11,7 @@ const lib = libFetcher();
 export function libraryMiscProvider({ token }: {
     token?: AuthToken,
 }) {
-    const cardsCache = persistentCache<LibraryCard>(createSyncStorage('<card>'));
+    const cardsCache = persistentCache<LibraryCard>(createSyncStorage('cards'));
     return {
         cardForId(bookId: string) {
             const cached = cardsCache.existing(bookId);
