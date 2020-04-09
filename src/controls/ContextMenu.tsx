@@ -11,7 +11,7 @@ import {
 } from './common';
 import { IconName, Icon } from './Icon';
 import { OverlayPanel } from './Panel';
-import { useOnScroll } from '../application';
+import { useOnScroll, useOnSelection } from '../application';
 
 type ContextMenuState = undefined | {
     top: number,
@@ -25,11 +25,13 @@ export function ContextMenu({
     onTrigger: () => boolean,
 }) {
     const [state, setState] = useState<ContextMenuState>(undefined);
-    useOnScroll(useCallback(() => {
+    const closeMenu = useCallback(() => {
         if (state) {
             setState(undefined);
         }
-    }, [state, setState]));
+    }, [state, setState]);
+    useOnScroll(closeMenu);
+    useOnSelection(closeMenu);
     const mouseHandler = useCallback((e: MouseEvent) => {
         const show = onTrigger();
         if (show) {

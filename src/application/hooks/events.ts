@@ -30,6 +30,16 @@ export function useOnScroll(callback: (e: Event) => void) {
     }, [callback]);
 }
 
+export function useOnSelection(callback: (e: Event) => void) {
+    useEffect(() => {
+        window.document.addEventListener('selectionchange', callback);
+
+        return function unsubscribe() {
+            window.document.removeEventListener('selectionchange', callback);
+        };
+    }, [callback]);
+}
+
 export function useWriteClipboardText() {
     return useCallback((text: string) => {
         navigator.clipboard.writeText(text);
