@@ -19,6 +19,7 @@ import { config } from '../config';
 type HighlightTarget = {
     target: 'highlight',
     highlight: Highlight,
+    selection: BookSelection,
 };
 type SelectionTarget = {
     target: 'selection',
@@ -92,7 +93,7 @@ function useMenuTarget(bookId: string, selection: SelectionType) {
             const selectedHighlight = highlights
                 .find(h => doesRangeOverlap(h.range, current.range));
             const newTarget: ContextMenuTarget = selectedHighlight
-                ? { target: 'highlight', highlight: selectedHighlight }
+                ? { target: 'highlight', selection: current, highlight: selectedHighlight }
                 : { target: 'selection', selection: current };
             setTarget(newTarget);
             return true;
@@ -134,7 +135,7 @@ function CopyQuoteItem({
     addToClipboard: (text: string) => void,
     setQuote: (range: BookRange | undefined) => void,
 }) {
-    if (target.target !== 'selection') {
+    if (target.target === 'empty') {
         return null;
     }
     const { selection: { text, range } } = target;
@@ -156,7 +157,7 @@ function CopyTextItem({
     target: ContextMenuTarget,
     addToClipboard: (text: string) => void,
 }) {
-    if (target.target !== 'selection') {
+    if (target.target === 'empty') {
         return null;
     }
     const { selection: { text } } = target;
