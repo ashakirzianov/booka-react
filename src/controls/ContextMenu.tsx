@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-
+import { Popper } from 'react-popper';
 import { Themed, colors } from '../core';
 import {
     HasChildren, regularSpace, fontCss, menuWidth,
@@ -17,7 +17,6 @@ type ContextMenuState = undefined | {
     top: number,
     left: number,
 };
-const offset = 10;
 export function ContextMenu({
     children, theme, trigger, onTrigger,
 }: HasChildren & Themed & {
@@ -39,30 +38,70 @@ export function ContextMenu({
                 if (show) {
                     e.preventDefault();
                     setState({
-                        top: e.clientY + offset,
-                        left: e.clientX + offset,
+                        top: e.clientY,
+                        left: e.clientX,
                     });
                 }
             }}
         >
-            {
-                state === undefined ? null :
-                    <div style={{
-                        position: 'fixed',
-                        top: state.top,
-                        left: state.left,
-                    }}>
-                        <OverlayPanel
-                            theme={theme}
-                            width={menuWidth}
-                        >
-                            {children}
-                        </OverlayPanel>
-                    </div>
-            }
+            <ContextMenuBody state={state} theme={theme}>
+                {children}
+            </ContextMenuBody>
             {trigger}
         </div>
     </Fragment>;
+}
+
+function ContextMenuBody({ state, theme, children }: HasChildren & Themed & {
+    state: ContextMenuState,
+}) {
+    if (state === undefined) {
+        return null;
+    }
+    const r = virtualRef(state.top, state.left);
+
+    return <Popper
+        referenceElement={r}
+        placement='bottom-start'
+        modifiers={[{
+            name: 'offset',
+            options: {
+                offset: [20, 20],
+            },
+        }]}
+    >
+        {
+            ({ ref, style, placement }) =>
+                <div ref={ref} style={{
+                    ...style,
+                    zIndex: 100,
+                }}
+                    data-placement={placement}
+                >
+                    <OverlayPanel
+                        theme={theme}
+                        width={menuWidth}
+                    >
+                        {children}
+                    </OverlayPanel>
+                </div>
+        }
+    </Popper>;
+}
+
+function virtualRef(top: number, left: number) {
+    return {
+        getBoundingClientRect() {
+            return {
+                top,
+                left,
+                bottom: top,
+                right: left,
+                width: 0,
+                height: 0,
+            };
+        },
+    };
 }
 
 export function ContextMenuItem({ callback, theme, children }: HasChildren & Themed & {
@@ -76,6 +115,7 @@ export function ContextMenuItem({ callback, theme, children }: HasChildren & The
         alignItems: 'center',
         padding: regularSpace,
     }}
+        onMouseUp={callback}
     >
         {children}
     </div>;
@@ -100,6 +140,7 @@ export function TextContextMenuItem({
         },
         padding: regularSpace,
     }}
+        onMouseUp={callback}
     >
         {
             !icon ? null :
