@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import React, {
-    ReactNode, useState, useCallback, MouseEvent,
+    ReactNode, useState, useCallback, MouseEvent, TouchEvent,
 } from 'react';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
@@ -30,7 +30,7 @@ export function ContextMenu({
             setState(undefined);
         }
     }, [state, setState]));
-    const handler = useCallback((e: MouseEvent) => {
+    const mouseHandler = useCallback((e: MouseEvent) => {
         const show = onTrigger();
         if (show) {
             e.preventDefault();
@@ -40,9 +40,21 @@ export function ContextMenu({
             });
         }
     }, [onTrigger, setState]);
+    const touchHandler = useCallback((e: TouchEvent) => {
+        const touch = e.touches[0];
+        if (touch && onTrigger()) {
+            e.preventDefault();
+            setState({
+                top: touch.clientY,
+                left: touch.clientX,
+            });
+        }
+    }, [onTrigger, setState]);
 
     return <div
-        onClick={handler}
+        onClick={mouseHandler}
+        onContextMenu={mouseHandler}
+        onTouchEnd={touchHandler}
     >
         <ContextMenuBody state={state} theme={theme}>
             {children}
