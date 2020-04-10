@@ -13,7 +13,7 @@ export function authProvider() {
             });
         },
         getAccountInfo(token: AuthToken) {
-            return back.get('/me/info', {
+            return back.get('/account', {
                 auth: token.token,
             });
         },
