@@ -1,10 +1,9 @@
 import React from 'react';
 import {
-    HasChildren, percent, panelShadow, userAreaWidth,
-    regularSpace, panelHeight, Size, radius, fontCss, doubleSpace,
+    HasChildren, userAreaWidth, regularSpace,
+    panelHeight, fontCss, doubleSpace,
 } from './common';
 import { Themed, colors } from './theme';
-import { defaultAnimationDuration } from './Animations';
 
 export function Panel({ theme, title, children }: HasChildren & Themed & {
     title?: string,
@@ -48,40 +47,5 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
         }}>
             {children}
         </div>
-    </div>;
-}
-
-export function OverlayPanel({
-    theme, width, animation, children,
-}: HasChildren & Themed & {
-    width?: Size,
-    animation?: {
-        entered: boolean,
-    },
-}) {
-    return <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        flexShrink: 1,
-        width: width ?? percent(100),
-        maxWidth: userAreaWidth,
-        maxHeight: '100%',
-        overflow: 'scroll',
-        zIndex: 10,
-        backgroundColor: colors(theme).secondary,
-        boxShadow: panelShadow(colors(theme).shadow),
-        borderRadius: radius,
-        pointerEvents: 'auto',
-        // TODO: rethink this
-        ...(animation && {
-            transitionDuration: `${defaultAnimationDuration}ms`,
-            transform: animation.entered
-                ? []
-                : [{ translateY: '100%' }],
-        } as any),
-    }}
-        onClick={e => e.stopPropagation()}
-    >
-        {children}
     </div>;
 }
