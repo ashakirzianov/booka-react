@@ -6,10 +6,11 @@ import {
 import { regularSpace, xsmallSpace, fontCss } from './common';
 
 export function TagLabel({
-    text, theme, color,
+    text, theme, color, tooltip,
 }: Themed & {
     text: string,
     color?: PaletteColor,
+    tooltip?: string,
 }) {
     const actualColor = colors(theme)[color ?? 'accent'];
     return <div css={{
@@ -22,6 +23,7 @@ export function TagLabel({
         borderColor: actualColor,
         color: actualColor,
     }}
+        title={tooltip}
     >
         {text}
     </div>;

@@ -43,6 +43,7 @@ function TabButton({ tag, theme }: Themed & {
                 theme={theme}
                 color='red'
                 text='Project Gutenberg'
+                tooltip={tag.value.toString()}
             />;
         default:
             return null;
