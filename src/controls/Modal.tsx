@@ -4,10 +4,10 @@ import { Transition } from 'react-transition-group';
 
 import { Themed, colors } from './theme';
 import {
-    HasChildren, regularSpace, fontCss,
+    HasChildren, regularSpace, fontCss, panelShadow,
+    userAreaWidth, percent, radius,
 } from './common';
 import { defaultAnimationDuration } from './Animations';
-import { OverlayPanel } from './Panel';
 import { PlaneIconButton } from './Buttons';
 
 export type ModalProps = Parameters<typeof Modal>[0];
@@ -35,11 +35,25 @@ export function Modal({
             }}
                 onClick={close}
             >
-                <OverlayPanel
-                    animation={{
-                        entered: state === 'entered',
-                    }}
-                    theme={theme}>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flexShrink: 1,
+                    width: percent(100),
+                    maxWidth: userAreaWidth,
+                    maxHeight: '100%',
+                    overflow: 'scroll',
+                    zIndex: 10,
+                    backgroundColor: colors(theme).secondary,
+                    boxShadow: panelShadow(colors(theme).shadow),
+                    borderRadius: radius,
+                    pointerEvents: 'auto',
+                    transitionDuration: `${defaultAnimationDuration}ms`,
+                    transform: state === 'entered'
+                        ? 'none' : 'translateY(100%)',
+                }}
+                    onClick={e => e.stopPropagation()}
+                >
                     <ModalTitle
                         theme={theme}
                         title={title}
@@ -54,7 +68,7 @@ export function Modal({
                     >
                         {children}
                     </View>
-                </OverlayPanel>
+                </div>
             </div>
         }
     </Transition >;

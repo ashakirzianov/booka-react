@@ -1,7 +1,10 @@
-import { createDataAccess } from '../../ducks';
-import { createSyncStorage } from '../../core';
+import { createContext, useContext } from 'react';
+import { UserContext } from '../../ducks';
 
-export const dataAccess = createDataAccess(createSyncStorage('users'));
+const ReactUserContext = createContext<UserContext>(null as any);
+export const UserContextProvider = ReactUserContext.Provider;
+
 export function useDataProvider() {
-    return dataAccess.dataProvider();
+    const userAccess = useContext(ReactUserContext);
+    return userAccess.dataProvider();
 }

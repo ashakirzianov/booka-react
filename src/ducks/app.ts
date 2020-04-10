@@ -1,7 +1,7 @@
 import { Epic, ofType, createEpicMiddleware } from 'redux-observable';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { DataAction, DataAccess } from './data';
+import { DataAction, UserContext } from './data';
 import { AccountState, AccountAction } from './account';
 import { ThemeState, ThemeAction } from './theme';
 import { BookState, BookAction } from './book';
@@ -46,7 +46,7 @@ export type AppState = {
     popular: PopularState,
 };
 
-export type AppDependencies = DataAccess;
+export type AppDependencies = UserContext;
 
 export type AppEpic<Output extends AppAction = AppAction> =
     Epic<AppAction, Output, AppState, AppDependencies>;

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { AccountInfo } from 'booka-common';
 
 import { AccountState } from '../ducks';
@@ -30,20 +30,25 @@ function AccountButtonDumb({
 }) {
     return <WithPopover
         theme={theme}
-        popoverPlacement='bottom'
-        body={
-            account.state === 'signed'
-                ? <AccountPanel
-                    theme={theme}
-                    account={account.account}
-                    logout={logout}
-                />
-                : ({ scheduleUpdate }) =>
-                    <LoginOptions
+        placement='bottom'
+        body={<View style={{
+            height: point(10),
+            alignItems: 'center',
+            justifyContent: 'space-around',
+            margin: doubleSpace,
+        }}>
+            {
+                account.state === 'signed'
+                    ? <AccountPanel
                         theme={theme}
-                        onStatusChanged={scheduleUpdate}
+                        account={account.account}
+                        logout={logout}
                     />
-        }
+                    : <LoginOptions
+                        theme={theme}
+                    />
+            }
+        </View>}
     >
         <ActualButton
             theme={theme}
@@ -75,12 +80,7 @@ function AccountPanel({ account, theme, logout }: Themed & {
     account: AccountInfo,
     logout: () => void,
 }) {
-    return <View style={{
-        height: point(10),
-        alignItems: 'center',
-        justifyContent: 'space-around',
-        margin: doubleSpace,
-    }}>
+    return <>
         <Label
             theme={theme}
             text={account.name}
@@ -90,5 +90,5 @@ function AccountPanel({ account, theme, logout }: Themed & {
             text='Logout'
             callback={logout}
         />
-    </View>;
+    </>;
 }

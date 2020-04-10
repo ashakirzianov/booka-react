@@ -1,21 +1,25 @@
 // eslint-disable-next-line
 import React, {
-    ReactNode, useState, useCallback, MouseEvent, TouchEvent,
+    ReactNode, useState, useCallback,
 } from 'react';
+import { debounce } from 'lodash';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { Popper } from 'react-popper';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/animations/shift-away.css';
+
 import { Themed, colors } from '../core';
 import {
-    HasChildren, regularSpace, fontCss, menuWidth,
+    HasChildren, regularSpace, fontCss, menuWidth, panelShadow, radius,
 } from './common';
 import { IconName, Icon } from './Icon';
-import { OverlayPanel } from './Panel';
 import { useOnScroll, useOnSelection } from '../application';
 
 type ContextMenuState = undefined | {
     top: number,
     left: number,
+    height: number,
+    width: number,
 };
 export function ContextMenu({
     children, theme, trigger, onTrigger,
@@ -25,38 +29,29 @@ export function ContextMenu({
     onTrigger: () => boolean,
 }) {
     const [state, setState] = useState<ContextMenuState>(undefined);
-    const closeMenu = useCallback(() => {
-        if (state) {
+    useOnScroll(useCallback((e) => {
+        const rect = e.getSelectionRect();
+        if (rect) {
+            setState({
+                top: rect.top, left: rect.left,
+                width: rect.width, height: rect.height,
+            });
+        } else if (state) {
             setState(undefined);
         }
-    }, [state, setState]);
-    useOnScroll(closeMenu);
-    useOnSelection(closeMenu);
-    const mouseHandler = useCallback((e: MouseEvent) => {
+    }, [state, setState]));
+    useOnSelection(useCallback(debounce(e => {
         const show = onTrigger();
         if (show) {
-            e.preventDefault();
-            setState({
-                top: e.clientY,
-                left: e.clientX,
-            });
+            const rect = e.getSelectionRect();
+            if (rect) {
+                setState(rect);
+            }
         }
-    }, [onTrigger, setState]);
-    const touchHandler = useCallback((e: TouchEvent) => {
-        const touch = e.touches[0];
-        if (touch && onTrigger()) {
-            e.preventDefault();
-            setState({
-                top: touch.clientY,
-                left: touch.clientX,
-            });
-        }
-    }, [onTrigger, setState]);
+    }, 300), [onTrigger]));
 
     return <div
-        onClick={mouseHandler}
-        onContextMenu={mouseHandler}
-        onTouchEnd={touchHandler}
+        onClick={() => setState(undefined)}
     >
         <ContextMenuBody state={state} theme={theme}>
             {children}
@@ -68,53 +63,38 @@ export function ContextMenu({
 function ContextMenuBody({ state, theme, children }: HasChildren & Themed & {
     state: ContextMenuState,
 }) {
-    if (state === undefined) {
-        return null;
-    }
-    const anchorRef = virtualRef(state.top, state.left);
-
-    return <Popper
-        referenceElement={anchorRef}
-        placement='bottom-start'
-        modifiers={[{
-            name: 'offset',
-            options: {
-                offset: [20, 20],
-            },
-        }]}
-    >
-        {
-            ({ ref, style, placement }) =>
-                <div ref={ref} style={{
-                    ...style,
-                    zIndex: 100,
-                }}
-                    data-placement={placement}
-                >
-                    <OverlayPanel
-                        theme={theme}
-                        width={menuWidth}
-                    >
-                        {children}
-                    </OverlayPanel>
-                </div>
-        }
-    </Popper>;
-}
-
-function virtualRef(top: number, left: number) {
-    return {
-        getBoundingClientRect() {
-            return {
-                top,
-                left,
-                bottom: top,
-                right: left,
-                width: 0,
-                height: 0,
-            };
+    return <div css={{
+        userSelect: 'none',
+        '& .tippy-box[data-theme~=\'custom\']': {
+            backgroundColor: colors(theme).secondary,
+            boxShadow: panelShadow(colors(theme).shadow),
+            borderRadius: radius,
+            width: menuWidth,
         },
-    };
+    }}>
+        <Tippy
+            visible={state !== undefined}
+            interactive={true}
+            arrow={false}
+            theme='custom'
+            placement='bottom'
+            animation='shift-away'
+            content={
+                <div style={{
+                    display: state ? 'block' : 'none',
+                }}>
+                    {children}
+                </div>
+            }
+        >
+            <div style={{
+                position: 'fixed',
+                pointerEvents: 'none',
+                top: state?.top, left: state?.left,
+                height: state?.height, width: state?.width,
+            }} />
+        </Tippy>
+    </div>;
 }
 
 export function ContextMenuItem({ callback, theme, children }: HasChildren & Themed & {
@@ -128,7 +108,7 @@ export function ContextMenuItem({ callback, theme, children }: HasChildren & The
         alignItems: 'center',
         padding: regularSpace,
     }}
-        onMouseUp={callback}
+        onClick={callback}
     >
         {children}
     </div>;
@@ -145,7 +125,7 @@ export function TextContextMenuItem({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        width: '100%',
+        // width: '100%',
         color: colors(theme).text,
         '&:hover': {
             backgroundColor: colors(theme).highlight,
@@ -153,7 +133,7 @@ export function TextContextMenuItem({
         },
         padding: regularSpace,
     }}
-        onMouseUp={callback}
+        onClick={callback}
     >
         {
             !icon ? null :

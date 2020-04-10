@@ -13,7 +13,7 @@ export function AppearanceButton() {
     const setPalette = useSetPalette();
     return <WithPopover
         theme={theme}
-        popoverPlacement='bottom'
+        placement='bottom'
         body={<ThemePicker
             theme={theme}
             setPalette={setPalette}

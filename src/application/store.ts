@@ -1,19 +1,27 @@
 /*global globalThis*/
-import React from 'react';
+import { createElement, SFC } from 'react';
 import { createStore, compose, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { createLogger } from 'redux-logger';
 import { filterUndefined } from 'booka-common';
 
 import { config } from '../config';
-import { createAppEpicMiddleware, rootReducer, rootEpic } from '../ducks';
+import { createAppEpicMiddleware, rootReducer, rootEpic, createUserContext } from '../ducks';
 import { startupFbSdk, fbState } from './facebookSdk';
-import { dataAccess } from './hooks/dataProvider';
 import { historySyncMiddleware, subscribeToHistory } from './historySync';
+import { createSyncStorage } from '../core';
+import { UserContextProvider } from './hooks/dataProvider';
 
-export const ConnectedProvider: React.SFC = ({ children }) =>
-    React.createElement(Provider, { store }, children);
+export const ConnectedProvider: SFC = ({ children }) =>
+    createElement(
+        Provider, { store },
+        createElement(
+            UserContextProvider, { value: userContext },
+            children,
+        ),
+    );
 
+const userContext = createUserContext(createSyncStorage('users'));
 function configureStore() {
     const composeEnhancers: typeof compose =
         // Note: support redux dev tools
@@ -21,7 +29,7 @@ function configureStore() {
         || compose;
 
     const epicMiddleware = createAppEpicMiddleware({
-        dependencies: dataAccess,
+        dependencies: userContext,
     });
     const middlewares = filterUndefined([
         epicMiddleware,
@@ -41,7 +49,7 @@ function configureStore() {
 
 const store = configureStore();
 store.dispatch({
-    type: 'data/update-provider',
+    type: 'data/update-context',
 });
 subscribeToHistory(link => {
     store.dispatch({
