@@ -11,7 +11,7 @@
     "@types/react": "16.9.23",
     "@types/react-dom": "16.9.5",
     "@welldone-software/why-did-you-render": "^4.0.5",
-    "booka-common": "^0.15.6",
+    "booka-common": "^0.16.0",
     "clipboard-polyfill": "^2.8.6",
     "detect-browser": "^5.0.0",
     "history": "^4.10.1",
