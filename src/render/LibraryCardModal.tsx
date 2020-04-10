@@ -2,20 +2,20 @@ import React, { useCallback, ReactNode } from 'react';
 import { View } from 'react-native';
 
 import {
-    LibraryCard, BookPath, firstPath, filterUndefined, pageForPosition, CurrentPosition,
+    LibraryCard, BookPath, firstPath, pageForPosition, CurrentPosition,
 } from 'booka-common';
 import {
     useTheme, useLibraryCard,
     useCollection, usePositions, useSetCardId, useCollectionActions, useCardId,
 } from '../application';
 import {
-    Modal, ActivityIndicator, ActionButton, TagLabel,
+    Modal, ActivityIndicator, ActionButton,
     regularSpace, Label, Icon,
 } from '../controls';
-import { Themed, PaletteColor } from '../core';
 import { LibraryCardTile } from './LibraryCardTile';
 import { BookPathLink } from './Navigation';
 import { ParagraphPreview } from './ParagraphPreview';
+import { TagList } from './TagList';
 
 export function LibraryCardModal() {
     const bookId = useCardId();
@@ -78,44 +78,6 @@ function LibraryCardModalImpl({ bookId }: {
                 />
         }
     </Modal>;
-}
-
-function TagList({ card, theme }: Themed & {
-    card: LibraryCard,
-}) {
-    const data = getTagDescs(card);
-    return <View style={{
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        margin: regularSpace,
-    }}>
-        {
-            data.map(({ color, text }, idx) => {
-                return <TagLabel
-                    key={idx}
-                    theme={theme}
-                    color={color}
-                    text={text}
-                />;
-            })
-        }
-    </View>;
-}
-
-type TagDesc = { color: PaletteColor, text: string };
-function getTagDescs(card: LibraryCard): TagDesc[] {
-    return filterUndefined(card.tags.map((tag): TagDesc | undefined => {
-        switch (tag.tag) {
-            case 'subject':
-                return { color: 'blue', text: tag.value };
-            case 'language':
-                return { color: 'green', text: `Language: ${tag.value.toUpperCase()}` };
-            case 'pg-index':
-                return { color: 'red', text: 'Project Gutenberg' };
-            default:
-                return undefined;
-        }
-    }));
 }
 
 function ReadButtons({ card }: {
