@@ -7,8 +7,8 @@ import { SyncStorage } from '../core';
 import { AppEpic, ofAppType, AppAction } from './app';
 import { createSyncWorker } from './sync';
 
-export type DataAccess = ReturnType<typeof createDataAccess>;
-export function createDataAccess(rootStorage: SyncStorage) {
+export type UserContext = ReturnType<typeof createUserContext>;
+export function createUserContext(rootStorage: SyncStorage) {
     let current = createForSignState({ sign: 'not-signed' });
     function createForSignState(sign: SignState) {
         const userStorage = rootStorage.sub(
@@ -39,7 +39,7 @@ export function createDataAccess(rootStorage: SyncStorage) {
 }
 
 type DataUpdateProviderAction = {
-    type: 'data/update-provider',
+    type: 'data/update-context',
 };
 export type DataAction =
     | DataUpdateProviderAction
@@ -53,7 +53,7 @@ const updateDataProviderEpic: AppEpic = (action$, _, { setSignState }) => action
             accountInfo: action.payload.account,
             token: action.payload.token,
         });
-        return { type: 'data/update-provider' };
+        return { type: 'data/update-context' };
     }),
 );
 

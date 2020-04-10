@@ -6,7 +6,7 @@ import { createLogger } from 'redux-logger';
 import { filterUndefined } from 'booka-common';
 
 import { config } from '../config';
-import { createAppEpicMiddleware, rootReducer, rootEpic, createDataAccess } from '../ducks';
+import { createAppEpicMiddleware, rootReducer, rootEpic, createUserContext } from '../ducks';
 import { startupFbSdk, fbState } from './facebookSdk';
 import { historySyncMiddleware, subscribeToHistory } from './historySync';
 import { createSyncStorage } from '../core';
@@ -16,12 +16,12 @@ export const ConnectedProvider: SFC = ({ children }) =>
     createElement(
         Provider, { store },
         createElement(
-            UserContextProvider, { value: dataAccess },
+            UserContextProvider, { value: userContext },
             children,
         ),
     );
 
-const dataAccess = createDataAccess(createSyncStorage('users'));
+const userContext = createUserContext(createSyncStorage('users'));
 function configureStore() {
     const composeEnhancers: typeof compose =
         // Note: support redux dev tools
@@ -29,7 +29,7 @@ function configureStore() {
         || compose;
 
     const epicMiddleware = createAppEpicMiddleware({
-        dependencies: dataAccess,
+        dependencies: userContext,
     });
     const middlewares = filterUndefined([
         epicMiddleware,
@@ -49,7 +49,7 @@ function configureStore() {
 
 const store = configureStore();
 store.dispatch({
-    type: 'data/update-provider',
+    type: 'data/update-context',
 });
 subscribeToHistory(link => {
     store.dispatch({

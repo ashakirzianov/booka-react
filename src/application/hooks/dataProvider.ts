@@ -1,10 +1,10 @@
 import { createContext, useContext } from 'react';
-import { DataAccess } from '../../ducks';
+import { UserContext } from '../../ducks';
 
-const userContext = createContext<DataAccess>(null as any);
-export const UserContextProvider = userContext.Provider;
+const ReactUserContext = createContext<UserContext>(null as any);
+export const UserContextProvider = ReactUserContext.Provider;
 
 export function useDataProvider() {
-    const userAccess = useContext(userContext);
+    const userAccess = useContext(ReactUserContext);
     return userAccess.dataProvider();
 }

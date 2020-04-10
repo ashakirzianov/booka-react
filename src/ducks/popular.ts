@@ -16,7 +16,7 @@ export function popularReducer(state: PopularState = init, action: AppAction): P
     switch (action.type) {
         case 'popular/received':
             return action.payload;
-        case 'data/update-provider':
+        case 'data/update-context':
             return { loading: true };
         default:
             return state;
@@ -24,7 +24,7 @@ export function popularReducer(state: PopularState = init, action: AppAction): P
 }
 
 const requestPopularEpic: AppEpic = (action$, _, { dataProvider }) => action$.pipe(
-    ofAppType('data/update-provider'),
+    ofAppType('data/update-context'),
     mergeMap(() => dataProvider().popularBooks().pipe(
         map((cards): AppAction => ({
             type: 'popular/received',
