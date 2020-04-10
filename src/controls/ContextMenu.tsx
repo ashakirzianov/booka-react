@@ -29,15 +29,21 @@ export function ContextMenu({
     onTrigger: () => boolean,
 }) {
     const [state, setState] = useState<ContextMenuState>(undefined);
-    useOnScroll(useCallback(() => {
-        if (state) {
+    useOnScroll(useCallback((e) => {
+        const rect = e.getSelectionRect();
+        if (rect) {
+            setState({
+                top: rect.top, left: rect.left,
+                width: rect.width, height: rect.height,
+            });
+        } else if (state) {
             setState(undefined);
         }
     }, [state, setState]));
     useOnSelection(useCallback(debounce(e => {
         const show = onTrigger();
         if (show) {
-            const rect = e.getRect();
+            const rect = e.getSelectionRect();
             if (rect) {
                 setState(rect);
             }
