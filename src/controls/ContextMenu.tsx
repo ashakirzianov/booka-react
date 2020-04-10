@@ -50,7 +50,9 @@ export function ContextMenu({
         }
     }, 300), [onTrigger]));
 
-    return <div>
+    return <div
+        onClick={() => setState(undefined)}
+    >
         <ContextMenuBody state={state} theme={theme}>
             {children}
         </ContextMenuBody>
