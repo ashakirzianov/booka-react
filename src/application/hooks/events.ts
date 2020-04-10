@@ -1,4 +1,5 @@
 import { useEffect, useCallback } from 'react';
+import * as clipboard from 'clipboard-polyfill';
 
 export type ClipboardEvent = {
     preventDefault: () => void,
@@ -65,6 +66,6 @@ function useEnhancedCallback(callback: (e: EnhancedEvent) => void) {
 
 export function useWriteClipboardText() {
     return useCallback((text: string) => {
-        navigator.clipboard.writeText(text);
+        clipboard.writeText(text);
     }, []);
 }
