@@ -1,19 +1,27 @@
 /*global globalThis*/
-import React from 'react';
+import { createElement, SFC } from 'react';
 import { createStore, compose, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { createLogger } from 'redux-logger';
 import { filterUndefined } from 'booka-common';
 
 import { config } from '../config';
-import { createAppEpicMiddleware, rootReducer, rootEpic } from '../ducks';
+import { createAppEpicMiddleware, rootReducer, rootEpic, createDataAccess } from '../ducks';
 import { startupFbSdk, fbState } from './facebookSdk';
-import { dataAccess } from './hooks/dataProvider';
 import { historySyncMiddleware, subscribeToHistory } from './historySync';
+import { createSyncStorage } from '../core';
+import { UserContextProvider } from './hooks/dataProvider';
 
-export const ConnectedProvider: React.SFC = ({ children }) =>
-    React.createElement(Provider, { store }, children);
+export const ConnectedProvider: SFC = ({ children }) =>
+    createElement(
+        Provider, { store },
+        createElement(
+            UserContextProvider, { value: dataAccess },
+            children,
+        ),
+    );
 
+const dataAccess = createDataAccess(createSyncStorage('users'));
 function configureStore() {
     const composeEnhancers: typeof compose =
         // Note: support redux dev tools
