@@ -3,38 +3,13 @@ import { assertNever } from 'booka-common';
 import { useTheme, useUploadEpub } from '../application';
 import {
     IconButton, Label, View, ActionButton, CheckBox,
-    regularSpace, SelectFileDialog, SelectFileDialogRef, SelectFileResult,
-    doubleSpace, megaSpace, ActivityIndicator, Modal,
+    SelectFileDialog, SelectFileDialogRef, SelectFileResult,
+    doubleSpace, megaSpace, ActivityIndicator, WithPopover, point,
 } from '../controls';
 import { Themed } from '../core';
 import { LoginOptions } from './LoginOptions';
 import { BookPathLink } from './Navigation';
-
-export function UploadButton() {
-    const theme = useTheme();
-    const [open, setOpen] = useState(false);
-
-    return <>
-        <IconButton
-            theme={theme}
-            icon='upload'
-            callback={() => setOpen(true)}
-        />
-        <Modal
-            theme={theme}
-            title='Upload book'
-            open={open}
-            close={() => setOpen(false)}
-        >
-            <View style={{
-                alignItems: 'center',
-                padding: regularSpace,
-            }}>
-                <UploadPanel />
-            </View>
-        </Modal>
-    </>;
-}
+import { Observable } from 'rxjs';
 
 type UploadState = {
     state: 'not-signed',
@@ -55,10 +30,40 @@ type UploadState = {
     state: 'error',
     fileName: string,
 };
-function UploadPanel() {
+export function UploadButton() {
     const theme = useTheme();
     const [state, setState] = useState<UploadState>({ state: 'empty' });
     const uploadEpub = useUploadEpub();
+
+    return <WithPopover
+        theme={theme}
+        placement='bottom'
+        body={<View style={{
+            alignItems: 'center',
+            width: point(14),
+            margin: doubleSpace,
+        }}>
+            <UploadPanel
+                theme={theme}
+                state={state}
+                setState={setState}
+                uploadEpub={uploadEpub}
+            />
+        </View>}
+    >
+        <IconButton
+            theme={theme}
+            icon='upload'
+        />
+    </WithPopover>;
+}
+function UploadPanel({
+    theme, uploadEpub, state, setState,
+}: Themed & {
+    state: UploadState,
+    setState: (state: UploadState) => void,
+    uploadEpub: (data: any, publicDomain: boolean) => Observable<string>,
+}) {
     switch (state.state) {
         case 'not-signed':
             return <NotSignedPanel
