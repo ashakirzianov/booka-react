@@ -9,6 +9,7 @@ import {
     faPlus, faTimes, faAngleLeft, faListUl, faFontCase, faCircle, faSignIn,
     faQuestion, faBookmark, faHighlighter, faUnderline,
     faTrashAlt, faMobile, faDesktop, faFileAlt, faQuoteRight, faClone,
+    faUser,
 } from '@fortawesome/pro-light-svg-icons';
 import {
     faFacebookSquare, faSafari, faChrome, faFirefox, faEdge, faInternetExplorer,
@@ -22,15 +23,15 @@ import { Size } from './common';
 
 export type IconName =
     | 'close' | 'left' | 'items' | 'letter'
-    | 'circle' | 'sign-in' | 'facebook'
+    | 'circle' | 'sign-in' | 'user'
     | 'upload'
     | 'bookmark-empty' | 'bookmark-solid'
     | 'highlight' | 'underline'
     | 'remove'
-    | 'safari' | 'chrome' | 'firefox' | 'edge' | 'ie'
     | 'mobile' | 'desktop'
     | 'pages'
     | 'copy' | 'quote'
+    | 'safari' | 'chrome' | 'firefox' | 'edge' | 'ie' | 'facebook'
     ;
 
 export type IconProps = Themed & {
@@ -114,6 +115,8 @@ function iconForName(name: IconName) {
             return faClone;
         case 'quote':
             return faQuoteRight;
+        case 'user':
+            return faUser;
         default:
             assertNever(name);
             return faQuestion;
