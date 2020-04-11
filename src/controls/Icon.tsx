@@ -4,30 +4,34 @@ import React from 'react';
 import { jsx } from '@emotion/core';
 import { assertNever } from 'booka-common';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    FaTimes, FaAngleLeft, FaBars, FaFont,
-    FaCircle, FaSignInAlt, FaFacebookSquare,
-    FaQuestion, FaBookmark, FaRegBookmark, FaHighlighter, FaUnderline,
-    FaRegTrashAlt, FaPlus,
-    FaSafari, FaChrome, FaFirefox, FaEdge, FaInternetExplorer,
-    FaMobile, FaDesktop,
-    FaFile,
-    FaQuoteRight, FaRegClone,
-} from 'react-icons/fa';
+    faPlus, faTimes, faAngleLeft, faListUl, faFontCase, faCircle, faSignIn,
+    faQuestion, faBookmark, faHighlighter, faUnderline,
+    faTrashAlt, faMobile, faDesktop, faFileAlt, faQuoteRight, faClone,
+    faUser,
+} from '@fortawesome/pro-light-svg-icons';
+import {
+    faFacebookSquare, faSafari, faChrome, faFirefox, faEdge, faInternetExplorer,
+} from '@fortawesome/free-brands-svg-icons';
+import {
+    faBookmark as faSolidBookmark,
+} from '@fortawesome/free-solid-svg-icons';
+
 import { PaletteColor, Themed, colors } from './theme';
 import { Size } from './common';
 
 export type IconName =
     | 'close' | 'left' | 'items' | 'letter'
-    | 'circle' | 'sign-in' | 'facebook'
+    | 'circle' | 'sign-in' | 'user'
     | 'upload'
     | 'bookmark-empty' | 'bookmark-solid'
     | 'highlight' | 'underline'
     | 'remove'
-    | 'safari' | 'chrome' | 'firefox' | 'edge' | 'ie'
     | 'mobile' | 'desktop'
     | 'pages'
     | 'copy' | 'quote'
+    | 'safari' | 'chrome' | 'firefox' | 'edge' | 'ie' | 'facebook'
     ;
 
 export type IconProps = Themed & {
@@ -41,13 +45,14 @@ export type IconProps = Themed & {
 export function Icon({
     theme, name, size, margin, color, hoverColor,
 }: IconProps) {
-    const IconClass = iconClassForName(name);
+    const icon = iconForName(name);
     return <div
         css={{
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             margin,
+            fontSize: size || '1em',
             color: color
                 ? colors(theme)[color]
                 : undefined,
@@ -58,62 +63,62 @@ export function Icon({
             },
         }}
     >
-        <IconClass
-            size={size || '1em'}
-        />
+        <FontAwesomeIcon icon={icon} />
     </div>;
 }
 
-function iconClassForName(name: IconName) {
+function iconForName(name: IconName) {
     switch (name) {
         case 'close':
-            return FaTimes;
+            return faTimes;
         case 'left':
-            return FaAngleLeft;
+            return faAngleLeft;
         case 'items':
-            return FaBars;
+            return faListUl;
         case 'letter':
-            return FaFont;
+            return faFontCase;
         case 'circle':
-            return FaCircle;
+            return faCircle;
         case 'sign-in':
-            return FaSignInAlt;
+            return faSignIn;
         case 'facebook':
-            return FaFacebookSquare;
+            return faFacebookSquare;
         case 'upload':
-            return FaPlus;
+            return faPlus;
         case 'bookmark-empty':
-            return FaRegBookmark;
+            return faBookmark;
         case 'bookmark-solid':
-            return FaBookmark;
+            return faSolidBookmark;
         case 'highlight':
-            return FaHighlighter;
+            return faHighlighter;
         case 'underline':
-            return FaUnderline;
+            return faUnderline;
         case 'remove':
-            return FaRegTrashAlt;
+            return faTrashAlt;
         case 'safari':
-            return FaSafari;
+            return faSafari;
         case 'chrome':
-            return FaChrome;
+            return faChrome;
         case 'firefox':
-            return FaFirefox;
+            return faFirefox;
         case 'edge':
-            return FaEdge;
+            return faEdge;
         case 'ie':
-            return FaInternetExplorer;
+            return faInternetExplorer;
         case 'mobile':
-            return FaMobile;
+            return faMobile;
         case 'desktop':
-            return FaDesktop;
+            return faDesktop;
         case 'pages':
-            return FaFile;
+            return faFileAlt;
         case 'copy':
-            return FaRegClone;
+            return faClone;
         case 'quote':
-            return FaQuoteRight;
+            return faQuoteRight;
+        case 'user':
+            return faUser;
         default:
             assertNever(name);
-            return FaQuestion;
+            return faQuestion;
     }
 }

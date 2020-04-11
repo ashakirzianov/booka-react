@@ -62,9 +62,9 @@ function ActualButton({ theme, account, callback }: Themed & {
     callback?: () => void,
 }) {
     if (account.state === 'signed') {
-        return <PictureButton
+        return <IconButton
             theme={theme}
-            pictureUrl={account.account.pictureUrl}
+            icon='user'
             callback={callback}
         />;
     } else {
