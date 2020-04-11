@@ -4,7 +4,7 @@ import { AccountInfo } from 'booka-common';
 import { AccountState } from '../ducks';
 import { useTheme, useAccount, useLogout } from '../application';
 import {
-    WithPopover, View, PictureButton, IconButton, Label,
+    WithPopover, View, IconButton, Label,
     ActionButton, point, doubleSpace,
 } from '../controls';
 import { Themed } from '../core';
