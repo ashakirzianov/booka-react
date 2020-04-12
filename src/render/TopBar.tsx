@@ -5,7 +5,7 @@ import {
     useSearch, useTheme, useDoSearch, useSearchQuery,
 } from '../application';
 import {
-    TextInput, ActivityIndicator, Panel, userAreaWidth, Label,
+    SearchInput, ActivityIndicator, Panel, userAreaWidth, Label,
 } from '../controls';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
@@ -20,7 +20,7 @@ export function TopBar() {
         doQuery(q ? q : undefined);
     }, 300), [doQuery]);
     return <Layout
-        Input={<TextInput
+        Input={<SearchInput
             theme={theme}
             placeholder='Search books...'
             initial={query}

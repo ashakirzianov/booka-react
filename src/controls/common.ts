@@ -55,10 +55,6 @@ export function actionBack(theme: Theme) {
     return colors(theme).primary;
 }
 
-export function panelShadow(color: Color) {
-    return `0px 0px 2px ${color}`;
-}
-
 export function roundShadow(color: Color) {
     return `2px 2px 2px ${color}`;
 }
@@ -105,6 +101,12 @@ export function fontCss({
         fontStyle: italic
             ? 'italic' as 'italic'
             : undefined,
+    };
+}
+
+export function panelShadow(color: string) {
+    return {
+        boxShadow: `0px 4px 6px -4px ${color}`,
     };
 }
 

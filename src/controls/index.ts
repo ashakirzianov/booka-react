@@ -17,4 +17,4 @@ export * from './Popover';
 export * from './PreviewText';
 export * from './SelectFileDialog';
 export * from './TagLabel';
-export * from './TextInput';
+export * from './SearchInput';

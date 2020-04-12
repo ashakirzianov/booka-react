@@ -18,7 +18,7 @@ export function WithPopover({
         pointerEvents: 'auto',
         '& .tippy-box[data-theme~=\'custom\']': {
             backgroundColor: colors(theme).secondary,
-            boxShadow: panelShadow(colors(theme).shadow),
+            ...panelShadow(colors(theme).shadow),
             borderRadius: radius,
         },
     }}>

@@ -45,7 +45,7 @@ export function Modal({
                     overflow: 'scroll',
                     zIndex: 10,
                     backgroundColor: colors(theme).secondary,
-                    boxShadow: panelShadow(colors(theme).shadow),
+                    ...panelShadow(colors(theme).shadow),
                     borderRadius: radius,
                     pointerEvents: 'auto',
                     transitionDuration: `${defaultAnimationDuration}ms`,

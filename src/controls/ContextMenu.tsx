@@ -67,7 +67,7 @@ function ContextMenuBody({ state, theme, children }: HasChildren & Themed & {
         userSelect: 'none',
         '& .tippy-box[data-theme~=\'custom\']': {
             backgroundColor: colors(theme).secondary,
-            boxShadow: panelShadow(colors(theme).shadow),
+            ...panelShadow(colors(theme).shadow),
             borderRadius: radius,
             width: menuWidth,
         },
