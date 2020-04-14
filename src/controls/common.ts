@@ -61,7 +61,7 @@ export function roundShadow(color: Color) {
 
 export const radius = 3;
 
-export const userAreaWidth = point(50);
+export const userAreaWidth = point(60);
 export const panelHeight = point(14);
 export const buttonHeight = 50;
 export const buttonWidth = 120;
@@ -126,4 +126,37 @@ export function actionHoverCss({ theme, color }: {
         transform: 'translateY(-1px)',
         boxShadow: `3px 3px 3px ${colors(theme)[color ?? 'shadow']}`,
     };
+}
+
+export function pageEffect(shadow: string) {
+    return {
+        position: 'relative',
+        boxShadow: `0 1px 4px ${shadow}, 0 0 6px rgba(0, 0, 0, 0.1) inset`,
+        '&:after': {
+            content: '""',
+            position: 'absolute',
+            zIndex: -1,
+            boxShadow: `0 0 20px ${shadow}`,
+            top: 0,
+            bottom: 0,
+            left: 10,
+            right: 10,
+            borderRadius: '50px',
+            transform: 'auto',
+        },
+        '&:hover': {
+            '&:before': {
+                content: '""',
+                zIndex: -1,
+                position: 'absolute',
+                top: '30%',
+                bottom: 15,
+                left: '30%',
+                right: 15,
+                boxShadow: `0px 0px 10px 10px ${shadow}`,
+                transform: 'skew(3deg, 3deg)',
+                borderRadius: 0,
+            },
+        },
+    } as const;
 }

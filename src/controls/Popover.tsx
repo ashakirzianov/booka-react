@@ -17,12 +17,14 @@ export function WithPopover({
     return <div css={{
         pointerEvents: 'auto',
         '& .tippy-box[data-theme~=\'custom\']': {
+            zIndex: 100,
             backgroundColor: colors(theme).secondary,
             ...panelShadow(colors(theme).shadow),
             borderRadius: radius,
         },
     }}>
         <Tippy
+            popperOptions={{ strategy: 'fixed' }}
             offset={[0, -10]}
             arrow={false}
             theme='custom'
@@ -30,7 +32,7 @@ export function WithPopover({
             interactive={true}
             hideOnClick={true}
             animation='shift-away'
-            content={<div>{body}</div>}>
+            content={<div style={{ zIndex: 100 }}>{body}</div>}>
             <div>{children}</div>
         </Tippy>
     </div>;

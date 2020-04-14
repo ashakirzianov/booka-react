@@ -5,8 +5,7 @@ import { View } from 'react-native';
 import { jsx } from '@emotion/core';
 import { Themed, colors } from './theme';
 import {
-    buttonHeight, actionBack, regularSpace,
-    fontCss, panelShadow, radius, point,
+    regularSpace, fontCss, radius, point,
 } from './common';
 
 export function SearchInput({

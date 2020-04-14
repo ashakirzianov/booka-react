@@ -76,7 +76,7 @@ const defaultColors: Palette = {
     accent: '#867B6C',
     dimmed: '#ddd',
     highlight: '#DA8C14',
-    shadow: 'rgba(0, 0, 0, 1.0)',
+    shadow: 'rgba(0, 0, 0, 0.3)',
     semiTransparent: 'rgba(0, 0, 0, 0.3)',
     neutral: 'navy',
     positive: 'green',

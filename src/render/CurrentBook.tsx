@@ -1,16 +1,12 @@
-import React, { ReactNode } from 'react';
-import { View } from 'react-native';
+import React from 'react';
+
 import { CurrentPosition } from 'booka-common';
 import {
-    usePositions, useTheme,
+    usePositions, useTheme, usePreview, useLibraryCard,
 } from '../application';
-import { Panel, regularSpace } from '../controls';
-import { Themed } from '../core';
-import { ParagraphPreview } from './ParagraphPreview';
-import { BookIdTile } from './LibraryCardTile';
+import { CurrentBookView } from '../views';
 
-export function CurrentBook() {
-    const theme = useTheme();
+export function CurrentBookPanel() {
     const positions = usePositions();
     if (positions.length === 0) {
         return null;
@@ -20,50 +16,19 @@ export function CurrentBook() {
         (most, curr) => most.created < curr.created
             ? curr : most,
     );
-
-    return <Panel theme={theme} title='Current'>
-        <CurrentBookContent
-            theme={theme}
-            position={mostRecent}
-        />
-    </Panel>;
+    return <CurrentBook position={mostRecent} />;
 }
 
-function CurrentBookContent({ position, theme }: Themed & {
+function CurrentBook({ position }: {
     position: CurrentPosition,
 }) {
-    return <Layout
-        Tile={<BookIdTile bookId={position.bookId} />}
-        Preview={<ParagraphPreview
-            theme={theme}
-            bookId={position.bookId}
-            path={position.path}
-        />}
+    const theme = useTheme();
+    const preview = usePreview(position.bookId, position.path);
+    const card = useLibraryCard(position.bookId);
+    return <CurrentBookView
+        theme={theme}
+        position={position}
+        card={card}
+        preview={preview}
     />;
-}
-
-function Layout({ Tile, Preview }: {
-    Tile: ReactNode,
-    Preview: ReactNode,
-}) {
-    return <View style={{
-        flexDirection: 'row',
-        minHeight: 0,
-        width: '100%',
-        height: 260,
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    }}>
-        {Tile}
-        <View style={{
-            flexDirection: 'column',
-            flexShrink: 1,
-            maxHeight: '100%',
-            width: '100%',
-            minHeight: 0,
-            marginLeft: regularSpace,
-        }}>
-            {Preview}
-        </View>
-    </View>;
 }

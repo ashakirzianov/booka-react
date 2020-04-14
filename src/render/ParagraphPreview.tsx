@@ -11,7 +11,7 @@ export function ParagraphPreview({ bookId, path, theme }: Themed & {
     bookId: string,
     path: BookPath,
 }) {
-    const { previewState } = usePreview(bookId, path);
+    const previewState = usePreview(bookId, path);
     if (previewState.loading) {
         return <ActivityIndicator theme={theme} />;
     } else {

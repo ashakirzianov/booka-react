@@ -43,7 +43,7 @@ export function usePreview(bookId: string, path: BookPath) {
         return () => sub.unsubscribe();
     }, [data, bookId, path]);
 
-    return { previewState };
+    return previewState;
 }
 
 export function useUploadEpub() {
