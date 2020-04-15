@@ -30,5 +30,6 @@ function CurrentBook({ position }: {
         position={position}
         card={card}
         preview={preview}
+        page='25 of 314'
     />;
 }

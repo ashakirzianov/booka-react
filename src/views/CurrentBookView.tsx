@@ -9,10 +9,13 @@ import {
 } from '../controls';
 import { BookPathLink, CardLink } from './Navigation';
 
-export function CurrentBookView({ card, position, preview, theme }: Themed & {
+export function CurrentBookView({
+    card, position, preview, page, theme,
+}: Themed & {
     position: CurrentPosition,
     card: Loadable<LibraryCard>,
     preview: Loadable<{ preview: string | undefined }>,
+    page: Loadable<string>,
 }) {
     if (card.loading) {
         return null;
@@ -30,7 +33,6 @@ export function CurrentBookView({ card, position, preview, theme }: Themed & {
                 display: 'flex',
                 flexDirection: 'column',
                 paddingLeft: megaSpace, paddingRight: megaSpace,
-                paddingBottom: megaSpace,
                 alignItems: 'center',
             }}>
                 <span css={{
@@ -55,6 +57,18 @@ export function CurrentBookView({ card, position, preview, theme }: Themed & {
                     theme={theme}
                     text={preview.loading ? 'loading...' : preview.preview ?? 'not available'}
                 />
+                <span css={{
+                    color: colors(theme).accent,
+                    marginTop: doubleSpace,
+                    marginBottom: tripleSpace,
+                    ...fontCss({
+                        theme,
+                        fontFamily: 'book',
+                        fontSize: 'small',
+                    }),
+                }}>
+                    {page}
+                </span>
             </div>
         </BookPathLink>
     </div>;
