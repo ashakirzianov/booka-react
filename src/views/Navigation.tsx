@@ -2,7 +2,11 @@ import React from 'react';
 import { BookPath } from 'booka-common';
 import { HasChildren, Link } from '../controls';
 import { AppLocation } from '../ducks';
-import { useNavigate, appLocationToUrl, useSetLibraryCard } from '../application';
+import {
+    useNavigate, appLocationToUrl, useSetLibraryCard,
+} from '../application';
+
+// TODO: find better location for this file
 
 export function BookPathLink({ bookId, path, children }: HasChildren & {
     bookId: string,

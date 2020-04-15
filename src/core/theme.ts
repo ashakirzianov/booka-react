@@ -72,7 +72,7 @@ export function colors(theme: Theme): Palette {
 const defaultColors: Palette = {
     text: '#000',
     primary: '#fff',
-    secondary: '#FFFAFC',
+    secondary: '#fefefd',
     accent: '#867B6C',
     dimmed: '#ddd',
     highlight: '#DA8C14',

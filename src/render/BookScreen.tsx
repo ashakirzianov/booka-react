@@ -11,12 +11,12 @@ import {
     FixedPanel, View, IconButton, Label, regularSpace, userAreaWidth,
     FullScreenActivityIndicator, Screen, megaSpace, doubleSpace,
 } from '../controls';
-import { FeedLink } from './Navigation';
 import { BookView } from './BookView';
 import { TableOfContentsModal } from './TableOfContentsModal';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
 import { BookmarkButton } from './BookmarkButton';
+import { FeedLink } from '../views';
 
 export function BookScreen() {
     const theme = useTheme();

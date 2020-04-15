@@ -8,8 +8,8 @@ import {
 } from '../controls';
 import { Themed } from '../core';
 import { LoginOptions } from './LoginOptions';
-import { BookPathLink } from './Navigation';
 import { Observable } from 'rxjs';
+import { BookPathLink } from '../views';
 
 type UploadState = {
     state: 'not-signed',

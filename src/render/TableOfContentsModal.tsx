@@ -14,7 +14,7 @@ import {
     useBookmarks, usePositions, useToc, useTheme,
     useSetTocOpen, useTocOpen,
 } from '../application';
-import { BookPathLink } from './Navigation';
+import { BookPathLink } from '../views';
 
 export function TableOfContentsModal({ bookId }: {
     bookId: string,
