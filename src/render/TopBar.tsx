@@ -5,7 +5,7 @@ import {
     useSearch, useTheme, useDoSearch, useSearchQuery,
 } from '../application';
 import {
-    SearchInput, ActivityIndicator, Panel, userAreaWidth, Label,
+    SearchInput, ActivityIndicator, Panel, Label, point,
 } from '../controls';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
@@ -74,9 +74,8 @@ function Layout({ Input, Buttons, Results }: {
 }) {
     return <View style={{
         flexDirection: 'column',
-        flexBasis: 'auto',
-        height: 'auto',
         justifyContent: 'flex-start',
+        height: point(7),
     }}>
         <View style={{
             flexDirection: 'row',
@@ -84,6 +83,7 @@ function Layout({ Input, Buttons, Results }: {
             flexGrow: 1,
             flexShrink: 1,
             justifyContent: 'space-between',
+            alignItems: 'center',
         }}>
             <View style={{
                 flexBasis: 1,
@@ -91,9 +91,8 @@ function Layout({ Input, Buttons, Results }: {
                 flexShrink: 1,
             }} />
             <View style={{
-                width: userAreaWidth,
-                maxWidth: userAreaWidth,
-                flexBasis: 'auto',
+                minWidth: 'auto',
+                flexBasis: 1,
                 flexGrow: 1,
                 flexShrink: 1,
                 flexDirection: 'row',

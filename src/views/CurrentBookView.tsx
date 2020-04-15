@@ -4,7 +4,9 @@ import React from 'react';
 import { jsx } from '@emotion/core';
 import { CurrentPosition, LibraryCard } from 'booka-common';
 import { Themed, Loadable, colors } from '../core';
-import { fontCss, pageEffect, megaSpace, point } from '../controls';
+import {
+    fontCss, pageEffect, megaSpace, userAreaWidth,
+} from '../controls';
 
 export function CurrentBookView({ card, position, preview, theme }: Themed & {
     position: CurrentPosition,
@@ -17,7 +19,7 @@ export function CurrentBookView({ card, position, preview, theme }: Themed & {
     return <div css={{
         display: 'flex',
         flexDirection: 'column',
-        maxWidth: point(40),
+        maxWidth: userAreaWidth,
         alignSelf: 'center',
         backgroundColor: colors(theme).primary,
         ...pageEffect(colors(theme).shadow),

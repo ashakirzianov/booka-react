@@ -18,14 +18,15 @@ export function SearchInput({
     return <View style={{
         flexBasis: 1,
         flexGrow: 1,
+        flexShrink: 1,
         margin: regularSpace,
         alignItems: 'center',
+        maxWidth: point(30),
     }}>
         <input
             css={{
                 paddingTop: 0, paddingBottom: 0,
                 paddingLeft: regularSpace, paddingRight: regularSpace,
-                maxWidth: point(30),
                 borderWidth: 1,
                 borderRadius: radius,
                 borderColor: colors(theme).accent,
