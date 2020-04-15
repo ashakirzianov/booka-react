@@ -9,10 +9,12 @@ export function Link({ to, callback, children }: HasChildren & {
         href={to}
         style={{
             textDecoration: 'none',
+            color: 'inherit',
         }}
         onClick={event => {
             if (!isKeyModified(event)) {
                 event.preventDefault();
+                event.stopPropagation();
                 callback();
             }
         }}

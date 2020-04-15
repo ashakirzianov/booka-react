@@ -72,6 +72,7 @@ export const xsmallSpace = point(0.1);
 export const smallSpace = point(0.25);
 export const regularSpace = point(0.5);
 export const doubleSpace = point(1);
+export const tripleSpace = point(1.5);
 export const megaSpace = point(3);
 
 export const bookCoverHeight = 180;
