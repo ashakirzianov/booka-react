@@ -28,16 +28,19 @@ export function CurrentBookView({
         backgroundColor: colors(theme).primary,
         ...pageEffect(colors(theme).shadow),
     }}>
-        <BookPathLink bookId={position.bookId} path={position.path}>
-            <div css={{
-                display: 'flex',
-                flexDirection: 'column',
-                paddingLeft: megaSpace, paddingRight: megaSpace,
-                alignItems: 'center',
-            }}>
-                <span css={{
-                    marginTop: tripleSpace,
-                    marginBottom: doubleSpace,
+        <div css={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+        }}>
+            <CardLink bookId={card.id}>
+                <div css={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignSelf: 'stretch',
+                    alignItems: 'center',
+                    paddingTop: tripleSpace,
+                    paddingBottom: doubleSpace,
                     color: colors(theme).accent,
                     ...fontCss({
                         theme,
@@ -49,32 +52,40 @@ export function CurrentBookView({
                         color: colors(theme).highlight,
                     },
                 }}>
-                    <CardLink bookId={card.id}>
-                        {card.title}
-                    </CardLink>
-                </span>
-                {
-                    preview.loading
-                        ? <ActivityIndicator theme={theme} />
-                        : <Preview
-                            theme={theme}
-                            text={preview}
-                        />
-                }
-                <span css={{
-                    color: colors(theme).accent,
-                    marginTop: doubleSpace,
-                    marginBottom: tripleSpace,
-                    ...fontCss({
-                        theme,
-                        fontFamily: 'book',
-                        fontSize: 'small',
-                    }),
+                    {card.title}
+                </div>
+            </CardLink>
+            <BookPathLink bookId={position.bookId} path={position.path}>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    paddingLeft: megaSpace,
+                    paddingRight: megaSpace,
                 }}>
-                    {page.loading ? '' : page}
-                </span>
-            </div>
-        </BookPathLink>
+                    {
+                        preview.loading
+                            ? <ActivityIndicator theme={theme} />
+                            : <Preview
+                                theme={theme}
+                                text={preview}
+                            />
+                    }
+                    <span css={{
+                        color: colors(theme).accent,
+                        marginTop: doubleSpace,
+                        marginBottom: tripleSpace,
+                        ...fontCss({
+                            theme,
+                            fontFamily: 'book',
+                            fontSize: 'small',
+                        }),
+                    }}>
+                        {page.loading ? '' : page}
+                    </span>
+                </div>
+            </BookPathLink>
+        </div>
     </div>;
 }
 
@@ -95,8 +106,8 @@ function Preview({ text, theme }: Themed & {
             fontFamily: 'book',
             fontSize: 'small',
         }),
-        margin: 0,
         padding: 0,
+        margin: 0,
         textIndent: megaSpace,
     }}>
         {text}
