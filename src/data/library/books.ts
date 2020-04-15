@@ -3,7 +3,8 @@ import { map, mergeMap } from 'rxjs/operators';
 import {
     Book, BookPath, fragmentForPath, findReference,
     defaultFragmentLength, tocForBook, firstPath, pathToString,
-    AuthToken, AugmentedBookFragment, previewForPath,
+    AuthToken, AugmentedBookFragment, previewForPath, positionForPath,
+    bookLength,
 } from 'booka-common';
 import { libFetcher } from '../utils';
 import { createBookStore } from './bookStore';
@@ -68,17 +69,24 @@ export function booksProvider({ token }: {
                 }
             });
         },
-        textPreview(bookId: string, path: BookPath) {
+        pathData(bookId: string, path: BookPath) {
             return withCached(bookId, cached => {
                 if (cached) {
                     const preview = previewForPath(cached, path);
-                    return of(preview);
+                    if (preview === undefined) {
+                        throw new Error(`Bad path node: ${path.node}`);
+                    }
+                    const position = positionForPath(cached, path);
+                    const length = bookLength(cached);
+                    return of({
+                        preview,
+                        position,
+                        of: length,
+                    });
                 } else {
-                    return lib.get('/preview', {
+                    return lib.get('/path-data', {
                         query: { id: bookId, node: path.node },
-                    }).pipe(
-                        map(r => r.preview),
-                    );
+                    });
                 }
             });
         },

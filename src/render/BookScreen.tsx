@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {
-    positionForPath, pageForPosition, AugmentedBookFragment, BookPath,
+    pageForPosition, AugmentedBookFragment, BookPath, positionForPathInFragment,
 } from 'booka-common';
 import {
     useTheme, useBook, useSetTocOpen, useBookId, useBookPath,
@@ -123,7 +123,7 @@ function Footer({
     const total = fragment.toc
         ? pageForPosition(fragment.toc.length)
         : undefined;
-    const currentPage = pageForPosition(positionForPath(fragment, path));
+    const currentPage = pageForPosition(positionForPathInFragment(fragment, path));
     const nextChapterPage = fragment.next
         ? pageForPosition(fragment.next.position)
         : total;

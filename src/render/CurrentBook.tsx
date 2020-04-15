@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { CurrentPosition } from 'booka-common';
+import { CurrentPosition, pageForPosition } from 'booka-common';
 import {
-    usePositions, useTheme, usePreview, useLibraryCard,
+    usePositions, useTheme, usePathData, useLibraryCard,
 } from '../application';
 import { CurrentBookView } from '../views';
 
@@ -23,13 +23,18 @@ function CurrentBook({ position }: {
     position: CurrentPosition,
 }) {
     const theme = useTheme();
-    const preview = usePreview(position.bookId, position.path);
+    const pathData = usePathData(position.bookId, position.path);
     const card = useLibraryCard(position.bookId);
+    const page = pathData.loading
+        ? pathData
+        : `${pageForPosition(pathData.position)} of ${pageForPosition(pathData.of)}`;
+    const preview = pathData.loading
+        ? pathData : pathData.preview;
     return <CurrentBookView
         theme={theme}
         position={position}
         card={card}
         preview={preview}
-        page='25 of 314'
+        page={page}
     />;
 }

@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { map } from 'rxjs/operators';
 import {
     BookPath, TableOfContents,
 } from 'booka-common';
@@ -28,18 +27,17 @@ export function useToc(): Loadable<TableOfContents> {
 }
 
 export type TextPreviewState = Loadable<{
-    preview: string | undefined,
+    preview: string,
+    position: number,
+    of: number,
 }>;
-export function usePreview(bookId: string, path: BookPath) {
+export function usePathData(bookId: string, path: BookPath) {
     const data = useDataProvider();
     const [previewState, setPreviewState] = useState<TextPreviewState>({ loading: true });
 
     useEffect(() => {
-        const sub = data.textPreview(bookId, path).pipe(
-            map((preview): TextPreviewState => ({
-                preview,
-            })),
-        ).subscribe(setPreviewState);
+        const sub = data.pathData(bookId, path)
+            .subscribe(setPreviewState);
         return () => sub.unsubscribe();
     }, [data, bookId, path]);
 

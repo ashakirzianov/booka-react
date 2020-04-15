@@ -5,7 +5,7 @@ import { jsx } from '@emotion/core';
 import { CurrentPosition, LibraryCard } from 'booka-common';
 import { Themed, Loadable, colors } from '../core';
 import {
-    fontCss, pageEffect, megaSpace, userAreaWidth, regularSpace, doubleSpace, point, tripleSpace,
+    fontCss, pageEffect, megaSpace, userAreaWidth, doubleSpace, tripleSpace, ActivityIndicator,
 } from '../controls';
 import { BookPathLink, CardLink } from './Navigation';
 
@@ -14,7 +14,7 @@ export function CurrentBookView({
 }: Themed & {
     position: CurrentPosition,
     card: Loadable<LibraryCard>,
-    preview: Loadable<{ preview: string | undefined }>,
+    preview: Loadable<string>,
     page: Loadable<string>,
 }) {
     if (card.loading) {
@@ -53,10 +53,14 @@ export function CurrentBookView({
                         {card.title}
                     </CardLink>
                 </span>
-                <Preview
-                    theme={theme}
-                    text={preview.loading ? 'loading...' : preview.preview ?? 'not available'}
-                />
+                {
+                    preview.loading
+                        ? <ActivityIndicator theme={theme} />
+                        : <Preview
+                            theme={theme}
+                            text={preview}
+                        />
+                }
                 <span css={{
                     color: colors(theme).accent,
                     marginTop: doubleSpace,
@@ -67,7 +71,7 @@ export function CurrentBookView({
                         fontSize: 'small',
                     }),
                 }}>
-                    {page}
+                    {page.loading ? '' : page}
                 </span>
             </div>
         </BookPathLink>
