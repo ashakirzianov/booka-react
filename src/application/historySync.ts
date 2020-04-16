@@ -81,6 +81,7 @@ export function appLocationToUrl(loc: AppLocation) {
                 url: '/feed',
                 query: {
                     show: loc.card,
+                    q: loc.search,
                 },
             });
         case 'book':
