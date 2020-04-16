@@ -8,7 +8,7 @@ import {
 } from '../application';
 import { Themed, colors } from '../core';
 import {
-    FixedPanel, View, IconButton, Label, regularSpace, userAreaWidth,
+    FixedPanel, View, IconButton, Label, regularSpace, readingAreaWidth,
     FullScreenActivityIndicator, Screen, megaSpace, doubleSpace,
 } from '../controls';
 import { BookView } from './BookView';
@@ -66,7 +66,7 @@ function BookReady({
         }}
         >
             <View style={{
-                maxWidth: userAreaWidth,
+                maxWidth: readingAreaWidth,
                 paddingTop: megaSpace, paddingBottom: megaSpace,
                 paddingLeft: doubleSpace, paddingRight: doubleSpace,
             }}>
