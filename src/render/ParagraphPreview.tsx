@@ -5,7 +5,7 @@ import {
 } from '../application';
 import { Themed } from '../core';
 import { PreviewText, ActivityIndicator } from '../controls';
-import { BookPathLink } from '../views';
+import { BookPathLink } from './Navigation';
 
 export function ParagraphPreview({ bookId, path, theme }: Themed & {
     bookId: string,

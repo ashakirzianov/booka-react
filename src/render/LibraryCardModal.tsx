@@ -15,7 +15,7 @@ import {
 import { LibraryCardTile } from './LibraryCardTile';
 import { ParagraphPreview } from './ParagraphPreview';
 import { TagList } from './TagList';
-import { BookPathLink } from '../views';
+import { BookPathLink } from './Navigation';
 
 export function LibraryCardModal() {
     const bookId = useCardId();

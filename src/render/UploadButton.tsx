@@ -9,7 +9,7 @@ import {
 import { Themed } from '../core';
 import { LoginOptions } from './LoginOptions';
 import { Observable } from 'rxjs';
-import { BookPathLink } from '../views';
+import { BookPathLink } from './Navigation';
 
 type UploadState = {
     state: 'not-signed',

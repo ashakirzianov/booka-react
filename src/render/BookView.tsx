@@ -16,7 +16,7 @@ import {
     View, BorderButton, regularSpace, colorForHighlightGroup,
 } from '../controls';
 import { BookContextMenu } from './BookContextMenu';
-import { BookRefLink, BookPathLink } from '../views';
+import { BookRefLink, BookPathLink } from './Navigation';
 
 export function BookView({
     bookId, fragment, scrollPath,

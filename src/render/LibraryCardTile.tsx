@@ -3,7 +3,7 @@ import { LibraryCard } from 'booka-common';
 import { BookTile, ActivityIndicator } from '../controls';
 import { useLibraryCard, useTheme } from '../application';
 import { Themed, Loadable } from '../core';
-import { CardLink } from '../views';
+import { CardLink } from './Navigation';
 
 export function BookIdTile({ bookId }: {
     bookId: string,

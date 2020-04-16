@@ -16,7 +16,7 @@ import { TableOfContentsModal } from './TableOfContentsModal';
 import { AccountButton } from './AccountButton';
 import { AppearanceButton } from './AppearanceButton';
 import { BookmarkButton } from './BookmarkButton';
-import { FeedLink } from '../views';
+import { FeedLink } from './Navigation';
 
 export function BookScreen() {
     const theme = useTheme();
