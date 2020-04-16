@@ -7,7 +7,7 @@ import {
     Themed, colors,
 } from './theme';
 import {
-    Style, bookCoverWidth, panelShadow, tripleSpace, radius,
+    Style, bookCoverWidth, panelShadow, tripleSpace, radius, fontCss, bookCoverHeight, regularSpace, multilineOverflowCss,
 } from './common';
 import { BookCover } from './BookCover';
 
@@ -20,12 +20,13 @@ export function BookTile({
     showTitle?: boolean,
     callback?: () => void,
 }) {
-    return <div css={{
+    return <div title={title} css={{
         display: 'flex',
         flex: 1,
-        flexDirection: 'column',
+        flexDirection: 'row',
         flexGrow: 0,
-        width: bookCoverWidth,
+        width: bookCoverWidth * 2,
+        height: bookCoverHeight,
         margin: tripleSpace,
         alignItems: 'center',
         color: colors(theme).text,
@@ -45,15 +46,24 @@ export function BookTile({
             author={author}
             coverUrl={coverUrl}
         />
-        {
-            !showTitle ? null :
-                <BookTitle
-                    theme={theme}
-                    title={title}
-                    author={author}
-                />
-        }
-    </div>;
+        <div css={{
+            display: 'flex',
+            flexShrink: 1,
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            color: colors(theme).accent,
+            padding: regularSpace,
+        }}>
+            <span css={{
+                ...multilineOverflowCss(4),
+                ...fontCss({ theme, fontSize: 'xsmall', bold: true }),
+            }}>{title}</span>
+            <span css={{
+                ...multilineOverflowCss(3),
+                ...fontCss({ theme, fontSize: 'xsmall' }),
+            }}>{author}</span>
+        </div>
+    </div >;
 }
 
 const overflowLine: Style = {

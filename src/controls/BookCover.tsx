@@ -16,18 +16,26 @@ export function BookCover({
     title: string,
     author: string | undefined,
 }) {
-    if (coverUrl) {
-        return <BookImageCover
-            theme={theme}
-            imageUrl={coverUrl}
-            title={title}
-        />;
-    } else {
-        return <BookEmptyCover
-            theme={theme}
-            title={title}
-        />;
-    }
+    return <div title={title} style={{
+        display: 'flex',
+        flexShrink: 0,
+        height: bookCoverHeight,
+        width: bookCoverWidth,
+        alignItems: 'stretch',
+    }}>
+        {
+            coverUrl
+                ? <BookImageCover
+                    theme={theme}
+                    imageUrl={coverUrl}
+                    title={title}
+                />
+                : <BookEmptyCover
+                    theme={theme}
+                    title={title}
+                />
+        }
+    </div>;
 }
 
 function BookImageCover({ theme, imageUrl, title }: Themed & {
@@ -35,8 +43,9 @@ function BookImageCover({ theme, imageUrl, title }: Themed & {
     title: string,
 }) {
     return <div title={title} style={{
-        height: bookCoverHeight,
-        width: bookCoverWidth,
+        display: 'flex',
+        width: '100%',
+        height: '100%',
         backgroundImage: `url(${imageUrl})`,
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
@@ -51,8 +60,6 @@ function BookEmptyCover({ title, theme }: Themed & {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'stretch',
-        height: bookCoverHeight,
-        width: bookCoverWidth,
     }}>
         <div css={{
             display: 'flex',

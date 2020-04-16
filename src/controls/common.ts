@@ -162,3 +162,14 @@ export function pageEffect(shadow: string) {
         },
     } as const;
 }
+
+export function multilineOverflowCss(lines: number) {
+    return {
+        display: '-webkit-box',
+        WebkitLineClamp: lines,
+        WebkitBoxOrient: 'vertical',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'break-spaces',
+    } as const;
+}

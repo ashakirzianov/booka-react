@@ -11,7 +11,7 @@ import {
 import { Loadable, Themed, colors } from '../core';
 import {
     pageEffect, tripleSpace, doubleSpace, fontCss,
-    megaSpace, ActivityIndicator, point,
+    megaSpace, ActivityIndicator, point, multilineOverflowCss,
 } from '../controls';
 import { CardLink, BookPathLink } from './Navigation';
 
@@ -162,12 +162,7 @@ function TextPreview({ text, theme }: Themed & {
     text: string,
 }) {
     return <p css={{
-        display: '-webkit-box',
-        WebkitLineClamp: 10,
-        WebkitBoxOrient: 'vertical',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'break-spaces',
+        ...multilineOverflowCss(10),
         textAlign: 'justify',
         color: colors(theme).text,
         ...fontCss({
