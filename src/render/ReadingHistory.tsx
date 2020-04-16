@@ -15,14 +15,14 @@ import {
 } from '../controls';
 import { CardLink, BookPathLink } from './Navigation';
 
-export function CurrentBookPanel() {
+export function ReadingHistory() {
     const positions = usePositions();
     if (positions.length === 0) {
         return null;
     }
 
     const recent = buildRecent(positions);
-    return <RecentBooksList
+    return <ReadingHistoryList
         positions={recent}
     />;
 }
@@ -35,7 +35,7 @@ function buildRecent(positions: CurrentPosition[]): CurrentPosition[] {
     return uniq;
 }
 
-function RecentBooksList({ positions }: {
+function ReadingHistoryList({ positions }: {
     positions: CurrentPosition[],
 }) {
     return <div style={{
@@ -49,7 +49,7 @@ function RecentBooksList({ positions }: {
             positions.map((position, idx) => <div key={idx} css={{
                 margin: doubleSpace,
             }}>
-                <CurrentBook
+                <ReadingHistoryTile
                     position={position}
                 />
             </div>)
@@ -57,7 +57,7 @@ function RecentBooksList({ positions }: {
     </div>;
 }
 
-function CurrentBook({ position }: {
+function ReadingHistoryTile({ position }: {
     position: CurrentPosition,
 }) {
     const theme = useTheme();
@@ -68,7 +68,7 @@ function CurrentBook({ position }: {
         : `${pageForPosition(pathData.position)} of ${pageForPosition(pathData.of)}`;
     const preview = pathData.loading
         ? pathData : pathData.preview;
-    return <CurrentBookView
+    return <BookPreview
         theme={theme}
         position={position}
         card={card}
@@ -77,7 +77,7 @@ function CurrentBook({ position }: {
     />;
 }
 
-function CurrentBookView({
+function BookPreview({
     card, position, preview, page, theme,
 }: Themed & {
     position: CurrentPosition,
@@ -135,7 +135,7 @@ function CurrentBookView({
                     {
                         preview.loading
                             ? <ActivityIndicator theme={theme} />
-                            : <Preview
+                            : <TextPreview
                                 theme={theme}
                                 text={preview}
                             />
@@ -158,7 +158,7 @@ function CurrentBookView({
     </div>;
 }
 
-function Preview({ text, theme }: Themed & {
+function TextPreview({ text, theme }: Themed & {
     text: string,
 }) {
     return <p css={{

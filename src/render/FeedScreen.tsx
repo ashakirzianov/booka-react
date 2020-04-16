@@ -5,8 +5,7 @@ import { useTheme } from '../application';
 import { ReadingList, UploadedList } from './Collections';
 import { LibraryCardModal } from './LibraryCardModal';
 import { TopBar } from './TopBar';
-import { CurrentBookPanel } from './CurrentBook';
-import { RecentBooks } from './RecentBooks';
+import { ReadingHistory } from './ReadingHistory';
 import { PopularBooks } from './PopularBooks';
 
 export function FeedScreen() {
@@ -14,8 +13,7 @@ export function FeedScreen() {
     return <Screen theme={theme}>
         <LibraryCardModal />
         <TopBar />
-        <CurrentBookPanel />
-        <RecentBooks />
+        <ReadingHistory />
         <UploadedList />
         <ReadingList />
         <PopularBooks />
