@@ -44,6 +44,7 @@ function ReadingHistoryList({ positions }: {
         flexShrink: 1,
         overflow: 'scroll',
         justifyContent: 'flex-start',
+        margin: doubleSpace,
     }}>
         {
             positions.map((position, idx) => <div key={idx} css={{
