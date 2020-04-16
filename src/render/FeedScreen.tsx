@@ -14,10 +14,10 @@ export function FeedScreen() {
     return <Screen theme={theme}>
         <LibraryCardModal />
         <AppBar />
-        <PopularBooks />
         <SearchResults />
         <ReadingHistory />
         <UploadedList />
         <ReadingList />
+        <PopularBooks />
     </Screen>;
 }
