@@ -39,6 +39,7 @@
         "keyval",
         "middlewares",
         "multiline",
+        "nowrap",
         "paren",
         "parens",
         "popperjs",

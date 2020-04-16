@@ -28,6 +28,7 @@ export function LibraryCardLink({ card, theme }: Themed & {
                 title={card.title}
                 author={card.author}
                 coverUrl={card.coverUrl}
+                showTitle
             />
         </CardLink>;
     }

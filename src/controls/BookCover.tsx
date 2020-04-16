@@ -44,6 +44,7 @@ function BookImageCover({ theme, imageUrl, title }: Themed & {
 }) {
     return <div title={title} style={{
         display: 'flex',
+        flexShrink: 0,
         width: '100%',
         height: '100%',
         backgroundImage: `url(${imageUrl})`,

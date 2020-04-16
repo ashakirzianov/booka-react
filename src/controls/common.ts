@@ -76,8 +76,8 @@ export const doubleSpace = point(1);
 export const tripleSpace = point(1.5);
 export const megaSpace = point(3);
 
-export const bookCoverHeight = 180;
-export const bookCoverWidth = 120;
+export const bookCoverHeight = 225;
+export const bookCoverWidth = 160;
 
 export const buttonStyle: CSSProperties = {
     cursor: 'pointer',
@@ -171,5 +171,13 @@ export function multilineOverflowCss(lines: number) {
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'break-spaces',
+    } as const;
+}
+
+export function singleLineOverflowCss() {
+    return {
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
     } as const;
 }
