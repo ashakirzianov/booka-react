@@ -37,16 +37,10 @@ function BookImageCover({ theme, imageUrl, title }: Themed & {
     return <div title={title} style={{
         height: bookCoverHeight,
         width: bookCoverWidth,
-    }}>
-        <img
-            src={imageUrl}
-            alt={title}
-            css={{
-                maxHeight: '100%',
-                maxWidth: '100%',
-            }}
-        />
-    </div>;
+        backgroundImage: `url(${imageUrl})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+    }} />;
 }
 
 function BookEmptyCover({ title, theme }: Themed & {
@@ -54,20 +48,30 @@ function BookEmptyCover({ title, theme }: Themed & {
 }) {
     const { back, text } = colorForString(title);
     return <div title={title} css={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'stretch',
         height: bookCoverHeight,
         width: bookCoverWidth,
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        textAlign: 'center',
-        paddingTop: 20,
-        paddingLeft: 5,
-        paddingRight: 5,
-        fontSize: calcFontSize(title),
-        fontFamily: theme.fontFamilies.menu,
-        background: back,
-        color: text,
     }}>
-        {title}
+        <div css={{
+            display: 'flex',
+            flexGrow: 1,
+            flexDirection: 'column',
+            alignItems: 'center',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            textAlign: 'center',
+            paddingTop: 20,
+            paddingLeft: 5,
+            paddingRight: 5,
+            fontSize: calcFontSize(title),
+            fontFamily: theme.fontFamilies.menu,
+            background: back,
+            color: text,
+        }}>
+            {title}
+        </div>
     </div>;
 }
 

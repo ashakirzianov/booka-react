@@ -7,18 +7,17 @@ import {
     Themed, colors,
 } from './theme';
 import {
-    Style, regularSpace, bookCoverWidth,
+    Style, bookCoverWidth, panelShadow, tripleSpace,
 } from './common';
 import { BookCover } from './BookCover';
 
 export function BookTile({
-    title, author, coverUrl, showTitle, hideShadow, theme, callback,
+    title, author, coverUrl, showTitle, theme, callback,
 }: Themed & {
     coverUrl: string | undefined,
     title: string,
     author: string | undefined,
     showTitle?: boolean,
-    hideShadow?: boolean,
     callback?: () => void,
 }) {
     return <div css={{
@@ -27,10 +26,11 @@ export function BookTile({
         flexDirection: 'column',
         flexGrow: 0,
         width: bookCoverWidth,
-        margin: regularSpace,
+        margin: tripleSpace,
         alignItems: 'center',
         color: colors(theme).text,
         fontFamily: theme.fontFamilies.book,
+        ...panelShadow(colors(theme).shadow),
         '&:hover': {
             color: colors(theme).highlight,
         },

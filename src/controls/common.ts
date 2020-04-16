@@ -61,7 +61,7 @@ export function roundShadow(color: Color) {
 
 export const radius = 3;
 
-export const userAreaWidth = point(40);
+export const userAreaWidth = point(60);
 export const panelHeight = point(14);
 export const buttonHeight = 50;
 export const buttonWidth = 120;
@@ -107,7 +107,11 @@ export function fontCss({
 
 export function panelShadow(color: string) {
     return {
-        boxShadow: `0px 4px 6px -4px ${color}`,
+        boxShadow: `
+        0px 2px 2px -1px ${color},
+        0px 1px 2px 0px ${color},
+        0px 1px 4px 0px ${color}
+        `,
     };
 }
 

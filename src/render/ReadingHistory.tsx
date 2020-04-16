@@ -10,8 +10,8 @@ import {
 } from '../application';
 import { Loadable, Themed, colors } from '../core';
 import {
-    userAreaWidth, pageEffect, tripleSpace, doubleSpace, fontCss,
-    megaSpace, ActivityIndicator,
+    pageEffect, tripleSpace, doubleSpace, fontCss,
+    megaSpace, ActivityIndicator, point,
 } from '../controls';
 import { CardLink, BookPathLink } from './Navigation';
 
@@ -92,7 +92,7 @@ function BookPreview({
         display: 'flex',
         flexDirection: 'column',
         width: '80vw',
-        maxWidth: userAreaWidth,
+        maxWidth: point(40),
         alignSelf: 'center',
         backgroundColor: colors(theme).primary,
         ...pageEffect(colors(theme).shadow),
