@@ -1,5 +1,9 @@
+// eslint-disable-next-line
 import React from 'react';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 
+import { uniqBy } from 'lodash';
 import { CurrentPosition, pageForPosition, LibraryCard } from 'booka-common';
 import {
     usePositions, useTheme, usePathData, useLibraryCard,
@@ -17,11 +21,40 @@ export function CurrentBookPanel() {
         return null;
     }
 
-    const mostRecent = positions.reduce(
-        (most, curr) => most.created < curr.created
-            ? curr : most,
+    const recent = buildRecent(positions);
+    return <RecentBooksList
+        positions={recent}
+    />;
+}
+
+function buildRecent(positions: CurrentPosition[]): CurrentPosition[] {
+    const sorted = positions.sort(
+        (a, b) => b.created.valueOf() - a.created.valueOf(),
     );
-    return <CurrentBook position={mostRecent} />;
+    const uniq = uniqBy(sorted, s => s.bookId);
+    return uniq;
+}
+
+function RecentBooksList({ positions }: {
+    positions: CurrentPosition[],
+}) {
+    return <div style={{
+        display: 'flex',
+        flexGrow: 1,
+        flexShrink: 1,
+        overflow: 'scroll',
+        justifyContent: 'flex-start',
+    }}>
+        {
+            positions.map((position, idx) => <div key={idx} css={{
+                margin: doubleSpace,
+            }}>
+                <CurrentBook
+                    position={position}
+                />
+            </div>)
+        }
+    </div>;
 }
 
 function CurrentBook({ position }: {
@@ -58,6 +91,7 @@ function CurrentBookView({
     return <div css={{
         display: 'flex',
         flexDirection: 'column',
+        width: '80vw',
         maxWidth: userAreaWidth,
         alignSelf: 'center',
         backgroundColor: colors(theme).primary,
