@@ -7,7 +7,7 @@ import {
     Themed, colors,
 } from './theme';
 import {
-    Style, bookCoverWidth, panelShadow, tripleSpace,
+    Style, bookCoverWidth, panelShadow, tripleSpace, radius,
 } from './common';
 import { BookCover } from './BookCover';
 
@@ -30,6 +30,8 @@ export function BookTile({
         alignItems: 'center',
         color: colors(theme).text,
         fontFamily: theme.fontFamilies.book,
+        borderRadius: radius,
+        overflow: 'hidden',
         ...panelShadow(colors(theme).shadow),
         '&:hover': {
             color: colors(theme).highlight,

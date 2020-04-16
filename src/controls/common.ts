@@ -59,7 +59,7 @@ export function roundShadow(color: Color) {
     return `2px 2px 2px ${color}`;
 }
 
-export const radius = 3;
+export const radius = 5;
 
 export const controlsAreaWidth = point(60);
 export const readingAreaWidth = point(50);
