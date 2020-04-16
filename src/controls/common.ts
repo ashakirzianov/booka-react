@@ -108,11 +108,7 @@ export function fontCss({
 
 export function panelShadow(color: string) {
     return {
-        boxShadow: `
-        0px 2px 2px -1px ${color},
-        0px 1px 2px 0px ${color},
-        0px 1px 4px 0px ${color}
-        `,
+        boxShadow: `0px 5px 20px ${color}`,
     };
 }
 
@@ -120,7 +116,7 @@ export function actionCss({ theme }: {
     theme: Theme,
 }) {
     return {
-        boxShadow: `2px 2px 2px ${colors(theme).shadow}`,
+        ...panelShadow(colors(theme).shadow),
     };
 }
 
