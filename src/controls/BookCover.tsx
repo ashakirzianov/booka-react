@@ -60,6 +60,7 @@ function BookEmptyCover({ title, theme }: Themed & {
     return <div title={title} css={{
         display: 'flex',
         flexDirection: 'row',
+        flexGrow: 1,
         alignItems: 'stretch',
     }}>
         <div css={{
