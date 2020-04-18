@@ -1,6 +1,5 @@
 // eslint-disable-next-line
 import React from 'react';
-import { View } from 'react-native';
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import {

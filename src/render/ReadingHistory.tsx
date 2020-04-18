@@ -1,19 +1,12 @@
-// eslint-disable-next-line
 import React from 'react';
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 
 import { uniqBy } from 'lodash';
-import { CurrentPosition, pageForPosition, LibraryCard } from 'booka-common';
+import { CurrentPosition, pageForPosition } from 'booka-common';
 import {
     usePositions, useTheme, usePathData, useLibraryCard,
 } from '../application';
-import { Loadable, Themed, colors } from '../core';
-import {
-    pageEffect, tripleSpace, doubleSpace, fontCss,
-    megaSpace, ActivityIndicator, point, multilineOverflowCss, panelShadow, radius,
-} from '../controls';
-import { CardLink, BookPathLink } from './Navigation';
+import { doubleSpace } from '../controls';
+import { BookPreview } from './BookPreview';
 
 export function ReadingHistory() {
     const positions = usePositions();
@@ -74,112 +67,10 @@ function ReadingHistoryTile({ position }: {
         ? pathData : pathData.preview;
     return <BookPreview
         theme={theme}
-        position={position}
+        bookId={position.bookId}
+        path={position.path}
         card={card}
         preview={preview}
         page={page}
     />;
-}
-
-function BookPreview({
-    card, position, preview, page, theme,
-}: Themed & {
-    position: CurrentPosition,
-    card: Loadable<LibraryCard>,
-    preview: Loadable<string>,
-    page: Loadable<string>,
-}) {
-    if (card.loading) {
-        return null;
-    }
-    return <div css={{
-        display: 'flex',
-        flexDirection: 'column',
-        width: '75vw',
-        maxWidth: point(40),
-        alignSelf: 'center',
-        backgroundColor: colors(theme).primary,
-        ...panelShadow(colors(theme).shadow),
-        // ...pageEffect(colors(theme).shadow),
-        borderRadius: radius,
-    }}>
-        <div css={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-        }}>
-            <CardLink bookId={card.id}>
-                <div css={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignSelf: 'stretch',
-                    alignItems: 'center',
-                    paddingTop: tripleSpace,
-                    paddingBottom: doubleSpace,
-                    color: colors(theme).accent,
-                    ...fontCss({
-                        theme,
-                        fontFamily: 'book',
-                        fontSize: 'small',
-                        bold: true,
-                    }),
-                    '&:hover': {
-                        color: colors(theme).highlight,
-                    },
-                }}>
-                    {card.title}
-                </div>
-            </CardLink>
-            <BookPathLink bookId={position.bookId} path={position.path}>
-                <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    paddingLeft: megaSpace,
-                    paddingRight: megaSpace,
-                }}>
-                    {
-                        preview.loading
-                            ? <ActivityIndicator theme={theme} />
-                            : <TextPreview
-                                theme={theme}
-                                text={preview}
-                            />
-                    }
-                    <span css={{
-                        color: colors(theme).accent,
-                        marginTop: doubleSpace,
-                        marginBottom: tripleSpace,
-                        ...fontCss({
-                            theme,
-                            fontFamily: 'book',
-                            fontSize: 'small',
-                        }),
-                    }}>
-                        {page.loading ? '' : page}
-                    </span>
-                </div>
-            </BookPathLink>
-        </div>
-    </div>;
-}
-
-function TextPreview({ text, theme }: Themed & {
-    text: string,
-}) {
-    return <p css={{
-        ...multilineOverflowCss(10),
-        textAlign: 'justify',
-        color: colors(theme).text,
-        ...fontCss({
-            theme,
-            fontFamily: 'book',
-            fontSize: 'small',
-        }),
-        padding: 0,
-        margin: 0,
-        textIndent: megaSpace,
-    }}>
-        {text}
-    </p>;
 }
