@@ -36,7 +36,7 @@ export function usePathData(bookId: string, path: BookPath) {
     const [previewState, setPreviewState] = useState<TextPreviewState>({ loading: true });
 
     useEffect(() => {
-        const sub = data.pathData(bookId, path)
+        const sub = data.preview(bookId, path)
             .subscribe(setPreviewState);
         return () => sub.unsubscribe();
     }, [data, bookId, path]);

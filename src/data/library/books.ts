@@ -69,7 +69,7 @@ export function booksProvider({ token }: {
                 }
             });
         },
-        pathData(bookId: string, path: BookPath) {
+        preview(bookId: string, path: BookPath) {
             return withCached(bookId, cached => {
                 if (cached) {
                     const preview = previewForPath(cached, path);
@@ -84,7 +84,7 @@ export function booksProvider({ token }: {
                         of: length,
                     });
                 } else {
-                    return lib.get('/path-data', {
+                    return lib.get('/preview', {
                         query: { id: bookId, node: path.node },
                     });
                 }
