@@ -59,6 +59,7 @@ function Layout({ Input, Buttons }: {
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
+            // width: point(30),
         }}>
             {Input}
         </View>
@@ -66,12 +67,16 @@ function Layout({ Input, Buttons }: {
             minWidth: 'auto',
             flexBasis: 1,
             flexGrow: 1,
-            flexShrink: 1,
-            flexDirection: 'row',
+            flexShrink: 0,
+            flexDirection: 'column',
             justifyContent: 'flex-end',
             alignItems: 'center',
         }}>
-            {Buttons}
+            <View style={{
+                flexDirection: 'row',
+            }}>
+                {Buttons}
+            </View>
         </View>
     </View>;
 }

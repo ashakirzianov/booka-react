@@ -11,7 +11,7 @@ import {
 import { Loadable, Themed, colors } from '../core';
 import {
     pageEffect, tripleSpace, doubleSpace, fontCss,
-    megaSpace, ActivityIndicator, point, multilineOverflowCss,
+    megaSpace, ActivityIndicator, point, multilineOverflowCss, panelShadow, radius,
 } from '../controls';
 import { CardLink, BookPathLink } from './Navigation';
 
@@ -44,11 +44,14 @@ function ReadingHistoryList({ positions }: {
         flexShrink: 1,
         overflow: 'scroll',
         justifyContent: 'flex-start',
-        margin: doubleSpace,
+        // marginTop: doubleSpace, marginBottom: doubleSpace,
+        // marginRight: doubleSpace,
+        // padding: doubleSpace,
     }}>
         {
             positions.map((position, idx) => <div key={idx} css={{
-                margin: doubleSpace,
+                // margin: doubleSpace,
+                padding: doubleSpace,
             }}>
                 <ReadingHistoryTile
                     position={position}
@@ -92,11 +95,13 @@ function BookPreview({
     return <div css={{
         display: 'flex',
         flexDirection: 'column',
-        width: '80vw',
+        width: '75vw',
         maxWidth: point(40),
         alignSelf: 'center',
         backgroundColor: colors(theme).primary,
-        ...pageEffect(colors(theme).shadow),
+        ...panelShadow(colors(theme).shadow),
+        // ...pageEffect(colors(theme).shadow),
+        borderRadius: radius,
     }}>
         <div css={{
             display: 'flex',

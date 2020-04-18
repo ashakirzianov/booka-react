@@ -63,6 +63,7 @@ export const radius = 5;
 
 export const controlsAreaWidth = point(60);
 export const readingAreaWidth = point(50);
+export const modalWidth = point(40);
 export const panelHeight = point(14);
 export const buttonHeight = 50;
 export const buttonWidth = 120;
@@ -108,7 +109,7 @@ export function fontCss({
 
 export function panelShadow(color: string) {
     return {
-        boxShadow: `0px 5px 20px ${color}`,
+        boxShadow: `0px 5px 15px ${color}`,
     };
 }
 
@@ -133,11 +134,12 @@ export function actionHoverCss({ theme, color }: {
 export function pageEffect(shadow: string) {
     return {
         position: 'relative',
+        zIndex: -1,
         boxShadow: `0 1px 4px ${shadow}, 0 0 6px rgba(0, 0, 0, 0.1) inset`,
         '&:after': {
             content: '""',
             position: 'absolute',
-            zIndex: -1,
+            zIndex: -10,
             boxShadow: `0 0 10px ${shadow}`,
             top: 0,
             bottom: 0,
@@ -149,7 +151,7 @@ export function pageEffect(shadow: string) {
         '&:hover': {
             '&:before': {
                 content: '""',
-                zIndex: -1,
+                zIndex: -10,
                 position: 'absolute',
                 top: '30%',
                 bottom: 15,

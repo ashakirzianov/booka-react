@@ -21,10 +21,11 @@ export function SearchInput({
         flexShrink: 1,
         margin: regularSpace,
         alignItems: 'center',
-        maxWidth: point(30),
+        minWidth: 10,
     }}>
         <input
             css={{
+                minWidth: 10,
                 paddingTop: 0, paddingBottom: 0,
                 paddingLeft: regularSpace, paddingRight: regularSpace,
                 borderWidth: 1,

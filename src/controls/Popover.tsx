@@ -6,7 +6,7 @@ import Tippy from '@tippyjs/react';
 import 'tippy.js/animations/shift-away.css';
 
 import { Themed, colors } from './theme';
-import { HasChildren, panelShadow, radius } from './common';
+import { HasChildren, panelShadow, radius, doubleSpace } from './common';
 
 export function WithPopover({
     body, placement, theme, children,
@@ -18,7 +18,7 @@ export function WithPopover({
         pointerEvents: 'auto',
         '& .tippy-box[data-theme~=\'custom\']': {
             zIndex: 100,
-            backgroundColor: colors(theme).secondary,
+            backgroundColor: colors(theme).primary,
             ...panelShadow(colors(theme).shadow),
             borderRadius: radius,
         },
@@ -32,7 +32,14 @@ export function WithPopover({
             interactive={true}
             hideOnClick={true}
             animation='shift-away'
-            content={<div style={{ zIndex: 100 }}>{body}</div>}>
+            content={
+                <div style={{
+                    zIndex: 100,
+                    padding: doubleSpace,
+                }}>
+                    {body}
+                </div>
+            }>
             <div>{children}</div>
         </Tippy>
     </div>;

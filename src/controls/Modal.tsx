@@ -5,7 +5,7 @@ import { Transition } from 'react-transition-group';
 import { Themed, colors } from './theme';
 import {
     HasChildren, regularSpace, fontCss, panelShadow,
-    controlsAreaWidth, percent, radius,
+    modalWidth, percent, radius,
 } from './common';
 import { defaultAnimationDuration } from './Animations';
 import { PlaneIconButton } from './Buttons';
@@ -40,7 +40,7 @@ export function Modal({
                     flexDirection: 'column',
                     flexShrink: 1,
                     width: percent(100),
-                    maxWidth: controlsAreaWidth,
+                    maxWidth: modalWidth,
                     maxHeight: '100%',
                     overflow: 'scroll',
                     zIndex: 10,
