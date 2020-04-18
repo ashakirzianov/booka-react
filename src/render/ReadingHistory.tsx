@@ -5,7 +5,7 @@ import { CurrentPosition, pageForPosition } from 'booka-common';
 import {
     usePositions, useTheme, usePathData, useLibraryCard,
 } from '../application';
-import { doubleSpace } from '../controls';
+import { doubleSpace, megaSpace } from '../controls';
 import { BookPreview } from './BookPreview';
 
 export function ReadingHistory() {
@@ -37,14 +37,11 @@ function ReadingHistoryList({ positions }: {
         flexShrink: 1,
         overflow: 'scroll',
         justifyContent: 'flex-start',
-        // marginTop: doubleSpace, marginBottom: doubleSpace,
-        // marginRight: doubleSpace,
-        // padding: doubleSpace,
+        padding: megaSpace,
     }}>
         {
-            positions.map((position, idx) => <div key={idx} css={{
-                // margin: doubleSpace,
-                padding: doubleSpace,
+            positions.map((position, idx) => <div key={idx} style={{
+                marginRight: doubleSpace,
             }}>
                 <ReadingHistoryTile
                     position={position}
