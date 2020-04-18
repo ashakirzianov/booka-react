@@ -5,7 +5,6 @@ import { Themed, colors } from '../theme';
 import { IconName, Icon } from '../Icon';
 import {
     buttonHeight, regularSpace, buttonStyle, smallButtonHeight,
-    actionCss, actionHoverCss, actionBack,
 } from '../common';
 
 export function IconButton({
@@ -29,12 +28,9 @@ export function IconButton({
             borderWidth: 0,
             height: buttonHeight,
             width: buttonHeight,
-            backgroundColor: actionBack(theme),
             color: colors(theme).accent,
-            ...actionCss({ theme }),
             '&:hover': {
                 color: colors(theme).highlight,
-                ...actionHoverCss({ theme }),
             },
             justifyContent: 'center',
             alignItems: 'center',

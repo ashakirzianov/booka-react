@@ -5,11 +5,10 @@ import { View } from 'react-native';
 import { jsx } from '@emotion/core';
 import { Themed, colors } from './theme';
 import {
-    buttonHeight, actionBack, regularSpace,
-    fontCss, actionCss, actionHoverCss,
+    regularSpace, fontCss, radius,
 } from './common';
 
-export function TextInput({
+export function SearchInput({
     theme, initial, onChange, placeholder,
 }: Themed & {
     placeholder?: string,
@@ -19,20 +18,25 @@ export function TextInput({
     return <View style={{
         flexBasis: 1,
         flexGrow: 1,
+        flexShrink: 1,
         margin: regularSpace,
+        alignItems: 'center',
+        minWidth: 10,
     }}>
         <input
             css={{
+                minWidth: 10,
                 paddingTop: 0, paddingBottom: 0,
                 paddingLeft: regularSpace, paddingRight: regularSpace,
-                borderWidth: 0,
-                height: buttonHeight,
+                borderWidth: 1,
+                borderRadius: radius,
+                borderColor: colors(theme).accent,
+                borderStyle: 'solid',
                 color: colors(theme).text,
                 ...fontCss({ theme, fontSize: 'xlarge' }),
-                ...actionCss({ theme }),
-                backgroundColor: actionBack(theme),
+                backgroundColor: colors(theme).primary,
                 '&:hover': {
-                    ...actionHoverCss({ theme }),
+                    borderColor: colors(theme).highlight,
                 },
                 '&::placeholder': {
                     color: colors(theme).accent,
@@ -45,12 +49,13 @@ export function TextInput({
                 '&:focus': {
                     outline: 'none',
                     color: colors(theme).highlight,
-                    ...actionHoverCss({ theme, color: 'highlight' }),
+                    borderColor: colors(theme).highlight,
+                    boxShadow: `0px 0px 2px ${colors(theme).highlight}`,
                 },
             }}
             placeholder={placeholder}
             defaultValue={initial}
-            type='text'
+            type='search'
             onChange={event => {
                 onChange(event.target.value);
             }}

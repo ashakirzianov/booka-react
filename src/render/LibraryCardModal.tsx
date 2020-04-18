@@ -13,9 +13,9 @@ import {
     regularSpace, Label, Icon,
 } from '../controls';
 import { LibraryCardTile } from './LibraryCardTile';
-import { BookPathLink } from './Navigation';
 import { ParagraphPreview } from './ParagraphPreview';
 import { TagList } from './TagList';
+import { BookPathLink } from './Navigation';
 
 export function LibraryCardModal() {
     const bookId = useCardId();

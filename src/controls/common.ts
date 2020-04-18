@@ -55,17 +55,15 @@ export function actionBack(theme: Theme) {
     return colors(theme).primary;
 }
 
-export function panelShadow(color: Color) {
-    return `0px 0px 2px ${color}`;
-}
-
 export function roundShadow(color: Color) {
     return `2px 2px 2px ${color}`;
 }
 
-export const radius = 3;
+export const radius = 5;
 
-export const userAreaWidth = point(50);
+export const controlsAreaWidth = point(60);
+export const readingAreaWidth = point(50);
+export const modalWidth = point(40);
 export const panelHeight = point(14);
 export const buttonHeight = 50;
 export const buttonWidth = 120;
@@ -76,10 +74,11 @@ export const xsmallSpace = point(0.1);
 export const smallSpace = point(0.25);
 export const regularSpace = point(0.5);
 export const doubleSpace = point(1);
+export const tripleSpace = point(1.5);
 export const megaSpace = point(3);
 
-export const bookCoverHeight = 180;
-export const bookCoverWidth = 120;
+export const bookCoverHeight = 225;
+export const bookCoverWidth = 160;
 
 export const buttonStyle: CSSProperties = {
     cursor: 'pointer',
@@ -108,11 +107,17 @@ export function fontCss({
     };
 }
 
+export function panelShadow(color: string) {
+    return {
+        boxShadow: `0px 5px 15px ${color}`,
+    };
+}
+
 export function actionCss({ theme }: {
     theme: Theme,
 }) {
     return {
-        boxShadow: `2px 2px 2px ${colors(theme).shadow}`,
+        ...panelShadow(colors(theme).shadow),
     };
 }
 
@@ -124,4 +129,57 @@ export function actionHoverCss({ theme, color }: {
         transform: 'translateY(-1px)',
         boxShadow: `3px 3px 3px ${colors(theme)[color ?? 'shadow']}`,
     };
+}
+
+export function pageEffect(shadow: string) {
+    return {
+        position: 'relative',
+        zIndex: -1,
+        boxShadow: `0 1px 4px ${shadow}, 0 0 6px rgba(0, 0, 0, 0.1) inset`,
+        '&:after': {
+            content: '""',
+            position: 'absolute',
+            zIndex: -10,
+            boxShadow: `0 0 10px ${shadow}`,
+            top: 0,
+            bottom: 0,
+            left: 10,
+            right: 10,
+            borderRadius: '25px',
+            transform: 'auto',
+        },
+        '&:hover': {
+            '&:before': {
+                content: '""',
+                zIndex: -10,
+                position: 'absolute',
+                top: '30%',
+                bottom: 15,
+                left: '30%',
+                right: 15,
+                boxShadow: `0px 0px 10px 10px ${shadow}`,
+                transform: 'skew(3deg, 3deg)',
+                borderRadius: 0,
+            },
+        },
+    } as const;
+}
+
+export function multilineOverflowCss(lines: number) {
+    return {
+        display: '-webkit-box',
+        WebkitLineClamp: lines,
+        WebkitBoxOrient: 'vertical',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'break-spaces',
+    } as const;
+}
+
+export function singleLineOverflowCss() {
+    return {
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+    } as const;
 }

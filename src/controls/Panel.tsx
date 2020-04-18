@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    HasChildren, userAreaWidth, regularSpace,
+    HasChildren, controlsAreaWidth, regularSpace,
     panelHeight, fontCss, doubleSpace,
 } from './common';
 import { Themed, colors } from './theme';
@@ -15,7 +15,7 @@ export function Panel({ theme, title, children }: HasChildren & Themed & {
         flexShrink: 1,
         flexGrow: 1,
         flexDirection: 'column',
-        maxWidth: userAreaWidth,
+        maxWidth: controlsAreaWidth,
         justifyContent: 'flex-start',
         width: '100%',
         alignSelf: 'center',
